@@ -14,25 +14,25 @@ list(
   # define individual data file
   tar_target(
     load_individual_data,
-    "data/SAU_LME_20_v48_0_1/SAU_LME_20_v48_0.csv",
+    "1_data/data_irn_individuals.xlsx",
     format = "file"
   ),
   # define group data file
   tar_target(
     load_group_data,
-    "data/ghs/Global_heterotroph_stoichio_v5.csv",
+    "1_data/data_irn_groups.xlsx",
     format = "file"
   ),
   # define food control data file
   tar_target(
     load_food_control_data,
-    "data/ghs/Global_heterotroph_stoichio_v5.csv",
+    "1_data/data_irn_food_control.xlsx",
     format = "file"
   ),
   # define individual control data file
   tar_target(
     load_individual_control_data,
-    "data/ghs/Global_heterotroph_stoichio_v5.csv",
+    "1_data/data_irn_individuals_control.xlsx",
     format = "file"
   ),
   # merge data
