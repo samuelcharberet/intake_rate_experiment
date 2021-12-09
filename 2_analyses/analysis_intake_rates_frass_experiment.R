@@ -2,35 +2,13 @@
 
 # This script analyses mass balance and chemical composition data and computes interesting intake, digestion, growth and egestion metrics.
 
-library(readxl)
-library(stringr)
-library(flextable)
-library(tibble)
-library(openxlsx)
-library(hrbrthemes)
-library(GGally)
-library(viridis)
-library(plyr)
-library(tidyr)
-library(ggsci)
-library(lubridate)
-library(ggstatsplot)
-
-setwd(
-  "C:/Users/Samuel/Documents/7. Doctorat/2. Experiments/2. Spodoptera littoralis/4. Experiment/1. Data"
-)
-
 # Load the individual data
-data_intake = read_xlsx(
-  "C:/Users/Samuel/Documents/7. Doctorat/2. Experiments/2. Spodoptera littoralis/4. Experiment/1. Data/data_intake_rates_frass_experiment_individuals.xlsx"
-)
+data_intake <- readxl::read_xlsx(here::here("1_data", "data_irn_individuals.xlsx"))
+
 
 # Load the control data
 
-data_foodcontrol = read_xlsx(
-  "C:/Users/Samuel/Documents/7. Doctorat/2. Experiments/2. Spodoptera littoralis/4. Experiment/1. Data/data_food_controls.xlsx"
-)
-
+data_foodcontrol <- readxl::read_xlsx(here::here("1_data", "data_irn_food_controls.xlsx"))
 
 ##########  0. Structuration  ##########
 
@@ -172,7 +150,7 @@ for (i in 1:nrow(data_sex)) {
 unique(data_intake$seventh_instar_date)
 ##### Growth  #####
 
-data_growth_long  = pivot_longer(
+data_growth_long  = tidyr::pivot_longer(
   data = data_intake[, c(
     "individual_ID",
     "food_provided_ww",
@@ -220,7 +198,7 @@ for (i in 1:nrow(data_growth_summary)) {
   rows_food_intake_day = intersect(rows_food_intake, rows_day)
   data_growth_summary$average_bodymass[i] = mean(data_growth_long$bodymass_mg[rows_food_intake_day], na.rm =
                                                    T)
-  data_growth_summary$sd_bodymass[i] = sd(data_growth_long$bodymass_mg[rows_food_intake_day])
+  data_growth_summary$sd_bodymass[i] = stats::sd(data_growth_long$bodymass_mg[rows_food_intake_day])
   data_growth_summary$N[i] = length(data_growth_long$bodymass_mg[rows_food_intake_day]) -
     length(which(is.na(data_growth_long$bodymass_mg[rows_food_intake_day])))
 }
@@ -304,7 +282,7 @@ p + labs(title = "Growth curve of S. littoralis according to provided food mass"
 
 # Growth efficiency according to the food provided daily
 
-plt <- ggbetweenstats(
+plt <- ggstatsplot::ggbetweenstats(
   data = data_intake,
   x = food_provided_ww,
   y = growth_efficiency,
