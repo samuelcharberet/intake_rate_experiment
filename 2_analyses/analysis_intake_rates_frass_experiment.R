@@ -3,12 +3,14 @@
 # This script analyses mass balance and chemical composition data and computes interesting intake, digestion, growth and egestion metrics.
 
 # Load the individual data
-data_intake <- readxl::read_xlsx(here::here("1_data", "data_irn_individuals.xlsx"))
+data_intake <-
+  readxl::read_xlsx(here::here("1_data", "data_irn_individuals.xlsx"))
 
 
 # Load the control data
 
-data_foodcontrol <- readxl::read_xlsx(here::here("1_data", "data_irn_food_controls.xlsx"))
+data_foodcontrol <-
+  readxl::read_xlsx(here::here("1_data", "data_irn_food_controls.xlsx"))
 
 ##########  0. Structuration  ##########
 
@@ -19,10 +21,10 @@ data_intake$bodymass_7th_instar_j16_ww = as.numeric(data_intake$bodymass_7th_ins
 # Removing individuals that underwent experimental errors
 
 # Individual 38 was believed to undergo pre pupation too soon
-data_intake = data_intake[-which(data_intake$individual_ID == "38"),]
+data_intake = data_intake[-which(data_intake$individual_ID == "38"), ]
 
 # Individual 94 was a L6
-data_intake = data_intake[-which(data_intake$individual_ID == "94"),]
+data_intake = data_intake[-which(data_intake$individual_ID == "94"), ]
 
 ##########  1. Filling the table  ##########
 
@@ -378,4 +380,6 @@ ggplot(
 ) +
   geom_point(size = 3) +
   theme_ipsum() + scale_color_npg() +
-  labs(title = "Egestion / ingestion ratio according to mass specific ingestion rate", x = "Mass specific ingestion rate (mg dw/day / mg indiv)", y = "Egestion / ingestion ratio (mg dw / mg dw)")
+  labs(title = "Egestion / ingestion ratio according to mass specific ingestion rate", x = "Mass specific ingestion rate (mg dw/day / mg indiv)", y = "Egestion / ingestion ratio (mg dw / mg dw)") +
+  geom_smooth()
+)
