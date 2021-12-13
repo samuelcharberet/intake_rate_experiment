@@ -14,10 +14,9 @@ data_foodcontrol <-
 
 ##########  0. Structuration  ##########
 
-str(data_intake)
 data_intake$filled_tube_food_mass = as.numeric(data_intake$filled_tube_food_mass)
 data_intake$bodymass_7th_instar_j16_ww = as.numeric(data_intake$bodymass_7th_instar_j16_ww)
-
+data_intake$bodymass_imago_dw = as.numeric(data_intake$bodymass_imago_dw)
 # Removing individuals that underwent experimental errors
 
 # Individual 38 was believed to undergo pre pupation too soon
@@ -35,10 +34,10 @@ data_intake = data_intake[-which(data_intake$individual_ID == "94"), ]
 for (i in 1:nrow(data_intake)) {
   if (is.na(data_intake$last_collection_date[i] == T)) {
     if (is.na(data_intake$pre_pupa_date[i] == T)) {
-      data_intake$last_collection_date[i] = data_intake$first_collection_date[i] + days(2)
+      data_intake$last_collection_date[i] = data_intake$first_collection_date[i] + lubridate::days(2)
     } else {
       if (is.na(data_intake$last_collection_date[i] == T)) {
-        data_intake$last_collection_date[i] = data_intake$pre_pupa_date[i] - days(1)
+        data_intake$last_collection_date[i] = data_intake$pre_pupa_date[i] - lubridate::days(1)
       }
     }
   }
@@ -206,9 +205,14 @@ for (i in 1:nrow(data_growth_summary)) {
 }
 
 data_growth_summary$day = as.factor(rep(c(1:4, 16), each = 5))
+
+# Dry weight bodymass at the end of the experiment
+
+boxplot(data = data_intake, bodymass_7th_instar_j3_dw ~ food_provided_ww)
+boxplot(data = data_intake, bodymass_imago_dw ~ food_provided_ww)
+
+
 ##### Food conversion efficiency  #####
-
-
 # We compute the food conversion efficiency for the 7th instar period without the prepupation
 
 data_intake$growth_efficiency = NA
@@ -230,33 +234,12 @@ for (i in 1:nrow(data_intake)) {
 
 ##########  3. Graphics and figures  ##########
 
-###### Individual growth curve #####
 data_intake$food_provided_ww = as.factor(data_intake$food_provided_ww)
-ggparcoord(
-  data_intake,
-  columns = c(
-    "bodymass_7th_instar_j0_ww",
-    "bodymass_7th_instar_j1_ww",
-    "bodymass_7th_instar_j2_ww",
-    "bodymass_7th_instar_j3_ww",
-    "bodymass_7th_instar_j16_ww"
-  ),
-  scale = "globalminmax",
-  groupColumn = "food_provided_ww",
-  showPoints = TRUE,
-  title = "Growth curve of S. littoralis larvae fed different quantities",
-  alphaLines = 0.3,
-  missing = "exclude",
-  order = 7:10
-) +
-  scale_color_viridis(discrete = T, option = "H") +
-  theme_ipsum() +
-  theme(plot.title = element_text(size = 10)) +
-  ylab("Bodymass (mg)")
+
 
 ###### Treatment growth curve ######
 data_growth_summary$food_provided_ww = as.factor(data_growth_summary$food_provided_ww)
-p = ggplot(
+p = ggplot2::ggplot(
   data_growth_summary,
   aes(
     x = day,
@@ -272,114 +255,38 @@ p = ggplot(
     position = position_dodge(0.1)
   ) +  geom_point()
 
-print(p)
 # Finished line plot
 p + labs(title = "Growth curve of S. littoralis according to provided food mass", x = "Day of 7th instar", y = "Bodymass (mg)") +
   theme_classic() +
   scale_x_discrete(breaks = unique(data_growth_summary$day),
                    labels = as.character(c(1:4, 17))) +
-  scale_color_npg()
+  ggsci::scale_color_npg()
 
 ###### Growth efficiency ######
 
-# Growth efficiency according to the food provided daily
-
-plt <- ggstatsplot::ggbetweenstats(
-  data = data_intake,
-  x = food_provided_ww,
-  y = growth_efficiency,
-  xlab = "Food provided daily (mg ww)",
-  ylab = "Growth efficiency (mg ww body / mg ww food)",
-  plot.type = "box",
-  type = "p",
-  conf.level = 0.95,
-  package = "ggsci",
-  palette = "nrc_npg",
-  centrality.plotting = T,
-  centrality.point.args = NULL,
-  centrality.label.args = NULL,
-)
-
-plt
-
-# Growth efficiency according to the ingestion rate
-
-ggplot(data_intake,
-       aes(x = ingestion_rate, y = growth_efficiency, color = food_provided_ww)) +
-  geom_point(size = 3) +
-  theme_ipsum() + scale_color_npg() +
-  labs(title = "Growth efficiency of S. littoralis according to ingestion rate", x = "Ingestion rate (mg dw/day)", y = "Growth efficiency (mg ww body / mg dw food)")
-
 # Growth efficiency according to the mass specific ingestion rate
-ggplot(data_intake,
+ggplot2::ggplot(data_intake,
        aes(x = ingestion_rate / ((
          bodymass_before_last_collection_date + bodymass_7th_instar_j0_ww
        ) / 2
-       ), y = growth_efficiency, color = food_provided_ww)) +
+       ), y = growth_efficiency)) +
   geom_point(size = 3) +
-  theme_ipsum() + scale_color_npg() +
-  labs(title = "Growth efficiency of S. littoralis according to mass-specific ingestion rate", x = "Mass specific ingestion rate (mg dw/day / mg ww indiv)", y = "Growth efficiency (mg ww body / mg dw food)")
-
-###### Functional response ######
-
-ggplot(data_intake,
-       aes(x = food_provided_ww, y = ingestion_rate, color = food_provided_ww)) +
-  geom_point(size = 3) +
-  theme_ipsum() + scale_color_npg() +
-  labs(title = "Functionnal response", x = "Food provided (mg ww /day)", y = "Food consumed (mg dw/day)")
-
-###### Ingestion rate and individual mass ######
-
-ggplot(data_intake,
-       aes(
-         x = (
-           bodymass_before_last_collection_date + bodymass_7th_instar_j0_ww
-         ) / 2,
-         y = ingestion_rate,
-         color = food_provided_ww
-       )) +
-  geom_point(size = 3) +
-  theme_ipsum() + scale_color_npg() +
-  labs(title = "Ingestion rate as a function of average individual bodymass", x = "Avergae individual bodymass (mg ww)", y = "Ingestion rate (mg dw/day)")
-
-###### Egestion ingestion ratio ######
-
-
-ggplot(
-  data_intake,
-  aes(x = ingestion_rate, y = egestion_ingestion_ratio, color = food_provided_ww)
-) +
-  geom_point(size = 3) +
-  theme_ipsum() + scale_color_npg() +
-  labs(title = "Egestion / ingestion ratio in S. littoralis according to ingestion rate", x = "Ingestion rate (mg dw/day)", y = "Egestion / ingestion ratio (mg dw / mg dw)")
-
-
-###### Mass specific egestion ingestion ratio according to ingestion rate ######
-
-ggplot(
-  data_intake,
-  aes(x = ingestion_rate, y = egestion_ingestion_ratio / ((
-    bodymass_before_last_collection_date + bodymass_7th_instar_j0_ww
-  ) / 2
-  ), color = food_provided_ww)
-) +
-  geom_point(size = 3) +
-  theme_ipsum() + scale_color_npg() +
-  labs(title = "Mass specific egestion / ingestion ratio according to ingestion rate", x = "Ingestion rate (mg dw/day)", y = "Mass specific egestion / ingestion ratio (mg dw / mg dw mg indiv ww)")
-
+  hrbrthemes::theme_ipsum() + 
+  labs(title = "Growth efficiency of S. littoralis according to mass-specific ingestion rate", x = "Mass specific ingestion rate (mg dw/day / mg ww indiv)", y = "Growth efficiency (mg ww body / mg dw food)")+
+  geom_smooth(color="steelblue3")
 
 
 ###### Egestion ingestion ratio according to mass specific ingestion rate ######
 
-ggplot(
+ggplot2::ggplot(
   data_intake,
   aes(x = ingestion_rate / ((
     bodymass_before_last_collection_date + bodymass_7th_instar_j0_ww
   ) / 2
-  ), y = egestion_ingestion_ratio , color = food_provided_ww)
+  ), y = egestion_ingestion_ratio)
 ) +
   geom_point(size = 3) +
-  theme_ipsum() + scale_color_npg() +
+  hrbrthemes::theme_ipsum() + ggsci::scale_color_npg() +
   labs(title = "Egestion / ingestion ratio according to mass specific ingestion rate", x = "Mass specific ingestion rate (mg dw/day / mg indiv)", y = "Egestion / ingestion ratio (mg dw / mg dw)") +
-  geom_smooth()
-)
+  geom_smooth(color="steelblue3")
+
