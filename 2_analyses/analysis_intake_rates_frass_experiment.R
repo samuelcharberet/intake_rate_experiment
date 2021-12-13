@@ -2,69 +2,13 @@
 
 # This script analyses mass balance and chemical composition data and computes interesting intake, digestion, growth and egestion metrics.
 
-# Load the individual data
-data_intake <-
-  readxl::read_xlsx(here::here("1_data", "data_irn_individuals.xlsx"))
-
 
 # Load the control data
 
 data_foodcontrol <-
   readxl::read_xlsx(here::here("1_data", "data_irn_food_controls.xlsx"))
 
-##########  0. Structuration  ##########
 
-data_intake$filled_tube_food_mass = as.numeric(data_intake$filled_tube_food_mass)
-data_intake$bodymass_7th_instar_j16_ww = as.numeric(data_intake$bodymass_7th_instar_j16_ww)
-data_intake$bodymass_imago_dw = as.numeric(data_intake$bodymass_imago_dw)
-# Removing individuals that underwent experimental errors
-
-# Individual 38 was believed to undergo pre pupation too soon
-data_intake = data_intake[-which(data_intake$individual_ID == "38"), ]
-
-# Individual 94 was a L6
-data_intake = data_intake[-which(data_intake$individual_ID == "94"), ]
-
-##########  1. Filling the table  ##########
-
-##### Last collection day #####
-
-# We automatically define the last collection day based on whether or not the pre pupation occurred during the week
-
-for (i in 1:nrow(data_intake)) {
-  if (is.na(data_intake$last_collection_date[i] == T)) {
-    if (is.na(data_intake$pre_pupa_date[i] == T)) {
-      data_intake$last_collection_date[i] = data_intake$first_collection_date[i] + lubridate::days(2)
-    } else {
-      if (is.na(data_intake$last_collection_date[i] == T)) {
-        data_intake$last_collection_date[i] = data_intake$pre_pupa_date[i] - lubridate::days(1)
-      }
-    }
-  }
-}
-
-##### Number of collection day #####
-
-data_intake$number_collection_days = as.numeric(data_intake$last_collection_date - data_intake$first_collection_date + 1)
-
-##### Bodymass at the last collection date #####
-
-# We create a column corresponding to the last bodymass measured before pre pupation, that is the bodymass at the last collection date
-data_intake$bodymass_before_last_collection_date = NA
-
-for (i in 1:nrow(data_intake)) {
-  day_last_collection = as.numeric(data_intake$last_collection_date[i] - data_intake$first_collection_date[i]) +
-    2
-  data_intake$bodymass_before_last_collection_date[i] = as.numeric(data_intake[i, colnames(data_intake)[grepl("bodymass", colnames(data_intake))][day_last_collection]])
-}
-
-##### Growth rate #####
-
-# We compute the growth rate on the 7th instar without prepupation
-data_intake$growth_rate = (
-  data_intake$bodymass_before_last_collection_date - data_intake$bodymass_7th_instar_j0_ww
-) / data_intake$number_collection_days
-data_intake$growth_rate_unit = "mg_ww/day"
 
 ##### Food water content #####
 

@@ -1,0 +1,9 @@
+Package: irn
+Title: intake rate nutrients
+Version: 0.1
+Authors@R: person("Samuel", "Charberet", email = "samuelcharberet@gmail.com",
+                  role = c("aut", "cre"))
+Description: We analyze data from the intake rate and nutrient experiment on Spodoptera littoralis
+Depends: R (>= 3.1.0)
+License: Creative Commons
+Imports:
