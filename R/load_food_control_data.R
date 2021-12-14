@@ -8,6 +8,9 @@ load_food_control_data = function(path){
   
   data_irn_food_control <- readr::read_delim(path)
   
+  ##########  1. Structuration  ##########
+  
+  # Decide column classes
   
   character_columns = c(
     "tube_food_control_unit"
@@ -36,5 +39,5 @@ load_food_control_data = function(path){
     dplyr::mutate(across(factor_columns, as.factor)) |>
     dplyr::mutate(across(numeric_columns, as.numeric))
   
-  
+  return(data_irn_food_control)
 }
