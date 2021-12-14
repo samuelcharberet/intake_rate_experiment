@@ -11,7 +11,7 @@ load_individual_data = function(path) {
   
   ##########  1. Structuration  ##########
   
-  # Decid column classes
+  # Decide column classes
   
   character_columns = c(
     "food_provided_unit",
@@ -58,16 +58,21 @@ load_individual_data = function(path) {
     "filled_tube_food_mass",
     "food_mass",
     "number_collection_days"
-    
   )
   
-  data_irn_individuals[, character_columns] = as.character(data_irn_individuals[, character_columns])
-  data_irn_individuals[, date_columns] = as.POSIXct(data_irn_individuals[, date_columns])
-  data_irn_individuals[, factor_columns] = as.factor(data_irn_individuals[, factor_columns])
-  data_irn_individuals[, numeric_columns] = as.numeric(data_irn_individuals[, numeric_columns])
-  
-  
+  data_irn_individuals <- mutate(data_irn_individuals, across(character_columns, as.character))
+  data_irn_individuals <- mutate(data_irn_individuals, across(date_columns, as.POSIXct))
+  data_irn_individuals <- mutate(data_irn_individuals, across(factor_columns, as.factor))
+  data_irn_individuals <- mutate(data_irn_individuals, across(numeric_columns, as.numeric))
 
+  dat <- data_irn_individuals |>
+  mutate(across(character_columns, as.character)) |>
+    mutate(across(factor_columns, as.factor)) |>
+    mutate(across(numeric_columns, as.numeric))
+    
+   str(data_irn_individuals)
+  
+  
   # Removing individuals that underwent experimental errors
   
   # Individual 38 was believed to undergo pre pupation too soon
