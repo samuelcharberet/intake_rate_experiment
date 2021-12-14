@@ -14,25 +14,25 @@ list(
   # define individual data file
   tar_target(
     load_individual_data,
-    "1_data/data_irn_individuals.xlsx",
+    here::here("1_data", "data_irn_individuals.csv"),
     format = "file"
   ),
   # define group data file
   tar_target(
     load_group_data,
-    "1_data/data_irn_groups.xlsx",
+    here::here("1_data", "data_irn_groups.csv"),
     format = "file"
   ),
   # define food control data file
   tar_target(
     load_food_control_data,
-    "1_data/data_irn_food_control.xlsx",
+    here::here("1_data", "data_irn_food_controls.csv"),
     format = "file"
   ),
   # define individual control data file
   tar_target(
     load_individual_control_data,
-    "1_data/data_irn_individuals_control.xlsx",
+    here::here("1_data", "data_irn_individuals_controls.csv"),
     format = "file"
   ),
   # merge data

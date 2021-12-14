@@ -61,10 +61,10 @@ load_individual_data = function(path) {
   # We define the type of each column
   
   data_irn_individuals <- data_irn_individuals |>
-    mutate(across(character_columns, as.character)) |>
-    mutate(across(date_columns, ~ as.POSIXct(.x, format = "%d/%m/%Y"))) |>
-    mutate(across(factor_columns, as.factor)) |>
-    mutate(across(numeric_columns, as.numeric))
+    dplyr::mutate(across(character_columns, as.character)) |>
+    dplyr::mutate(across(date_columns, ~ as.POSIXct(.x, format = "%d/%m/%Y"))) |>
+    dplyr::mutate(across(factor_columns, as.factor)) |>
+    dplyr::mutate(across(numeric_columns, as.numeric))
   
   # Removing individuals that underwent experimental errors
   
@@ -133,4 +133,5 @@ load_individual_data = function(path) {
   
   data_irn_individuals$egestion_mass = data_irn_individuals$filled_tube_egestion_mass - data_irn_individuals$empty_tube_egestion_mass
   
+  return(data_irn_individuals)
 }
