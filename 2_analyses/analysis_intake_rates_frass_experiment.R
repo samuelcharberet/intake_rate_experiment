@@ -63,13 +63,12 @@ data_intake$ingestion_rate = data_intake$food_consumed_collection_days /
   data_intake$number_collection_days
 data_intake$ingestion_rate_unit = "mg dw / day"
 
-##### Egested mass consumed complete period #####
 
-data_intake$egestion_mass = data_intake$filled_tube_egestion_mass - data_intake$empty_tube_egestion_mass
 
 ##### Egestion - ingestion ratio #####
 
 data_intake$egestion_ingestion_ratio = data_intake$egestion_mass / data_intake$food_consumed_collection_days
+
 ##########  2. Check for biases  ##########
 
 # Effect of week on bodymass at the start

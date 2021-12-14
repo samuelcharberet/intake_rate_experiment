@@ -5,9 +5,7 @@
 load_individual_data = function(path) {
   ##########  0. Load data  ##########
   
-  data_irn_individuals <- readxl::read_xlsx(path)
-  
-  str(data_irn_individuals)
+  data_irn_individuals <- readr::read_delim(path)
   
   ##########  1. Structuration  ##########
   
@@ -60,26 +58,21 @@ load_individual_data = function(path) {
     "number_collection_days"
   )
   
-  data_irn_individuals <- mutate(data_irn_individuals, across(character_columns, as.character))
-  data_irn_individuals <- mutate(data_irn_individuals, across(date_columns, as.POSIXct))
-  data_irn_individuals <- mutate(data_irn_individuals, across(factor_columns, as.factor))
-  data_irn_individuals <- mutate(data_irn_individuals, across(numeric_columns, as.numeric))
-
-  dat <- data_irn_individuals |>
-  mutate(across(character_columns, as.character)) |>
+  # We define the type of each column
+  
+  data_irn_individuals <- data_irn_individuals |>
+    mutate(across(character_columns, as.character)) |>
+    mutate(across(date_columns, ~ as.POSIXct(.x, format = "%d/%m/%Y"))) |>
     mutate(across(factor_columns, as.factor)) |>
     mutate(across(numeric_columns, as.numeric))
-    
-   str(data_irn_individuals)
-  
   
   # Removing individuals that underwent experimental errors
   
   # Individual 38 was believed to undergo pre pupation too soon
-  data_intake = data_intake[-which(data_intake$individual_ID == "38"), ]
+  data_irn_individuals = data_irn_individuals[-which(data_irn_individuals$individual_ID == "38"),]
   
-  # Individual 94 was a L6
-  data_intake = data_intake[-which(data_intake$individual_ID == "94"), ]
+  # Individual 94 was a L6 instead of a L7 on the first day of the experiment
+  data_irn_individuals = data_irn_individuals[-which(data_irn_individuals$individual_ID == "94"),]
   
   ##########  2. Filling the table  ##########
   
@@ -87,38 +80,57 @@ load_individual_data = function(path) {
   
   # We automatically define the last collection day based on whether or not the pre pupation occurred during the week
   
-  for (i in 1:nrow(data_intake)) {
-    if (is.na(data_intake$last_collection_date[i] == T)) {
-      if (is.na(data_intake$pre_pupa_date[i] == T)) {
-        data_intake$last_collection_date[i] = data_intake$first_collection_date[i] + lubridate::days(2)
+  for (i in 1:nrow(data_irn_individuals)) {
+    # If no last collection date is specified, meaning that the individual was the object of three collection
+    if (is.na(data_irn_individuals$last_collection_date[i]) == T) {
+      # And if no prepupation date is specified
+      if (is.na(data_irn_individuals$pre_pupa_date[i]) == T) {
+        # Then the last collection date was two days after the first one
+        data_irn_individuals$last_collection_date[i] = data_irn_individuals$first_collection_date[i] + lubridate::days(2)
       } else {
-        if (is.na(data_intake$last_collection_date[i] == T)) {
-          data_intake$last_collection_date[i] = data_intake$pre_pupa_date[i] - lubridate::days(1)
-        }
+        # Else it means that the last collection date was one day before the prepupation
+        data_irn_individuals$last_collection_date[i] = data_irn_individuals$pre_pupa_date[i] - lubridate::days(1)
       }
     }
   }
   
   ##### Number of collection day #####
   
-  data_intake$number_collection_days = as.numeric(data_intake$last_collection_date - data_intake$first_collection_date + 1)
+  data_irn_individuals$number_collection_days = as.numeric(
+    data_irn_individuals$last_collection_date - data_irn_individuals$first_collection_date + 1
+  )
   
   ##### Bodymass at the last collection date #####
   
   # We create a column corresponding to the last bodymass measured before pre pupation, that is the bodymass at the last collection date
-  data_intake$bodymass_before_last_collection_date = NA
+  data_irn_individuals$bodymass_last_collection_date = NA
   
-  for (i in 1:nrow(data_intake)) {
-    day_last_collection = as.numeric(data_intake$last_collection_date[i] - data_intake$first_collection_date[i]) +
-      2
-    data_intake$bodymass_before_last_collection_date[i] = as.numeric(data_intake[i, colnames(data_intake)[grepl("bodymass", colnames(data_intake))][day_last_collection]])
+  for (i in 1:nrow(data_irn_individuals)) {
+    # We define for each individuals the day number of last collection
+    if (is.na(data_irn_individuals$first_collection_date[i]) == F) {
+      day_last_collection = as.numeric(
+        data_irn_individuals$last_collection_date[i] - data_irn_individuals$first_collection_date[i]
+      ) + 1
+      # Define the bodymass column corresponding to this day number
+      col_name = colnames(data_irn_individuals)[grepl("bodymass", colnames(data_irn_individuals))][day_last_collection +
+                                                                                                     1]
+      # We add the corresponding mass in the new column
+      data_irn_individuals$bodymass_last_collection_date[i] = as.numeric(data_irn_individuals[i, col_name])
+    }
   }
   
   ##### Growth rate #####
   
-  # We compute the growth rate on the 7th instar without prepupation
-  data_intake$growth_rate = (
-    data_intake$bodymass_before_last_collection_date - data_intake$bodymass_7th_instar_j0_ww
-  ) / data_intake$number_collection_days
-  data_intake$growth_rate_unit = "mg_ww/day"
+  # We compute the growth rate of the 7th instar before prepupation
+  
+  
+  data_irn_individuals$growth_rate = (
+    data_irn_individuals$bodymass_last_collection_date - data_irn_individuals$bodymass_7th_instar_j0_ww
+  ) / data_irn_individuals$number_collection_days
+  data_irn_individuals$growth_rate_unit = "mg_ww/day"
+  
+  ##### Egested mass complete period #####
+  
+  data_irn_individuals$egestion_mass = data_irn_individuals$filled_tube_egestion_mass - data_irn_individuals$empty_tube_egestion_mass
+  
 }
