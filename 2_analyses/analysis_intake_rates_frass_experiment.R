@@ -10,14 +10,7 @@ data_foodcontrol <-
 
 
 
-##### Food water content #####
 
-data_foodcontrol$food_ww = data_foodcontrol$ww_filled_tube_food_control_mass -
-  data_foodcontrol$empty_tube_food_control_mass
-data_foodcontrol$food_dw = data_foodcontrol$dw_filled_tube_food_control_mass -
-  data_foodcontrol$empty_tube_food_control_mass
-data_foodcontrol$food_water_content = (data_foodcontrol$food_ww - data_foodcontrol$food_dw) /
-  data_foodcontrol$food_ww
 
 ##### Food provided in dw #####
 
