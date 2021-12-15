@@ -91,5 +91,5 @@ combine_individual_data <- function(data_fc, data_ic, data_i) {
     ) / (data_i$food_consumed_collection_days[i] / (1 - mean(data_fc$food_water_content[week_indexes]))) # It is in fresh weight of food
   }
   
-  
+  return(data_i)
 }

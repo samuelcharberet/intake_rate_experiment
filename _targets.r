@@ -6,6 +6,8 @@
 # _targets.R file
 
 library(targets)
+library(ggplot2)
+
 # We source all functions contained in all files in the R directory
 lapply(list.files(here::here("R"), recursive = TRUE, full.names = T), source)
 
@@ -46,7 +48,7 @@ list(
   # load food control data file
   tar_target(
     data_irn_food_controls,
-    load_food_controle(path = data_irn_food_controls_file)
+    load_food_control_data(path = data_irn_food_controls_file)
   ),
   # load individual control data file
   tar_target(
@@ -65,19 +67,19 @@ list(
   # Combine groups data
   tar_target(
     data_irn_groups_combined,
-    combine_group_data(data_irn_inidivuals_combined,
-                        data_irn_groups)
+    combine_group_data(data_ic = data_irn_inidivuals_combined,
+                       data_g = data_irn_groups)
   ),
   # Model the data
   tar_target(
     models_irn,
-    model_irn(data_irn_inidivuals_combined, data_irn_group_combined)
+    model_irn(data_ic = data_irn_inidivuals_combined, data_gc = data_irn_group_combined)
   ),
   
   # Plot the data
   tar_target(
     plots_irn,
-    plot_irn(data_irn_inidivuals_combined, data_irn_groups_combined)
+    plot_irn(data_ic = data_irn_inidivuals_combined, data_gc = data_irn_groups_combined)
   ),
   
   # Generate report Rmd

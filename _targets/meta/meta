@@ -1,0 +1,22 @@
+name|type|data|command|depend|seed|path|time|size|bytes|format|iteration|parent|children|seconds|warnings|error
+data_irn_groups_file|stem|75a7b9e472ab84b3|a30f97404a5c5da9|c3b5fc02cdc369c1|-802154947|C:/Users/Samuel/Documents/7. Doctorat/2. Experiments/2_spodoptera_littoralis/intake_rate_experiment/1_data/data_irn_groups.csv|t18975.7021816468s|677db97696e98d71|6342|file|vector|||0||
+data_irn_individuals_file|stem|49d6012abdc8ac18|c477fb7fc3b4b4cd|c3b5fc02cdc369c1|-1069794645|C:/Users/Samuel/Documents/7. Doctorat/2. Experiments/2_spodoptera_littoralis/intake_rate_experiment/1_data/data_irn_individuals.csv|t18975.6397303968s|4da5e91c59297981|57352|file|vector|||0||
+data_irn_individuals_controls_file|stem|cfe731523e631f95|0a4496c545faeafa|c3b5fc02cdc369c1|1140122235|C:/Users/Samuel/Documents/7. Doctorat/2. Experiments/2_spodoptera_littoralis/intake_rate_experiment/1_data/data_irn_individuals_controls.csv|t18975.7020799334s|4792184db4142771|557|file|vector|||0||
+data_irn_food_controls_file|stem|abb47ab5d3efa79c|dd71a5466f81f6e3|c3b5fc02cdc369c1|-860666989|C:/Users/Samuel/Documents/7. Doctorat/2. Experiments/2_spodoptera_littoralis/intake_rate_experiment/1_data/data_irn_food_controls.csv|t18975.7017534024s|2f2d362de45b3d2d|1279|file|vector|||0||
+data_irn_groups|stem|b441015217fc173f|92583ad401b9306f|2c29950e6493c66f|1806790806||t18976.7242000286s|cee09fbecadcf749|1536|rds|vector|||0.74||
+data_irn_individuals|stem|ce4d3bbbabe8555d|7f0d885e9d57840c|0453b44b3e071211|832679305||t18976.7242100852s|a976fc77ff7d3eb3|15904|rds|vector|||0.86||
+data_irn_individuals_controls|stem|ce27a9b5213d3cb3|d5a4eed185fd1f72|bc99d1d61518c8b6|-1644559586||t18976.7242108009s|366e89b6c3e7cb42|638|rds|vector|||0.04||
+data_irn_food_controls|stem|747cdbf4c0e7fa9f|5f16a18876761242|32c1cde26a7f3bce|-983005508||t18976.7250624287s|fc24f9db8de28e8b|1237|rds|vector|||0.39||
+data_irn_inidivuals_combined|stem|05658ce44b3ab14e|04fdddd60e4005df|fbb1ee9d3cb45719|1851078751||t18976.7250656945s|25c08be506a1f356|21173|rds|vector|||0.26||
+data_irn_groups_combined|stem|b441015217fc173f|0dc2f210829b195f|d9194a1802ec54f6|-1786254687||t18976.7250659138s|cee09fbecadcf749|1536|rds|vector|||0||
+models_irn|stem|a13fe59b9f3a127a|dfc7e62197859661|b02efc97edba7b2e|291896608||t18976.7250660177s|8af1149d62b33a4b|54|rds|vector|||0||
+plots_irn|stem|31f6a1964e89bee1|a64edab2ecf9a2d3|aaa4f17a29bd35ab|1581823599||t18976.7336046358s|25edcc1f7bb1c960|85|rds|vector|||1.58|font family not found in Windows font database|
+load_individual_control_data|function|0b79331075474169||||||||||||||
+load_group_data|function|574ba76e8068353c||||||||||||||
+load_food_control_data|function|bd65b1b9bfd40c7c||||||||||||||
+combine_group_data|function|63541bb53bd97e71||||||||||||||
+plot_irn|function|edcac356a6d3c50b||||||||||||||
+combine_individual_data|function|63c84cd27f9e0947||||||||||||||
+model_irn|function|2aa51733c5932feb||||||||||||||
+load_individual_data|function|e8cc2d611e91d005||||||||||||||
+rmd_report|stem|48df022761bcc752|bcbf7449c6f27b3a|4745aa592080ea1d|-234516627|3_manuscript/irn.html*3_manuscript/irn.rmd|t18976.7466984236s|2e44e0eb6cef862f|639224|file|vector|||0.97||
