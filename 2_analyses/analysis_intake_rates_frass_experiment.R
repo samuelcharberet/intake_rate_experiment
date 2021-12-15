@@ -8,17 +8,6 @@
 data_foodcontrol <-
   readxl::read_xlsx(here::here("1_data", "data_irn_food_controls.xlsx"))
 
-
-
-
-
-
-
-
-
-
-
-
 ##########  2. Check for biases  ##########
 
 # Effect of week on bodymass at the start
