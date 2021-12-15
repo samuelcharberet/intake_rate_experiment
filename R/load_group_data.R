@@ -44,9 +44,9 @@ load_group_data = function(path){
   # We define the type of each column
   
   data_irn_groups <- data_irn_groups |>
-    dplyr::mutate(across(character_columns, as.character)) |>
-    dplyr::mutate(across(factor_columns, as.factor)) |>
-    dplyr::mutate(across(numeric_columns, as.numeric))
+    dplyr::mutate(across(tidyselect::all_of(character_columns), as.character)) |>
+    dplyr::mutate(across(tidyselect::all_of(factor_columns), as.factor)) |>
+    dplyr::mutate(across(tidyselect::all_of(numeric_columns), as.numeric))
   
   return(data_irn_groups)
   

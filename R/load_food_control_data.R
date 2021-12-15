@@ -34,10 +34,21 @@ load_food_control_data = function(path){
   # We define the type of each column
   
   data_irn_food_control <- data_irn_food_control |>
-    dplyr::mutate(across(character_columns, as.character)) |>
-    dplyr::mutate(across(date_columns, ~ as.POSIXct(.x, format = "%d/%m/%Y"))) |>
-    dplyr::mutate(across(factor_columns, as.factor)) |>
-    dplyr::mutate(across(numeric_columns, as.numeric))
+    dplyr::mutate(across(tidyselect::all_of(character_columns), as.character)) |>
+    dplyr::mutate(across(tidyselect::all_of(date_columns), ~ as.POSIXct(.x, format = "%d/%m/%Y"))) |>
+    dplyr::mutate(across(tidyselect::all_of(factor_columns), as.factor)) |>
+    dplyr::mutate(across(tidyselect::all_of(numeric_columns), as.numeric))
+  
+  ##### Food water content #####
+  
+  data_irn_food_control$food_ww = data_irn_food_control$ww_filled_tube_food_control_mass -
+    data_irn_food_control$empty_tube_food_control_mass
+  
+  data_irn_food_control$food_dw = data_irn_food_control$dw_filled_tube_food_control_mass -
+    data_irn_food_control$empty_tube_food_control_mass
+  
+  data_irn_food_control$food_water_content = (data_irn_food_control$food_ww - data_irn_food_control$food_dw) /
+    data_irn_food_control$food_ww
   
   return(data_irn_food_control)
 }

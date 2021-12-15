@@ -15,14 +15,14 @@ load_individual_control_data = function(path) {
   
   factor_columns = c("indiv_ID")
   
-  numeric_columns = c("bodymass_7th_instar_j0_ww ", "bodymass_7th_instar_j0_dw", "indiv_water_content")
+  numeric_columns = c("bodymass_7th_instar_j0_ww", "bodymass_7th_instar_j0_dw", "indiv_water_content")
   
   # We define the type of each column
   
   data_irn_individuals_controls <- data_irn_individuals_controls |>
-    dplyr::mutate(across(date_columns, ~ as.POSIXct(.x, format = "%d/%m/%Y"))) |>
-    dplyr::mutate(across(factor_columns, as.factor)) |>
-    dplyr::mutate(across(numeric_columns, as.numeric))
+    dplyr::mutate(across(tidyselect::all_of(date_columns), ~ as.POSIXct(.x, format = "%d/%m/%Y"))) |>
+    dplyr::mutate(across(tidyselect::all_of(factor_columns), as.factor)) |>
+    dplyr::mutate(across(tidyselect::all_of(numeric_columns), as.numeric))
   
   return(data_irn_individuals_controls)
 }

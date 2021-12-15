@@ -61,10 +61,10 @@ load_individual_data = function(path) {
   # We define the type of each column
   
   data_irn_individuals <- data_irn_individuals |>
-    dplyr::mutate(across(character_columns, as.character)) |>
-    dplyr::mutate(across(date_columns, ~ as.POSIXct(.x, format = "%d/%m/%Y"))) |>
-    dplyr::mutate(across(factor_columns, as.factor)) |>
-    dplyr::mutate(across(numeric_columns, as.numeric))
+    dplyr::mutate(across(tidyselect::all_of(character_columns), as.character)) |>
+    dplyr::mutate(across(tidyselect::all_of(date_columns), ~ as.POSIXct(.x, format = "%d/%m/%Y"))) |>
+    dplyr::mutate(across(tidyselect::all_of(factor_columns), as.factor)) |>
+    dplyr::mutate(across(tidyselect::all_of(numeric_columns), as.numeric))
   
   # Removing individuals that underwent experimental errors
   
