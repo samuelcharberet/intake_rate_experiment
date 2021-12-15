@@ -38,47 +38,48 @@ list(
   # load individual data file
   tar_target(
     data_irn_individuals,
-    load_individual_data(data_irn_individuals_file)
+    load_individual_data(path = data_irn_individuals_file)
   ),
   # load group data file
-  tar_target(
-    data_irn_groups,
-    load_group_data(data_irn_groups_file)
-  ),
+  tar_target(data_irn_groups,
+             load_group_data(path = data_irn_groups_file)),
   # load food control data file
   tar_target(
     data_irn_food_controls,
-  load_food_controle(data_irn_food_controls_file)
+    load_food_controle(path = data_irn_food_controls_file)
   ),
-  # define individual control data file
+  # load individual control data file
   tar_target(
     data_irn_individuals_controls,
-    load_individual_control_data(data_irn_individuals_controls_file)
+    load_individual_control_data(path = data_irn_individuals_controls_file)
   ),
-  # merge individual data
+  # Combine individual data
   tar_target(
     data_irn_inidivuals_combined,
     combine_individual_data(
-      load_food_control_data,
-      load_individual_control_data,
-      load_individual_data
+      data_fc = data_irn_food_controls,
+      data_ic = data_irn_individuals_controls,
+      data_i = data_irn_individuals
     )
   ),
-  # merge individual data
+  # Combine groups data
   tar_target(
     data_irn_groups_combined,
-    combine_groups_data(
-      data_irn_inidivuals_combined,
-      load_gro
-      load_food_control_data,
-      load_individual_control_data,
-      load_individual_data
-    )
+    combine_groups_data(data_irn_inidivuals_combined,
+                        data_irn_groups)
   ),
-  # model the data
-  tar_target(models_irn, model(data_irn)),
-  # plot the data
-  tar_target(plots_irn, plot(data_irn)),
-  # generate report Rmd
+  # Model the data
+  tar_target(
+    models_irn,
+    model_irn(data_irn_inidivuals_combined, data_irn_groups_combined)
+  ),
+  
+  # Plot the data
+  tar_target(
+    plots_irn,
+    plot_irn(data_irn_inidivuals_combined, data_irn_groups_combined)
+  ),
+  
+  # Generate report Rmd
   tarchetypes::tar_render(rmd_report, "3_manuscript/irn.rmd")
 )
