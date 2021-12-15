@@ -19,3 +19,10 @@ data_irn_inidivuals_combined <-
   combine_individual_data(data_fc = data_irn_food_control,
                           data_ic = data_irn_individuals_controls,
                           data_i = data_irn_individuals)
+
+data_irn_group_combined <- combine_groups_data(data_irn_inidivuals_combined,
+                                               data_irn_groups)
+
+model <- model_irn(data_irn_inidivuals_combined, data_irn_group_combined)
+
+plot_irn(data_irn_inidivuals_combined, data_irn_group_combined)

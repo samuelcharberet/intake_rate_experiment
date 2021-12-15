@@ -11,9 +11,8 @@ data_foodcontrol <-
 ##########  2. Check for biases  ##########
 
 # Effect of week on bodymass at the start
-
-boxplot(data = data_intake, bodymass_7th_instar_j0_ww ~ seventh_instar_date)
 summary(aov(data = data_intake, bodymass_7th_instar_j0_ww ~ seventh_instar_date)) # There is an effect of week on bodymass at the start
+
 
 # Effect of intake on sex
 list_food_intakes = unique(data_intake$food_provided_ww)
@@ -27,6 +26,33 @@ for (i in 1:nrow(data_sex)) {
     length(which(is.na(data_intake[rows_intake, "sex"]) == F))
 }
 
+###### Treatment growth curve ######
+
+jpeg(here::here("4_outputs", "bm_imago_dw_&_food_provided_ww.jpg"), width = 350, height = "350")
+
+data_growth_summary$food_provided_ww = as.factor(data_growth_summary$food_provided_ww)
+p = ggplot2::ggplot(
+  data_growth_summary,
+  aes(
+    x = day,
+    y = average_bodymass,
+    group = food_provided_ww,
+    color = food_provided_ww
+  )
+) +
+  geom_line() +
+  geom_errorbar(
+    aes(ymin = average_bodymass - sd_bodymass, ymax = average_bodymass + sd_bodymass),
+    width = 0.2,
+    position = position_dodge(0.1)
+  ) +  geom_point()
+
+# Finished line plot
+p + labs(title = "Growth curve of S. littoralis according to provided food mass", x = "Day of 7th instar", y = "Bodymass (mg)") +
+  theme_classic() +
+  scale_x_discrete(breaks = unique(data_growth_summary$day),
+                   labels = as.character(c(1:4, 17))) +
+  ggsci::scale_color_npg()
 
 
 ##########  2. Statistics  ##########

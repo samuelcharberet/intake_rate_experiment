@@ -65,13 +65,13 @@ list(
   # Combine groups data
   tar_target(
     data_irn_groups_combined,
-    combine_groups_data(data_irn_inidivuals_combined,
+    combine_group_data(data_irn_inidivuals_combined,
                         data_irn_groups)
   ),
   # Model the data
   tar_target(
     models_irn,
-    model_irn(data_irn_inidivuals_combined, data_irn_groups_combined)
+    model_irn(data_irn_inidivuals_combined, data_irn_group_combined)
   ),
   
   # Plot the data
