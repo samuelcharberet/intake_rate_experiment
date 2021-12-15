@@ -12,55 +12,12 @@ data_foodcontrol <-
 
 
 
-##### Food provided in dw #####
-
-data_intake$food_provided_dw = NA
-
-for (i in 1:nrow(data_intake)) {
-  seventh_instar_date = data_intake$seventh_instar_date[i]
-  week_dates = c(
-    seventh_instar_date,
-    seventh_instar_date + 24 * 60 * 60,
-    seventh_instar_date + 2 * 24 * 60 * 60
-  )
-  week_indexes = which(data_foodcontrol$date == week_dates)
-  data_intake$food_provided_dw[i] = as.numeric(as.character((data_intake$food_provided_ww[i]))) *
-    (1 - mean(data_foodcontrol$food_water_content[week_indexes]))
-}
-
-##### Food provided complete period #####
-
-data_intake$food_provided_collection_days = data_intake$food_provided_dw *
-  data_intake$number_collection_days
-
-
-##### Food consumed complete period #####
-
-data_intake$food_mass = data_intake$filled_tube_food_mass - data_intake$empty_tube_food_mass
-data_intake$food_consumed_collection_days = NA
-for (i in 1:nrow(data_intake)) {
-  if (is.na(data_intake$food_mass[i]) == T) {
-    data_intake$food_consumed_collection_days[i] = data_intake$food_provided_collection_days[i]
-  }
-  else {
-    data_intake$food_consumed_collection_days[i] = data_intake$food_provided_collection_days[i] -
-      data_intake$food_mass[i]
-  }
-}
-
-data_intake$food_consumed_collection_days_unit = "md dw"
-
-##### Ingestion rate #####
-
-data_intake$ingestion_rate = data_intake$food_consumed_collection_days /
-  data_intake$number_collection_days
-data_intake$ingestion_rate_unit = "mg dw / day"
 
 
 
-##### Egestion - ingestion ratio #####
 
-data_intake$egestion_ingestion_ratio = data_intake$egestion_mass / data_intake$food_consumed_collection_days
+
+
 
 ##########  2. Check for biases  ##########
 
@@ -148,24 +105,7 @@ boxplot(data = data_intake, bodymass_7th_instar_j3_dw ~ food_provided_ww)
 boxplot(data = data_intake, bodymass_imago_dw ~ food_provided_ww)
 
 
-##### Food conversion efficiency  #####
-# We compute the food conversion efficiency for the 7th instar period without the prepupation
 
-data_intake$growth_efficiency = NA
-
-
-for (i in 1:nrow(data_intake)) {
-  seventh_instar_date = data_intake$seventh_instar_date[i]
-  week_dates = c(
-    seventh_instar_date,
-    seventh_instar_date + 24 * 60 * 60,
-    seventh_instar_date + 2 * 24 * 60 * 60
-  )
-  week_indexes = which(data_foodcontrol$date == week_dates)
-  data_intake$growth_efficiency[i] = (
-    data_intake$bodymass_before_last_collection_date[i] - data_intake$bodymass_7th_instar_j0_ww[i]
-  ) / (data_intake$food_consumed_collection_days[i] / (1 - mean(data_foodcontrol$food_water_content[week_indexes]))) # It is in fresh weight of food
-}
 
 
 ##########  3. Graphics and figures  ##########
@@ -203,7 +143,7 @@ p + labs(title = "Growth curve of S. littoralis according to provided food mass"
 # Growth efficiency according to the mass specific ingestion rate
 ggplot2::ggplot(data_intake,
        aes(x = ingestion_rate / ((
-         bodymass_before_last_collection_date + bodymass_7th_instar_j0_ww
+         bodymass_last_collection_date + bodymass_7th_instar_j0_ww
        ) / 2
        ), y = growth_efficiency)) +
   geom_point(size = 3) +
@@ -217,7 +157,7 @@ ggplot2::ggplot(data_intake,
 ggplot2::ggplot(
   data_intake,
   aes(x = ingestion_rate / ((
-    bodymass_before_last_collection_date + bodymass_7th_instar_j0_ww
+    bodymass_last_collection_date + bodymass_7th_instar_j0_ww
   ) / 2
   ), y = egestion_ingestion_ratio)
 ) +
