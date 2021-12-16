@@ -29,8 +29,7 @@ plot_irn <- function(data_ic, data_gc){
   
   # Growth efficiency according to the mass specific ingestion rate
   
-  pdf(here::here("4_outputs", "ge_&_msir.pdf"), width = 11, height = 8.5)
-  
+
   p <- ggplot2::ggplot(data_ic,
                   aes(x = ingestion_rate / ((
                     bodymass_last_collection_date + bodymass_7th_instar_j0_ww
@@ -40,8 +39,16 @@ plot_irn <- function(data_ic, data_gc){
     hrbrthemes::theme_ipsum() + 
     labs(x = "Mass specific ingestion rate (mg dw/day / mg ww indiv)", y = "Growth efficiency (mg ww body / mg dw food)")+
     geom_smooth(color="steelblue3")
-  print(p)
-  dev.off()
+
+  ggsave(
+    filename = "ge_&_msir.pdf",
+    plot = p,
+    device = "pdf",
+    path = here::here("4_outputs"),
+    scale = 1,
+    width = 11,
+    height = 8.5,
+    units = "in")
   
   ###### Egestion ingestion ratio according to mass specific ingestion rate ######
   
