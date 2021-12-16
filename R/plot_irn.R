@@ -9,16 +9,16 @@ plot_irn <- function(data_ic, data_gc){
 
   # Effect of week on bodymass at the start
   jpeg(here::here("4_outputs", "bm_j0_ww_&_week.jpeg"), width = 500, height = 350)
-  boxplot(data = data_ic, bodymass_7th_instar_j0_ww ~ seventh_instar_date)
+  boxplot(data = data_ic, bodymass_7th_instar_j0_ww ~ seventh_instar_date, xlab="Date of the experiment", ylab="Bodymass at the start 7th instar (mg ww)")
   dev.off()
   
   # Dry weight bodymass at the end of the experiment according to food consumed
   jpeg(here::here("4_outputs", "bm_j3_dw_&_food_consumed.jpeg"), width = 500, height = 350)
-  plot(data_ic$bodymass_7th_instar_j3_dw ~ data_ic$food_consumed_collection_days)
+  plot(data_ic$bodymass_7th_instar_j3_dw ~ data_ic$food_consumed_collection_days, xlab="Total amount of food consumed (mg dw)", ylab="Bodymass at the end of the 7th instar (mg dw)")
   dev.off()
   
   jpeg(here::here("4_outputs", "bm_imago_dw_&_food_provided_ww.jpeg"), width = 500, height = 350)
-  boxplot(data = data_ic, bodymass_imago_dw ~ food_provided_ww)
+  plot(data_ic$bodymass_imago_dw ~ data_ic$food_consumed_collection_days, xlab="Total amount of food consumed (mg dw)", ylab="Bodymass of the imago (mg dw)")
   dev.off()
   
   ##########  3. Graphics and figures  ##########
@@ -38,7 +38,7 @@ plot_irn <- function(data_ic, data_gc){
                   ), y = growth_efficiency)) +
     geom_point(size = 3) +
     hrbrthemes::theme_ipsum() + 
-    labs(title = "Growth efficiency of S. littoralis according to mass-specific ingestion rate", x = "Mass specific ingestion rate (mg dw/day / mg ww indiv)", y = "Growth efficiency (mg ww body / mg dw food)")+
+    labs(x = "Mass specific ingestion rate (mg dw/day / mg ww indiv)", y = "Growth efficiency (mg ww body / mg dw food)")+
     geom_smooth(color="steelblue3")
   print(p)
   dev.off()
@@ -56,7 +56,7 @@ plot_irn <- function(data_ic, data_gc){
   ) +
     geom_point(size = 3) +
     hrbrthemes::theme_ipsum() + ggsci::scale_color_npg() +
-    labs(title = "Egestion / ingestion ratio according to mass specific ingestion rate", x = "Mass specific ingestion rate (mg dw/day / mg indiv)", y = "Egestion / ingestion ratio (mg dw / mg dw)") +
+    labs(x = "Mass specific ingestion rate (mg dw/day / mg indiv)", y = "Egestion / ingestion ratio (mg dw / mg dw)") +
     geom_smooth(color="steelblue3")
   print(p)
   dev.off()
