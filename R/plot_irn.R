@@ -6,19 +6,18 @@
 #' @examples
 
 plot_irn <- function(data_ic, data_gc){
-  
-  
+
   # Effect of week on bodymass at the start
-  jpeg(here::here("4_outputs", "bm_j0_ww_&_week.jpg"), width = 500, height = 350)
+  jpeg(here::here("4_outputs", "bm_j0_ww_&_week.jpeg"), width = 500, height = 350)
   boxplot(data = data_ic, bodymass_7th_instar_j0_ww ~ seventh_instar_date)
   dev.off()
   
   # Dry weight bodymass at the end of the experiment according to food consumed
-  jpeg(here::here("4_outputs", "bm_j3_dw_&_food_consumed.jpg"), width = 500, height = 350)
+  jpeg(here::here("4_outputs", "bm_j3_dw_&_food_consumed.jpeg"), width = 500, height = 350)
   plot(data_ic$bodymass_7th_instar_j3_dw ~ data_ic$food_consumed_collection_days)
   dev.off()
   
-  jpeg(here::here("4_outputs", "bm_imago_dw_&_food_provided_ww.jpg"), width = 500, height = 350)
+  jpeg(here::here("4_outputs", "bm_imago_dw_&_food_provided_ww.jpeg"), width = 500, height = 350)
   boxplot(data = data_ic, bodymass_imago_dw ~ food_provided_ww)
   dev.off()
   
@@ -30,7 +29,7 @@ plot_irn <- function(data_ic, data_gc){
   
   # Growth efficiency according to the mass specific ingestion rate
   
-  jpeg(here::here("4_outputs", "ge_&_msir.jpg"), width = 350, height = 350)
+  jpeg(here::here("4_outputs", "ge_&_msir.jpeg"), width = 360, height = 350)
   
   p <- ggplot2::ggplot(data_ic,
                   aes(x = ingestion_rate / ((
@@ -46,7 +45,7 @@ plot_irn <- function(data_ic, data_gc){
   
   ###### Egestion ingestion ratio according to mass specific ingestion rate ######
   
-  jpeg(here::here("4_outputs", "eir_&_msir.jpg"), width = 350, height = 350)
+  jpeg(here::here("4_outputs", "eir_&_msir.jpeg"), width = 350, height = 350)
   
   p <- ggplot2::ggplot(
     data_ic,
