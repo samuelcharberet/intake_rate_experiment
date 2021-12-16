@@ -8,16 +8,16 @@
 plot_irn <- function(data_ic, data_gc){
 
   # Effect of week on bodymass at the start
-  pdf(here::here("4_outputs", "bm_j0_ww_&_week.pdf"), width = 11, height = 8.5)
+  pdf(here::here("4_outputs", "bm_j0_ww_&_week.pdf"), width = 6, height = 4)
   boxplot(data = data_ic, bodymass_7th_instar_j0_ww ~ seventh_instar_date, xlab="Date of the experiment", ylab="Bodymass at the start 7th instar (mg ww)")
   dev.off()
   
   # Dry weight bodymass at the end of the experiment according to food consumed
-  pdf(here::here("4_outputs", "bm_j3_dw_&_food_consumed.pdf"), width = 11, height = 8.5)
+  pdf(here::here("4_outputs", "bm_j3_dw_&_food_consumed.pdf"), width = 6, height = 4)
   plot(data_ic$bodymass_7th_instar_j3_dw ~ data_ic$food_consumed_collection_days, xlab="Total amount of food consumed (mg dw)", ylab="Bodymass at the end of the 7th instar (mg dw)")
   dev.off()
   
-  pdf(here::here("4_outputs", "bm_imago_dw_&_food_provided_ww.pdf"), width = 11, height = 8.5)
+  pdf(here::here("4_outputs", "bm_imago_dw_&_food_provided_ww.pdf"), width = 6, height = 4)
   plot(data_ic$bodymass_imago_dw ~ data_ic$food_consumed_collection_days, xlab="Total amount of food consumed (mg dw)", ylab="Bodymass of the imago (mg dw)")
   dev.off()
   
@@ -28,8 +28,6 @@ plot_irn <- function(data_ic, data_gc){
   ###### Growth efficiency ######
   
   # Growth efficiency according to the mass specific ingestion rate
-  
-  extrafont::loadfonts()
   
   p <- ggplot2::ggplot(data_ic,
                   aes(x = ingestion_rate / ((
@@ -47,13 +45,13 @@ plot_irn <- function(data_ic, data_gc){
     device = "pdf",
     path = here::here("4_outputs"),
     scale = 1,
-    width = 11,
-    height = 8.5,
+    width = 6,
+    height = 4,
     units = "in")
   
   ###### Egestion ingestion ratio according to mass specific ingestion rate ######
   
-  pdf(here::here("4_outputs", "eir_&_msir.pdf"), width = 11, height = 8.5)
+  pdf(here::here("4_outputs", "eir_&_msir.pdf"), width = 6, height = 4)
   
   p <- ggplot2::ggplot(
     data_ic,

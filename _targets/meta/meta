@@ -15,8 +15,8 @@ load_individual_control_data|function|0b79331075474169||||||||||||||
 load_group_data|function|574ba76e8068353c||||||||||||||
 load_food_control_data|function|bd65b1b9bfd40c7c||||||||||||||
 combine_group_data|function|63541bb53bd97e71||||||||||||||
-plot_irn|function|eaaf59b9c82688a4||||||||||||||
+plot_irn|function|d0a9298a6bafe617||||||||||||||
 combine_individual_data|function|63c84cd27f9e0947||||||||||||||
 model_irn|function|2aa51733c5932feb||||||||||||||
 load_individual_data|function|e8cc2d611e91d005||||||||||||||
-plots_irn|stem|31f6a1964e89bee1|a64edab2ecf9a2d3|1e5e6849282b5cf8|1581823599||t18977.5349122085s||85|rds|vector|||0.97|font family Arial Narrow not found in PostScript font database|invalid font type
+plots_irn|stem|31f6a1964e89bee1|a64edab2ecf9a2d3|c5aa3ec30349c4af|1581823599||t18977.5621956981s|25edcc1f7bb1c960|85|rds|vector|||1.03|Removed 200 rows containing missing values geom_point.|

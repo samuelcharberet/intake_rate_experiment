@@ -68,6 +68,10 @@ load_individual_data = function(path) {
   
   # Removing individuals that underwent experimental errors
   
+  # Individual 27 has a very high egestion/ingestion ratio (0.8), which seems impossible
+  # Possibly due to tube weighing error
+  data_irn_individuals = data_irn_individuals[-which(data_irn_individuals$individual_ID == "27"),]
+  
   # Individual 38 was believed to undergo pre pupation too soon
   data_irn_individuals = data_irn_individuals[-which(data_irn_individuals$individual_ID == "38"),]
   
