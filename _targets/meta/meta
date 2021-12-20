@@ -14,9 +14,9 @@ plot_irn|function|d0a9298a6bafe617||||||||||||||
 combine_individual_data|function|63c84cd27f9e0947||||||||||||||
 model_irn|function|2aa51733c5932feb||||||||||||||
 load_individual_data|function|ce03e6ab6e2fe8ac||||||||||||||
-data_irn_individuals_file|stem|a9e489e48a1930bd|c477fb7fc3b4b4cd|c3b5fc02cdc369c1|-1069794645|C:/Users/Samuel/Documents/7. Doctorat/2. Experiments/2_spodoptera_littoralis/intake_rate_experiment/1_data/data_irn_individuals.csv|t18977.7096736694s|fb07150ddaf60396|58048|file|vector|||0||
-data_irn_individuals|stem|126464545eca8eee|7f0d885e9d57840c|4a69a4c4e7b364dc|832679305||t18977.7123509221s|475b66cd4e20972a|16164|rds|vector|||1.22||
-data_irn_inidivuals_combined|stem|9b9380cd562bab99|04fdddd60e4005df|c198aee1c5c32d33|1851078751||t18977.7123543076s|52818912a9cc5eba|21411|rds|vector|||0.25||
-data_irn_groups_combined|stem|b441015217fc173f|0dc2f210829b195f|b35529d7e7490478|-1786254687||t18977.7123544826s|cee09fbecadcf749|1536|rds|vector|||0||
-models_irn|stem|a13fe59b9f3a127a|dfc7e62197859661|984f168ca18a4472|291896608||t18977.7123545865s|8af1149d62b33a4b|54|rds|vector|||0||
-plots_irn|stem|31f6a1964e89bee1|a64edab2ecf9a2d3|d691ef2befd1aedd|1581823599||t18977.7123686107s|25edcc1f7bb1c960|85|rds|vector|||1.21|Removed 200 rows containing missing values geom_point.|
+data_irn_individuals_file|stem|40e5b93d215ad16e|c477fb7fc3b4b4cd|c3b5fc02cdc369c1|-1069794645|C:/Users/Samuel/Documents/7. Doctorat/2. Experiments/2_spodoptera_littoralis/intake_rate_experiment/1_data/data_irn_individuals.csv|t18981.6016415973s|83f5b9b6ceb70859|58760|file|vector|||0||
+data_irn_individuals|stem|1ace6d0a0cb08c20|7f0d885e9d57840c|a6f87741e0a6c950|832679305||t18981.6019267249s|6b6f8f56a7c6c4e0|16540|rds|vector|||1.18||
+data_irn_inidivuals_combined|stem|195c7ed06462bed7|04fdddd60e4005df|d0c42793fa9196ce|1851078751||t18981.6019301852s|139c2fcc542099a4|21784|rds|vector|||0.27||
+data_irn_groups_combined|stem|b441015217fc173f|0dc2f210829b195f|4d758836090b94dc|-1786254687||t18981.6019303617s|cee09fbecadcf749|1536|rds|vector|||0||
+models_irn|stem|a13fe59b9f3a127a|dfc7e62197859661|cae33b8ed9a2daac|291896608||t18981.601930454s|8af1149d62b33a4b|54|rds|vector|||0||
+plots_irn|stem|31f6a1964e89bee1|a64edab2ecf9a2d3|410636de82b047df|1581823599||t18981.6019457995s|25edcc1f7bb1c960|85|rds|vector|||1.31|Removed 200 rows containing missing values geom_point.|
