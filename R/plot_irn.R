@@ -9,7 +9,7 @@ plot_irn <- function(data_ic, data_gc){
 
   # Effect of week on bodymass at the start
   pdf(here::here("4_outputs", "bm_j0_ww_&_week.pdf"), width = 6, height = 4)
-  boxplot(data = data_ic, bodymass_7th_instar_j0_ww ~ seventh_instar_date, xlab="Date of the experiment", ylab="Bodymass at the start 7th instar (mg ww)")
+  boxplot(data = data_ic, bodymass_7th_instar_j0_ww ~ seventh_instar_date, xlab="Date of the experiment", ylab="Bodymass at the start of 7th instar (mg ww)")
   dev.off()
   
   # Dry weight bodymass at the end of the experiment according to food consumed
