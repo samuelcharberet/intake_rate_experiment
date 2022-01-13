@@ -2,6 +2,8 @@ name|type|data|command|depend|seed|path|time|size|bytes|format|iteration|parent|
 data_irn_groups|stem|b441015217fc173f|92583ad401b9306f|2c29950e6493c66f|1806790806||t18976.7242000286s|cee09fbecadcf749|1536|rds|vector|||0.74||
 rmd_report|stem|27bcb5cf61ba969b|bcbf7449c6f27b3a|4745aa592080ea1d|-234516627|3_manuscript/irn.html*3_manuscript/irn.rmd|t18976.7497968215s|eae465b58c3b396b|638344|file|vector|||0.96||
 data_irn_groups_file|stem|75a7b9e472ab84b3|a30f97404a5c5da9|c3b5fc02cdc369c1|-802154947|C:/Users/Samuel/Documents/1_PhD/4_experiments/2_spodoptera_littoralis/intake_rate_experiment/1_data/data_irn_groups.csv|t18975.7021816468s|677db97696e98d71|6342|file|vector|||0||
+data_irn_individuals_controls_file|stem|e187b3ca4a1081c7|0a4496c545faeafa|c3b5fc02cdc369c1|1140122235|C:/Users/Samuel/Documents/1_PhD/4_experiments/2_spodoptera_littoralis/intake_rate_experiment/1_data/data_irn_individuals_controls.csv|t19004.5385614414s|f720404f6006c1e3|630|file|vector|||0||
+data_irn_individuals_controls|stem|cc0febaee279e2c1|d5a4eed185fd1f72|d0ca87d07a271bb5|-1644559586||t19004.5387383814s|0a0bf5b6f0c1b4a4|668|rds|vector|||0.06||
 load_individual_control_data|function|0b79331075474169||||||||||||||
 load_group_data|function|574ba76e8068353c||||||||||||||
 load_food_control_data|function|bd65b1b9bfd40c7c||||||||||||||
@@ -10,13 +12,11 @@ plot_irn|function|7a9e1a7141345a97||||||||||||||
 combine_individual_data|function|63c84cd27f9e0947||||||||||||||
 model_irn|function|2aa51733c5932feb||||||||||||||
 load_individual_data|function|ce03e6ab6e2fe8ac||||||||||||||
-data_irn_individuals_file|stem|01b3bf68ae356655|c477fb7fc3b4b4cd|c3b5fc02cdc369c1|-1069794645|C:/Users/Samuel/Documents/1_PhD/4_experiments/2_spodoptera_littoralis/intake_rate_experiment/1_data/data_irn_individuals.csv|t19004.537708095s|6d617796ec34a96c|60023|file|vector|||0||
-data_irn_individuals_controls_file|stem|e187b3ca4a1081c7|0a4496c545faeafa|c3b5fc02cdc369c1|1140122235|C:/Users/Samuel/Documents/1_PhD/4_experiments/2_spodoptera_littoralis/intake_rate_experiment/1_data/data_irn_individuals_controls.csv|t19004.5385614414s|f720404f6006c1e3|630|file|vector|||0||
-data_irn_food_controls_file|stem|65994ef9ab6a4c59|dd71a5466f81f6e3|c3b5fc02cdc369c1|-860666989|C:/Users/Samuel/Documents/1_PhD/4_experiments/2_spodoptera_littoralis/intake_rate_experiment/1_data/data_irn_food_controls.csv|t19004.5381454275s|65c2576aa8cd9357|1311|file|vector|||0||
-data_irn_individuals|stem|3b7193422b4d6d4d|7f0d885e9d57840c|2023f3820390bf62|832679305||t19004.5387374216s|e0c5f2e66636d1bd|16841|rds|vector|||0.93||
-data_irn_individuals_controls|stem|cc0febaee279e2c1|d5a4eed185fd1f72|d0ca87d07a271bb5|-1644559586||t19004.5387383814s|0a0bf5b6f0c1b4a4|668|rds|vector|||0.06||
-data_irn_food_controls|stem|cb69eab9c3594b2f|5f16a18876761242|113e6b186aef6a20|-983005508||t19004.5387393911s|26e498ce1fbfb5bf|1267|rds|vector|||0.07||
-data_irn_inidivuals_combined|stem|3c608a004b681988|04fdddd60e4005df|8db55b32b0ea4e79|1851078751||t19004.5387429465s|b6b19b4bd922c127|22084|rds|vector|||0.3||
-data_irn_groups_combined|stem|b441015217fc173f|0dc2f210829b195f|6600c3d267e2dd4a|-1786254687||t19004.5387432624s|cee09fbecadcf749|1536|rds|vector|||0||
-models_irn|stem|a13fe59b9f3a127a|dfc7e62197859661|f222e4a4dbccf885|291896608||t19004.5387433662s|8af1149d62b33a4b|54|rds|vector|||0||
-plots_irn|stem|31f6a1964e89bee1|a64edab2ecf9a2d3|88b6f5b150f0ad1c|1581823599||t19004.538756064s|25edcc1f7bb1c960|85|rds|vector|||1.07|Removed 200 rows containing missing values geom_point.|
+data_irn_individuals_file|stem|805a4455df842576|c477fb7fc3b4b4cd|c3b5fc02cdc369c1|-1069794645|C:/Users/Samuel/Documents/1_PhD/4_experiments/2_spodoptera_littoralis/intake_rate_experiment/1_data/data_irn_individuals.csv|t19005.5480592557s|662ff22a2a28613b|60221|file|vector|||0||
+data_irn_food_controls_file|stem|db79b0d323195722|dd71a5466f81f6e3|c3b5fc02cdc369c1|-860666989|C:/Users/Samuel/Documents/1_PhD/4_experiments/2_spodoptera_littoralis/intake_rate_experiment/1_data/data_irn_food_controls.csv|t19005.5482952796s|583d5482d267d990|1317|file|vector|||0||
+data_irn_individuals|stem|6c0dfe6f9e541825|7f0d885e9d57840c|45564f74fecd44ac|832679305||t19005.5485710427s|a5bc0afba6aeaa81|16953|rds|vector|||1.28||
+data_irn_food_controls|stem|1e098c179aeba537|5f16a18876761242|4c5bcbf43c200995|-983005508||t19005.5485722435s|fddcf41c67f61060|1274|rds|vector|||0.07||
+data_irn_inidivuals_combined|stem|f36b790fc5f41402|04fdddd60e4005df|33683a1f27319f6f|1851078751||t19005.5485755459s|eb34cf2e11f474e2|22195|rds|vector|||0.27||
+data_irn_groups_combined|stem|b441015217fc173f|0dc2f210829b195f|91bcf0f589fef6f2|-1786254687||t19005.548575719s|cee09fbecadcf749|1536|rds|vector|||0||
+models_irn|stem|a13fe59b9f3a127a|dfc7e62197859661|3ba5ccdbc6d94438|291896608||t19005.5485758201s|8af1149d62b33a4b|54|rds|vector|||0||
+plots_irn|stem|31f6a1964e89bee1|a64edab2ecf9a2d3|f9ae9d4eb1a1b3d9|1581823599||t19005.5485907784s|25edcc1f7bb1c960|85|rds|vector|||1.28|Removed 200 rows containing missing values geom_point.|
