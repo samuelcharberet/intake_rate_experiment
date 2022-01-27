@@ -79,7 +79,7 @@ load_individual_data = function(path) {
   data_irn_individuals = data_irn_individuals[-which(data_irn_individuals$individual_ID == "94"),]
   
   # During week 6, individuals faced dry conditions in the climate chamber and as a results lose weight
-  week_6 = which(as.num(data_irn_individuals$individual_ID) > 201 & as.num(data_irn_individuals$individual_ID) < 240)
+  week_6 = which(as.numeric(data_irn_individuals$individual_ID) > 201 & as.numeric(data_irn_individuals$individual_ID) < 240)
   data_irn_individuals = data_irn_individuals[-week_6,]
   
   ##########  2. Filling the table  ##########
