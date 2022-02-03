@@ -24,5 +24,8 @@ load_individual_control_data = function(path) {
     dplyr::mutate(across(tidyselect::all_of(factor_columns), as.factor)) |>
     dplyr::mutate(across(tidyselect::all_of(numeric_columns), as.numeric))
   
+  data_irn_individuals_controls$indiv_water_content = 1-data_irn_individuals_controls$bodymass_7th_instar_j0_dw/data_irn_individuals_controls$bodymass_7th_instar_j0_ww
+  
+  
   return(data_irn_individuals_controls)
 }

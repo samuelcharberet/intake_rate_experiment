@@ -27,20 +27,43 @@ plot_irn <- function(data_ic, data_gc){
   
   ###### Growth efficiency ######
   
-  # Growth efficiency according to the mass specific ingestion rate
+  # Growth efficiency in fresh weight according to the mass specific ingestion rate
   
   p <- ggplot2::ggplot(data_ic,
                   aes(x = ingestion_rate / ((
                     bodymass_last_collection_date + bodymass_7th_instar_j0_ww
                   ) / 2
-                  ), y = growth_efficiency)) +
+                  ), y = growth_efficiency_fw)) +
     geom_point(size = 2) +
     labs(x = "Mass specific ingestion rate (mg dw/day / mg ww indiv)", y = "Growth efficiency (mg ww body / mg dw food)")+
     geom_smooth(color="steelblue3") +
     theme_minimal()
 
   ggsave(
-    filename = "ge_&_msir.pdf",
+    filename = "gefw_&_msir.pdf",
+    plot = p,
+    device = "pdf",
+    path = here::here("4_outputs"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in")
+  
+  # Growth efficiency in dry weight according to the mass specific ingestion rate
+  
+  
+  p <- ggplot2::ggplot(data_ic,
+                       aes(x = ingestion_rate / ((
+                         bodymass_7th_instar_j3_dw + bodymass_7th_instar_j0_ww*(1-larvae_day0_wc)
+                       ) / 2
+                       ), y = growth_efficiency_dw)) +
+    geom_point(size = 2) +
+    labs(x = "Mass specific ingestion rate (mg dw/day / mg dw indiv)", y = "Growth efficiency (mg dw body / mg dw food)")+
+    geom_smooth(color="steelblue3") +
+    theme_minimal()
+  
+  ggsave(
+    filename = "gedw_&_msir.pdf",
     plot = p,
     device = "pdf",
     path = here::here("4_outputs"),
