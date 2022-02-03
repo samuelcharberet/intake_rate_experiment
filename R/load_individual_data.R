@@ -78,6 +78,9 @@ load_individual_data = function(path) {
   # Individual 94 was a L6 instead of a L7 on the first day of the experiment
   data_irn_individuals = data_irn_individuals[-which(data_irn_individuals$individual_ID == "94"),]
   
+  # Individual 313 ate and grew very little
+  data_irn_individuals = data_irn_individuals[-which(data_irn_individuals$individual_ID == "313"),]
+  
   # During week 6, individuals faced dry conditions in the climate chamber and as a results lose weight
   week_6 = which(as.numeric(data_irn_individuals$individual_ID) >= 201 & as.numeric(data_irn_individuals$individual_ID) <= 240)
   data_irn_individuals = data_irn_individuals[-week_6,]
