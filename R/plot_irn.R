@@ -34,7 +34,7 @@ plot_irn <- function(data_ic, data_gc){
                     bodymass_last_collection_date + bodymass_7th_instar_j0_ww
                   ) / 2
                   ), y = growth_efficiency)) +
-    geom_point(size = 3) +
+    geom_point(size = 2) +
     labs(x = "Mass specific ingestion rate (mg dw/day / mg ww indiv)", y = "Growth efficiency (mg ww body / mg dw food)")+
     geom_smooth(color="steelblue3") +
     theme_minimal()
@@ -60,7 +60,7 @@ plot_irn <- function(data_ic, data_gc){
     ) / 2
     ), y = egestion_ingestion_ratio)
   ) +
-    geom_point(size = 3) +
+    geom_point(size = 2) +
     theme_minimal() + 
   labs(x = "Mass specific ingestion rate (mg dw/day / mg indiv)", y = "Egestion / ingestion ratio (mg dw / mg dw)") +
     geom_smooth(color="steelblue3")
