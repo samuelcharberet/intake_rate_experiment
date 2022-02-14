@@ -3,26 +3,20 @@
 # This script automatically create a sample code composed of several sample-specific ID
 # It also creates a table to facilitate the creation of labels to put on the samples
 
-library(readxl)
+library(readr)
 library(stringr)
 library(flextable)
 library(tibble)
 library(openxlsx)
 
 
-
-setwd(
-  "C:/Users/Samuel/Documents/7. Doctorat/2. Experiments/2. Spodoptera littoralis/4. Experiment/1. Data"
-)
-data_intake = read_xlsx(
-  "C:/Users/Samuel/Documents/7. Doctorat/2. Experiments/2. Spodoptera littoralis/4. Experiment/1. Data/data_intake_rates_frass_experiment_individuals.xlsx"
-)
+data_intake = readr::read_csv(here::here("1_data", "data_irn_individuals.csv"))
 
 ######### 1. Box codes #########
-# 400 boxes with
+# 440 boxes with
 # Treatment : T1-T5
-# Group : G1-G100
-# Individual : I1-I400
+# Group : G1-G110
+# Individual : I1-I440
 # CA (chemical analysis) ou EP (emergence percentage)
 
 # We add CA or EP in a dedicated column
@@ -83,7 +77,7 @@ for (i in c(1, 3, 5)) {
 
 write.xlsx(
   box_labels_table,
-  "C:/Users/Samuel/Documents/7. Doctorat/2. Experiments/2. Spodoptera littoralis/0. Appendix/labeling/box_labels.xlsx",
+  here::here("0_appendix", "labeling", "box_labels.xlsx"),
   sheetName = "Sheet1",
   col.names = F,
   row.names = F,
@@ -95,13 +89,13 @@ write.xlsx(
 # Date
 # Nature : egestion, food, larvae
 # Traitement : T1-T5
-# Groupe : G1-G100
-# Individu(s) : I1-I400
+# Groupe : G1-G110
+# Individu(s) : I1-I440
 
 #### 2.1 Individual egestion tubes codes ####
-# 400 tubes
+# 440 tubes
 
-# We create an egestion tube ID a box ID
+# We create an egestion tube ID
 data_intake$individual_egestion_tube_ID = NA
 
 for (i in 1:nrow(data_intake)) {
@@ -112,7 +106,11 @@ individual_egestion_tube_IDs = data.frame(data_intake$individual_egestion_tube_I
 
 write.xlsx(
   individual_egestion_tube_IDs,
-  "C:/Users/Samuel/Documents/7. Doctorat/2. Experiments/2. Spodoptera littoralis/0. Appendix/labeling/individual_egestion_tube_IDs.xlsx",
+  here::here(
+    "0_appendix",
+    "labeling",
+    "individual_egestion_tube_IDs.xlsx"
+  ),
   sheetName = "Sheet1",
   col.names = F,
   row.names = F,
@@ -152,7 +150,11 @@ for (i in c(1, 3, 5)) {
 
 write.xlsx(
   individual_egestion_tube_labels_table,
-  "C:/Users/Samuel/Documents/7. Doctorat/2. Experiments/2. Spodoptera littoralis/0. Appendix/labeling/individual_egestion_tube_labels.xlsx",
+  here::here(
+    "0_appendix",
+    "labeling",
+    "individual_egestion_tube_labels.xlsx"
+  ),
   sheetName = "Sheet1",
   col.names = F,
   row.names = F,
@@ -161,7 +163,7 @@ write.xlsx(
 )
 
 #### 2.2 Individual food tubes codes ####
-# 400 tubes
+# 440 tubes
 
 # We create a food tube ID a box ID
 data_intake$individual_food_tube_ID = NA
@@ -174,7 +176,7 @@ individual_food_tube_IDs = data.frame(data_intake$individual_food_tube_ID)
 
 write.xlsx(
   individual_food_tube_IDs,
-  "C:/Users/Samuel/Documents/7. Doctorat/2. Experiments/2. Spodoptera littoralis/0. Appendix/labeling/individual_food_tube_IDs.xlsx",
+  here::here("0_appendix", "labeling", "individual_food_tube_IDs.xlsx"),
   sheetName = "Sheet1",
   col.names = F,
   row.names = F,
@@ -213,7 +215,7 @@ for (i in c(1, 3, 5)) {
 
 write.xlsx(
   individual_food_tube_labels_table,
-  "C:/Users/Samuel/Documents/7. Doctorat/2. Experiments/2. Spodoptera littoralis/0. Appendix/labeling/individual_food_tube_labels.xlsx",
+  here::here("0_appendix", "labeling", "individual_food_tube_labels.xlsx"),
   sheetName = "Sheet1",
   col.names = F,
   row.names = F,
@@ -263,7 +265,7 @@ for (i in c(1, 3, 5)) {
 
 write.xlsx(
   larvae_tube_labels_table,
-  "C:/Users/Samuel/Documents/7. Doctorat/2. Experiments/2. Spodoptera littoralis/0. Appendix/labeling/larvae_tube_labels.xlsx",
+  here::here("0_appendix", "labeling", "larvae_tube_labels.xlsx"),
   sheetName = "Sheet1",
   col.names = F,
   row.names = F,
@@ -272,7 +274,7 @@ write.xlsx(
 )
 
 #### 2.4 Group egestion tubes codes ####
-# 100 tubes
+# 110 tubes
 
 
 # We create a group egestion tubes ID
@@ -291,7 +293,7 @@ group_egestion_tube_IDs = unique(data.frame(data_intake$group_egestion_tubes_ID)
 
 write.xlsx(
   group_egestion_tube_IDs,
-  "C:/Users/Samuel/Documents/7. Doctorat/2. Experiments/2. Spodoptera littoralis/0. Appendix/labeling/group_egestion_tube_IDs.xlsx",
+  here::here("0_appendix", "labeling", "group_egestion_tube_IDs.xlsx"),
   sheetName = "Sheet1",
   col.names = F,
   row.names = F,
@@ -315,23 +317,23 @@ for (i in 1:length(group_egestion_tubes_IDs)) {
 group_egestion_tubes_labels = c(group_egestion_tubes_labels, rep(NA, length.out = (
   4 - length(group_egestion_tubes_labels) %% 4
 )))
-group_egestion_tubes_table = matrix(
+group_egestion_tubes_labels_table = matrix(
   group_egestion_tubes_labels,
   ncol = 4,
   nrow = length(group_egestion_tubes_labels) / 4,
   byrow = T
 )
-group_egestion_tubes_table = data.frame(group_egestion_tubes_table)
+group_egestion_tubes_labels_table = data.frame(group_egestion_tubes_labels_table)
 
 for (i in c(1, 3, 5)) {
-  group_egestion_tubes_table = add_column(group_egestion_tubes_table,
+  group_egestion_tubes_labels_table = add_column(group_egestion_tubes_labels_table,
                                           X = "",
                                           .after = i)
 }
 
 write.xlsx(
-  group_egestion_tubes_table,
-  "C:/Users/Samuel/Documents/7. Doctorat/2. Experiments/2. Spodoptera littoralis/0. Appendix/labeling/group_egestion_tubes.xlsx",
+  group_egestion_tubes_labels_table,
+  here::here("0_appendix", "labeling", "group_egestion_tubes_labels.xlsx"),
   sheetName = "Sheet1",
   col.names = F,
   row.names = F,
@@ -344,10 +346,10 @@ write.xlsx(
 
 #### 3.1 Daily food control codes ####
 
-# 30 tubes
+# 33 tubes
 
 days = 1:3
-weeks = 1:10
+weeks = 1:11
 
 daily_food_control_IDs = rep(NA, 30)
 days_IDS = rep(days, 10)
@@ -367,7 +369,7 @@ daily_food_control_IDs = data.frame(daily_food_control_IDs)
 
 write.xlsx(
   daily_food_control_IDs,
-  "C:/Users/Samuel/Documents/7. Doctorat/2. Experiments/2. Spodoptera littoralis/0. Appendix/labeling/daily_food_control_IDs.xlsx",
+  here::here("0_appendix", "labeling", "daily_food_control_IDs.xlsx"),
   sheetName = "Sheet1",
   col.names = F,
   row.names = F,
@@ -405,7 +407,7 @@ for (i in c(1, 3, 5)) {
 
 write.xlsx(
   daily_food_control_table,
-  "C:/Users/Samuel/Documents/7. Doctorat/2. Experiments/2. Spodoptera littoralis/0. Appendix/labeling/daily_food_control.xlsx",
+  here::here("0_appendix", "labeling", "daily_food_control_labels.xlsx"),
   sheetName = "Sheet1",
   col.names = F,
   row.names = F,
@@ -416,7 +418,7 @@ write.xlsx(
 
 #### 3.2. Weekly food control codes ####
 
-# 10 tubes
+# 11 tubes
 
 
 weekly_food_control_IDs = rep(NA, length(weeks))
@@ -432,7 +434,7 @@ weekly_food_control_IDs = unique(data.frame(weekly_food_control_IDs))
 
 write.xlsx(
   weekly_food_control_IDs,
-  "C:/Users/Samuel/Documents/7. Doctorat/2. Experiments/2. Spodoptera littoralis/0. Appendix/labeling/weekly_food_control_IDs.xlsx",
+  here::here("0_appendix", "labeling", "weekly_food_control_IDs.xlsx"),
   sheetName = "Sheet1",
   col.names = F,
   row.names = F,
@@ -470,7 +472,7 @@ for (i in c(1, 3, 5)) {
 
 write.xlsx(
   weekly_food_control_table,
-  "C:/Users/Samuel/Documents/7. Doctorat/2. Experiments/2. Spodoptera littoralis/0. Appendix/labeling/weekly_food_control.xlsx",
+  here::here("0_appendix", "labeling", "weekly_food_control_labels.xlsx"),
   sheetName = "Sheet1",
   col.names = F,
   row.names = F,
