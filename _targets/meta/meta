@@ -4,6 +4,7 @@ data_irn_groups_file|stem|cf953363fba16677|a30f97404a5c5da9|c3b5fc02cdc369c1|-80
 data_irn_groups|stem|08577f4b2b712c6e|92583ad401b9306f|08f59a4d2853738f|1806790806||t19037.4567441556s|b0d44cd18a630b2e|1660|rds|vector|||0.29||
 data_irn_individuals_controls_file|stem|210d68218c44f273|0a4496c545faeafa|c3b5fc02cdc369c1|1140122235|C:/Users/Samuel/Documents/1_PhD/4_experiments/2_spodoptera_littoralis/intake_rate_experiment/1_data/data_irn_individuals_controls.csv|t19038.5909970287s|316489145a9a9412|1144|file|vector|||0||
 data_irn_individuals_controls|stem|9519e4b4d77dacfa|d5a4eed185fd1f72|b7921b7356025a09|-1644559586||t19038.5912705255s|9c217c730e8c4d78|1057|rds|vector|||0.06||
+data_irn_food_controls_file|stem|2417106f8b0e7f2a|dd71a5466f81f6e3|c3b5fc02cdc369c1|-860666989|C:/Users/Samuel/Documents/1_PhD/4_experiments/2_spodoptera_littoralis/intake_rate_experiment/1_data/data_irn_food_controls.csv|t19040.6500102271s|8ba61d5e79d83af4|1708|file|vector|||0||
 load_individual_control_data|function|be9a07c56b9d65b7||||||||||||||
 load_group_data|function|574ba76e8068353c||||||||||||||
 load_food_control_data|function|bd65b1b9bfd40c7c||||||||||||||
@@ -12,11 +13,10 @@ plot_irn|function|de4fa525edb4275b||||||||||||||
 combine_individual_data|function|66c2065c04eb8d8e||||||||||||||
 model_irn|function|2aa51733c5932feb||||||||||||||
 load_individual_data|function|64910e037142b7e3||||||||||||||
-data_irn_individuals_file|stem|5dba5557648683b9|c477fb7fc3b4b4cd|c3b5fc02cdc369c1|-1069794645|C:/Users/Samuel/Documents/1_PhD/4_experiments/2_spodoptera_littoralis/intake_rate_experiment/1_data/data_irn_individuals.csv|t19039.7121791468s|9733bb0c82b4942d|76061|file|vector|||0||
-data_irn_food_controls_file|stem|ac802b563c3bcbc4|dd71a5466f81f6e3|c3b5fc02cdc369c1|-860666989|C:/Users/Samuel/Documents/1_PhD/4_experiments/2_spodoptera_littoralis/intake_rate_experiment/1_data/data_irn_food_controls.csv|t19039.7123945571s|1daf0833e533ec87|1698|file|vector|||0||
-data_irn_individuals|stem|4debf2234f26f026|7f0d885e9d57840c|c3522ab5f215dfb4|832679305||t19039.7128068364s|5decdab4b02541ce|21565|rds|vector|||1.28||
-data_irn_food_controls|stem|ce423cc77eeed683|5f16a18876761242|9b9b22d71bb529a6|-983005508||t19039.7128080612s|af7cf071d55349f6|1592|rds|vector|||0.08||
-data_irn_inidivuals_combined|stem|e64629aa724e7f07|04fdddd60e4005df|b82713af52d21606|1851078751||t19039.71281441s|ade50fb0e9eed9df|30550|rds|vector|||0.54|longer object length is not a multiple of shorter object length|
-data_irn_groups_combined|stem|08577f4b2b712c6e|0dc2f210829b195f|99c6b8c3f9b5b1d2|-1786254687||t19039.7128145831s|b0d44cd18a630b2e|1660|rds|vector|||0||
-models_irn|stem|a13fe59b9f3a127a|dfc7e62197859661|c1b9b6e75d06b494|291896608||t19039.7128146755s|8af1149d62b33a4b|54|rds|vector|||0||
-plots_irn|stem|31f6a1964e89bee1|a64edab2ecf9a2d3|e56837af4ca0e25d|1581823599||t19039.7128310002s|25edcc1f7bb1c960|85|rds|vector|||1.39|Removed 80 rows containing missing values geom_point.|
+data_irn_individuals_file|stem|718b60da5feb709a|c477fb7fc3b4b4cd|c3b5fc02cdc369c1|-1069794645|C:/Users/Samuel/Documents/1_PhD/4_experiments/2_spodoptera_littoralis/intake_rate_experiment/1_data/data_irn_individuals.csv|t19040.6557449577s|93852b2d8c422e9d|76355|file|vector|||0||
+data_irn_individuals|stem|c60e0faa020e01d1|7f0d885e9d57840c|26fb5779ab60aa7f|832679305||t19040.6558055696s|bad78da92192c390|21730|rds|vector|||1||
+data_irn_food_controls|stem|9757fa83a8259feb|5f16a18876761242|91ab46bd939843b6|-983005508||t19040.6558070327s|eb5c94295f379f57|1598|rds|vector|||0.09||
+data_irn_inidivuals_combined|stem|1aa4dd5c0a39cec5|04fdddd60e4005df|201b47a2831c9d5a|1851078751||t19040.6558134623s|c86f1d7f968cfd7e|30716|rds|vector|||0.54|longer object length is not a multiple of shorter object length|
+data_irn_groups_combined|stem|08577f4b2b712c6e|0dc2f210829b195f|92688088061278b8|-1786254687||t19040.6558136034s|b0d44cd18a630b2e|1660|rds|vector|||0||
+models_irn|stem|a13fe59b9f3a127a|dfc7e62197859661|8c7a33ec00277c9e|291896608||t19040.6558136958s|8af1149d62b33a4b|54|rds|vector|||0||
+plots_irn|stem|31f6a1964e89bee1|a64edab2ecf9a2d3|7f9cff05e24679ba|1581823599||t19040.6558295862s|25edcc1f7bb1c960|85|rds|vector|||1.36|Removed 80 rows containing missing values geom_point.|
