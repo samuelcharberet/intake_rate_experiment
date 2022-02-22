@@ -36,7 +36,7 @@ plot_irn <- function(data_ic, data_gc){
                   ), y = growth_efficiency_fw)) +
     geom_point(size = 2) +
     labs(x = "Mass specific ingestion rate (mg dw/day / mg ww indiv)", y = "Growth efficiency (mg ww body / mg dw food)")+
-    geom_smooth(color="steelblue3") +
+    geom_smooth(color="steelblue3", span=0.85) +
     theme_minimal()
 
   ggsave(
@@ -59,7 +59,7 @@ plot_irn <- function(data_ic, data_gc){
                        ), y = growth_efficiency_dw)) +
     geom_point(size = 2) +
     labs(x = "Mass specific ingestion rate (mg dw/day / mg dw indiv)", y = "Growth efficiency (mg dw body / mg dw food)")+
-    geom_smooth(color="steelblue3") +
+    geom_smooth(color="steelblue3", span=0.85) +
     theme_minimal()
   
   ggsave(
@@ -86,7 +86,7 @@ plot_irn <- function(data_ic, data_gc){
     geom_point(size = 2) +
     theme_minimal() + 
   labs(x = "Mass specific ingestion rate (mg dw/day / mg indiv)", y = "Egestion / ingestion ratio (mg dw / mg dw)") +
-    geom_smooth(color="steelblue3")
+    geom_smooth(color="steelblue3", span=0.85)
   print(p)
   dev.off()
   

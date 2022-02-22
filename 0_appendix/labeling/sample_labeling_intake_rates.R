@@ -224,7 +224,7 @@ write.xlsx(
 )
 
 #### 2.3 Larvae tubes codes ####
-# 100 tubes
+# 110 tubes
 
 # We create a larvae tube ID
 data_intake$larvae_tube_ID = NA
