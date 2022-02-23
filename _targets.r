@@ -67,8 +67,11 @@ list(
   # Combine groups data
   tar_target(
     data_irn_groups_combined,
-    combine_group_data(data_ic = data_irn_inidivuals_combined,
-                       data_g = data_irn_groups)
+    combine_group_data(
+      data_i = data_irn_inidivuals_combined,
+      data_ic = data_irn_inidivuals_combined,
+      data_g = data_irn_groups
+    )
   ),
   # Model the data
   tar_target(
