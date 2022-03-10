@@ -72,13 +72,28 @@ plot_irn <- function(data_ic, data_gc){
     height = 4,
     units = "in")
   
-  ###### Growth efficiency according to egestion ingestion ratio ######
+  ###### Egestion ingestion ratio according to growth efficiency in fresh weight  ######
   
-  pdf(here::here("4_outputs", "gefw_&_eir.pdf"), width = 6, height = 4)
+  pdf(here::here("4_outputs", "eir_&_gefw.pdf"), width = 6, height = 4)
   
   p <- ggplot2::ggplot(
     data_ic,
     aes(x = growth_efficiency_fw, y = egestion_ingestion_ratio)
+  ) +
+    geom_point(size = 2) +
+    theme_minimal() + 
+    labs(x = "Growth efficiency (mg fw body / mg dw food)", y = "Egestion / ingestion ratio (mg dw / mg dw)") +
+    geom_smooth(color="steelblue3", span=0.85)
+  print(p)
+  dev.off()
+  
+  ###### Egestion ingestion ratio according to growth efficiency in fresh weight  ######
+  
+  pdf(here::here("4_outputs", "eir_&_gedw.pdf"), width = 6, height = 4)
+  
+  p <- ggplot2::ggplot(
+    data_ic,
+    aes(x = growth_efficiency_dw, y = egestion_ingestion_ratio)
   ) +
     geom_point(size = 2) +
     theme_minimal() + 
