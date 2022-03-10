@@ -25,6 +25,21 @@ plot_irn <- function(data_ic, data_gc){
   data_ic$food_provided_ww = as.factor(data_ic$food_provided_ww)
   
   
+  ###### Growth efficiency according to egestion ingestion ratio ######
+  
+  pdf(here::here("4_outputs", "growth_curve.pdf"), width = 6, height = 4)
+  
+  p <- ggplot2::ggplot(
+    data_ic,
+    aes(x = body, y = egestion_ingestion_ratio)
+  ) +
+    geom_col(size = 2) +
+    theme_minimal() + 
+    labs(x = "Mass specific ingestion rate (mg dw/day / mg indiv)", y = "Egestion / ingestion ratio (mg dw / mg dw)") +
+    geom_smooth(color="steelblue3", span=0.85)
+  print(p)
+  dev.off()
+  
   ###### Growth efficiency ######
   
   # Growth efficiency in fresh weight according to the mass specific ingestion rate
@@ -71,6 +86,22 @@ plot_irn <- function(data_ic, data_gc){
     width = 6,
     height = 4,
     units = "in")
+  
+  ###### Growth efficiency according to egestion ingestion ratio ######
+  
+  pdf(here::here("4_outputs", "gefw_&_eir.pdf"), width = 6, height = 4)
+  
+  p <- ggplot2::ggplot(
+    data_ic,
+    aes(x = growth_efficiency_fw, y = egestion_ingestion_ratio)
+  ) +
+    geom_point(size = 2) +
+    theme_minimal() + 
+    labs(x = "Mass specific ingestion rate (mg dw/day / mg indiv)", y = "Egestion / ingestion ratio (mg dw / mg dw)") +
+    geom_smooth(color="steelblue3", span=0.85)
+  print(p)
+  dev.off()
+  
   
   ###### Egestion ingestion ratio according to mass specific ingestion rate ######
   
