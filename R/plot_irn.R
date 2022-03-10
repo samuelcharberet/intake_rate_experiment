@@ -82,7 +82,7 @@ plot_irn <- function(data_ic, data_gc){
   ) +
     geom_point(size = 2) +
     theme_minimal() + 
-    labs(x = "Mass specific ingestion rate (mg dw/day / mg indiv)", y = "Egestion / ingestion ratio (mg dw / mg dw)") +
+    labs(x = "Growth efficiency (mg dw body / mg dw food)", y = "Egestion / ingestion ratio (mg dw / mg dw)") +
     geom_smooth(color="steelblue3", span=0.85)
   print(p)
   dev.off()
