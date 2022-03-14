@@ -121,4 +121,20 @@ plot_irn <- function(data_ic, data_gc){
   print(p)
   dev.off()
   
+
+###### Egestion ingestion ratio according to mass specific ingestion rate ######
+
+pdf(here::here("4_outputs", "d_&_gedw.pdf"), width = 6, height = 4)
+
+p <- ggplot2::ggplot(
+  data_ic,
+  aes(x = 1-egestion_ingestion_ratio, y = growth_efficiency_dw)
+) +
+  geom_point(size = 2) +
+  theme_minimal() + 
+  labs(x = "Mass specific ingestion rate (mg dw/day / mg indiv)", y = "Egestion / ingestion ratio (mg dw / mg dw)") +
+  geom_smooth(color="steelblue3", span=0.85)
+print(p)
+dev.off()
+
 }
