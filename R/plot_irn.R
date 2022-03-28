@@ -132,7 +132,7 @@ p <- ggplot2::ggplot(
 ) +
   geom_point(size = 2) +
   theme_minimal() + 
-  labs(x = "Mass specific ingestion rate (mg dw/day / mg indiv)", y = "Egestion / ingestion ratio (mg dw / mg dw)") +
+  labs(x = "Digestibility", y = "Growth efficiency (mg dw body / mg dw food)") +
   geom_smooth(color="steelblue3", span=0.85)
 print(p)
 dev.off()
