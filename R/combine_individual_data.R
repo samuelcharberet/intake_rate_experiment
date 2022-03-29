@@ -65,12 +65,16 @@ combine_individual_data <- function(data_fc, data_ic, data_i) {
     data_i$number_collection_days
   data_i$ingestion_rate_unit = "mg dw / day"
   
+  ##### Digestion efficiency #####
+  
+  data_i$digestion_efficiency_dw = 1-(data_i$egestion_mass / data_i$food_consumed_collection_days)
+  
   
   ##### Egestion - ingestion ratio #####
   # The egestion - ingestion ratio in equal to the total mass of egestion produced 
   # divided by the total amount of food consumed over the collection days
   
-  data_i$egestion_ingestion_ratio = data_i$egestion_mass / data_i$food_consumed_collection_days
+  data_i$egestion_ingestion_ratio_dw = data_i$egestion_mass / data_i$food_consumed_collection_days
   
   ##### Day 0 larvae water content #####
   

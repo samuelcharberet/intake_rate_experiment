@@ -24,6 +24,26 @@ plot_irn <- function(data_ic, data_gc){
   ##########  3. Graphics and figures  ##########
   data_ic$food_provided_ww = as.factor(data_ic$food_provided_ww)
   
+  ###### Proportional fluxes ######
+
+  ### Digestion efficiency according to mass specific ingestion rate ###
+  
+  pdf(here::here("4_outputs", "de_&_msir.pdf"), width = 6, height = 4)
+  
+  p <- ggplot2::ggplot(
+    data_ic,
+    aes(x = ingestion_rate / ((
+      bodymass_last_collection_date + bodymass_7th_instar_j0_ww
+    ) / 2
+    ), y = digestion_efficiency_dw)
+  ) +
+    geom_point(size = 2) +
+    theme_minimal() + 
+    labs(x = "Mass specific ingestion rate (mg dw/day / mg indiv)", y = "Egestion / ingestion ratio (mg dw / mg dw)") +
+    geom_smooth(color="steelblue3", span=0.85)
+  print(p)
+  dev.off()
+  
   
   ###### Growth efficiency ######
   
@@ -78,7 +98,7 @@ plot_irn <- function(data_ic, data_gc){
   
   p <- ggplot2::ggplot(
     data_ic,
-    aes(x = growth_efficiency_fw, y = egestion_ingestion_ratio)
+    aes(x = growth_efficiency_fw, y = egestion_ingestion_ratio_dw)
   ) +
     geom_point(size = 2) +
     theme_minimal() + 
@@ -93,7 +113,7 @@ plot_irn <- function(data_ic, data_gc){
   
   p <- ggplot2::ggplot(
     data_ic,
-    aes(x = growth_efficiency_dw, y = egestion_ingestion_ratio)
+    aes(x = growth_efficiency_dw, y = egestion_ingestion_ratio_dw)
   ) +
     geom_point(size = 2) +
     theme_minimal() + 
@@ -103,32 +123,16 @@ plot_irn <- function(data_ic, data_gc){
   dev.off()
   
   
-  ###### Egestion ingestion ratio according to mass specific ingestion rate ######
-  
-  pdf(here::here("4_outputs", "eir_&_msir.pdf"), width = 6, height = 4)
-  
-  p <- ggplot2::ggplot(
-    data_ic,
-    aes(x = ingestion_rate / ((
-      bodymass_last_collection_date + bodymass_7th_instar_j0_ww
-    ) / 2
-    ), y = egestion_ingestion_ratio)
-  ) +
-    geom_point(size = 2) +
-    theme_minimal() + 
-  labs(x = "Mass specific ingestion rate (mg dw/day / mg indiv)", y = "Egestion / ingestion ratio (mg dw / mg dw)") +
-    geom_smooth(color="steelblue3", span=0.85)
-  print(p)
-  dev.off()
+
   
 
-###### Egestion ingestion ratio according to mass specific ingestion rate ######
+###### Digestibility ratio according to Growth efficiency ######
 
 pdf(here::here("4_outputs", "d_&_gedw.pdf"), width = 6, height = 4)
 
 p <- ggplot2::ggplot(
   data_ic,
-  aes(x = 1-egestion_ingestion_ratio, y = growth_efficiency_dw)
+  aes(x = 1-egestion_ingestion_ratio_dw, y = growth_efficiency_dw)
 ) +
   geom_point(size = 2) +
   theme_minimal() + 

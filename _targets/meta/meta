@@ -6,17 +6,17 @@ data_irn_food_controls_file|stem|276a64a4d3169a90|dd71a5466f81f6e3|c3b5fc02cdc36
 data_irn_food_controls|stem|d018cbfbd7f2eff7|5f16a18876761242|4742d0bf49c812d8|-983005508||t19046.7554466481s|576b153298b76121|1664|rds|vector|||0.09||
 data_irn_individuals_controls_file|stem|5884589be08a9e00|0a4496c545faeafa|c3b5fc02cdc369c1|1140122235|C:/Users/Samuel/Documents/1_PhD/4_experiments/2_spodoptera_littoralis/intake_rate_experiment/1_data/data_irn_individuals_controls.csv|t19047.7015455652s|198c5363a15b974d|1184|file|vector|||0||
 data_irn_individuals_controls|stem|f5b02686d97ef3f5|d5a4eed185fd1f72|538c9fde4e8a7ed6|-1644559586||t19047.7058570016s|56434a29cee39335|1156|rds|vector|||0.06||
+data_irn_individuals_file|stem|9cb74c05f5b4d956|c477fb7fc3b4b4cd|c3b5fc02cdc369c1|-1069794645|C:/Users/Samuel/Documents/1_PhD/4_experiments/2_spodoptera_littoralis/intake_rate_experiment/1_data/data_irn_individuals.csv|t19079.6050211033s|789eff28380aee55|79181|file|vector|||0.02||
+data_irn_individuals|stem|6870cbdb64c6d10f|7f0d885e9d57840c|977b373c672a8b6f|832679305||t19079.6058831614s|be6d6d7cf97868a3|23687|rds|vector|||1.19||
+data_irn_inidivuals_combined|stem|61055d3a84efac4c|04fdddd60e4005df|6589b14921952611|1851078751||t19080.6254483684s|6997404e833bd53b|38308|rds|vector|||0.48|longer object length is not a multiple of shorter object length|
+data_irn_groups_combined|stem|e382f2df7d273d87|693ae9b7c024931f|94ebaadf3c08d201|-1786254687||t19080.6254493963s|ba85b24b5578abd3|2144|rds|vector|||0.08||
+models_irn|stem|a13fe59b9f3a127a|dfc7e62197859661|8c67d22db7b32ac4|291896608||t19080.6254495632s|8af1149d62b33a4b|54|rds|vector|||0||
 load_individual_control_data|function|be9a07c56b9d65b7||||||||||||||
 load_group_data|function|574ba76e8068353c||||||||||||||
 load_food_control_data|function|bd65b1b9bfd40c7c||||||||||||||
 combine_group_data|function|0a06c95a82488dd8||||||||||||||
-plot_irn|function|bdfbdd05b289f9bc||||||||||||||
-combine_individual_data|function|66c2065c04eb8d8e||||||||||||||
+plot_irn|function|e06bcb6924137bb0||||||||||||||
+combine_individual_data|function|4f4d8600458dba7f||||||||||||||
 model_irn|function|2aa51733c5932feb||||||||||||||
 load_individual_data|function|64910e037142b7e3||||||||||||||
-data_irn_individuals_file|stem|9cb74c05f5b4d956|c477fb7fc3b4b4cd|c3b5fc02cdc369c1|-1069794645|C:/Users/Samuel/Documents/1_PhD/4_experiments/2_spodoptera_littoralis/intake_rate_experiment/1_data/data_irn_individuals.csv|t19079.6050211033s|789eff28380aee55|79181|file|vector|||0.02||
-data_irn_individuals|stem|6870cbdb64c6d10f|7f0d885e9d57840c|977b373c672a8b6f|832679305||t19079.6058831614s|be6d6d7cf97868a3|23687|rds|vector|||1.19||
-data_irn_inidivuals_combined|stem|c990c60924aa2b5f|04fdddd60e4005df|a935f1e815816367|1851078751||t19079.6058898574s|dcfa18b111dc10ca|35079|rds|vector|||0.53|longer object length is not a multiple of shorter object length|
-data_irn_groups_combined|stem|e382f2df7d273d87|693ae9b7c024931f|042eb0947457a18a|-1786254687||t19079.6058909099s|ba85b24b5578abd3|2144|rds|vector|||0.08||
-models_irn|stem|a13fe59b9f3a127a|dfc7e62197859661|a023ad776c611a0f|291896608||t19079.6058911532s|8af1149d62b33a4b|54|rds|vector|||0||
-plots_irn|stem|31f6a1964e89bee1|a64edab2ecf9a2d3|66c0b015d9e29cf1|1581823599||t19079.6059106513s|25edcc1f7bb1c960|85|rds|vector|||1.67|Removed 297 rows containing missing values geom_point.|
+plots_irn|stem|31f6a1964e89bee1|a64edab2ecf9a2d3|40c6de7f653609ed|1581823599||t19080.6263343182s|25edcc1f7bb1c960|85|rds|vector|||1.43|Removed 297 rows containing missing values geom_point.|
