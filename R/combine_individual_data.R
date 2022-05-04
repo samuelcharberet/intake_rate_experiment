@@ -65,7 +65,11 @@ combine_individual_data <- function(data_fc, data_ic, data_i) {
     data_i$number_collection_days
   data_i$ingestion_rate_unit = "mg dw / day"
   
-  ##### Absorption of food #####
+  ##### Absorbed mass of food #####
+  
+  data_i$absorbed_mass_dw = data_i$food_consumed_collection_days - data_i$egestion_mass
+  
+  ##### Absorption efficiency of food #####
   
   data_i$absorption_efficiency_dw = 1-(data_i$egestion_mass / data_i$food_consumed_collection_days)
   
@@ -130,13 +134,18 @@ combine_individual_data <- function(data_fc, data_ic, data_i) {
     )
     week_indexes = which(data_fc$date == week_dates)
     
-    # The growth efficiency in fresh weight is equal to fresh weight mass gains divided by fresh weight of food consumed
+    # The growth efficiency in dry weight is equal to estimated dry weight mass gains divided by dry weight of food consumed
     data_i$growth_efficiency_dw[i] = (
       data_i$bodymass_7th_instar_j3_dw[i] - data_i$bodymass_7th_instar_j0_ww[i]*(1-data_i$larvae_day0_wc[i])
     ) / (data_i$food_consumed_collection_days[i])  # It is in dry weight of food
   }
   
+  # The growth investment is the proportion of mass which was absorbed that ended up in growth
 
+    data_i$growth_investment = (
+      data_i$bodymass_7th_instar_j3_dw[i] - data_i$bodymass_7th_instar_j0_ww[i]*(1-data_i$larvae_day0_wc[i])
+    ) / (data_i$absorbed_mass_dw)  
   
+
   return(data_i)
 }
