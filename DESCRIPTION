@@ -1,12 +1,14 @@
 Package: irn
-Title: intake rate nutrients
-Version: 0.1
-Authors@R: person("Samuel", "Charberet", email = "samuelcharberet@gmail.com",
+Title: Analyse Food Limitation Data
+Version: 0.0.0.9000
+Authors@R: 
+    person("Samuel", "Charberet", email = "samuelcharberet@gmail.com",
                   role = c("aut", "cre"))
 Description: We analyze data from the intake rate and nutrient experiment on Spodoptera littoralis
-Depends: R (>= 3.1.0)
 License: Creative Commons
-Imports: 
-renv,
-dplyr,
-tidyr
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2
+Imports:
+    dplyr,
+    tidyr
