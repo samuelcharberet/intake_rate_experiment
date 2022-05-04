@@ -65,9 +65,9 @@ combine_individual_data <- function(data_fc, data_ic, data_i) {
     data_i$number_collection_days
   data_i$ingestion_rate_unit = "mg dw / day"
   
-  ##### Digestion efficiency #####
+  ##### Absorption of food #####
   
-  data_i$digestion_efficiency_dw = 1-(data_i$egestion_mass / data_i$food_consumed_collection_days)
+  data_i$absorption_efficiency_dw = 1-(data_i$egestion_mass / data_i$food_consumed_collection_days)
   
   
   ##### Egestion - ingestion ratio #####

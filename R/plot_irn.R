@@ -26,20 +26,20 @@ plot_irn <- function(data_ic, data_gc){
   
   ###### Proportional fluxes ######
 
-  ### Digestion efficiency according to mass specific ingestion rate ###
+  ### Absorption efficiency according to mass specific ingestion rate ###
   
-  pdf(here::here("4_outputs", "de_&_msir.pdf"), width = 6, height = 4)
+  pdf(here::here("4_outputs", "ae_&_msir.pdf"), width = 6, height = 4)
   
   p <- ggplot2::ggplot(
     data_ic,
     aes(x = ingestion_rate / ((
       bodymass_last_collection_date + bodymass_7th_instar_j0_ww
     ) / 2
-    ), y = digestion_efficiency_dw)
+    ), y = absorption_efficiency_dw)
   ) +
     geom_point(size = 2) +
     theme_minimal() + 
-    labs(x = "Mass specific ingestion rate (mg dw/day / mg indiv)", y = "Digestion efficiency (mg dw / mg dw)") +
+    labs(x = "Mass specific ingestion rate (mg dw/day / mg indiv)", y = "Absorption efficiency (mg dw / mg dw)") +
     geom_smooth(color="steelblue3", span=0.85)
   print(p)
   dev.off()
@@ -126,9 +126,9 @@ plot_irn <- function(data_ic, data_gc){
 
   
 
-###### Digestibility ratio according to Growth efficiency ######
+###### Absorption efficiency according to Growth efficiency ######
 
-pdf(here::here("4_outputs", "d_&_gedw.pdf"), width = 6, height = 4)
+pdf(here::here("4_outputs", "ae_&_gedw.pdf"), width = 6, height = 4)
 
 p <- ggplot2::ggplot(
   data_ic,
@@ -136,7 +136,7 @@ p <- ggplot2::ggplot(
 ) +
   geom_point(size = 2) +
   theme_minimal() + 
-  labs(x = "Digestibility", y = "Growth efficiency (mg dw body / mg dw food)") +
+  labs(x = "Absoprtion efficiency (mg dw / mg dw)", y = "Growth efficiency (mg dw body / mg dw food)") +
   geom_smooth(color="steelblue3", span=0.85)
 print(p)
 dev.off()
