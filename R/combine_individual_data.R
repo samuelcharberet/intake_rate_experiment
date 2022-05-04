@@ -143,7 +143,7 @@ combine_individual_data <- function(data_fc, data_ic, data_i) {
   # The growth investment is the proportion of mass which was absorbed that ended up in growth
 
     data_i$growth_investment = (
-      data_i$bodymass_7th_instar_j3_dw[i] - data_i$bodymass_7th_instar_j0_ww[i]*(1-data_i$larvae_day0_wc[i])
+      data_i$bodymass_7th_instar_j3_dw - data_i$bodymass_7th_instar_j0_ww*(1-data_i$larvae_day0_wc)
     ) / (data_i$absorbed_mass_dw)  
   
 
