@@ -1,29 +1,48 @@
 ---
-title: "irn"
-author: "Samuel Charberet"
-date: "12/15/2021"
-output: 
-pdf_document: default
-word_document: default
+title: "Ingestion rate affects mass and nutrient balance and allocation"
+author: "Samuel Charberet^[Sorbonne Université, CNRS, UPEC, CNRS, IRD, INRA, Institut d’écologie et des sciences de l’environnement, IEES, F-75005 Paris, France.]"
+date: "`r format(Sys.Date(), '%d %B %Y')`"
+bibliography: references/references.bib
+csl: references/vancouver.csl
+output: pdf_document
+fontsize: 12pt
+lincolor: blue
+link-citation: yes
+toc: FALSE
+
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+# chunk option defaults
+knitr::opts_chunk$set(echo=FALSE, message=FALSE)
+# packages
+library(dplyr)
+library(ggplot2)
+library(stargazer)
 ```
 
 # Introduction
 
+[@animals]
 
-```{r cars}
-summary(cars)
+# Materials and methods
+
+# Results
+
+```{r, scatterplot}
+
+#| fig.height=6
+#| fig.width=9
+#| fig.align="center"
+#| fig.caption="A Scatter Plot \\label{Scatter_plot}"
+#| dpi=300
+
+plot(1:10, 1:10)
+
 ```
 
-## Including Plots
+\autoref{Scatter_plot} visualizes the relationship
 
-You can also embed plots, for example:
+# Discussion
 
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+# References
