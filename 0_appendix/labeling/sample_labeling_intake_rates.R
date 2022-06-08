@@ -79,8 +79,8 @@ write.xlsx(
   box_labels_table,
   here::here("0_appendix", "labeling", "box_labels.xlsx"),
   sheetName = "Sheet1",
-  col.names = F,
-  row.names = F,
+  colNames = F,
+  rowNames = F,
   append = FALSE,
   overwrite = T
 )
@@ -112,8 +112,8 @@ write.xlsx(
     "individual_egestion_tube_IDs.xlsx"
   ),
   sheetName = "Sheet1",
-  col.names = F,
-  row.names = F,
+  colNames = F,
+  rowNames = F,
   append = FALSE,
   overwrite = T
 )
@@ -156,8 +156,8 @@ write.xlsx(
     "individual_egestion_tube_labels.xlsx"
   ),
   sheetName = "Sheet1",
-  col.names = F,
-  row.names = F,
+  colNames = F,
+  rowNames = F,
   append = FALSE,
   overwrite = T
 )
@@ -178,8 +178,8 @@ write.xlsx(
   individual_food_tube_IDs,
   here::here("0_appendix", "labeling", "individual_food_tube_IDs.xlsx"),
   sheetName = "Sheet1",
-  col.names = F,
-  row.names = F,
+  colNames = F,
+  rowNames = F,
   append = FALSE,
   overwrite = T
 )
@@ -217,8 +217,8 @@ write.xlsx(
   individual_food_tube_labels_table,
   here::here("0_appendix", "labeling", "individual_food_tube_labels.xlsx"),
   sheetName = "Sheet1",
-  col.names = F,
-  row.names = F,
+  colNames = F,
+  rowNames = F,
   append = FALSE,
   overwrite = T
 )
@@ -263,12 +263,24 @@ for (i in c(1, 3, 5)) {
   larvae_tube_labels_table = add_column(larvae_tube_labels_table, X = "", .after = i)
 }
 
+larvae_tube_IDs = unique(data.frame(data_intake$larvae_tube_ID))
+
 write.xlsx(
   larvae_tube_labels_table,
   here::here("0_appendix", "labeling", "larvae_tube_labels.xlsx"),
   sheetName = "Sheet1",
-  col.names = F,
-  row.names = F,
+  colNames = F,
+  rowNames = F,
+  append = FALSE,
+  overwrite = T
+)
+
+write.xlsx(
+  larvae_tube_IDs,
+  here::here("0_appendix", "labeling", "larvae_tube_IDs.xlsx"),
+  sheetName = "Sheet1",
+  colNames = F,
+  rowNames = F,
   append = FALSE,
   overwrite = T
 )
@@ -295,8 +307,8 @@ write.xlsx(
   group_egestion_tube_IDs,
   here::here("0_appendix", "labeling", "group_egestion_tube_IDs.xlsx"),
   sheetName = "Sheet1",
-  col.names = F,
-  row.names = F,
+  colNames = F,
+  rowNames = F,
   append = FALSE,
   overwrite = T
 )
@@ -327,16 +339,16 @@ group_egestion_tubes_labels_table = data.frame(group_egestion_tubes_labels_table
 
 for (i in c(1, 3, 5)) {
   group_egestion_tubes_labels_table = add_column(group_egestion_tubes_labels_table,
-                                          X = "",
-                                          .after = i)
+                                                 X = "",
+                                                 .after = i)
 }
 
 write.xlsx(
   group_egestion_tubes_labels_table,
   here::here("0_appendix", "labeling", "group_egestion_tubes_labels.xlsx"),
   sheetName = "Sheet1",
-  col.names = F,
-  row.names = F,
+  colNames = F,
+  rowNames = F,
   append = FALSE,
   overwrite = T
 )
@@ -371,8 +383,8 @@ write.xlsx(
   daily_food_control_IDs,
   here::here("0_appendix", "labeling", "daily_food_control_IDs.xlsx"),
   sheetName = "Sheet1",
-  col.names = F,
-  row.names = F,
+  colNames = F,
+  rowNames = F,
   append = FALSE,
   overwrite = T
 )
@@ -409,8 +421,8 @@ write.xlsx(
   daily_food_control_table,
   here::here("0_appendix", "labeling", "daily_food_control_labels.xlsx"),
   sheetName = "Sheet1",
-  col.names = F,
-  row.names = F,
+  colNames = F,
+  rowNames = F,
   append = FALSE,
   overwrite = T
 )
@@ -436,8 +448,8 @@ write.xlsx(
   weekly_food_control_IDs,
   here::here("0_appendix", "labeling", "weekly_food_control_IDs.xlsx"),
   sheetName = "Sheet1",
-  col.names = F,
-  row.names = F,
+  colNames = F,
+  rowNames = F,
   append = FALSE,
   overwrite = T
 )
@@ -474,8 +486,8 @@ write.xlsx(
   weekly_food_control_table,
   here::here("0_appendix", "labeling", "weekly_food_control_labels.xlsx"),
   sheetName = "Sheet1",
-  col.names = F,
-  row.names = F,
+  colNames = F,
+  rowNames = F,
   append = FALSE,
   overwrite = T
 )
