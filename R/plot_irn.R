@@ -12,7 +12,11 @@ plot_irn <- function(data_ic, data_gc) {
       text = element_text(size = 14),
       legend.position = 'right',
       aspect.ratio = 0.618,
-      panel.grid.minor = element_blank()
+      panel.grid.major = element_line(
+        color = "grey",
+        size = 0.5,
+        linetype = 1
+      )
     )
   )
   
