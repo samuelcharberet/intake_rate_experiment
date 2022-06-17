@@ -6,10 +6,15 @@
 #' @examples
 
 plot_irn <- function(data_ic, data_gc) {
-  
   # Set global options for the ggplot2 plots
-  theme_set(theme_classic() + theme(text = element_text(size = 14),
-                                    legend.position = 'right'))
+  theme_set(
+    theme_classic() + theme(
+      text = element_text(size = 14),
+      legend.position = 'right',
+      aspect.ratio = 1.6,
+      panel.grid.minor = element_blank()
+    )
+  )
   
   
   # Effect of week on bodymass at the start
@@ -57,7 +62,7 @@ plot_irn <- function(data_ic, data_gc) {
   ###### Proportional fluxes ######
   
   ### Absorption efficiency according to mass specific ingestion rate ###
-
+  
   
   p <- ggplot2::ggplot(data_ic,
                        aes(x = ingestion_rate_fw / ((bodymass_last_collection_date + bodymass_7th_instar_j0_fw) / 2
@@ -65,7 +70,7 @@ plot_irn <- function(data_ic, data_gc) {
     geom_point(size = 2) +
     labs(x = "Mass specific ingestion rate (mg fw/day / mg fw indiv)", y = "Absorption efficiency (mg dw / mg dw)") +
     geom_smooth(color = "steelblue3", span = 0.85)
-
+  
   ggsave(
     filename = "aedw_&_msirfw.pdf",
     plot = p,
@@ -126,9 +131,7 @@ plot_irn <- function(data_ic, data_gc) {
   
   
   p <- ggplot2::ggplot(data_ic,
-                       aes(x = ingestion_rate_fw / ((
-                         bodymass_7th_instar_j3_fw + bodymass_7th_instar_j0_fw
-                       ) / 2
+                       aes(x = ingestion_rate_fw / ((bodymass_7th_instar_j3_fw + bodymass_7th_instar_j0_fw) / 2
                        ), y = growth_rate)) +
     geom_point(size = 2) +
     labs(x = "Mass specific ingestion rate (mg fw/day / mg fw indiv)", y = "Growth rate (mg fw body / day") +
@@ -167,7 +170,7 @@ plot_irn <- function(data_ic, data_gc) {
   
   ###### Growth investment according to mass specific amount absorbed  ######
   
-
+  
   p <- ggplot2::ggplot(data_ic,
                        aes(x = absorbed_mass_dw / ((
                          bodymass_7th_instar_j3_dw + bodymass_7th_instar_j0_fw * (1 - larvae_day0_wc)
