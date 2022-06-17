@@ -24,9 +24,9 @@ load_food_control_data = function(path){
   )
   numeric_columns = c(
     "empty_tube_food_control_mass",
-    "ww_filled_tube_food_control_mass",
+    "fw_filled_tube_food_control_mass",
     "dw_filled_tube_food_control_mass",
-    "food_ww",
+    "food_fw",
     "food_dw",
     "food_water_content"
   )
@@ -41,14 +41,14 @@ load_food_control_data = function(path){
   
   ##### Food water content #####
   
-  data_irn_food_control$food_ww = data_irn_food_control$ww_filled_tube_food_control_mass -
+  data_irn_food_control$food_fw = data_irn_food_control$fw_filled_tube_food_control_mass -
     data_irn_food_control$empty_tube_food_control_mass
   
   data_irn_food_control$food_dw = data_irn_food_control$dw_filled_tube_food_control_mass -
     data_irn_food_control$empty_tube_food_control_mass
   
-  data_irn_food_control$food_water_content = (data_irn_food_control$food_ww - data_irn_food_control$food_dw) /
-    data_irn_food_control$food_ww
+  data_irn_food_control$food_water_content = (data_irn_food_control$food_fw - data_irn_food_control$food_dw) /
+    data_irn_food_control$food_fw
   
   return(data_irn_food_control)
 }

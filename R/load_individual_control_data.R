@@ -15,7 +15,7 @@ load_individual_control_data = function(path) {
   
   factor_columns = c("indiv_ID")
   
-  numeric_columns = c("bodymass_7th_instar_j0_ww", "bodymass_7th_instar_j0_dw", "indiv_water_content")
+  numeric_columns = c("bodymass_7th_instar_j0_fw", "bodymass_7th_instar_j0_dw", "indiv_water_content")
   
   # We define the type of each column
   
@@ -24,7 +24,7 @@ load_individual_control_data = function(path) {
     dplyr::mutate(across(tidyselect::all_of(factor_columns), as.factor)) |>
     dplyr::mutate(across(tidyselect::all_of(numeric_columns), as.numeric))
   
-  data_irn_individuals_controls$indiv_water_content = 1-data_irn_individuals_controls$bodymass_7th_instar_j0_dw/data_irn_individuals_controls$bodymass_7th_instar_j0_ww
+  data_irn_individuals_controls$indiv_water_content = 1-data_irn_individuals_controls$bodymass_7th_instar_j0_dw/data_irn_individuals_controls$bodymass_7th_instar_j0_fw
   
   
   return(data_irn_individuals_controls)

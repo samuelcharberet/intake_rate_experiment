@@ -17,7 +17,7 @@ load_individual_data = function(path) {
     "tube_egestion_mass_unit",
     "egestion_mass_unit",
     "tube_food_mass_unit",
-    "food_mass_unit",
+    "remaining_food_mass_dw_unit",
     "reason"
   )
   date_columns = c(
@@ -40,21 +40,21 @@ load_individual_data = function(path) {
     "individual_removed"
   )
   numeric_columns = c(
-    "food_provided_ww",
-    "bodymass_7th_instar_j0_ww",
-    "bodymass_7th_instar_j1_ww",
-    "bodymass_7th_instar_j2_ww",
-    "bodymass_7th_instar_j3_ww",
+    "food_provided_fw",
+    "bodymass_7th_instar_j0_fw",
+    "bodymass_7th_instar_j1_fw",
+    "bodymass_7th_instar_j2_fw",
+    "bodymass_7th_instar_j3_fw",
     "bodymass_7th_instar_j3_dw",
-    "bodymass_7th_instar_j16_ww",
-    "bodymass_imago_ww",
+    "bodymass_7th_instar_j16_fw",
+    "bodymass_imago_fw",
     "bodymass_imago_dw",
     "empty_tube_egestion_mass",
     "filled_tube_egestion_mass",
     "egestion_mass",
     "empty_tube_food_mass",
     "filled_tube_food_mass",
-    "food_mass",
+    "remaining_food_mass_dw",
     "number_collection_days"
   )
   
@@ -82,6 +82,7 @@ load_individual_data = function(path) {
   data_irn_individuals = data_irn_individuals[-which(data_irn_individuals$individual_ID == "313"),]
   
   # During week 6, individuals faced dry conditions in the climate chamber and as a results lose weight
+  # We therefore remove them from the study
   week_6 = which(as.numeric(data_irn_individuals$individual_ID) >= 201 & as.numeric(data_irn_individuals$individual_ID) <= 240)
   data_irn_individuals = data_irn_individuals[-week_6,]
   
@@ -136,13 +137,13 @@ load_individual_data = function(path) {
   
   
   data_irn_individuals$growth_rate = (
-    data_irn_individuals$bodymass_last_collection_date - data_irn_individuals$bodymass_7th_instar_j0_ww
+    data_irn_individuals$bodymass_last_collection_date - data_irn_individuals$bodymass_7th_instar_j0_fw
   ) / data_irn_individuals$number_collection_days
-  data_irn_individuals$growth_rate_unit = "mg_ww/day"
+  data_irn_individuals$growth_rate_unit = "mg_fw/day"
   
   ##### Egested mass complete period #####
   
-  data_irn_individuals$egestion_mass = data_irn_individuals$filled_tube_egestion_mass - data_irn_individuals$empty_tube_egestion_mass
-  
-  return(data_irn_individuals)
+  data_irn_individuals$egestion_mass_dw = data_irn_individuals$filled_tube_egestion_mass - data_irn_individuals$empty_tube_egestion_mass
+
+    return(data_irn_individuals)
 }

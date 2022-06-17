@@ -1,4 +1,4 @@
-date,tube_food_control_ID,empty_tube_food_control_mass,ww_filled_tube_food_control_mass,dw_filled_tube_food_control_mass,tube_food_control_unit,food_ww,food_dw,food_water_content
+date,tube_food_control_ID,empty_tube_food_control_mass,fw_filled_tube_food_control_mass,dw_filled_tube_food_control_mass,tube_food_control_unit,food_fw,food_dw,food_water_content
 26/10/2021,FC-w1-d1,5546.1,6179.8,5703.4,mg,,,
 27/10/2021,FC-w1-d2,5560.6,6293.5,5749.3,mg,,,
 28/10/2021,FC-w1-d3,5575.5,7502.9,6069.9,mg,,,
