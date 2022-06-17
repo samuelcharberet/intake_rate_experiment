@@ -73,7 +73,7 @@ plot_irn <- function(data_ic, data_gc) {
                        aes(x = ingestion_rate_fw / ((bodymass_last_collection_date + bodymass_7th_instar_j0_fw) / 2
                        ), y = absorption_efficiency_dw)) +
     geom_point(size = 2) +
-    labs(x = "Mass specific ingestion rate (mg fw/day / mg fw indiv)", y = "Absorption efficiency (mg dw / mg dw)") +
+    labs(x = "Mass specific ingestion rate (mg fw/day / mg fw indiv)", y = "Absorption efficiency (% dw)") +
     geom_smooth(color = "steelblue3", span = 0.85)
   
   ggsave(
@@ -95,7 +95,7 @@ plot_irn <- function(data_ic, data_gc) {
                        aes(x = ingestion_rate_fw / ((bodymass_last_collection_date + bodymass_7th_instar_j0_fw) / 2
                        ), y = growth_efficiency_fw)) +
     geom_point(size = 2) +
-    labs(x = "Mass specific ingestion rate (mg fw/day / mg fw indiv)", y = "Growth efficiency (mg fw body / mg fw food)") +
+    labs(x = "Mass specific ingestion rate (mg fw/day / mg fw indiv)", y = "Growth efficiency (% fw)") +
     geom_smooth(color = "steelblue3", span = 0.85)
   
   ggsave(
@@ -118,7 +118,7 @@ plot_irn <- function(data_ic, data_gc) {
                        ) / 2
                        ), y = growth_efficiency_dw)) +
     geom_point(size = 2) +
-    labs(x = "Mass specific ingestion rate (mg dw/day / mg dw indiv)", y = "Growth efficiency (mg dw body / mg dw food)") +
+    labs(x = "Mass specific ingestion rate (mg dw/day / mg dw indiv)", y = "Growth efficiency (% dw)") +
     geom_smooth(color = "steelblue3", span = 0.85)
   
   ggsave(
@@ -139,7 +139,7 @@ plot_irn <- function(data_ic, data_gc) {
                        aes(x = ingestion_rate_fw / ((bodymass_7th_instar_j3_fw + bodymass_7th_instar_j0_fw) / 2
                        ), y = growth_rate)) +
     geom_point(size = 2) +
-    labs(x = "Mass specific ingestion rate (mg fw/day / mg fw indiv)", y = "Growth rate (mg fw body / day") +
+    labs(x = "Mass specific ingestion rate (mg fw/day / mg fw indiv)", y = "Growth rate (mg fw / day") +
     geom_smooth(color = "steelblue3", span = 0.85)
   
   ggsave(
@@ -158,7 +158,7 @@ plot_irn <- function(data_ic, data_gc) {
   p <- ggplot2::ggplot(data_ic,
                        aes(x = growth_rate, y = growth_efficiency_fw)) +
     geom_point(size = 2) +
-    labs(x = "Growth rate (mg fw / day)", y = "Growth efficiency (mg fw body / mg fw food)") +
+    labs(x = "Growth rate (mg fw / day)", y = "Growth efficiency (% fw)") +
     geom_smooth(color = "steelblue3", span = 0.85)
   
   ggsave(
@@ -182,7 +182,7 @@ plot_irn <- function(data_ic, data_gc) {
                        ) / 2
                        ), y = growth_investment_dw)) +
     geom_point(size = 2) +
-    labs(x = "Mass-specific absorbed mass (mg dw/ mg dw)", y = " Growth investment (mg dw / mg dw)") +
+    labs(x = "Mass-specific absorbed mass (% dw)", y = " Growth investment (% dw)") +
     geom_smooth(color = "steelblue3", span = 0.85)
   
   ggsave(
@@ -202,7 +202,7 @@ plot_irn <- function(data_ic, data_gc) {
   p <- ggplot2::ggplot(data_ic,
                        aes(x = absorption_efficiency_dw, y = growth_efficiency_dw)) +
     geom_point(size = 2) +
-    labs(x = "Absoprtion efficiency (mg dw / mg dw)", y = "Growth efficiency (mg dw body / mg dw food)") +
+    labs(x = "Absoprtion efficiency (% dw)", y = "Growth efficiency (% dw)") +
     geom_smooth(color = "steelblue3", span = 0.85)
   
   ggsave(
