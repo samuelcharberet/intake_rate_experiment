@@ -13,7 +13,7 @@ plot_irn <- function(data_ic, data_gc) {
       legend.position = 'right',
       aspect.ratio = 0.618,
       panel.grid.major = element_line(
-        color = "grey",
+        color = "#D3D3D3",
         size = 0.5,
         linetype = 1
       )
