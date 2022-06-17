@@ -11,7 +11,7 @@ plot_irn <- function(data_ic, data_gc) {
     theme_classic() + theme(
       text = element_text(size = 14),
       legend.position = 'right',
-      aspect.ratio = 1.6,
+      aspect.ratio = 0.618,
       panel.grid.minor = element_blank()
     )
   )
