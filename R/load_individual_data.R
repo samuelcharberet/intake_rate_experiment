@@ -15,7 +15,7 @@ load_individual_data = function(path) {
     "food_provided_unit",
     "bodymass_unit",
     "tube_egestion_mass_unit",
-    "egestion_mass_unit",
+    "egestion_mass_dw_unit",
     "tube_food_mass_unit",
     "remaining_food_mass_dw_unit",
     "reason"
@@ -51,7 +51,7 @@ load_individual_data = function(path) {
     "bodymass_imago_dw",
     "empty_tube_egestion_mass",
     "filled_tube_egestion_mass",
-    "egestion_mass",
+    "egestion_mass_dw",
     "empty_tube_food_mass",
     "filled_tube_food_mass",
     "remaining_food_mass_dw",
