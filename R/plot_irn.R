@@ -23,18 +23,22 @@ plot_irn <- function(data_ic, data_gc) {
   
   
   # Effect of week on bodymass at the start
-  pdf(
-    here::here("4_outputs", "bm_j0_fw_&_week.pdf"),
+  
+  p <- ggplot2::ggplot(data_ic,
+                       aes(x = bodymass_7th_instar_j0_fw, y = seventh_instar_date)) +
+    geom_boxplot() +
+    labs(x = "Date of the experiment", y = "Bodymass at the start of 7th instar (mg fw)")
+  
+  ggsave(
+    filename = "bm_j0_fw_&_week.pdf",
+    plot = p,
+    device = cairo_pdf,
+    path = here::here("4_outputs"),
+    scale = 1,
     width = 6,
-    height = 4
+    height = 4,
+    units = "in"
   )
-  boxplot(
-    data = data_ic,
-    bodymass_7th_instar_j0_fw ~ seventh_instar_date,
-    xlab = "Date of the experiment",
-    ylab = "Bodymass at the start of 7th instar (mg fw)"
-  )
-  dev.off()
   
   # Dry weight bodymass at the end of the experiment according to food consumed
   pdf(
