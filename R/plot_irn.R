@@ -7,7 +7,7 @@
 
 plot_irn <- function(data_ic, data_gc) {
   # Set global options for the ggplot2 plots
-  theme_set(
+  ggplot2::theme_set(
     theme_classic() + theme(
       text = element_text(size = 14),
       legend.position = 'right',
@@ -24,10 +24,15 @@ plot_irn <- function(data_ic, data_gc) {
   
   # Effect of week on bodymass at the start
   
-  p <- ggplot2::ggplot(data_ic,
-                       aes(x = bodymass_7th_instar_j0_fw, y = seventh_instar_date)) +
-    geom_boxplot() +
-    labs(x = "Date of the experiment", y = "Bodymass at the start of 7th instar (mg fw)")
+  p <- ggplot2::ggplot(
+    data_ic,
+    aes(x = seventh_instar_date ,
+        y = bodymass_7th_instar_j0_fw,
+        group = seventh_instar_date)
+  ) +
+    geom_boxplot(fill = "steelblue3") +
+    labs(x = "Date of the experiment", y = "Bodymass at the start of 7th instar (mg fw)")  +
+    theme(legend.position = "none")
   
   ggsave(
     filename = "bm_j0_fw_&_week.pdf",
@@ -41,29 +46,52 @@ plot_irn <- function(data_ic, data_gc) {
   )
   
   # Dry weight bodymass at the end of the experiment according to food consumed
-  pdf(
-    here::here("4_outputs", "bm_j3_dw_&_food_consumed.pdf"),
-    width = 6,
-    height = 4
-  )
-  plot(
-    data_ic$bodymass_7th_instar_j3_dw ~ data_ic$food_consumed_collection_days_dw,
-    xlab = "Total amount of food consumed (mg dw)",
-    ylab = "Bodymass at the end of the 7th instar (mg dw)"
-  )
-  dev.off()
   
-  pdf(
-    here::here("4_outputs", "bm_imago_dw_&_food_provided_fw.pdf"),
+  p <- ggplot2::ggplot(data_ic,
+                       aes(x = food_consumed_collection_days_dw, y = bodymass_7th_instar_j3_dw)) +
+    geom_point(size = 2) +
+    labs(x = "Total amount of food consumed (mg dw)", y = "Bodymass at the end of the 7th instar (mg dw)") +
+    geom_smooth(
+      formula = y ~ x,
+      color = "steelblue3",
+      span = 0.85,
+      method = lm
+    )
+  
+  ggsave(
+    filename = "bm_j3_dw_&_food_consumed.pdf",
+    plot = p,
+    device = cairo_pdf,
+    path = here::here("4_outputs"),
+    scale = 1,
     width = 6,
-    height = 4
+    height = 4,
+    units = "in"
   )
-  plot(
-    data_ic$bodymass_imago_dw ~ data_ic$food_consumed_collection_days_dw,
-    xlab = "Total amount of food consumed (mg dw)",
-    ylab = "Bodymass of the imago (mg dw)"
+  
+  
+  p <- ggplot2::ggplot(data_ic,
+                       aes(x = food_consumed_collection_days_dw, y = bodymass_imago_dw)) +
+    geom_point(size = 2) +
+    labs(x = "Total amount of food consumed (mg dw)", y = "Bodymass of the imago (mg dw)") +
+    geom_smooth(
+      formula = y ~ x,
+      color = "steelblue3",
+      span = 0.85,
+      method = lm
+    )
+  
+  ggsave(
+    filename = "bm_imago_dw_&_food_provided_fw.pdf",
+    plot = p,
+    device = cairo_pdf,
+    path = here::here("4_outputs"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
   )
-  dev.off()
+  
   
   ##########  3. Graphics and figures  ##########
   data_ic$food_provided_fw = as.factor(data_ic$food_provided_fw)
