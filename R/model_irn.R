@@ -4,7 +4,7 @@
 #' @export
 #'
 #' @examples
-model_irn <- function(data_ic, data_gc) {
+model_irn <- function(data_i, data_g) {
   
   return(404)
   

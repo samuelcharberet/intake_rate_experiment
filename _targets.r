@@ -57,7 +57,7 @@ list(
   ),
   # Combine individual data
   tar_target(
-    data_irn_inidivuals_combined,
+    data_irn_indivuals_combined,
     combine_individual_data(
       data_fc = data_irn_food_controls,
       data_ic = data_irn_individuals_controls,
@@ -68,21 +68,21 @@ list(
   tar_target(
     data_irn_groups_combined,
     combine_group_data(
-      data_i = data_irn_inidivuals_combined,
-      data_ic = data_irn_inidivuals_combined,
+      data_i = data_irn_indivuals_combined,
+      data_fc = data_irn_food_controls,
       data_g = data_irn_groups
     )
   ),
   # Model the data
   tar_target(
     models_irn,
-    model_irn(data_ic = data_irn_inidivuals_combined, data_gc = data_irn_group_combined)
+    model_irn(data_i = data_irn_indivuals_combined, data_g = data_irn_groups_combined)
   ),
   
   # Plot the data
   tar_target(
     plots_irn,
-    plot_irn(data_ic = data_irn_inidivuals_combined, data_gc = data_irn_groups_combined)
+    plot_irn(data_i = data_irn_indivuals_combined, data_g = data_irn_groups_combined)
   ),
   
   # Generate report Rmd

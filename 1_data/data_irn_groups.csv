@@ -1,4 +1,4 @@
-group_ID,treatment_ID,food_intake ,food_intake_unit,tube_egestion_ID,egestion_group_mass,egestion_group_mass_unit,nb_days_collection,egestion_C,egestion_N,egestion_P,egestion_K,egestion_Mg,egestion_Ca,larvae_C,larvae_N,larvae_P,larvae_K,larvae_Mg,larvae_Ca
+group_ID,treatment_ID,food_intake ,food_intake_unit,tube_egestion_ID,egestion_group_mass_dw,egestion_group_mass_dw_unit,nb_days_collection,egestion_C,egestion_N,egestion_P,egestion_K,egestion_Mg,egestion_Ca,larvae_C,larvae_N,larvae_P,larvae_K,larvae_Mg,larvae_Ca
 1,1,120,mg_fw/day/individual,E-T1-G1,,mg_dw,3,,,,,,,,,,,,
 2,1,120,mg_fw/day/individual,E-T1-G2,,mg_dw,3,,,,,,,,,,,,
 3,2,240,mg_fw/day/individual,E-T2-G3,,mg_dw,3,,,,,,,,,,,,

@@ -14,7 +14,7 @@ load_group_data = function(path){
   
   character_columns = c(
     "food_intake_unit",
-    "egestion_group_mass_unit"
+    "egestion_group_mass_dw_unit"
   )
   
   factor_columns = c(
@@ -25,7 +25,7 @@ load_group_data = function(path){
   
   numeric_columns = c(
     "food_intake ",
-    "egestion_group_mass",
+    "egestion_group_mass_dw",
     "nb_days_collection",
     "egestion_C",
     "egestion_N",

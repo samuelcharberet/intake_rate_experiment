@@ -20,9 +20,9 @@ data_irn_individuals_combined <-
                           data_ic = data_irn_individuals_controls,
                           data_i = data_irn_individuals)
 
-data_irn_group_combined <- combine_group_data(data_irn_inidivuals_combined,
-                                               data_irn_groups)
+data_irn_group_combined <- combine_group_data(data_i=data_irn_individuals_combined,
+                                               data_g=data_irn_groups, data_fc=data_irn_food_control)
 
-model <- model_irn(data_ic = data_irn_inidivuals_combined, data_gc = data_irn_group_combined)
+model <- model_irn(data_i = data_irn_inidivuals_combined, data_g = data_irn_group_combined)
 
-plot_irn(data_ic = data_irn_inidivuals_combined, data_gc = data_irn_group_combined)
+plot_irn(data_i = data_irn_individuals_combined, data_g = data_irn_group_combined)

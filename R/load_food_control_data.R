@@ -50,5 +50,11 @@ load_food_control_data = function(path){
   data_irn_food_control$food_water_content = (data_irn_food_control$food_fw - data_irn_food_control$food_dw) /
     data_irn_food_control$food_fw
   
+  data_irn_food_control$food_C = 0.5
+  data_irn_food_control$food_N = 0.1
+  data_irn_food_control$food_P = 0.05
+  
+  
+  
   return(data_irn_food_control)
 }
