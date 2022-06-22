@@ -38,7 +38,13 @@ combine_group_data <- function(data_i, data_g, data_fc) {
   
   data_g$food_C = NA
   data_g$food_N = NA 
-  data_g$food_P = NA 
+  data_g$food_P = NA
+  data_g$food_S = NA 
+  data_g$food_Na = NA 
+  data_g$food_Mg = NA 
+  data_g$food_K = NA 
+  data_g$food_Ca = NA 
+  
   
   for (i in 1:nrow(data_g)) {
     # Define the date of seventh instar
@@ -56,22 +62,40 @@ combine_group_data <- function(data_i, data_g, data_fc) {
     data_g$food_C[i] = data_fc$food_C[week_indexes[1]]
     data_g$food_N[i] = data_fc$food_N[week_indexes[1]]
     data_g$food_P[i] = data_fc$food_P[week_indexes[1]]
+    data_g$food_S[i] = data_fc$food_S[week_indexes[1]]
+    data_g$food_Na[i] = data_fc$food_Na[week_indexes[1]]
+    data_g$food_Mg[i] = data_fc$food_Mg[week_indexes[1]]
+    data_g$food_K[i] = data_fc$food_K[week_indexes[1]]
+    data_g$food_Ca[i] = data_fc$food_Ca[week_indexes[1]]
+    
     
   }
   
+  
+  # Simulate some data while waiting for the chemical analysis to be done
+  data_g$egestion_C = rnorm(nrow(data_g), 0.4, 0.04)
+  data_g$egestion_N = rnorm(nrow(data_g), 0.07, 0.007)
+  data_g$egestion_P = rnorm(nrow(data_g), 0.03, 0.003)
+  data_g$egestion_S = rnorm(nrow(data_g), 0.03, 0.003)
+  data_g$egestion_Na = rnorm(nrow(data_g), 0.03, 0.003)
+  data_g$egestion_Mg = rnorm(nrow(data_g), 0.03, 0.003)
+  data_g$egestion_K = rnorm(nrow(data_g), 0.03, 0.003)
+  data_g$egestion_Ca = rnorm(nrow(data_g), 0.03, 0.003)
+  
   # We compute the group intake rate
-  
-  
-  data_g$egestion_C = rnorm(nrow(data_g), 0.4, 0.1)
-  data_g$egestion_N = rnorm(nrow(data_g), 0.07, 0.03)
-  data_g$egestion_P = rnorm(nrow(data_g), 0.03, 0.005)
   
   data_g$group_mass_specific_intake_rate_fw = data_g$food_consumed_collection_days_fw/(data_g$number_collection_days*((data_g$groupmass_7th_instar_j0_fw+data_g$groupmass_7th_instar_j3_fw)/2))
   
-
+  # Computes the element absorption efficiency
+  
   data_g$C_absorption_efficiency_dw = 1-((data_g$egestion_C*data_g$egestion_group_mass_dw)/(data_g$food_C*data_g$food_consumed_collection_days_dw))
   data_g$N_absorption_efficiency_dw = 1-((data_g$egestion_N*data_g$egestion_group_mass_dw)/(data_g$food_N*data_g$food_consumed_collection_days_dw))
   data_g$P_absorption_efficiency_dw = 1-((data_g$egestion_P*data_g$egestion_group_mass_dw)/(data_g$food_P*data_g$food_consumed_collection_days_dw))
+  data_g$S_absorption_efficiency_dw = 1-((data_g$egestion_S*data_g$egestion_group_mass_dw)/(data_g$food_S*data_g$food_consumed_collection_days_dw))
+  data_g$Na_absorption_efficiency_dw = 1-((data_g$egestion_Na*data_g$egestion_group_mass_dw)/(data_g$food_Na*data_g$food_consumed_collection_days_dw))
+  data_g$Mg_absorption_efficiency_dw = 1-((data_g$egestion_Mg*data_g$egestion_group_mass_dw)/(data_g$food_Mg*data_g$food_consumed_collection_days_dw))
+  data_g$K_absorption_efficiency_dw = 1-((data_g$egestion_K*data_g$egestion_group_mass_dw)/(data_g$food_K*data_g$food_consumed_collection_days_dw))
+  data_g$Ca_absorption_efficiency_dw = 1-((data_g$egestion_Ca*data_g$egestion_group_mass_dw)/(data_g$food_Ca*data_g$food_consumed_collection_days_dw))
   
   
 

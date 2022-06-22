@@ -255,36 +255,41 @@ plot_irn <- function(data_i, data_g) {
     cols = c(
       "C_absorption_efficiency_dw",
       "N_absorption_efficiency_dw",
-      "P_absorption_efficiency_dw"
+      "P_absorption_efficiency_dw",
+      "S_absorption_efficiency_dw",
+      "Na_absorption_efficiency_dw",
+      "Mg_absorption_efficiency_dw",
+      "K_absorption_efficiency_dw",
+      "Ca_absorption_efficiency_dw"
     ),
     names_to = "element",
     values_to = "elemental_absorption_efficiency_dw"
   )
+  
   data_g$element = gsub('_absorption_efficiency_dw','',data_g$element)
 
-  p <- ggplot2::ggplot(
-    data_g,
+  CNP <- ggplot2::ggplot(
+    subset(data_g, data_g$element == "C" | data_g$element == "N" | data_g$element == "P") ,
     aes(
       x = group_mass_specific_intake_rate_fw,
       y = elemental_absorption_efficiency_dw,
-      colour = factor(element),
-      fill =  factor(element)
+      colour = element,
+      fill =  element
     )
   ) +
-    geom_point(size = 2,
-               show.legend = T) +
-    geom_smooth(span = 0.85,
-                show.legend = T) +
+    geom_point(size = 2
+               ) +
+    geom_smooth(span = 0.85) +
     scale_color_manual(
-      values = c("C" = "#909090", "N" = "#3050F8", "P" = "#FF8000"),
+      values = c("C" = "#C8C8C8", "N" = "#8F8FFF", "P" = "#FFA500"),
       aesthetics = c("colour","fill")) +
-    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = "Elemental absorption efficiency (%dw)")
+    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = "Elemental absorption efficiency (%dw)", fill="Element", color="Element")
   
   
   
   ggsave(
-    filename = "eaedw_&_msirfw.pdf",
-    plot = p,
+    filename = "CNPaedw_&_msirfw.pdf",
+    plot = CNP,
     device = cairo_pdf,
     path = here::here("4_outputs"),
     scale = 1,
@@ -293,6 +298,145 @@ plot_irn <- function(data_i, data_g) {
     units = "in"
   )
   
+  Na <- ggplot2::ggplot(
+    subset(data_g, data_g$element == "Na") ,
+    aes(
+      x = group_mass_specific_intake_rate_fw,
+      y = elemental_absorption_efficiency_dw,
+      colour = element,
+      fill =  element
+    )
+  ) +
+    geom_point(size = 2
+    ) +
+    geom_smooth(span = 0.85) +
+    scale_color_manual(
+      values = c("Na" = "#403EFF"),
+      aesthetics = c("colour","fill")) +
+    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = "Elemental absorption efficiency (%dw)", fill="Element", color="Element")
+  
+  ggsave(
+    filename = "Naaedw_&_msirfw.pdf",
+    plot = Na,
+    device = cairo_pdf,
+    path = here::here("4_outputs"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
+  
+  Mg <- ggplot2::ggplot(
+    subset(data_g, data_g$element == "Mg") ,
+    aes(
+      x = group_mass_specific_intake_rate_fw,
+      y = elemental_absorption_efficiency_dw,
+      colour = element,
+      fill =  element
+    )
+  ) +
+    geom_point(size = 2
+    ) +
+    geom_smooth(span = 0.85) +
+    scale_color_manual(
+      values = c("Mg" = "#5CC55C"),
+      aesthetics = c("colour","fill")) +
+    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = "Elemental absorption efficiency (%dw)", fill="Element", color="Element")
+  
+  ggsave(
+    filename = "Mgaedw_&_msirfw.pdf",
+    plot = Mg,
+    device = cairo_pdf,
+    path = here::here("4_outputs"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
+  
+  S <- ggplot2::ggplot(
+    subset(data_g, data_g$element == "S") ,
+    aes(
+      x = group_mass_specific_intake_rate_fw,
+      y = elemental_absorption_efficiency_dw,
+      colour = element,
+      fill =  element
+    )
+  ) +
+    geom_point(size = 2
+    ) +
+    geom_smooth(span = 0.85) +
+    scale_color_manual(
+      values = c("S" = "#D69F09"),
+      aesthetics = c("colour","fill")) +
+    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = "Elemental absorption efficiency (%dw)", fill="Element", color="Element")
+  
+  ggsave(
+    filename = "Saedw_&_msirfw.pdf",
+    plot = S,
+    device = cairo_pdf,
+    path = here::here("4_outputs"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
+  
+  K <- ggplot2::ggplot(
+    subset(data_g, data_g$element == "K") ,
+    aes(
+      x = group_mass_specific_intake_rate_fw,
+      y = elemental_absorption_efficiency_dw,
+      colour = element,
+      fill =  element
+    )
+  ) +
+    geom_point(size = 2
+    ) +
+    geom_smooth(span = 0.85) +
+    scale_color_manual(
+      values = c("K" = "#9B4BE1"),
+      aesthetics = c("colour","fill")) +
+    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = "Elemental absorption efficiency (%dw)", fill="Element", color="Element")
+  
+  ggsave(
+    filename = "Kaedw_&_msirfw.pdf",
+    plot = K,
+    device = cairo_pdf,
+    path = here::here("4_outputs"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
+  
+  Ca <- ggplot2::ggplot(
+    subset(data_g, data_g$element == "Ca") ,
+    aes(
+      x = group_mass_specific_intake_rate_fw,
+      y = elemental_absorption_efficiency_dw,
+      colour = element,
+      fill =  element
+    )
+  ) +
+    geom_point(size = 2
+    ) +
+    geom_smooth(span = 0.85) +
+    scale_color_manual(
+      values = c("Ca" = "#DF4F4F"),
+      aesthetics = c("colour","fill")) +
+    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = "Elemental absorption efficiency (%dw)", fill="Element", color="Element")
+  
+  ggsave(
+    filename = "Caaedw_&_msirfw.pdf",
+    plot = Ca,
+    device = cairo_pdf,
+    path = here::here("4_outputs"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
   
   
 }

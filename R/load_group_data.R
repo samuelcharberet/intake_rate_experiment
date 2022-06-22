@@ -30,14 +30,18 @@ load_group_data = function(path){
     "egestion_C",
     "egestion_N",
     "egestion_P",
-    "egestion_K",
+    "egestion_S",
+    "egestion_Na",
     "egestion_Mg",
+    "egestion_K",
     "egestion_Ca",
     "larvae_C",
     "larvae_N",
     "larvae_P",
-    "larvae_K",
+    "larvae_S",
+    "larvae_Na",
     "larvae_Mg",
+    "larvae_K",
     "larvae_Ca"
   )
   
