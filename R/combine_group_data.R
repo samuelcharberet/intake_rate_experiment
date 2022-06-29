@@ -73,14 +73,23 @@ combine_group_data <- function(data_i, data_g, data_fc) {
   
   
   # Simulate some data while waiting for the chemical analysis to be done
-  data_g$egestion_C = rnorm(nrow(data_g), 0.4, 0.04)
-  data_g$egestion_N = rnorm(nrow(data_g), 0.07, 0.007)
-  data_g$egestion_P = rnorm(nrow(data_g), 0.03, 0.003)
-  data_g$egestion_S = rnorm(nrow(data_g), 0.03, 0.003)
-  data_g$egestion_Na = rnorm(nrow(data_g), 0.03, 0.003)
-  data_g$egestion_Mg = rnorm(nrow(data_g), 0.03, 0.003)
-  data_g$egestion_K = rnorm(nrow(data_g), 0.03, 0.003)
-  data_g$egestion_Ca = rnorm(nrow(data_g), 0.03, 0.003)
+  data_g$C_egestion = rnorm(nrow(data_g), 0.4, 0.04)
+  data_g$N_egestion = rnorm(nrow(data_g), 0.07, 0.007)
+  data_g$P_egestion = rnorm(nrow(data_g), 0.03, 0.003)
+  data_g$S_egestion = rnorm(nrow(data_g), 0.03, 0.003)
+  data_g$Na_egestion = rnorm(nrow(data_g), 0.03, 0.003)
+  data_g$Mg_egestion = rnorm(nrow(data_g), 0.03, 0.003)
+  data_g$K_egestion = rnorm(nrow(data_g), 0.03, 0.003)
+  data_g$Ca_egestion = rnorm(nrow(data_g), 0.03, 0.003)
+  
+  data_g$C_larvae = rnorm(nrow(data_g), 0.4, 0.04)
+  data_g$N_larvae = rnorm(nrow(data_g), 0.07, 0.007)
+  data_g$P_larvae = rnorm(nrow(data_g), 0.03, 0.003)
+  data_g$S_larvae = rnorm(nrow(data_g), 0.03, 0.003)
+  data_g$Na_larvae = rnorm(nrow(data_g), 0.03, 0.003)
+  data_g$Mg_larvae = rnorm(nrow(data_g), 0.03, 0.003)
+  data_g$K_larvae = rnorm(nrow(data_g), 0.03, 0.003)
+  data_g$Ca_larvae = rnorm(nrow(data_g), 0.03, 0.003)
   
   # We compute the group intake rate
   
@@ -88,16 +97,49 @@ combine_group_data <- function(data_i, data_g, data_fc) {
   
   # Computes the element absorption efficiency
   
-  data_g$C_absorption_efficiency_dw = 1-((data_g$egestion_C*data_g$egestion_group_mass_dw)/(data_g$food_C*data_g$food_consumed_collection_days_dw))
-  data_g$N_absorption_efficiency_dw = 1-((data_g$egestion_N*data_g$egestion_group_mass_dw)/(data_g$food_N*data_g$food_consumed_collection_days_dw))
-  data_g$P_absorption_efficiency_dw = 1-((data_g$egestion_P*data_g$egestion_group_mass_dw)/(data_g$food_P*data_g$food_consumed_collection_days_dw))
-  data_g$S_absorption_efficiency_dw = 1-((data_g$egestion_S*data_g$egestion_group_mass_dw)/(data_g$food_S*data_g$food_consumed_collection_days_dw))
-  data_g$Na_absorption_efficiency_dw = 1-((data_g$egestion_Na*data_g$egestion_group_mass_dw)/(data_g$food_Na*data_g$food_consumed_collection_days_dw))
-  data_g$Mg_absorption_efficiency_dw = 1-((data_g$egestion_Mg*data_g$egestion_group_mass_dw)/(data_g$food_Mg*data_g$food_consumed_collection_days_dw))
-  data_g$K_absorption_efficiency_dw = 1-((data_g$egestion_K*data_g$egestion_group_mass_dw)/(data_g$food_K*data_g$food_consumed_collection_days_dw))
-  data_g$Ca_absorption_efficiency_dw = 1-((data_g$egestion_Ca*data_g$egestion_group_mass_dw)/(data_g$food_Ca*data_g$food_consumed_collection_days_dw))
+  data_g$C_absorption_efficiency_dw = 1-((data_g$C_egestion*data_g$egestion_group_mass_dw)/(data_g$food_C*data_g$food_consumed_collection_days_dw))
+  data_g$N_absorption_efficiency_dw = 1-((data_g$N_egestion*data_g$egestion_group_mass_dw)/(data_g$food_N*data_g$food_consumed_collection_days_dw))
+  data_g$P_absorption_efficiency_dw = 1-((data_g$P_egestion*data_g$egestion_group_mass_dw)/(data_g$food_P*data_g$food_consumed_collection_days_dw))
+  data_g$S_absorption_efficiency_dw = 1-((data_g$S_egestion*data_g$egestion_group_mass_dw)/(data_g$food_S*data_g$food_consumed_collection_days_dw))
+  data_g$Na_absorption_efficiency_dw = 1-((data_g$Na_egestion*data_g$egestion_group_mass_dw)/(data_g$food_Na*data_g$food_consumed_collection_days_dw))
+  data_g$Mg_absorption_efficiency_dw = 1-((data_g$Mg_egestion*data_g$egestion_group_mass_dw)/(data_g$food_Mg*data_g$food_consumed_collection_days_dw))
+  data_g$K_absorption_efficiency_dw = 1-((data_g$K_egestion*data_g$egestion_group_mass_dw)/(data_g$food_K*data_g$food_consumed_collection_days_dw))
+  data_g$Ca_absorption_efficiency_dw = 1-((data_g$Ca_egestion*data_g$egestion_group_mass_dw)/(data_g$food_Ca*data_g$food_consumed_collection_days_dw))
   
+  data_g = tidyr::pivot_longer(
+    data_g,
+    cols = c(
+      "C_absorption_efficiency_dw",
+      "N_absorption_efficiency_dw",
+      "P_absorption_efficiency_dw",
+      "S_absorption_efficiency_dw",
+      "Na_absorption_efficiency_dw",
+      "Mg_absorption_efficiency_dw",
+      "K_absorption_efficiency_dw",
+      "Ca_absorption_efficiency_dw",
+      "C_egestion",
+      "N_egestion",
+      "P_egestion",
+      "S_egestion",
+      "Na_egestion",
+      "Mg_egestion",
+      "K_egestion",
+      "Ca_egestion",
+      "C_larvae",
+      "N_larvae",
+      "P_larvae",
+      "S_larvae",
+      "Na_larvae",
+      "Mg_larvae",
+      "K_larvae",
+      "Ca_larvae"
+    ),
+    names_to = "element_matrix",
+    values_to = "elemental_value"
+  )
   
+  data_g = tidyr::separate(data_g, "element_matrix", c("element", "matrix"), sep =
+                             "_")
 
   return(data_g)
 }
