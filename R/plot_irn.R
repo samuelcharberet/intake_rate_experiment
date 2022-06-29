@@ -271,16 +271,36 @@ plot_irn <- function(data_i, data_g) {
   y_plot_names = c("eae", "ec", "lc")
   
   for (i in 1:nb_matrices) {
-    CNP[[i]] <- ggplot2::ggplot(
-      subset(
-        data_g,
+    data_matrix = subset(
+      data_g,
+      data_g$matrix == names(CNP)[i] &
+        data_g$element == "C" |
         data_g$matrix == names(CNP)[i] &
-          data_g$element == "C" |
-          data_g$matrix == names(CNP)[i] &
-          data_g$element == "N" |
-          data_g$matrix == names(CNP)[i] &
-          data_g$element == "P"
-      ) ,
+        data_g$element == "N" |
+        data_g$matrix == names(CNP)[i] &
+        data_g$element == "P"
+    )
+    
+    y_axis_coef = mean(data_matrix$elemental_value[which(data_matrix$element ==
+                                                           "C")], na.rm = T) / (mean(c(
+                                                             mean(data_matrix$elemental_value[which(data_matrix$element == "N")], na.rm = T),
+                                                             mean(data_matrix$elemental_value[which(data_matrix$element == "P")], na.rm =
+                                                                    T)
+                                                           )))
+    
+    if (names(CNP)[i] != "absorption") {
+      data_matrix$elemental_value[which(data_matrix$element ==
+                                          "N")] = data_matrix$elemental_value[which(data_matrix$element ==
+                                                                                      "N")] *
+        y_axis_coef
+      data_matrix$elemental_value[which(data_matrix$element ==
+                                          "P")] = data_matrix$elemental_value[which(data_matrix$element ==
+                                                                                      "P")] *
+        y_axis_coef
+    }
+    CNP[[i]] <- ggplot2::ggplot(
+      data_matrix
+      ,
       aes(
         x = group_mass_specific_intake_rate_fw,
         y = elemental_value,
@@ -288,6 +308,10 @@ plot_irn <- function(data_i, data_g) {
         fill =  element
       )
     ) +
+      {
+        if (names(CNP)[i] != "absorption")
+          scale_y_continuous(sec.axis = sec_axis(~ . / y_axis_coef ))
+      } +
       geom_point(size = 2) +
       geom_smooth(span = 0.85) +
       scale_color_manual(
@@ -299,7 +323,19 @@ plot_irn <- function(data_i, data_g) {
         y = y_axes[i],
         fill = "Element",
         color = "Element"
-      )
+      ) + {
+        if (names(CNP)[i] != "absorption")
+          theme(
+            axis.text.y = element_text(color = "#808080"),
+            axis.line.y = element_line(color = "#808080"),
+            axis.ticks.y = element_line(color = "#808080"),
+            axis.text.y.right = element_text(color = "#5A5ACA"),
+            axis.line.y.right = element_line(color = "#5A5ACA"),
+            axis.ticks.y.right = element_line(color = "#5A5ACA"),
+            
+          )
+      }
+    
     
     ggsave(
       filename = paste("CNP", y_plot_names[i], "dw_&_msirfw.pdf", sep = ""),
@@ -435,11 +471,11 @@ plot_irn <- function(data_i, data_g) {
         NULL,
         ncol = 2,
         nrow = 6,
-        labels = c("b.", "c.","","", "d.", "e.","", "", "", "f.", "", ""),
+        labels = c("b.", "c.", "", "", "d.", "e.", "", "", "", "f.", "", ""),
         label.y = 1.1,
         label.x = 0,
         heights = c(1, 0.05, 1, 0.05, 1, 0.1),
-        widths = c(1,1)
+        widths = c(1, 1)
       ),
       ncol = 2,
       nrow = 1,
@@ -447,7 +483,7 @@ plot_irn <- function(data_i, data_g) {
       label.x = 0,
       labels = c("a.", ""),
       heights = 1,
-      widths = c(1,1)
+      widths = c(1, 1)
     )
     
     # Annotating the complete absorption efficiency plot with axes titles
