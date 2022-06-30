@@ -310,7 +310,7 @@ plot_irn <- function(data_i, data_g) {
     ) +
       {
         if (names(CNP)[i] != "absorption")
-          scale_y_continuous(sec.axis = sec_axis(~ . / y_axis_coef ))
+          scale_y_continuous(sec.axis = sec_axis( ~ . / y_axis_coef))
       } +
       geom_point(size = 2) +
       geom_smooth(span = 0.85) +
@@ -401,6 +401,94 @@ plot_irn <- function(data_i, data_g) {
       
     }
   }
+  
+  # Making C:N and N:P plots for larvae and egestion as a function of
+  # the mass-specific intake rate
+  
+  # For the larvae
+  
+  data_larvae = subset(data_g, data_g$matrix == "larvae")
+  data_larvae = pivot_wider(data_larvae, names_from= element, values_from = elemental_value)
+  data_larvae$C_N = data_larvae$C / data_larvae$N
+  data_larvae$N_P = data_larvae$N / data_larvae$P
+  
+  p <- ggplot2::ggplot(data_larvae,
+                       aes(x = group_mass_specific_intake_rate_fw, y = C_N)) +
+    geom_point(size = 2) +
+    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = "Larvae C/N") +
+    geom_smooth(color = "steelblue3", span = 0.85)
+  
+  ggsave(
+    filename = "cnlarvae_&_grfw.pdf",
+    plot = p,
+    device = cairo_pdf,
+    path = here::here("4_outputs"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
+  
+  p <- ggplot2::ggplot(data_larvae,
+                       aes(x = group_mass_specific_intake_rate_fw, y = N_P)) +
+    geom_point(size = 2) +
+    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = "Larvae N/P") +
+    geom_smooth(color = "steelblue3", span = 0.85)
+  
+  ggsave(
+    filename = "nplarvae_&_grfw.pdf",
+    plot = p,
+    device = cairo_pdf,
+    path = here::here("4_outputs"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
+  
+  # For egestions
+  
+  data_egestion = subset(data_g, data_g$matrix == "egestion")
+  data_egestion = pivot_wider(data_egestion, names_from= element, values_from = elemental_value)
+  data_egestion$C_N = data_egestion$C / data_egestion$N
+  data_egestion$N_P = data_egestion$N / data_egestion$P
+  
+  p <- ggplot2::ggplot(data_egestion,
+                       aes(x = group_mass_specific_intake_rate_fw, y = C_N)) +
+    geom_point(size = 2) +
+    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = "Egestion C/N") +
+    geom_smooth(color = "steelblue3", span = 0.85)
+  
+  ggsave(
+    filename = "cnegestion_&_grfw.pdf",
+    plot = p,
+    device = cairo_pdf,
+    path = here::here("4_outputs"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
+  
+  p <- ggplot2::ggplot(data_egestion,
+                       aes(x = group_mass_specific_intake_rate_fw, y = N_P)) +
+    geom_point(size = 2) +
+    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = "Egestion N/P") +
+    geom_smooth(color = "steelblue3", span = 0.85)
+  
+  ggsave(
+    filename = "npegestion_&_grfw.pdf",
+    plot = p,
+    device = cairo_pdf,
+    path = here::here("4_outputs"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
+  
+
+
   
   # Set a new theme to produce the complete figures
   
@@ -496,7 +584,7 @@ plot_irn <- function(data_i, data_g) {
       top = ""
     )
     
-    # Saving the the complete absorption efficiency plot
+    # Saving the the complete plots
     
     ggsave(
       filename = paste(y_plot_names[i], "alldw_&_msirfw.pdf", sep = ""),

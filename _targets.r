@@ -7,6 +7,7 @@
 
 library(targets)
 library(ggplot2)
+library(tidyr)
 
 # We source all functions contained in all files in the R directory
 lapply(list.files(here::here("R"), recursive = TRUE, full.names = T), source)
