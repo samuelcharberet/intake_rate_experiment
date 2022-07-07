@@ -70,8 +70,8 @@ combine_group_data <- function(data_i, data_g, data_fc) {
     data_g$food_Mg[i] = data_fc$food_Mg[week_indexes[1]]
     data_g$food_K[i] = data_fc$food_K[week_indexes[1]]
     data_g$food_Ca[i] = data_fc$food_Ca[week_indexes[1]]
-    data_g$food_13C[i] = data_fc$'food_13C(vsPDB)'[week_indexes[1]]
-    data_g$food_15N[i] = data_fc$'food_15N(vsAir)'[week_indexes[1]]
+    data_g$food_13C[i] = data_fc$'food_13C'[week_indexes[1]]
+    data_g$food_15N[i] = data_fc$'food_15N'[week_indexes[1]]
     
     
   }
@@ -106,8 +106,8 @@ combine_group_data <- function(data_i, data_g, data_fc) {
   data_g$Mg_absorption_efficiency_dw = 1-((data_g$Mg_egestion*data_g$egestion_group_mass_dw)/(data_g$food_Mg*data_g$food_consumed_collection_days_dw))
   data_g$K_absorption_efficiency_dw = 1-((data_g$K_egestion*data_g$egestion_group_mass_dw)/(data_g$food_K*data_g$food_consumed_collection_days_dw))
   data_g$Ca_absorption_efficiency_dw = 1-((data_g$Ca_egestion*data_g$egestion_group_mass_dw)/(data_g$food_Ca*data_g$food_consumed_collection_days_dw))
-  data_g$'13C_absorption_efficiency_dw' = 1-((data_g$'13C(vsPDB)_egestion'*data_g$egestion_group_mass_dw)/(data_g$food_13C*data_g$food_consumed_collection_days_dw))
-  data_g$'15N_absorption_efficiency_dw' = 1-((data_g$'15N(vsAir)_egestion'*data_g$egestion_group_mass_dw)/(data_g$food_15N*data_g$food_consumed_collection_days_dw))
+  data_g$'13C_absorption_efficiency_dw' = 1-((data_g$'13C_egestion'*data_g$egestion_group_mass_dw)/(data_g$food_13C*data_g$food_consumed_collection_days_dw))
+  data_g$'15N_absorption_efficiency_dw' = 1-((data_g$'15N_egestion'*data_g$egestion_group_mass_dw)/(data_g$food_15N*data_g$food_consumed_collection_days_dw))
   
   data_g = tidyr::pivot_longer(
     data_g,
@@ -130,8 +130,8 @@ combine_group_data <- function(data_i, data_g, data_fc) {
       "Mg_egestion",
       "K_egestion",
       "Ca_egestion",
-      "13C(vsPDB)_egestion",
-      "15N(vsAir)_egestion",
+      "13C_egestion",
+      "15N_egestion",
       "C_larvae",
       "N_larvae",
       "P_larvae",
@@ -140,8 +140,8 @@ combine_group_data <- function(data_i, data_g, data_fc) {
       "Mg_larvae",
       "K_larvae",
       "Ca_larvae",
-      "13C(vsPDB)_larvae",
-      "15N(vsAir)_larvae"
+      "13C_larvae",
+      "15N_larvae"
     ),
     names_to = "element_matrix",
     values_to = "elemental_value"
