@@ -253,14 +253,16 @@ plot_irn <- function(data_i, data_g) {
   nb_matrices = length(unique(data_g$matrix))
   nb_elements = length(unique(data_g$element)) - 3
   matrices = unique(data_g$matrix)
-  elements = c("Na", "Mg", "S", "K", "Ca")
+  elements = c("Na", "Mg", "S", "K", "Ca", "13C", "15N")
   colours = c(
     "Na" = "#403EFF",
     "Mg" = "#5CC55C",
     "S" = "#D69F09",
     "K" = "#9B4BE1",
-    "Ca" = "#DF4F4F"
-  )
+    "Ca" = "#DF4F4F",
+    "13C" = "black",
+    "15N" = "black"
+  ) # The colors used for elements, modified after Jmol
   
   plots = vector("list", nb_matrices)
   names(plots) = unique(data_g$matrix)
@@ -310,7 +312,7 @@ plot_irn <- function(data_i, data_g) {
     ) +
       {
         if (names(CNP)[i] != "absorption")
-          scale_y_continuous(sec.axis = sec_axis( ~ . / y_axis_coef))
+          scale_y_continuous(sec.axis = sec_axis(~ . / y_axis_coef))
       } +
       geom_point(size = 2) +
       geom_smooth(span = 0.85) +
@@ -353,11 +355,8 @@ plot_irn <- function(data_i, data_g) {
   
   for (i in 1:nb_matrices) {
     plots[[i]] = vector("list", nb_elements)
-    names(plots[[i]]) = c("Na", "Mg", "S", "K", "Ca")
+    names(plots[[i]]) = c("Na", "Mg", "S", "K", "Ca", "13C", "15N")
   }
-  
-  # The colors used for elements, modified after Jmol
-  
   
   
   # A for loop to create the plots of absorption efficiency according to mass-specific ingestion rate for
@@ -408,7 +407,7 @@ plot_irn <- function(data_i, data_g) {
   # For the larvae
   
   data_larvae = subset(data_g, data_g$matrix == "larvae")
-  data_larvae = pivot_wider(data_larvae, names_from= element, values_from = elemental_value)
+  data_larvae = pivot_wider(data_larvae, names_from = element, values_from = elemental_value)
   data_larvae$C_N = data_larvae$C / data_larvae$N
   data_larvae$N_P = data_larvae$N / data_larvae$P
   
@@ -449,7 +448,9 @@ plot_irn <- function(data_i, data_g) {
   # For egestions
   
   data_egestion = subset(data_g, data_g$matrix == "egestion")
-  data_egestion = pivot_wider(data_egestion, names_from= element, values_from = elemental_value)
+  data_egestion = pivot_wider(data_egestion,
+                              names_from = element,
+                              values_from = elemental_value)
   data_egestion$C_N = data_egestion$C / data_egestion$N
   data_egestion$N_P = data_egestion$N / data_egestion$P
   
@@ -487,8 +488,8 @@ plot_irn <- function(data_i, data_g) {
     units = "in"
   )
   
-
-
+  
+  
   
   # Set a new theme to produce the complete figures
   

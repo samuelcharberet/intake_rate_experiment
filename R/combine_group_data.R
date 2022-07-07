@@ -44,6 +44,9 @@ combine_group_data <- function(data_i, data_g, data_fc) {
   data_g$food_Mg = NA 
   data_g$food_K = NA 
   data_g$food_Ca = NA 
+  data_g$food_13C = NA
+  data_g$food_15N = NA 
+  
   
   
   for (i in 1:nrow(data_g)) {
@@ -67,24 +70,22 @@ combine_group_data <- function(data_i, data_g, data_fc) {
     data_g$food_Mg[i] = data_fc$food_Mg[week_indexes[1]]
     data_g$food_K[i] = data_fc$food_K[week_indexes[1]]
     data_g$food_Ca[i] = data_fc$food_Ca[week_indexes[1]]
+    data_g$food_13C[i] = data_fc$'food_13C(vsPDB)'[week_indexes[1]]
+    data_g$food_15N[i] = data_fc$'food_15N(vsAir)'[week_indexes[1]]
     
     
   }
   
   
   # Simulate some data while waiting for the chemical analysis to be done
-  data_g$C_egestion = rnorm(nrow(data_g), 0.4, 0.04)
-  data_g$N_egestion = rnorm(nrow(data_g), 0.07, 0.007)
-  data_g$P_egestion = rnorm(nrow(data_g), 0.03, 0.003)
+  data_g$P_egestion = rnorm(nrow(data_g), 0.5, 0.08)
   data_g$S_egestion = rnorm(nrow(data_g), 0.03, 0.003)
   data_g$Na_egestion = rnorm(nrow(data_g), 0.03, 0.003)
   data_g$Mg_egestion = rnorm(nrow(data_g), 0.03, 0.003)
   data_g$K_egestion = rnorm(nrow(data_g), 0.03, 0.003)
   data_g$Ca_egestion = rnorm(nrow(data_g), 0.03, 0.003)
   
-  data_g$C_larvae = rnorm(nrow(data_g), 0.4, 0.04)
-  data_g$N_larvae = rnorm(nrow(data_g), 0.07, 0.007)
-  data_g$P_larvae = rnorm(nrow(data_g), 0.03, 0.003)
+  data_g$P_larvae = rnorm(nrow(data_g), 0.5, 0.08)
   data_g$S_larvae = rnorm(nrow(data_g), 0.03, 0.003)
   data_g$Na_larvae = rnorm(nrow(data_g), 0.03, 0.003)
   data_g$Mg_larvae = rnorm(nrow(data_g), 0.03, 0.003)
@@ -105,6 +106,8 @@ combine_group_data <- function(data_i, data_g, data_fc) {
   data_g$Mg_absorption_efficiency_dw = 1-((data_g$Mg_egestion*data_g$egestion_group_mass_dw)/(data_g$food_Mg*data_g$food_consumed_collection_days_dw))
   data_g$K_absorption_efficiency_dw = 1-((data_g$K_egestion*data_g$egestion_group_mass_dw)/(data_g$food_K*data_g$food_consumed_collection_days_dw))
   data_g$Ca_absorption_efficiency_dw = 1-((data_g$Ca_egestion*data_g$egestion_group_mass_dw)/(data_g$food_Ca*data_g$food_consumed_collection_days_dw))
+  data_g$'13C_absorption_efficiency_dw' = 1-((data_g$'13C(vsPDB)_egestion'*data_g$egestion_group_mass_dw)/(data_g$food_13C*data_g$food_consumed_collection_days_dw))
+  data_g$'15N_absorption_efficiency_dw' = 1-((data_g$'15N(vsAir)_egestion'*data_g$egestion_group_mass_dw)/(data_g$food_15N*data_g$food_consumed_collection_days_dw))
   
   data_g = tidyr::pivot_longer(
     data_g,
@@ -117,6 +120,8 @@ combine_group_data <- function(data_i, data_g, data_fc) {
       "Mg_absorption_efficiency_dw",
       "K_absorption_efficiency_dw",
       "Ca_absorption_efficiency_dw",
+      "13C_absorption_efficiency_dw",
+      "15N_absorption_efficiency_dw",
       "C_egestion",
       "N_egestion",
       "P_egestion",
@@ -125,6 +130,8 @@ combine_group_data <- function(data_i, data_g, data_fc) {
       "Mg_egestion",
       "K_egestion",
       "Ca_egestion",
+      "13C(vsPDB)_egestion",
+      "15N(vsAir)_egestion",
       "C_larvae",
       "N_larvae",
       "P_larvae",
@@ -132,7 +139,9 @@ combine_group_data <- function(data_i, data_g, data_fc) {
       "Na_larvae",
       "Mg_larvae",
       "K_larvae",
-      "Ca_larvae"
+      "Ca_larvae",
+      "13C(vsPDB)_larvae",
+      "15N(vsAir)_larvae"
     ),
     names_to = "element_matrix",
     values_to = "elemental_value"
