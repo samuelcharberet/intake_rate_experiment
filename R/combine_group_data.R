@@ -106,8 +106,16 @@ combine_group_data <- function(data_i, data_g, data_fc) {
   data_g$Mg_absorption_efficiency_dw = 1-((data_g$Mg_egestion*data_g$egestion_group_mass_dw)/(data_g$food_Mg*data_g$food_consumed_collection_days_dw))
   data_g$K_absorption_efficiency_dw = 1-((data_g$K_egestion*data_g$egestion_group_mass_dw)/(data_g$food_K*data_g$food_consumed_collection_days_dw))
   data_g$Ca_absorption_efficiency_dw = 1-((data_g$Ca_egestion*data_g$egestion_group_mass_dw)/(data_g$food_Ca*data_g$food_consumed_collection_days_dw))
-  data_g$'13C_absorption_efficiency_dw' = 1-((data_g$'13C_egestion'*data_g$egestion_group_mass_dw)/(data_g$food_13C*data_g$food_consumed_collection_days_dw))
-  data_g$'15N_absorption_efficiency_dw' = 1-((data_g$'15N_egestion'*data_g$egestion_group_mass_dw)/(data_g$food_15N*data_g$food_consumed_collection_days_dw))
+  
+  # Pseudo isotopic absorption efficiency
+  data_g$'13C_absorption_efficiency_dw' = 1-((data_g$'13C_egestion'*data_g$egestion_group_mass_dw*data_g$C_egestion)/(data_g$food_13C*data_g$food_consumed_collection_days_dw*data_g$food_C))
+  data_g$'15N_absorption_efficiency_dw' = 1-((data_g$'15N_egestion'*data_g$egestion_group_mass_dw*data_g$N_egestion)/(data_g$food_15N*data_g$food_consumed_collection_days_dw*data_g$food_N))
+  
+  
+  # Isotopic fractionation
+  data_g$'13C_fractionation' = data_g$'13C_larvae'-data_g$food_13C
+  data_g$'15N_fractionation' = data_g$'15N_larvae'-data_g$food_15N
+  
   
   data_g = tidyr::pivot_longer(
     data_g,
@@ -122,6 +130,8 @@ combine_group_data <- function(data_i, data_g, data_fc) {
       "Ca_absorption_efficiency_dw",
       "13C_absorption_efficiency_dw",
       "15N_absorption_efficiency_dw",
+      "13C_fractionation",
+      "15N_fractionation",
       "C_egestion",
       "N_egestion",
       "P_egestion",
