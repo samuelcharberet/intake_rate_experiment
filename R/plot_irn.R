@@ -250,9 +250,9 @@ plot_irn <- function(data_i, data_g) {
   
   ###### Element absorption efficiency according to total mass-specific intake rate  ######
   
-  nb_matrices = length(unique(data_g$matrix))-1
+  nb_matrices = 3
   nb_elements = length(unique(data_g$element)) - 3
-  matrices = unique(data_g$matrix)
+  matrices = c("larvae", "egestion", "absorption")
   elements = c("Na", "Mg", "S", "K", "Ca", "13C", "15N")
   colours = c(
     "Na" = "#403EFF",
@@ -265,10 +265,10 @@ plot_irn <- function(data_i, data_g) {
   ) # The colors used for elements, modified after Jmol
   
   plots = vector("list", nb_matrices)
-  names(plots) = unique(data_g$matrix)[1:nb_matrices]
+  names(plots) = matrices
   
   CNP = vector("list", nb_matrices)
-  names(CNP) = unique(data_g$matrix)[1:nb_matrices]
+  names(CNP) = matrices
   y_axes = c("Elemental absorption efficiency (%dw)", "%dw", "%dw")
   y_plot_names = c("eae", "ec", "lc")
   
@@ -599,20 +599,33 @@ plot_irn <- function(data_i, data_g) {
     )
   }
   
-  ## Isotopic fractionation
+  ## Isotopic fractionation of the larvae
   
-  data_fractionation = subset(data_g, data_g$matrix == "fractionation")
-  data_fractionation = pivot_wider(data_fractionation, names_from = element, values_from = elemental_value)
+  ggplot2::theme_set(
+    theme_classic() + theme(
+      text = element_text(size = 14),
+      legend.position = 'right',
+      aspect.ratio = 0.618,
+      panel.grid.major = element_line(
+        color = "gray95",
+        size = 0.5,
+        linetype = 1
+      )
+    )
+  )
+  
+  data_fractionation_larvae = subset(data_g, data_g$matrix == "fractionation-larvae")
+  data_fractionation_larvae = pivot_wider(data_fractionation_larvae, names_from = element, values_from = elemental_value)
   
   
-  p <- ggplot2::ggplot(data_fractionation,
+  p <- ggplot2::ggplot(data_fractionation_larvae,
                        aes(x = group_mass_specific_intake_rate_fw, y = `13C`)) +
     geom_point(size = 2) +
     labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = expression(paste("13C isotopic fractionation ( ", delta, ")"))) +
     geom_smooth(color = "steelblue3", span = 0.85)
   
   ggsave(
-    filename = "13cfrac_&_msir.pdf",
+    filename = "13cfracl_&_msir.pdf",
     plot = p,
     device = cairo_pdf,
     path = here::here("4_outputs"),
@@ -622,14 +635,14 @@ plot_irn <- function(data_i, data_g) {
     units = "in"
   )
   
-  p <- ggplot2::ggplot(data_fractionation,
+  p <- ggplot2::ggplot(data_fractionation_larvae,
                        aes(x = group_mass_specific_intake_rate_fw, y = `15N`)) +
     geom_point(size = 2) +
     labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = expression(paste("15N isotopic fractionation ( ", delta, ")"))) +
     geom_smooth(color = "steelblue3", span = 0.85)
   
   ggsave(
-    filename = "15nfrac_&_msir.pdf",
+    filename = "15nfracl_&_msir.pdf",
     plot = p,
     device = cairo_pdf,
     path = here::here("4_outputs"),
@@ -639,5 +652,44 @@ plot_irn <- function(data_i, data_g) {
     units = "in"
   )
   
+  ## Isotopic fractionation of the egestion
+  
+  data_fractionation_egestion = subset(data_g, data_g$matrix == "fractionation-egestion")
+  data_fractionation_egestion = pivot_wider(data_fractionation_egestion, names_from = element, values_from = elemental_value)
+  
+  
+  p <- ggplot2::ggplot(data_fractionation_egestion,
+                       aes(x = group_mass_specific_intake_rate_fw, y = `13C`)) +
+    geom_point(size = 2) +
+    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = expression(paste("13C isotopic fractionation ( ", delta, ")"))) +
+    geom_smooth(color = "steelblue3", span = 0.85)
+  
+  ggsave(
+    filename = "13cfrace_&_msir.pdf",
+    plot = p,
+    device = cairo_pdf,
+    path = here::here("4_outputs"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
+  
+  p <- ggplot2::ggplot(data_fractionation_egestion,
+                       aes(x = group_mass_specific_intake_rate_fw, y = `15N`)) +
+    geom_point(size = 2) +
+    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = expression(paste("15N isotopic fractionation ( ", delta, ")"))) +
+    geom_smooth(color = "steelblue3", span = 0.85)
+  
+  ggsave(
+    filename = "15nfrace_&_msir.pdf",
+    plot = p,
+    device = cairo_pdf,
+    path = here::here("4_outputs"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
   
 }
