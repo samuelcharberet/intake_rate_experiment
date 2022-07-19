@@ -106,7 +106,7 @@ plot_irn <- function(data_i, data_g) {
                        ), y = absorption_efficiency_dw)) +
     geom_point(size = 2) +
     labs(x = "Mass specific ingestion rate (mg fw/day / mg fw indiv)", y = "Absorption efficiency (% dw)") +
-    geom_smooth(color = "steelblue3", span = 0.85)
+    geom_smooth(color = "steelblue3", span = 0.85, method="gam")
   
   ggsave(
     filename = "aedw_&_msirfw.pdf",
@@ -128,7 +128,7 @@ plot_irn <- function(data_i, data_g) {
                        ), y = growth_efficiency_fw)) +
     geom_point(size = 2) +
     labs(x = "Mass specific ingestion rate (mg fw/day / mg fw indiv)", y = "Growth efficiency (% fw)") +
-    geom_smooth(color = "steelblue3", span = 0.85)
+    geom_smooth(color = "steelblue3", span = 0.85, method="gam")
   
   ggsave(
     filename = "gefw_&_msirfw.pdf",
@@ -151,7 +151,7 @@ plot_irn <- function(data_i, data_g) {
                        ), y = growth_efficiency_dw)) +
     geom_point(size = 2) +
     labs(x = "Mass specific ingestion rate (mg dw/day / mg dw indiv)", y = "Growth efficiency (% dw)") +
-    geom_smooth(color = "steelblue3", span = 0.85)
+    geom_smooth(color = "steelblue3", span = 0.85, method="gam")
   
   ggsave(
     filename = "gedw_&_msirdw.pdf",
@@ -172,7 +172,7 @@ plot_irn <- function(data_i, data_g) {
                        ), y = growth_rate)) +
     geom_point(size = 2) +
     labs(x = "Mass specific ingestion rate (mg fw/day / mg fw indiv)", y = "Growth rate (mg fw / day") +
-    geom_smooth(color = "steelblue3", span = 0.85)
+    geom_smooth(color = "steelblue3", span = 0.85, method="gam")
   
   ggsave(
     filename = "grfw_&_msirfw.pdf",
@@ -191,7 +191,7 @@ plot_irn <- function(data_i, data_g) {
                        aes(x = growth_rate, y = growth_efficiency_fw)) +
     geom_point(size = 2) +
     labs(x = "Growth rate (mg fw / day)", y = "Growth efficiency (% fw)") +
-    geom_smooth(color = "steelblue3", span = 0.85)
+    geom_smooth(color = "steelblue3", span = 0.85, method="gam")
   
   ggsave(
     filename = "gefw_&_grfw.pdf",
@@ -215,7 +215,7 @@ plot_irn <- function(data_i, data_g) {
                        ), y = growth_investment_dw)) +
     geom_point(size = 2) +
     labs(x = "Mass-specific absorbed mass (% dw)", y = " Growth investment (% dw)") +
-    geom_smooth(color = "steelblue3", span = 0.85)
+    geom_smooth(color = "steelblue3", span = 0.85, method="gam")
   
   ggsave(
     filename = "gidw_&_msamdw.pdf",
@@ -235,7 +235,7 @@ plot_irn <- function(data_i, data_g) {
                        aes(x = absorption_efficiency_dw, y = growth_efficiency_dw)) +
     geom_point(size = 2) +
     labs(x = "Absoprtion efficiency (% dw)", y = "Growth efficiency (% dw)") +
-    geom_smooth(color = "steelblue3", span = 0.85)
+    geom_smooth(color = "steelblue3", span = 0.85, method="gam")
   
   ggsave(
     filename = "gedw_&_aedw.pdf",
@@ -315,7 +315,7 @@ plot_irn <- function(data_i, data_g) {
           scale_y_continuous(sec.axis = sec_axis(~ . / y_axis_coef))
       } +
       geom_point(size = 2) +
-      geom_smooth(span = 0.85) +
+      geom_smooth(span = 0.85, method="gam") +
       scale_color_manual(
         values = c("C" = "#808080", "N" = "#5A5ACA", "P" = "#EC9200"),
         aesthetics = c("colour", "fill")
@@ -376,7 +376,7 @@ plot_irn <- function(data_i, data_g) {
         )
       ) +
         geom_point(size = 2) +
-        geom_smooth(span = 0.85) +
+        geom_smooth(span = 0.85, method="gam") +
         scale_color_manual(values = colours[i],
                            aesthetics = c("colour", "fill")) +
         labs(
@@ -415,7 +415,7 @@ plot_irn <- function(data_i, data_g) {
                        aes(x = group_mass_specific_intake_rate_fw, y = C_N)) +
     geom_point(size = 2) +
     labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = "Larvae C/N") +
-    geom_smooth(color = "steelblue3", span = 0.85)
+    geom_smooth(color = "steelblue3", span = 0.85, method="gam")
   
   ggsave(
     filename = "cnlarvae_&_grfw.pdf",
@@ -432,7 +432,7 @@ plot_irn <- function(data_i, data_g) {
                        aes(x = group_mass_specific_intake_rate_fw, y = N_P)) +
     geom_point(size = 2) +
     labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = "Larvae N/P") +
-    geom_smooth(color = "steelblue3", span = 0.85)
+    geom_smooth(color = "steelblue3", span = 0.85, method="gam")
   
   ggsave(
     filename = "nplarvae_&_grfw.pdf",
@@ -458,7 +458,7 @@ plot_irn <- function(data_i, data_g) {
                        aes(x = group_mass_specific_intake_rate_fw, y = C_N)) +
     geom_point(size = 2) +
     labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = "Egestion C/N") +
-    geom_smooth(color = "steelblue3", span = 0.85)
+    geom_smooth(color = "steelblue3", span = 0.85, method="gam")
   
   ggsave(
     filename = "cnegestion_&_grfw.pdf",
@@ -475,7 +475,7 @@ plot_irn <- function(data_i, data_g) {
                        aes(x = group_mass_specific_intake_rate_fw, y = N_P)) +
     geom_point(size = 2) +
     labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = "Egestion N/P") +
-    geom_smooth(color = "steelblue3", span = 0.85)
+    geom_smooth(color = "steelblue3", span = 0.85, method="gam")
   
   ggsave(
     filename = "npegestion_&_grfw.pdf",
@@ -622,7 +622,7 @@ plot_irn <- function(data_i, data_g) {
                        aes(x = group_mass_specific_intake_rate_fw, y = `13C`)) +
     geom_point(size = 2) +
     labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = expression(paste("13C isotopic fractionation ( ", delta, ")"))) +
-    geom_smooth(color = "steelblue3", span = 0.85)
+    geom_smooth(color = "steelblue3", span = 0.85, method="gam")
   
   ggsave(
     filename = "13cfracl_&_msir.pdf",
@@ -639,7 +639,7 @@ plot_irn <- function(data_i, data_g) {
                        aes(x = group_mass_specific_intake_rate_fw, y = `15N`)) +
     geom_point(size = 2) +
     labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = expression(paste("15N isotopic fractionation ( ", delta, ")"))) +
-    geom_smooth(color = "steelblue3", span = 0.85)
+    geom_smooth(color = "steelblue3", span = 0.85, method="gam")
   
   ggsave(
     filename = "15nfracl_&_msir.pdf",
@@ -662,7 +662,7 @@ plot_irn <- function(data_i, data_g) {
                        aes(x = group_mass_specific_intake_rate_fw, y = `13C`)) +
     geom_point(size = 2) +
     labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = expression(paste("13C isotopic fractionation ( ", delta, ")"))) +
-    geom_smooth(color = "steelblue3", span = 0.85)
+    geom_smooth(color = "steelblue3", span = 0.85, method="gam")
   
   ggsave(
     filename = "13cfrace_&_msir.pdf",
@@ -679,7 +679,7 @@ plot_irn <- function(data_i, data_g) {
                        aes(x = group_mass_specific_intake_rate_fw, y = `15N`)) +
     geom_point(size = 2) +
     labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = expression(paste("15N isotopic fractionation ( ", delta, ")"))) +
-    geom_smooth(color = "steelblue3", span = 0.85)
+    geom_smooth(color = "steelblue3", span = 0.85, method="gam")
   
   ggsave(
     filename = "15nfrace_&_msir.pdf",
