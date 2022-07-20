@@ -622,12 +622,12 @@ plot_irn <- function(data_i, data_g) {
                        aes(x = group_mass_specific_intake_rate_fw, y = `13C`)) +
     geom_point(size = 2) +
     labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = expression(paste(
-      "13C isotopic fractionation ( ", delta, ")"
+      "13C TF ( ", delta, ")"
     ))) +
     geom_smooth(color = "steelblue3",  method = "gam")
   
   ggsave(
-    filename = "13cfracl_&_msir.pdf",
+    filename = "13ctfl_&_msir.pdf",
     plot = p,
     device = cairo_pdf,
     path = here::here("4_outputs"),
@@ -641,12 +641,12 @@ plot_irn <- function(data_i, data_g) {
                        aes(x = group_mass_specific_intake_rate_fw, y = `15N`)) +
     geom_point(size = 2) +
     labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = expression(paste(
-      "15N isotopic fractionation ( ", delta, ")"
+      "15N TF ( ", delta, ")"
     ))) +
     geom_smooth(color = "steelblue3",  method = "gam")
   
   ggsave(
-    filename = "15nfracl_&_msir.pdf",
+    filename = "15ntfl_&_msir.pdf",
     plot = p,
     device = cairo_pdf,
     path = here::here("4_outputs"),
@@ -670,12 +670,12 @@ plot_irn <- function(data_i, data_g) {
   ) +
     geom_point(size = 2) +
     labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = expression(paste(
-      "13C isotopic fractionation ( ", delta, ")"
+      "13C EDDF ( ", delta, ")"
     ))) +
     geom_smooth(color = "steelblue3",  method = "gam")
   
   ggsave(
-    filename = "13cfrace_&_msir.pdf",
+    filename = "13ceddf_&_msir.pdf",
     plot = p,
     device = cairo_pdf,
     path = here::here("4_outputs"),
@@ -691,12 +691,12 @@ plot_irn <- function(data_i, data_g) {
   ) +
     geom_point(size = 2) +
     labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = expression(paste(
-      "15N isotopic fractionation ( ", delta, ")"
+      "15N EDDF ( ", delta, ")"
     ))) +
     geom_smooth(color = "steelblue3",  method = "gam")
   
   ggsave(
-    filename = "15nfrace_&_msir.pdf",
+    filename = "15neddf_&_msir.pdf",
     plot = p,
     device = cairo_pdf,
     path = here::here("4_outputs"),
