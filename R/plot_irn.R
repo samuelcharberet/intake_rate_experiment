@@ -53,7 +53,7 @@ plot_irn <- function(data_i, data_g) {
     labs(x = "Total amount of food consumed (mg dw)", y = "Bodymass at the end of the 7th instar (mg dw)") +
     geom_smooth(formula = y ~ x,
                 color = "steelblue3",
-                method = lm)
+                method = "gam")
   
   ggsave(
     filename = "bm_j3_dw_&_food_consumed.pdf",
@@ -74,7 +74,7 @@ plot_irn <- function(data_i, data_g) {
     geom_smooth(formula = y ~ x,
                 color = "steelblue3",
                 
-                method = lm)
+                method = "gam")
   
   ggsave(
     filename = "bm_imago_dw_&_food_provided_fw.pdf",
