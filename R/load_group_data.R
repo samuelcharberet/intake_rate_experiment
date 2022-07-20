@@ -35,6 +35,8 @@ load_group_data = function(path){
     "Mg_egestion",
     "K_egestion",
     "Ca_egestion",
+    "13C_egestion",
+    "15N_egestion",
     "C_larvae",
     "N_larvae",
     "P_larvae",
@@ -42,7 +44,9 @@ load_group_data = function(path){
     "Na_larvae",
     "Mg_larvae",
     "K_larvae",
-    "Ca_larvae"
+    "Ca_larvae",
+    "13C_larvae",
+    "15N_larvae"
   )
   
   # We define the type of each column

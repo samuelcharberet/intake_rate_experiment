@@ -20,8 +20,6 @@ plot_irn <- function(data_i, data_g) {
     )
   )
   
-  
-  
   # Effect of week on bodymass at the start
   
   p <- ggplot2::ggplot(
@@ -73,7 +71,6 @@ plot_irn <- function(data_i, data_g) {
     labs(x = "Total amount of food consumed (mg dw)", y = "Bodymass of the imago (mg dw)") +
     geom_smooth(formula = y ~ x,
                 color = "steelblue3",
-                
                 method = "gam")
   
   ggsave(
@@ -210,7 +207,7 @@ plot_irn <- function(data_i, data_g) {
                        ), y = growth_investment_dw)) +
     geom_point(size = 2) +
     labs(x = "Mass-specific absorbed mass (% dw)", y = " Growth investment (% dw)") +
-    geom_smooth(color = "steelblue3",  method = "gam")
+    geom_smooth(color = "steelblue3", method = "gam")
   
   ggsave(
     filename = "gidw_&_msamdw.pdf",
@@ -230,7 +227,7 @@ plot_irn <- function(data_i, data_g) {
                        aes(x = absorption_efficiency_dw, y = growth_efficiency_dw)) +
     geom_point(size = 2) +
     labs(x = "Absoprtion efficiency (% dw)", y = "Growth efficiency (% dw)") +
-    geom_smooth(color = "steelblue3",  method = "gam")
+    geom_smooth(color = "steelblue3", method = "gam")
   
   ggsave(
     filename = "gedw_&_aedw.pdf",
@@ -309,7 +306,7 @@ plot_irn <- function(data_i, data_g) {
       {
         if (names(CNP)[i] != "absorption" &
             names(CNP)[i] != "fractionation")
-          scale_y_continuous(sec.axis = sec_axis( ~ . / y_axis_coef))
+          scale_y_continuous(sec.axis = sec_axis(~ . / y_axis_coef))
       } +
       geom_point(size = 2) +
       geom_smooth(method = "gam") +
@@ -331,8 +328,7 @@ plot_irn <- function(data_i, data_g) {
             axis.ticks.y = element_line(color = "#808080"),
             axis.text.y.right = element_text(color = "#5A5ACA"),
             axis.line.y.right = element_line(color = "#5A5ACA"),
-            axis.ticks.y.right = element_line(color = "#5A5ACA"),
-            
+            axis.ticks.y.right = element_line(color = "#5A5ACA")
           )
       }
     
@@ -621,9 +617,7 @@ plot_irn <- function(data_i, data_g) {
   p <- ggplot2::ggplot(data_fractionation_larvae,
                        aes(x = group_mass_specific_intake_rate_fw, y = `13C`)) +
     geom_point(size = 2) +
-    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = expression(paste(
-      "13C TF ( ", delta, ")"
-    ))) +
+    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = expression(paste("13C TF ( ", delta, ")"))) +
     geom_smooth(color = "steelblue3",  method = "gam")
   
   ggsave(
@@ -640,9 +634,7 @@ plot_irn <- function(data_i, data_g) {
   p <- ggplot2::ggplot(data_fractionation_larvae,
                        aes(x = group_mass_specific_intake_rate_fw, y = `15N`)) +
     geom_point(size = 2) +
-    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = expression(paste(
-      "15N TF ( ", delta, ")"
-    ))) +
+    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = expression(paste("15N TF ( ", delta, ")"))) +
     geom_smooth(color = "steelblue3",  method = "gam")
   
   ggsave(
@@ -669,9 +661,7 @@ plot_irn <- function(data_i, data_g) {
     aes(x = group_mass_specific_intake_rate_fw, y = `13C`)
   ) +
     geom_point(size = 2) +
-    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = expression(paste(
-      "13C EDDF ( ", delta, ")"
-    ))) +
+    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = expression(paste("13C EDDF ( ", delta, ")"))) +
     geom_smooth(color = "steelblue3",  method = "gam")
   
   ggsave(
@@ -690,9 +680,7 @@ plot_irn <- function(data_i, data_g) {
     aes(x = group_mass_specific_intake_rate_fw, y = `15N`)
   ) +
     geom_point(size = 2) +
-    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = expression(paste(
-      "15N EDDF ( ", delta, ")"
-    ))) +
+    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = expression(paste("15N EDDF ( ", delta, ")"))) +
     geom_smooth(color = "steelblue3",  method = "gam")
   
   ggsave(
