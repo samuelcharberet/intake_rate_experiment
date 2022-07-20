@@ -261,8 +261,8 @@ plot_irn <- function(data_i, data_g) {
   
   CNP = vector("list", nb_matrices)
   names(CNP) = matrices
-  y_axes = c("Elemental absorption efficiency (%dw)", "%dw", "%dw")
-  y_plot_names = c("eae", "ec", "lc")
+  y_axes = c("%dw", "%dw", "Elemental absorption efficiency (%dw)")
+  y_plot_names = c("lc", "ec", "eae")
   
   for (i in 1:nb_matrices) {
     data_matrix = subset(
