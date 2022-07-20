@@ -353,13 +353,14 @@ plot_irn <- function(data_i, data_g) {
   }
   
   
-  # A for loop to create the plots of absorption efficiency according to mass-specific ingestion rate for
+  # A for loop to create the plots of absorption efficiency, larvae content and egestion content
+  # according to mass-specific ingestion rate for
   # Na, Mg, S, K, and Ca
   
   
   for (j in 1:nb_matrices) {
     data_matrix = subset(data_g, data_g$matrix == matrices[j])
-    for (i in 1:length(plots[[j]])) {
+    for (i in 1:nb_elements) {
       plots[[j]][[i]] = ggplot2::ggplot(
         subset(data_matrix, data_matrix$element == elements[i]) ,
         aes(
