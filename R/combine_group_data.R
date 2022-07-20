@@ -108,8 +108,10 @@ combine_group_data <- function(data_i, data_g, data_fc) {
   data_g$Ca_absorption_efficiency_dw = 1-((data_g$Ca_egestion*data_g$egestion_group_mass_dw)/(data_g$food_Ca*data_g$food_consumed_collection_days_dw))
   
   # Isotopic pseudo absorption efficiency
-  data_g$'13C_absorption_efficiency_dw' = 1-((data_g$'13C_egestion'*data_g$egestion_group_mass_dw*data_g$C_egestion)/(data_g$food_13C*data_g$food_consumed_collection_days_dw*data_g$food_C))
-  data_g$'15N_absorption_efficiency_dw' = 1-((data_g$'15N_egestion'*data_g$egestion_group_mass_dw*data_g$N_egestion)/(data_g$food_15N*data_g$food_consumed_collection_days_dw*data_g$food_N))
+  # Using PDB and air delta 13C and delta 15N 
+  # of 0.0112372 and 0.003663 respectively
+  data_g$'13C_absorption_efficiency_dw' = 1-(((((data_g$'13C_egestion'/1000)+1)*0.0112372)*data_g$egestion_group_mass_dw*data_g$C_egestion)/((((data_g$food_13C/1000)+1)*0.0112372)*data_g$food_consumed_collection_days_dw*data_g$food_C))
+  data_g$'15N_absorption_efficiency_dw' = 1-(((((data_g$'15N_egestion'/1000)+1)*0.003663)*data_g$egestion_group_mass_dw*data_g$N_egestion)/((((data_g$food_15N/1000)+1)*0.003663)*data_g$food_consumed_collection_days_dw*data_g$food_N))
   
   
   # Isotopic fractionation of the larvae 
