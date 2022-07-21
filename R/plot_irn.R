@@ -682,7 +682,7 @@ plot_irn <- function(data_i, data_g) {
   
   
   p <- ggplot2::ggplot(data_tf,
-                       aes(x = growth_rate/mean(c(groupmass_7th_instar_j3_fw, groupmass_7th_instar_j0_fw)), y = `13C`)) +
+                       aes(x = growth_rate/((groupmass_7th_instar_j3_fw+groupmass_7th_instar_j0_fw)/2), y = `13C`)) +
     geom_point(size = 2) +
     labs(x = "Mass-specific growth rate (mg fw/ day)", y = expression(paste("13C TF ( ", delta, ")"))) +
     geom_smooth(color = "steelblue3",  method = "gam")
@@ -699,13 +699,50 @@ plot_irn <- function(data_i, data_g) {
   )
   
   p <- ggplot2::ggplot(data_tf,
-                       aes(x = growth_rate/mean(c(groupmass_7th_instar_j3_fw, groupmass_7th_instar_j0_fw)), y = `15N`)) +
+                       aes(x = growth_rate/((groupmass_7th_instar_j3_fw+groupmass_7th_instar_j0_fw)/2), y = `15N`)) +
     geom_point(size = 2) +
     labs(x = "Mass-specific growth rate (mg fw/ day)", y = expression(paste("15N TF ( ", delta, ")"))) +
     geom_smooth(color = "steelblue3",  method = "gam")
   
   ggsave(
     filename = "15ntf_&_msgr.pdf",
+    plot = p,
+    device = cairo_pdf,
+    path = here::here("4_outputs"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
+  
+  ######  Isotopic fractionation between the larvae and the diet as a function of growth efficiency ######
+  
+  
+  p <- ggplot2::ggplot(data_tf,
+                       aes(x = growth_efficiency_fw, y = `13C`)) +
+    geom_point(size = 2) +
+    labs(x = "Mass-specific growth rate (mg fw/ day)", y = expression(paste("13C TF ( ", delta, ")"))) +
+    geom_smooth(color = "steelblue3",  method = "gam")
+  
+  ggsave(
+    filename = "13ctf_&_gefw.pdf",
+    plot = p,
+    device = cairo_pdf,
+    path = here::here("4_outputs"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
+  
+  p <- ggplot2::ggplot(data_tf,
+                       aes(x = growth_efficiency_fw, y = `15N`)) +
+    geom_point(size = 2) +
+    labs(x = "Mass-specific growth rate (mg fw/ day)", y = expression(paste("15N TF ( ", delta, ")"))) +
+    geom_smooth(color = "steelblue3",  method = "gam")
+  
+  ggsave(
+    filename = "15ntf_&_gefw.pdf",
     plot = p,
     device = cairo_pdf,
     path = here::here("4_outputs"),
