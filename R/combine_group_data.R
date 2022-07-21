@@ -31,7 +31,7 @@ combine_group_data <- function(data_i, data_g, data_fc) {
     data_g$seventh_instar_date[group_row] = data_i$seventh_instar_date[individual_group_rows[1]]
     data_g$number_collection_days[group_row] = sum(data_i$number_collection_days[individual_group_rows])
     data_g$growth_rate[group_row] = mean(data_i$growth_rate[individual_group_rows])
-    data_g$growth_efficiency_fw = mean(data_i$growth_efficiency_fw[individual_group_rows])
+    data_g$growth_efficiency_fw[group_row] = mean(data_i$growth_efficiency_fw[individual_group_rows])
     }
   
 
