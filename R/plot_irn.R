@@ -586,7 +586,7 @@ plot_irn <- function(data_i, data_g) {
     )
   }
   
-  ######  Isotopic fractionation between the larvae and the diet ######
+  ######  Isotopic fractionation between the larvae and the diet as a function of MSIR ######
   
   ggplot2::theme_set(
     theme_classic() + theme(
@@ -632,6 +632,43 @@ plot_irn <- function(data_i, data_g) {
   
   ggsave(
     filename = "15ntf_&_msir.pdf",
+    plot = p,
+    device = cairo_pdf,
+    path = here::here("4_outputs"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
+  
+  ######  Isotopic fractionation between the larvae and the diet as a function of growth rate ######
+  
+  
+  p <- ggplot2::ggplot(data_tf,
+                       aes(x = growth_rate, y = `13C`)) +
+    geom_point(size = 2) +
+    labs(x = "Growth rate (mg fw/ day)", y = expression(paste("13C TF ( ", delta, ")"))) +
+    geom_smooth(color = "steelblue3",  method = "gam")
+  
+  ggsave(
+    filename = "13ctf_&_gr.pdf",
+    plot = p,
+    device = cairo_pdf,
+    path = here::here("4_outputs"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
+  
+  p <- ggplot2::ggplot(data_tf,
+                       aes(x = growth_rate, y = `15N`)) +
+    geom_point(size = 2) +
+    labs(x = "Growth rate (mg fw/ day)", y = expression(paste("15N TF ( ", delta, ")"))) +
+    geom_smooth(color = "steelblue3",  method = "gam")
+  
+  ggsave(
+    filename = "15ntf_&_gr.pdf",
     plot = p,
     device = cairo_pdf,
     path = here::here("4_outputs"),
