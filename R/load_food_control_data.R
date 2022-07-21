@@ -29,8 +29,8 @@ load_food_control_data = function(path){
     "food_fw",
     "food_dw",
     "food_water_content",
-    "food_13C",
-    "food_15N"
+    "food_d13C",
+    "food_d15N"
   )
   
   # We define the type of each column

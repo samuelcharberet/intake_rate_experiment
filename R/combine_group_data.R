@@ -5,7 +5,6 @@
 #'
 #' @examples
 combine_group_data <- function(data_i, data_g, data_fc) {
-  # We compute a group egestion mass by adding individual egestion masses
   group_IDs = unique(data_i$group_ID)
   data_g$food_consumed_collection_days_dw = NA
   data_g$food_consumed_collection_days_fw = NA
@@ -33,6 +32,8 @@ combine_group_data <- function(data_i, data_g, data_fc) {
     data_g$number_collection_days[group_row] = sum(data_i$number_collection_days[individual_group_rows])
   }
   
+
+  
   # We compute the group-level element-specific intake rate at the level of the group
   # by combining food chemical analysis and group-level intake rate
   
@@ -44,8 +45,8 @@ combine_group_data <- function(data_i, data_g, data_fc) {
   data_g$food_Mg = NA 
   data_g$food_K = NA 
   data_g$food_Ca = NA 
-  data_g$food_13C = NA
-  data_g$food_15N = NA 
+  data_g$food_d13C = NA
+  data_g$food_d15N = NA 
   
   
   
@@ -70,11 +71,37 @@ combine_group_data <- function(data_i, data_g, data_fc) {
     data_g$food_Mg[i] = data_fc$food_Mg[week_indexes[1]]
     data_g$food_K[i] = data_fc$food_K[week_indexes[1]]
     data_g$food_Ca[i] = data_fc$food_Ca[week_indexes[1]]
-    data_g$food_13C[i] = data_fc$'food_13C'[week_indexes[1]]
-    data_g$food_15N[i] = data_fc$'food_15N'[week_indexes[1]]
+    data_g$food_d13C[i] = data_fc$`food_d13C`[week_indexes[1]]
+    data_g$food_d15N[i] = data_fc$`food_d15N`[week_indexes[1]]
     
     
   }
+  
+  # Computing the isotopic contents of egestions
+  # Using PDB and air delta 13C and delta 15N 
+  # of 0.0112372 and 0.003663 respectively
+  
+  data_g$`12C_egestion` = data_g$C_egestion/(1+(((data_g$`d13C_egestion`/1000)+1)*0.0112372))
+  data_g$`13C_egestion` = data_g$C_egestion-data_g$`12C_egestion`
+  
+  data_g$`14N_egestion` = data_g$N_egestion/(1+(((data_g$`d15N_egestion`/1000)+1)*0.003663))
+  data_g$`15N_egestion` = data_g$N_egestion-data_g$`14N_egestion`
+  
+  # Computing the isotopic contents of the larvae
+  
+  data_g$`12C_larvae` = data_g$C_larvae/(1+(((data_g$`d13C_larvae`/1000)+1)*0.0112372))
+  data_g$`13C_larvae` = data_g$C_larvae-data_g$`12C_larvae`
+  
+  data_g$`14N_larvae` = data_g$N_larvae/(1+(((data_g$`d15N_larvae`/1000)+1)*0.003663))
+  data_g$`15N_larvae` = data_g$N_larvae-data_g$`14N_larvae`
+  
+  # Computing the isotopic contents of the food
+  
+  data_g$`12C_food` = data_g$food_C/(1+(((data_g$`food_d13C`/1000)+1)*0.0112372))
+  data_g$`13C_food` = data_g$food_C-data_g$`12C_food`
+  
+  data_g$`14N_food` = data_g$food_N/(1+(((data_g$`food_d15N`/1000)+1)*0.003663))
+  data_g$`15N_food` = data_g$food_N-data_g$`14N_food`
   
   
   # Simulate some data while waiting for the chemical analysis to be done
@@ -106,26 +133,29 @@ combine_group_data <- function(data_i, data_g, data_fc) {
   data_g$Mg_absorption_efficiency_dw = 1-((data_g$Mg_egestion*data_g$egestion_group_mass_dw)/(data_g$food_Mg*data_g$food_consumed_collection_days_dw))
   data_g$K_absorption_efficiency_dw = 1-((data_g$K_egestion*data_g$egestion_group_mass_dw)/(data_g$food_K*data_g$food_consumed_collection_days_dw))
   data_g$Ca_absorption_efficiency_dw = 1-((data_g$Ca_egestion*data_g$egestion_group_mass_dw)/(data_g$food_Ca*data_g$food_consumed_collection_days_dw))
+  data_g$`12C_absorption_efficiency_dw` = 1-((data_g$`12C_egestion`*data_g$egestion_group_mass_dw)/(data_g$`12C_food`*data_g$food_consumed_collection_days_dw))
+  data_g$`13C_absorption_efficiency_dw` = 1-((data_g$`13C_egestion`*data_g$egestion_group_mass_dw)/(data_g$`13C_food`*data_g$food_consumed_collection_days_dw))
+  data_g$`14N_absorption_efficiency_dw` = 1-((data_g$`14N_egestion`*data_g$egestion_group_mass_dw)/(data_g$`14N_food`*data_g$food_consumed_collection_days_dw))
+  data_g$`15N_absorption_efficiency_dw` = 1-((data_g$`15N_egestion`*data_g$egestion_group_mass_dw)/(data_g$`15N_food`*data_g$food_consumed_collection_days_dw))
   
-  # Isotopic pseudo absorption efficiency
-  # Using PDB and air delta 13C and delta 15N 
-  # of 0.0112372 and 0.003663 respectively
+  # Isotopic absorption efficiency ratios
+
   
-  data_g$'13C_aer' = (1-(((((data_g$'13C_egestion'/1000)+1)*0.0112372)*data_g$egestion_group_mass_dw*data_g$C_egestion)/((((data_g$food_13C/1000)+1)*0.0112372)*data_g$food_consumed_collection_days_dw*data_g$food_C)))/data_g$C_absorption_efficiency_dw
-  data_g$'15N_aer' = (1-(((((data_g$'15N_egestion'/1000)+1)*0.003663)*data_g$egestion_group_mass_dw*data_g$N_egestion)/((((data_g$food_15N/1000)+1)*0.003663)*data_g$food_consumed_collection_days_dw*data_g$food_N)))/data_g$N_absorption_efficiency_dw
+  data_g$`C_iaer` = data_g$`13C_absorption_efficiency_dw`/ data_g$`12C_absorption_efficiency_dw`
+  data_g$`N_iaer` = data_g$`15N_absorption_efficiency_dw`/data_g$`14N_absorption_efficiency_dw`
   
   
   # Isotopic fractionation
-  data_g$'13C_tf' = data_g$'13C_larvae'-data_g$food_13C
-  data_g$'15N_tf' = data_g$'15N_larvae'-data_g$food_15N
+  data_g$`13C_tf` = data_g$`d13C_larvae`-data_g$food_d13C
+  data_g$`15N_tf` = data_g$`d15N_larvae`-data_g$food_d15N
   
   # Isotopic egestion-diet discrimination factor
-  data_g$'13C_eddf' = data_g$'13C_egestion'-data_g$food_13C
-  data_g$'15N_eddf' = data_g$'15N_egestion'-data_g$food_15N
+  data_g$`13C_eddf` = data_g$`d13C_egestion`-data_g$food_d13C
+  data_g$`15N_eddf` = data_g$`d15N_egestion`-data_g$food_d15N
   
   # Isotopic egestion-larvae discrimination factor
-  data_g$'13C_eldf' = data_g$'13C_egestion'-data_g$'13C_larvae'
-  data_g$'15N_eldf' = data_g$'15N_egestion'-data_g$'15N_larvae'
+  data_g$`13C_eldf` = data_g$`d13C_egestion`-data_g$`d13C_larvae`
+  data_g$`15N_eldf` = data_g$`d15N_egestion`-data_g$`d15N_larvae`
   
   data_g = tidyr::pivot_longer(
     data_g,
@@ -138,8 +168,8 @@ combine_group_data <- function(data_i, data_g, data_fc) {
       "Mg_absorption_efficiency_dw",
       "K_absorption_efficiency_dw",
       "Ca_absorption_efficiency_dw",
-      "13C_aer",
-      "15N_aer",
+      "C_iaer",
+      "N_iaer",
       "13C_tf",
       "15N_tf",
       "13C_eddf",
@@ -154,8 +184,8 @@ combine_group_data <- function(data_i, data_g, data_fc) {
       "Mg_egestion",
       "K_egestion",
       "Ca_egestion",
-      "13C_egestion",
-      "15N_egestion",
+      "d13C_egestion",
+      "d15N_egestion",
       "C_larvae",
       "N_larvae",
       "P_larvae",
@@ -164,8 +194,8 @@ combine_group_data <- function(data_i, data_g, data_fc) {
       "Mg_larvae",
       "K_larvae",
       "Ca_larvae",
-      "13C_larvae",
-      "15N_larvae"
+      "d13C_larvae",
+      "d15N_larvae"
     ),
     names_to = "element_matrix",
     values_to = "elemental_value"

@@ -238,7 +238,7 @@ plot_irn <- function(data_i, data_g) {
   # Options for the plots
   
   matrices = c("larvae", "egestion", "absorption")
-  elements = c("Na", "Mg", "S", "K", "Ca")
+  elements = c("Na", "Mg", "S", "K", "Ca", "15N", "13C")
   nb_matrices = length(matrices)
   nb_elements = length(elements)
   colours = c(
@@ -246,7 +246,9 @@ plot_irn <- function(data_i, data_g) {
     "Mg" = "#5CC55C",
     "S" = "#D69F09",
     "K" = "#9B4BE1",
-    "Ca" = "#DF4F4F"
+    "Ca" = "#DF4F4F",
+    "15N" = "black", 
+    "13C" = "black"
   ) # The colors used for elements, modified after Jmol
   
   plots = vector("list", nb_matrices)
@@ -337,7 +339,7 @@ plot_irn <- function(data_i, data_g) {
   
   for (i in 1:nb_matrices) {
     plots[[i]] = vector("list", nb_elements)
-    names(plots[[i]]) = c("Na", "Mg", "S", "K", "Ca")
+    names(plots[[i]]) = elements
   }
   
   
@@ -731,7 +733,7 @@ plot_irn <- function(data_i, data_g) {
   
   ######  Isotopic absorption efficiency ratio (AER) ######
   
-  data_aer = subset(data_g, data_g$matrix == "aer")
+  data_aer = subset(data_g, data_g$matrix == "iaer")
   data_aer = pivot_wider(data_aer,
                           names_from = element,
                           values_from = elemental_value)
@@ -739,14 +741,14 @@ plot_irn <- function(data_i, data_g) {
   
   p <- ggplot2::ggplot(
     data_aer,
-    aes(x = group_mass_specific_intake_rate_fw, y = `13C`)
+    aes(x = group_mass_specific_intake_rate_fw, y = `C`)
   ) +
     geom_point(size = 2) +
-    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = "13C AER") +
+    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = "C IAER") +
     geom_smooth(color = "steelblue3",  method = "gam")
   
   ggsave(
-    filename = "13caer_&_msir.pdf",
+    filename = "ciaer_&_msir.pdf",
     plot = p,
     device = cairo_pdf,
     path = here::here("4_outputs"),
@@ -758,14 +760,14 @@ plot_irn <- function(data_i, data_g) {
   
   p <- ggplot2::ggplot(
     data_aer,
-    aes(x = group_mass_specific_intake_rate_fw, y = `15N`)
+    aes(x = group_mass_specific_intake_rate_fw, y = `N`)
   ) +
     geom_point(size = 2) +
-    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = "15N AER") +
+    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = "N IAER") +
     geom_smooth(color = "steelblue3",  method = "gam")
   
   ggsave(
-    filename = "15naer_&_msir.pdf",
+    filename = "niaer_&_msir.pdf",
     plot = p,
     device = cairo_pdf,
     path = here::here("4_outputs"),
