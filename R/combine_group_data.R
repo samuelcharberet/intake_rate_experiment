@@ -14,7 +14,7 @@ combine_group_data <- function(data_i, data_g, data_fc) {
   data_g$seventh_instar_date = "2021-10-26 CEST"
   data_g$seventh_instar_date = as.POSIXct(data_g$seventh_instar_date)
   data_g$number_collection_days = NA
-  
+  data_g$growth_rate = NA
 
   # We compute group-level measures based on the sum of the individual data
   
