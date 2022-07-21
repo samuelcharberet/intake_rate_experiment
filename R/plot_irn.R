@@ -95,7 +95,7 @@ plot_irn <- function(data_i, data_g) {
                        aes(x = ingestion_rate_fw / ((bodymass_last_collection_date + bodymass_7th_instar_j0_fw) / 2
                        ), y = absorption_efficiency_dw)) +
     geom_point(size = 2) +
-    labs(x = "Mass specific ingestion rate (mg fw/day / mg fw indiv)", y = "Absorption efficiency (% dw)") +
+    labs(x = "Mass specific ingestion rate (mg fw/ day / mg fw indiv)", y = "Absorption efficiency (% dw)") +
     geom_smooth(color = "steelblue3",  method = "gam")
   
   ggsave(
