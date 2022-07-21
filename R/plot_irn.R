@@ -20,7 +20,7 @@ plot_irn <- function(data_i, data_g) {
     )
   )
   
-  # Effect of week on bodymass at the start
+  ###### Effect of week on bodymass at the start ######
   
   p <- ggplot2::ggplot(
     data_i,
@@ -43,7 +43,7 @@ plot_irn <- function(data_i, data_g) {
     units = "in"
   )
   
-  # Dry weight bodymass at the end of the experiment according to food consumed
+  ###### Dry weight bodymass at the end of the experiment according to food consumed  ######
   
   p <- ggplot2::ggplot(data_i,
                        aes(x = food_consumed_collection_days_dw, y = bodymass_7th_instar_j3_dw)) +
@@ -85,12 +85,10 @@ plot_irn <- function(data_i, data_g) {
   )
   
   
-  ##########  3. Graphics and figures  ##########
+  # The food provided daily is a factor rather than a numeric variable
   data_i$food_provided_fw = as.factor(data_i$food_provided_fw)
   
-  ###### Proportional fluxes ######
-  
-  ### Absorption efficiency according to mass specific ingestion rate ###
+  ###### Absorption efficiency according to mass specific ingestion rate ######
   
   
   p <- ggplot2::ggplot(data_i,
@@ -111,9 +109,7 @@ plot_irn <- function(data_i, data_g) {
     units = "in"
   )
   
-  ###### Growth efficiency ######
-  
-  # Growth efficiency in fresh weight according to the mass specific ingestion rate in fresh weight
+  ###### Growth efficiency in fresh weight according to the mass specific ingestion rate in fresh weight  ######
   
   p <- ggplot2::ggplot(data_i,
                        aes(x = ingestion_rate_fw / ((bodymass_last_collection_date + bodymass_7th_instar_j0_fw) / 2
@@ -133,7 +129,7 @@ plot_irn <- function(data_i, data_g) {
     units = "in"
   )
   
-  # Growth efficiency in dry weight according to the mass specific ingestion rate in dry weights
+  ###### Growth efficiency in dry weight according to the mass specific ingestion rate in dry weight  ######
   
   
   p <- ggplot2::ggplot(data_i,
@@ -156,8 +152,7 @@ plot_irn <- function(data_i, data_g) {
     units = "in"
   )
   
-  # Growth rate in fresh weight according to the mass specific ingestion rate
-  
+  ###### Growth rate in fresh weight according to the mass specific ingestion rate  ######
   
   p <- ggplot2::ggplot(data_i,
                        aes(x = ingestion_rate_fw / ((bodymass_7th_instar_j3_fw + bodymass_7th_instar_j0_fw) / 2
@@ -177,7 +172,7 @@ plot_irn <- function(data_i, data_g) {
     units = "in"
   )
   
-  # Growth efficiency in fresh weight according to growth rate
+  ###### Growth efficiency in fresh weight according to growth rate  in fresh weight ######
   
   p <- ggplot2::ggplot(data_i,
                        aes(x = growth_rate, y = growth_efficiency_fw)) +
@@ -240,24 +235,26 @@ plot_irn <- function(data_i, data_g) {
     units = "in"
   )
   
-  ###### Element absorption efficiency according to total mass-specific intake rate  ######
+  # Options for the plots
   
-  nb_matrices = 3
-  nb_elements = length(unique(data_g$element)) - 3
   matrices = c("larvae", "egestion", "absorption")
-  elements = c("Na", "Mg", "S", "K", "Ca", "13C", "15N")
+  elements = c("Na", "Mg", "S", "K", "Ca")
+  nb_matrices = length(matrices)
+  nb_elements = length(elements)
   colours = c(
     "Na" = "#403EFF",
     "Mg" = "#5CC55C",
     "S" = "#D69F09",
     "K" = "#9B4BE1",
-    "Ca" = "#DF4F4F",
-    "13C" = "black",
-    "15N" = "black"
+    "Ca" = "#DF4F4F"
   ) # The colors used for elements, modified after Jmol
   
   plots = vector("list", nb_matrices)
   names(plots) = matrices
+  
+  
+  ###### CNP absorption efficiency, larval content, egestion content according to total mass-specific intake rate  ######
+  
   
   CNP = vector("list", nb_matrices)
   names(CNP) = matrices
@@ -267,11 +264,11 @@ plot_irn <- function(data_i, data_g) {
   for (i in 1:nb_matrices) {
     data_matrix = subset(
       data_g,
-      data_g$matrix == names(CNP)[i] &
+      data_g$matrix == matrices[i] &
         data_g$element == "C" |
-        data_g$matrix == names(CNP)[i] &
+        data_g$matrix == matrices[i] &
         data_g$element == "N" |
-        data_g$matrix == names(CNP)[i] &
+        data_g$matrix == matrices[i] &
         data_g$element == "P"
     )
     
@@ -282,17 +279,15 @@ plot_irn <- function(data_i, data_g) {
                                                                     T)
                                                            )))
     
-    if (names(CNP)[i] != "absorption" &
-        names(CNP)[i] != "fractionation") {
-      data_matrix$elemental_value[which(data_matrix$element ==
-                                          "N")] = data_matrix$elemental_value[which(data_matrix$element ==
-                                                                                      "N")] *
-        y_axis_coef
-      data_matrix$elemental_value[which(data_matrix$element ==
-                                          "P")] = data_matrix$elemental_value[which(data_matrix$element ==
-                                                                                      "P")] *
-        y_axis_coef
-    }
+    data_matrix$elemental_value[which(data_matrix$element ==
+                                        "N")] = data_matrix$elemental_value[which(data_matrix$element ==
+                                                                                    "N")] *
+      y_axis_coef
+    data_matrix$elemental_value[which(data_matrix$element ==
+                                        "P")] = data_matrix$elemental_value[which(data_matrix$element ==
+                                                                                    "P")] *
+      y_axis_coef
+    
     CNP[[i]] <- ggplot2::ggplot(
       data_matrix
       ,
@@ -303,11 +298,8 @@ plot_irn <- function(data_i, data_g) {
         fill =  element
       )
     ) +
-      {
-        if (names(CNP)[i] != "absorption" &
-            names(CNP)[i] != "fractionation")
-          scale_y_continuous(sec.axis = sec_axis(~ . / y_axis_coef))
-      } +
+      
+      scale_y_continuous(sec.axis = sec_axis(~ . / y_axis_coef)) +
       geom_point(size = 2) +
       geom_smooth(method = "gam") +
       scale_color_manual(
@@ -319,19 +311,15 @@ plot_irn <- function(data_i, data_g) {
         y = y_axes[i],
         fill = "Element",
         color = "Element"
-      ) + {
-        if (names(CNP)[i] != "absorption" &
-            names(CNP)[i] != "fractionation")
-          theme(
-            axis.text.y = element_text(color = "#808080"),
-            axis.line.y = element_line(color = "#808080"),
-            axis.ticks.y = element_line(color = "#808080"),
-            axis.text.y.right = element_text(color = "#5A5ACA"),
-            axis.line.y.right = element_line(color = "#5A5ACA"),
-            axis.ticks.y.right = element_line(color = "#5A5ACA")
-          )
-      }
-    
+      ) +
+      theme(
+        axis.text.y = element_text(color = "#808080"),
+        axis.line.y = element_line(color = "#808080"),
+        axis.ticks.y = element_line(color = "#808080"),
+        axis.text.y.right = element_text(color = "#5A5ACA"),
+        axis.line.y.right = element_line(color = "#5A5ACA"),
+        axis.ticks.y.right = element_line(color = "#5A5ACA")
+      )
     
     ggsave(
       filename = paste("CNP", y_plot_names[i], "dw_&_msirfw.pdf", sep = ""),
@@ -345,11 +333,11 @@ plot_irn <- function(data_i, data_g) {
     )
   }
   
-  # Creating the list of plots
+  # Creating the list of plots for the other elements
   
   for (i in 1:nb_matrices) {
     plots[[i]] = vector("list", nb_elements)
-    names(plots[[i]]) = c("Na", "Mg", "S", "K", "Ca", "13C", "15N")
+    names(plots[[i]]) = c("Na", "Mg", "S", "K", "Ca")
   }
   
   
@@ -533,7 +521,7 @@ plot_irn <- function(data_i, data_g) {
     guides(colour = guide_legend(override.aes = list(size = 8), ncol = 2))
   
   
-  # Creating the complete absorption efficiency, larvae and egestion composition plots
+  ######  Creating the complete absorption efficiency, larvae and egestion composition plots ######
   
   complete_plots = vector("list", nb_matrices)
   
@@ -594,7 +582,7 @@ plot_irn <- function(data_i, data_g) {
     )
   }
   
-  ## Isotopic fractionation of the larvae
+  ######  Isotopic fractionation between the larvae and the diet ######
   
   ggplot2::theme_set(
     theme_classic() + theme(
@@ -609,20 +597,20 @@ plot_irn <- function(data_i, data_g) {
     )
   )
   
-  data_fractionation_larvae = subset(data_g, data_g$matrix == "fractionation-larvae")
-  data_fractionation_larvae = pivot_wider(data_fractionation_larvae,
+  data_tf = subset(data_g, data_g$matrix == "tf")
+  data_tf = pivot_wider(data_tf,
                                           names_from = element,
                                           values_from = elemental_value)
   
   
-  p <- ggplot2::ggplot(data_fractionation_larvae,
+  p <- ggplot2::ggplot(data_tf,
                        aes(x = group_mass_specific_intake_rate_fw, y = `13C`)) +
     geom_point(size = 2) +
     labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = expression(paste("13C TF ( ", delta, ")"))) +
     geom_smooth(color = "steelblue3",  method = "gam")
   
   ggsave(
-    filename = "13ctfl_&_msir.pdf",
+    filename = "13ctf_&_msir.pdf",
     plot = p,
     device = cairo_pdf,
     path = here::here("4_outputs"),
@@ -632,14 +620,14 @@ plot_irn <- function(data_i, data_g) {
     units = "in"
   )
   
-  p <- ggplot2::ggplot(data_fractionation_larvae,
+  p <- ggplot2::ggplot(data_tf,
                        aes(x = group_mass_specific_intake_rate_fw, y = `15N`)) +
     geom_point(size = 2) +
     labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = expression(paste("15N TF ( ", delta, ")"))) +
     geom_smooth(color = "steelblue3",  method = "gam")
   
   ggsave(
-    filename = "15ntfl_&_msir.pdf",
+    filename = "15ntf_&_msir.pdf",
     plot = p,
     device = cairo_pdf,
     path = here::here("4_outputs"),
@@ -649,16 +637,16 @@ plot_irn <- function(data_i, data_g) {
     units = "in"
   )
   
-  ## Isotopic fractionation of the egestion
+  ######  Isotopic discrimination factor between the egestion and the diet (EDDF) ######
   
-  data_fractionation_egestion = subset(data_g, data_g$matrix == "fractionation-egestion")
-  data_fractionation_egestion = pivot_wider(data_fractionation_egestion,
+  data_eddf = subset(data_g, data_g$matrix == "eddf")
+  data_eddf = pivot_wider(data_eddf,
                                             names_from = element,
                                             values_from = elemental_value)
   
   
   p <- ggplot2::ggplot(
-    data_fractionation_egestion,
+    data_eddf,
     aes(x = group_mass_specific_intake_rate_fw, y = `13C`)
   ) +
     geom_point(size = 2) +
@@ -677,7 +665,7 @@ plot_irn <- function(data_i, data_g) {
   )
   
   p <- ggplot2::ggplot(
-    data_fractionation_egestion,
+    data_eddf,
     aes(x = group_mass_specific_intake_rate_fw, y = `15N`)
   ) +
     geom_point(size = 2) +
@@ -695,4 +683,95 @@ plot_irn <- function(data_i, data_g) {
     units = "in"
   )
   
+  ######  Isotopic discrimination factor between the egestion and the larvae (ELDF) ######
+  
+  data_eldf = subset(data_g, data_g$matrix == "eldf")
+  data_eldf = pivot_wider(data_eldf,
+                          names_from = element,
+                          values_from = elemental_value)
+  
+  
+  p <- ggplot2::ggplot(
+    data_eldf,
+    aes(x = group_mass_specific_intake_rate_fw, y = `13C`)
+  ) +
+    geom_point(size = 2) +
+    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = expression(paste("13C ELDF ( ", delta, ")"))) +
+    geom_smooth(color = "steelblue3",  method = "gam")
+  
+  ggsave(
+    filename = "13celdf_&_msir.pdf",
+    plot = p,
+    device = cairo_pdf,
+    path = here::here("4_outputs"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
+  
+  p <- ggplot2::ggplot(
+    data_eldf,
+    aes(x = group_mass_specific_intake_rate_fw, y = `15N`)
+  ) +
+    geom_point(size = 2) +
+    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = expression(paste("15N ELDF ( ", delta, ")"))) +
+    geom_smooth(color = "steelblue3",  method = "gam")
+  
+  ggsave(
+    filename = "15neldf_&_msir.pdf",
+    plot = p,
+    device = cairo_pdf,
+    path = here::here("4_outputs"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
+  
+  ######  Isotopic absorption efficiency ratio (AER) ######
+  
+  data_aer = subset(data_g, data_g$matrix == "aer")
+  data_aer = pivot_wider(data_aer,
+                          names_from = element,
+                          values_from = elemental_value)
+  
+  
+  p <- ggplot2::ggplot(
+    data_aer,
+    aes(x = group_mass_specific_intake_rate_fw, y = `13C`)
+  ) +
+    geom_point(size = 2) +
+    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = "13C AER") +
+    geom_smooth(color = "steelblue3",  method = "gam")
+  
+  ggsave(
+    filename = "13caer_&_msir.pdf",
+    plot = p,
+    device = cairo_pdf,
+    path = here::here("4_outputs"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
+  
+  p <- ggplot2::ggplot(
+    data_aer,
+    aes(x = group_mass_specific_intake_rate_fw, y = `15N`)
+  ) +
+    geom_point(size = 2) +
+    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = "15N AER") +
+    geom_smooth(color = "steelblue3",  method = "gam")
+  
+  ggsave(
+    filename = "15naer_&_msir.pdf",
+    plot = p,
+    device = cairo_pdf,
+    path = here::here("4_outputs"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
 }

@@ -110,17 +110,22 @@ combine_group_data <- function(data_i, data_g, data_fc) {
   # Isotopic pseudo absorption efficiency
   # Using PDB and air delta 13C and delta 15N 
   # of 0.0112372 and 0.003663 respectively
-  data_g$'13C_absorption_efficiency_dw' = 1-(((((data_g$'13C_egestion'/1000)+1)*0.0112372)*data_g$egestion_group_mass_dw*data_g$C_egestion)/((((data_g$food_13C/1000)+1)*0.0112372)*data_g$food_consumed_collection_days_dw*data_g$food_C))
-  data_g$'15N_absorption_efficiency_dw' = 1-(((((data_g$'15N_egestion'/1000)+1)*0.003663)*data_g$egestion_group_mass_dw*data_g$N_egestion)/((((data_g$food_15N/1000)+1)*0.003663)*data_g$food_consumed_collection_days_dw*data_g$food_N))
+  
+  data_g$'13C_aer' = (1-(((((data_g$'13C_egestion'/1000)+1)*0.0112372)*data_g$egestion_group_mass_dw*data_g$C_egestion)/((((data_g$food_13C/1000)+1)*0.0112372)*data_g$food_consumed_collection_days_dw*data_g$food_C)))/data_g$C_absorption_efficiency_dw
+  data_g$'15N_aer' = (1-(((((data_g$'15N_egestion'/1000)+1)*0.003663)*data_g$egestion_group_mass_dw*data_g$N_egestion)/((((data_g$food_15N/1000)+1)*0.003663)*data_g$food_consumed_collection_days_dw*data_g$food_N)))/data_g$N_absorption_efficiency_dw
   
   
-  # Isotopic fractionation of the larvae 
-  data_g$'13C_fractionation-larvae' = data_g$'13C_larvae'-data_g$food_13C
-  data_g$'15N_fractionation-larvae' = data_g$'15N_larvae'-data_g$food_15N
+  # Isotopic fractionation
+  data_g$'13C_tf' = data_g$'13C_larvae'-data_g$food_13C
+  data_g$'15N_tf' = data_g$'15N_larvae'-data_g$food_15N
   
-  # Isotopic fractionation of the egestion 
-  data_g$'13C_fractionation-egestion' = data_g$'13C_egestion'-data_g$food_13C
-  data_g$'15N_fractionation-egestion' = data_g$'15N_egestion'-data_g$food_15N
+  # Isotopic egestion-diet discrimination factor
+  data_g$'13C_eddf' = data_g$'13C_egestion'-data_g$food_13C
+  data_g$'15N_eddf' = data_g$'15N_egestion'-data_g$food_15N
+  
+  # Isotopic egestion-larvae discrimination factor
+  data_g$'13C_eldf' = data_g$'13C_egestion'-data_g$'13C_larvae'
+  data_g$'15N_eldf' = data_g$'15N_egestion'-data_g$'15N_larvae'
   
   data_g = tidyr::pivot_longer(
     data_g,
@@ -133,12 +138,14 @@ combine_group_data <- function(data_i, data_g, data_fc) {
       "Mg_absorption_efficiency_dw",
       "K_absorption_efficiency_dw",
       "Ca_absorption_efficiency_dw",
-      "13C_absorption_efficiency_dw",
-      "15N_absorption_efficiency_dw",
-      "13C_fractionation-larvae",
-      "15N_fractionation-larvae",
-      "13C_fractionation-egestion",
-      "15N_fractionation-egestion",
+      "13C_aer",
+      "15N_aer",
+      "13C_tf",
+      "15N_tf",
+      "13C_eddf",
+      "15N_eddf",
+      "13C_eldf",
+      "15N_eldf",
       "C_egestion",
       "N_egestion",
       "P_egestion",
