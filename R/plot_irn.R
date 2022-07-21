@@ -678,6 +678,43 @@ plot_irn <- function(data_i, data_g) {
     units = "in"
   )
   
+  ######  Isotopic fractionation between the larvae and the diet as a function of mass-specific growth rate ######
+  
+  
+  p <- ggplot2::ggplot(data_tf,
+                       aes(x = growth_rate/mean(c(groupmass_7th_instar_j3_fw, groupmass_7th_instar_j0_fw)), y = `13C`)) +
+    geom_point(size = 2) +
+    labs(x = "Mass-specific growth rate (mg fw/ day)", y = expression(paste("13C TF ( ", delta, ")"))) +
+    geom_smooth(color = "steelblue3",  method = "gam")
+  
+  ggsave(
+    filename = "13ctf_&_msgr.pdf",
+    plot = p,
+    device = cairo_pdf,
+    path = here::here("4_outputs"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
+  
+  p <- ggplot2::ggplot(data_tf,
+                       aes(x = growth_rate/mean(c(groupmass_7th_instar_j3_fw, groupmass_7th_instar_j0_fw)), y = `15N`)) +
+    geom_point(size = 2) +
+    labs(x = "Mass-specific growth rate (mg fw/ day)", y = expression(paste("15N TF ( ", delta, ")"))) +
+    geom_smooth(color = "steelblue3",  method = "gam")
+  
+  ggsave(
+    filename = "15ntf_&_msgr.pdf",
+    plot = p,
+    device = cairo_pdf,
+    path = here::here("4_outputs"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
+  
   ######  Isotopic discrimination factor between the egestion and the diet (EDDF) ######
   
   data_eddf = subset(data_g, data_g$matrix == "eddf")
