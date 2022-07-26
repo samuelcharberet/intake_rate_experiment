@@ -721,7 +721,7 @@ plot_irn <- function(data_i, data_g) {
   p <- ggplot2::ggplot(data_tf,
                        aes(x = growth_efficiency_fw, y = `13C`)) +
     geom_point(size = 2) +
-    labs(x = "Mass-specific growth rate (mg fw/ day)", y = expression(paste("13C TF ( ", delta, ")"))) +
+    labs(x = "Growth efficiency (%fw)", y = expression(paste("13C TF ( ", delta, ")"))) +
     geom_smooth(color = "steelblue3",  method = "gam")
   
   ggsave(
@@ -738,7 +738,7 @@ plot_irn <- function(data_i, data_g) {
   p <- ggplot2::ggplot(data_tf,
                        aes(x = growth_efficiency_fw, y = `15N`)) +
     geom_point(size = 2) +
-    labs(x = "Mass-specific growth rate (mg fw/ day)", y = expression(paste("15N TF ( ", delta, ")"))) +
+    labs(x = "Growth efficiency (%fw)", y = expression(paste("15N TF ( ", delta, ")"))) +
     geom_smooth(color = "steelblue3",  method = "gam")
   
   ggsave(
