@@ -151,13 +151,13 @@ combine_group_data <- function(data_i, data_g, data_fc) {
   data_g$`13C_tf` = data_g$`d13C_larvae`-data_g$food_d13C
   data_g$`15N_tf` = data_g$`d15N_larvae`-data_g$food_d15N
   
-  # Isotopic egestion-diet discrimination factor
-  data_g$`13C_eddf` = data_g$`d13C_egestion`-data_g$food_d13C
-  data_g$`15N_eddf` = data_g$`d15N_egestion`-data_g$food_d15N
+  # Isotopic frass-food discrimination factor
+  data_g$`13C_ffdf` = data_g$`d13C_egestion`-data_g$food_d13C
+  data_g$`15N_ffdf` = data_g$`d15N_egestion`-data_g$food_d15N
   
-  # Isotopic egestion-larvae discrimination factor
-  data_g$`13C_eldf` = data_g$`d13C_egestion`-data_g$`d13C_larvae`
-  data_g$`15N_eldf` = data_g$`d15N_egestion`-data_g$`d15N_larvae`
+  # Isotopic frass-larvae discrimination factor
+  data_g$`13C_fldf` = data_g$`d13C_egestion`-data_g$`d13C_larvae`
+  data_g$`15N_fldf` = data_g$`d15N_egestion`-data_g$`d15N_larvae`
   
   data_g = tidyr::pivot_longer(
     data_g,
@@ -178,10 +178,10 @@ combine_group_data <- function(data_i, data_g, data_fc) {
       "N_iaer",
       "13C_tf",
       "15N_tf",
-      "13C_eddf",
-      "15N_eddf",
-      "13C_eldf",
-      "15N_eldf",
+      "13C_ffdf",
+      "15N_ffdf",
+      "13C_fldf",
+      "15N_fldf",
       "C_egestion",
       "N_egestion",
       "P_egestion",

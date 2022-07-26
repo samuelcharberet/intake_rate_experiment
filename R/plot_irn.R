@@ -610,7 +610,7 @@ plot_irn <- function(data_i, data_g) {
   p <- ggplot2::ggplot(data_tf,
                        aes(x = group_mass_specific_intake_rate_fw, y = `13C`)) +
     geom_point(size = 2) +
-    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = expression(paste("13C TF ( ", delta, ")"))) +
+    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = expression(paste(Delta, "13C"))) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
@@ -627,7 +627,7 @@ plot_irn <- function(data_i, data_g) {
   p <- ggplot2::ggplot(data_tf,
                        aes(x = group_mass_specific_intake_rate_fw, y = `15N`)) +
     geom_point(size = 2) +
-    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = expression(paste("15N TF ( ", delta, ")"))) +
+    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = expression(paste(Delta, "15N"))) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
@@ -641,13 +641,13 @@ plot_irn <- function(data_i, data_g) {
     units = "in"
   )
   
-  ######  Isotopic fractionation between the larvae and the diet as a function of growth rate ######
+  ######  Isotopic fractionation between the larvae and the frass as a function of growth rate ######
   
   
   p <- ggplot2::ggplot(data_tf,
                        aes(x = growth_rate, y = `13C`)) +
     geom_point(size = 2) +
-    labs(x = "Growth rate (mg fw/ day)", y = expression(paste("13C TF ( ", delta, ")"))) +
+    labs(x = "Growth rate (mg fw/ day)", y = expression(paste(Delta, "13C"))) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
@@ -664,7 +664,7 @@ plot_irn <- function(data_i, data_g) {
   p <- ggplot2::ggplot(data_tf,
                        aes(x = growth_rate, y = `15N`)) +
     geom_point(size = 2) +
-    labs(x = "Growth rate (mg fw/ day)", y = expression(paste("15N TF ( ", delta, ")"))) +
+    labs(x = "Growth rate (mg fw/ day)", y = expression(paste(Delta,"15N"))) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
@@ -684,7 +684,7 @@ plot_irn <- function(data_i, data_g) {
   p <- ggplot2::ggplot(data_tf,
                        aes(x = growth_rate/((groupmass_7th_instar_j3_fw+groupmass_7th_instar_j0_fw)/2), y = `13C`)) +
     geom_point(size = 2) +
-    labs(x = "Mass-specific growth rate (mg fw/ day)", y = expression(paste("13C TF ( ", delta, ")"))) +
+    labs(x = "Mass-specific growth rate (mg fw/ day)", y = expression(paste(Delta, "13C"))) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
@@ -701,7 +701,7 @@ plot_irn <- function(data_i, data_g) {
   p <- ggplot2::ggplot(data_tf,
                        aes(x = growth_rate/((groupmass_7th_instar_j3_fw+groupmass_7th_instar_j0_fw)/2), y = `15N`)) +
     geom_point(size = 2) +
-    labs(x = "Mass-specific growth rate (mg fw/ day)", y = expression(paste("15N TF ( ", delta, ")"))) +
+    labs(x = "Mass-specific growth rate (mg fw/ day)", y = expression(paste(Delta, "15N"))) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
@@ -721,7 +721,7 @@ plot_irn <- function(data_i, data_g) {
   p <- ggplot2::ggplot(data_tf,
                        aes(x = growth_efficiency_fw, y = `13C`)) +
     geom_point(size = 2) +
-    labs(x = "Growth efficiency (%fw)", y = expression(paste("13C TF ( ", delta, ")"))) +
+    labs(x = "Growth efficiency (%fw)", y = expression(paste(Delta, "13C"))) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
@@ -738,7 +738,7 @@ plot_irn <- function(data_i, data_g) {
   p <- ggplot2::ggplot(data_tf,
                        aes(x = growth_efficiency_fw, y = `15N`)) +
     geom_point(size = 2) +
-    labs(x = "Growth efficiency (%fw)", y = expression(paste("15N TF ( ", delta, ")"))) +
+    labs(x = "Growth efficiency (%fw)", y = expression(paste(Delta, "15N"))) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
@@ -752,9 +752,9 @@ plot_irn <- function(data_i, data_g) {
     units = "in"
   )
   
-  ######  Isotopic discrimination factor between the egestion and the diet (EDDF) ######
+  ######  Isotopic discrimination factor between frass and food (FFDF) ######
   
-  data_eddf = subset(data_g, data_g$matrix == "eddf")
+  data_eddf = subset(data_g, data_g$matrix == "ffdf")
   data_eddf = pivot_wider(data_eddf,
                                             names_from = element,
                                             values_from = elemental_value)
@@ -765,11 +765,11 @@ plot_irn <- function(data_i, data_g) {
     aes(x = group_mass_specific_intake_rate_fw, y = `13C`)
   ) +
     geom_point(size = 2) +
-    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = expression(paste("13C EDDF ( ", delta, ")"))) +
+    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = expression(paste("13C FFDF"))) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
-    filename = "13ceddf_&_msir.pdf",
+    filename = "13cffdf_&_msir.pdf",
     plot = p,
     device = cairo_pdf,
     path = here::here("4_outputs"),
@@ -784,7 +784,7 @@ plot_irn <- function(data_i, data_g) {
     aes(x = group_mass_specific_intake_rate_fw, y = `15N`)
   ) +
     geom_point(size = 2) +
-    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = expression(paste("15N EDDF ( ", delta, ")"))) +
+    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = expression(paste("15N FFDF"))) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
@@ -798,9 +798,9 @@ plot_irn <- function(data_i, data_g) {
     units = "in"
   )
   
-  ######  Isotopic discrimination factor between the egestion and the larvae (ELDF) ######
+  ######  Isotopic discrimination factor between the frass and the larvae (FLDF) ######
   
-  data_eldf = subset(data_g, data_g$matrix == "eldf")
+  data_eldf = subset(data_g, data_g$matrix == "fldf")
   data_eldf = pivot_wider(data_eldf,
                           names_from = element,
                           values_from = elemental_value)
@@ -811,11 +811,11 @@ plot_irn <- function(data_i, data_g) {
     aes(x = group_mass_specific_intake_rate_fw, y = `13C`)
   ) +
     geom_point(size = 2) +
-    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = expression(paste("13C ELDF ( ", delta, ")"))) +
+    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = expression(paste("13C FLDF"))) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
-    filename = "13celdf_&_msir.pdf",
+    filename = "13cfldf_&_msir.pdf",
     plot = p,
     device = cairo_pdf,
     path = here::here("4_outputs"),
@@ -830,11 +830,11 @@ plot_irn <- function(data_i, data_g) {
     aes(x = group_mass_specific_intake_rate_fw, y = `15N`)
   ) +
     geom_point(size = 2) +
-    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = expression(paste("15N ELDF ( ", delta, ")"))) +
+    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = expression(paste("15N FLDF"))) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
-    filename = "15neldf_&_msir.pdf",
+    filename = "15nfldf_&_msir.pdf",
     plot = p,
     device = cairo_pdf,
     path = here::here("4_outputs"),
