@@ -17,4 +17,9 @@ model_irn <- function(data_i, data_g) {
   
   # Using the broom package, and the augment, tidy, and glance functions, we can 
   # insect, evaluate, and predict
+  
+  
+  
+  ##### Isotopes paper #####
+  
 }

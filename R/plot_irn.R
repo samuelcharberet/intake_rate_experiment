@@ -752,16 +752,16 @@ plot_irn <- function(data_i, data_g) {
     units = "in"
   )
   
-  ######  Isotopic discrimination factor between frass and food (FFDF) ######
+  ######  Isotopic discrimination factor between frass and food (FFDF) according to MSIR ######
   
-  data_eddf = subset(data_g, data_g$matrix == "ffdf")
-  data_eddf = pivot_wider(data_eddf,
+  data_ffdf = subset(data_g, data_g$matrix == "ffdf")
+  data_ffdf = pivot_wider(data_ffdf,
                                             names_from = element,
                                             values_from = elemental_value)
   
   
   p <- ggplot2::ggplot(
-    data_eddf,
+    data_ffdf,
     aes(x = group_mass_specific_intake_rate_fw, y = `13C`)
   ) +
     geom_point(size = 2) +
@@ -780,7 +780,7 @@ plot_irn <- function(data_i, data_g) {
   )
   
   p <- ggplot2::ggplot(
-    data_eddf,
+    data_ffdf,
     aes(x = group_mass_specific_intake_rate_fw, y = `15N`)
   ) +
     geom_point(size = 2) +
@@ -798,24 +798,24 @@ plot_irn <- function(data_i, data_g) {
     units = "in"
   )
   
-  ######  Isotopic discrimination factor between the frass and the larvae (FLDF) ######
+  ######  Isotopic discrimination factor between frass and food (FFDF) according to absorption efficiency ######
   
-  data_eldf = subset(data_g, data_g$matrix == "fldf")
-  data_eldf = pivot_wider(data_eldf,
+  data_ffdf = subset(data_g, data_g$matrix == "ffdf")
+  data_ffdf = pivot_wider(data_ffdf,
                           names_from = element,
                           values_from = elemental_value)
   
   
   p <- ggplot2::ggplot(
-    data_eldf,
-    aes(x = group_mass_specific_intake_rate_fw, y = `13C`)
+    data_ffdf,
+    aes(x = absorption_efficiency_dw, y = `13C`)
   ) +
     geom_point(size = 2) +
-    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = expression(paste("13C FLDF"))) +
+    labs(x = "Absorption efficiency (%)", y = expression(paste("13C FFDF"))) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
-    filename = "13cfldf_&_msir.pdf",
+    filename = "13cffdf_&_aedw.pdf",
     plot = p,
     device = cairo_pdf,
     path = here::here("4_outputs"),
@@ -826,15 +826,61 @@ plot_irn <- function(data_i, data_g) {
   )
   
   p <- ggplot2::ggplot(
-    data_eldf,
-    aes(x = group_mass_specific_intake_rate_fw, y = `15N`)
+    data_ffdf,
+    aes(x = absorption_efficiency_dw, y = `15N`)
   ) +
     geom_point(size = 2) +
-    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = expression(paste("15N FLDF"))) +
+    labs(x = "Absorption efficiency (%)", y = expression(paste("15N FFDF"))) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
-    filename = "15nfldf_&_msir.pdf",
+    filename = "15neddf_&_aedf.pdf",
+    plot = p,
+    device = cairo_pdf,
+    path = here::here("4_outputs"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
+  
+  ######  Isotopic discrimination factor between the frass and the larvae (FLDF) according to MSIR ######
+  
+  data_fldf = subset(data_g, data_g$matrix == "fldf")
+  data_fldf = pivot_wider(data_fldf,
+                          names_from = element,
+                          values_from = elemental_value)
+  
+  
+  p <- ggplot2::ggplot(
+    data_fldf,
+    aes(x = absorption_efficiency_dw, y = `13C`)
+  ) +
+    geom_point(size = 2) +
+    labs(x = "Absorption efficiency (%)", y = expression(paste("13C FLDF"))) +
+    geom_smooth(color = "steelblue3",  method = "lm")
+  
+  ggsave(
+    filename = "13cfldf_&_aedf.pdf",
+    plot = p,
+    device = cairo_pdf,
+    path = here::here("4_outputs"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
+  
+  p <- ggplot2::ggplot(
+    data_fldf,
+    aes(x = absorption_efficiency_dw, y = `15N`)
+  ) +
+    geom_point(size = 2) +
+    labs(x = "Absorption efficiency (%)", y = expression(paste("15N FLDF"))) +
+    geom_smooth(color = "steelblue3",  method = "lm")
+  
+  ggsave(
+    filename = "15nfldf_&_aedf.pdf",
     plot = p,
     device = cairo_pdf,
     path = here::here("4_outputs"),
