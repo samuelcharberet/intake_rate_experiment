@@ -834,7 +834,7 @@ plot_irn <- function(data_i, data_g) {
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
-    filename = "15neddf_&_aedf.pdf",
+    filename = "15neddf_&_aedw.pdf",
     plot = p,
     device = cairo_pdf,
     path = here::here("4_outputs"),
@@ -861,7 +861,7 @@ plot_irn <- function(data_i, data_g) {
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
-    filename = "13cfldf_&_aedf.pdf",
+    filename = "13cfldf_&_aedw.pdf",
     plot = p,
     device = cairo_pdf,
     path = here::here("4_outputs"),
@@ -880,7 +880,7 @@ plot_irn <- function(data_i, data_g) {
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
-    filename = "15nfldf_&_aedf.pdf",
+    filename = "15nfldf_&_aedw.pdf",
     plot = p,
     device = cairo_pdf,
     path = here::here("4_outputs"),
