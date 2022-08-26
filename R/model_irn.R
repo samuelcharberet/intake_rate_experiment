@@ -12,9 +12,9 @@ model_irn <- function(data_i, data_g) {
   
   ###### 1. For chemical elements #####
   
-  matrices = c("absorption", "larvae", "egestion")
-  nb_matrices = length(matrices)
-  elements = c("C",
+  variables_list = c("absorption", "larvae", "egestion")
+  nb_variables = length(variables_list)
+  elements_list = c("C",
                "N",
                "P",
                "Na",
@@ -22,25 +22,25 @@ model_irn <- function(data_i, data_g) {
                "S",
                "K",
                "Ca")
-  nb_elements = length(elements)
+  nb_elements = length(elements_list)
   
   
   # Creating a dataframe containing statistics for the publication
   
-  constituents = c("total mass",
+  constituent = c("total mass",
                    "total mass",
-                   rep(elements, 3))
-  variables = c("growth_efficiency",
+                   rep(elements_list, nb_variables))
+  variable = c("growth_efficiency",
                 rep("absorption", nb_elements+1),
                 rep("larvae", nb_elements),
                 rep("egestion", nb_elements))
   
   
-  edf = rep(NA, length(constituents))
-  p_value = rep(NA, length(constituents))
+  edf = rep(NA, length(constituent))
+  p_value = rep(NA, length(constituent))
   models_nutrients = data.frame(
-    constituents = constituents,
-    variables = variables,
+    constituent = constituent,
+    variable = variable,
     edf = edf,
     p_value = p_value
   )
@@ -48,8 +48,8 @@ model_irn <- function(data_i, data_g) {
   # We have two datasets, one at the level of individuals
   # and another at the level of the group
   
-  n_mod_data_i = length(which(constituents == "total mass"))
-  n_mod_data_g = length(constituents) - length(which(constituents == "total mass"))
+  n_mod_data_i = length(which(constituent == "total mass"))
+  n_mod_data_g = length(constituent) - length(which(constituent == "total mass"))
   
   # At the level of individuals
   
@@ -71,19 +71,19 @@ model_irn <- function(data_i, data_g) {
   
   # At the level of groups
   
-  for (i in 1:nb_matrices) {
-    data_matrix = subset(data_g, data_g$matrix == matrices[i])
+  for (i in 1:nb_variables) {
+    data_variable = subset(data_g, data_g$matrix == variables_list[i])
     for (j in 1:nb_elements) {
-      data_matrix_element = subset(data_matrix, data_matrix$element == elements[j])
+      data_variable_element = subset(data_variable, data_variable$element == elements_list[j])
       formula = as.formula(paste(
         "elemental_value",
         "~ s(group_mass_specific_intake_rate_fw)"
       ))
-      mod = mgcv::gam(formula, data = data_matrix_element)
+      mod = mgcv::gam(formula, data = data_variable_element)
       summary_mod = summary(mod)
       k = which(
-        models_nutrients$variables == matrices[i] &
-          models_nutrients$constituents == elements[j]
+        models_nutrients$variable == variables_list[i] &
+          models_nutrients$constituent == elements_list[j]
       )
       if (mod$converged == "TRUE") {
         models_nutrients$edf[k] = summary_mod$edf
@@ -99,47 +99,47 @@ model_irn <- function(data_i, data_g) {
   
   ###### 2. For isotopes #####
   
-  variables = c("tf", "fldf", "ffdf")
-  nb_variables = length(matrices)
-  isotopes = c("13C",
+  variables_list = c("tf", "fldf", "ffdf")
+  nb_variables = length(variables_list)
+  isotopes_list = c("13C",
                "15N")
-  nb_isotopes = length(isotopes)
+  nb_isotopes = length(isotopes_list)
   
   
   # Creating a dataframe containing statistics for the publication
   
-  constituents = c(rep(isotopes, nb_variables))
-  variables = c(rep("tf", nb_isotopes),
+  isotope = c(rep(isotopes_list, nb_variables))
+  variable = c(rep("tf", nb_isotopes),
                 rep("fldf", nb_isotopes),
                 rep("ffdf", nb_isotopes))
   
   
-  edf = rep(NA, length(constituents))
-  p_value = rep(NA, length(constituents))
+  edf = rep(NA, length(isotope))
+  p_value = rep(NA, length(isotope))
   models_isotopes = data.frame(
-    constituents = constituents,
-    variables = variables,
+    isotope = isotope,
+    variable = variable,
     edf = edf,
     p_value = p_value
   )
   
   for (i in 1:nb_variables) {
-    data_variable = subset(data_g, data_g$matrix == variables[i])
+    data_variable = subset(data_g, data_g$matrix == variables_list[i])
     for (j in 1:nb_isotopes) {
-      data_variable_isotope = subset(data_variable, data_variable$element == isotopes[j])
+      data_variable_isotope = subset(data_variable, data_variable$element == isotopes_list[j])
       formula = as.formula(paste(
         "elemental_value",
         "~ s(group_mass_specific_intake_rate_fw)"
       ))
-      mod = mgcv::gam(formula, data = data_matrix_element)
+      mod = mgcv::gam(formula, data = data_variable_isotope)
       summary_mod = summary(mod)
       k = which(
-        models_isotopes$variables == variables[i] &
-          models_isotopes$constituents == isotopes[j]
+        models_isotopes$variable == variables_list[i] &
+          models_isotopes$isotope == isotopes_list[j]
       )
       if (mod$converged == "TRUE") {
-        models_nutrients$edf[k] = summary_mod$edf
-        models_nutrients$p_value[k] = summary_mod$s.pv
+        models_isotopes$edf[k] = summary_mod$edf
+        models_isotopes$p_value[k] = summary_mod$s.pv
       }
     }
   }
