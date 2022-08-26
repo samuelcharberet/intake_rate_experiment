@@ -8,16 +8,12 @@ model_irn <- function(data_i, data_g) {
   # GAM
   # for all relationships
   # Extract the p-value and the edf. When edf is close to 1, the relationship is close to linear.
-  # gam.check function to check whether the model converges or not.
   # Non convergence can be due to too high number of parameters compared to the number of data
-  # We also check that smooths have enough basis functions
-  # by looking at the significance result in the diagnostic test.
   
-  # Using the broom package, and the augment, tidy, and glance functions, we can
-  # insect, evaluate, and predict
+  ###### 1. For chemical elements #####
   
-
-  matrices = c("absorption", "larva", "egestion")
+  matrices = c("absorption", "larvae", "egestion")
+  nb_matrices = length(matrices)
   elements = c("C",
                "N",
                "P",
@@ -26,19 +22,18 @@ model_irn <- function(data_i, data_g) {
                "S",
                "K",
                "Ca")
+  nb_elements = length(elements)
   
   
   # Creating a dataframe containing statistics for the publication
   
-  constituents = c(
-    "total mass",
-    "total mass",
-    rep(elements,3)
-  )
+  constituents = c("total mass",
+                   "total mass",
+                   rep(elements, 3))
   variables = c("growth_efficiency",
-                rep("absorption", 9),
-                rep("larva", 8),
-                rep("egestion", 8))
+                rep("absorption", nb_elements+1),
+                rep("larvae", nb_elements),
+                rep("egestion", nb_elements))
   
   
   edf = rep(NA, length(constituents))
@@ -76,23 +71,82 @@ model_irn <- function(data_i, data_g) {
   
   # At the level of groups
   
-  forumlae = as.formula(paste(models_nutrients$variables, "~ s(ingestion_rate_fw)"))
-
-  
   for (i in 1:nb_matrices) {
-    data_matrix = subset(data_g, data_g$matrix == matrices[j])
+    data_matrix = subset(data_g, data_g$matrix == matrices[i])
     for (j in 1:nb_elements) {
-      formula = 
-        mod = mgcv::gam(formula, data = data_i)
+      data_matrix_element = subset(data_matrix, data_matrix$element == elements[j])
+      formula = as.formula(paste(
+        "elemental_value",
+        "~ s(group_mass_specific_intake_rate_fw)"
+      ))
+      mod = mgcv::gam(formula, data = data_matrix_element)
       summary_mod = summary(mod)
-      if (mod$converged == "T") {
-        models_nutrients$edf[i] = summary_mod$edf
-        models_nutrients$p_value[i] = summary_mod$s.pv
+      k = which(
+        models_nutrients$variables == matrices[i] &
+          models_nutrients$constituents == elements[j]
+      )
+      if (mod$converged == "TRUE") {
+        models_nutrients$edf[k] = summary_mod$edf
+        models_nutrients$p_value[k] = summary_mod$s.pv
       }
     }
   }
   
+  write.csv(
+    models_nutrients,
+    file = here::here("4_outputs", "1_statistical_results", "models_nutrients.csv"),
+  )
   
-  ##### Isotopes paper #####
+  ###### 2. For isotopes #####
+  
+  variables = c("tf", "fldf", "ffdf")
+  nb_variables = length(matrices)
+  isotopes = c("13C",
+               "15N")
+  nb_isotopes = length(isotopes)
+  
+  
+  # Creating a dataframe containing statistics for the publication
+  
+  constituents = c(rep(isotopes, nb_variables))
+  variables = c(rep("tf", nb_isotopes),
+                rep("fldf", nb_isotopes),
+                rep("ffdf", nb_isotopes))
+  
+  
+  edf = rep(NA, length(constituents))
+  p_value = rep(NA, length(constituents))
+  models_isotopes = data.frame(
+    constituents = constituents,
+    variables = variables,
+    edf = edf,
+    p_value = p_value
+  )
+  
+  for (i in 1:nb_variables) {
+    data_variable = subset(data_g, data_g$matrix == variables[i])
+    for (j in 1:nb_isotopes) {
+      data_variable_isotope = subset(data_variable, data_variable$element == isotopes[j])
+      formula = as.formula(paste(
+        "elemental_value",
+        "~ s(group_mass_specific_intake_rate_fw)"
+      ))
+      mod = mgcv::gam(formula, data = data_matrix_element)
+      summary_mod = summary(mod)
+      k = which(
+        models_isotopes$variables == variables[i] &
+          models_isotopes$constituents == isotopes[j]
+      )
+      if (mod$converged == "TRUE") {
+        models_nutrients$edf[k] = summary_mod$edf
+        models_nutrients$p_value[k] = summary_mod$s.pv
+      }
+    }
+  }
+  
+  write.csv(
+    models_isotopes,
+    file = here::here("4_outputs", "1_statistical_results", "models_isotopes.csv"),
+  )
   
 }
