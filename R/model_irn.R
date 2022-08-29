@@ -37,12 +37,16 @@ model_irn <- function(data_i, data_g) {
     rep("egestion", nb_elements)
   )
   
-  
+  n = rep(NA, length(constituent))
+  r_squared = rep(NA, length(constituent))
   edf = rep(NA, length(constituent))
   p_value = rep(NA, length(constituent))
+  
   models_nutrients = data.frame(
     constituent = constituent,
     variable = variable,
+    n = n,
+    r_squared = r_squared,
     edf = edf,
     p_value = p_value
   )
@@ -59,6 +63,8 @@ model_irn <- function(data_i, data_g) {
   mod = mgcv::gam(formula, data = data_i)
   summary_mod = summary(mod)
   if (mod$converged == "TRUE") {
+    models_nutrients$n[1] = summary_mod$n
+    models_nutrients$r_quared[1] = format(signif(summary_mod$r.sq, digits = 3), scientific = F)
     models_nutrients$edf[1] = format(signif(summary_mod$edf, digits = 3), scientific = F)
     models_nutrients$p_value[1] = format(signif(summary_mod$s.pv, digits = 2), scientific = T)
   }
@@ -67,6 +73,8 @@ model_irn <- function(data_i, data_g) {
   mod = mgcv::gam(formula, data = data_i)
   summary_mod = summary(mod)
   if (mod$converged == "TRUE") {
+    models_nutrients$n[2] = summary_mod$n
+    models_nutrients$r_quared[2] = format(signif(summary_mod$r.sq, digits = 3), scientific = F)
     models_nutrients$edf[2] = format(signif(summary_mod$edf, digits = 3), scientific = F)
     models_nutrients$p_value[2] = format(signif(summary_mod$s.pv, digits = 2), scientific = T)
   }
@@ -88,12 +96,14 @@ model_irn <- function(data_i, data_g) {
           models_nutrients$constituent == elements_list[j]
       )
       if (mod$converged == "TRUE") {
+        models_nutrients$n[k] = summary_mod$n
+        models_nutrients$r_quared[k] = format(signif(summary_mod$r.sq, digits = 3), scientific = F)
         models_nutrients$edf[k] = format(signif(summary_mod$edf, digits = 3), scientific = F)
         models_nutrients$p_value[k] = format(signif(summary_mod$s.pv, digits = 2), scientific = T)
       }
     }
   }
-
+  
   write.csv(
     models_nutrients,
     file = here::here(
@@ -120,14 +130,18 @@ model_irn <- function(data_i, data_g) {
                rep("ffdf", nb_isotopes))
   
   
+  n = rep(NA, length(isotope))
   F_stat = rep(NA, length(isotope))
+  R_squared = rep(NA, length(isotope))
   equation = rep(NA, length(isotope))
   p_value = rep(NA, length(isotope))
   models_isotopes = data.frame(
     isotope = isotope,
     variable = variable,
     equation = equation,
+    n = n,
     F_stat = F_stat,
+    R_squared = R_squared,
     p_value = p_value
   )
   
@@ -146,15 +160,21 @@ model_irn <- function(data_i, data_g) {
           models_isotopes$isotope == isotopes_list[j]
       )
       models_isotopes$equation[k] = paste(
+        variables_list[i],
+        " = ",
         round(summary_mod$coefficients[1, 1], digits = 2),
         round(summary_mod$coefficients[2, 1], digits = 2),
         ".",
         "msir"
       )
-      models_isotopes$F_stat[k] = signif(summary_mod$fstatistic[1], digits =
-                                          2)
-      models_isotopes$p_value[k] = format(signif(summary_mod$coefficients[2, 4], digits = 2), scientific=T)
       
+      models_isotopes$n = length(mod$residuals)
+      models_isotopes$F_stat[k] = signif(summary_mod$fstatistic[1], digits =
+                                           2)
+      models_isotopes$p_value[k] = format(signif(summary_mod$coefficients[2, 4], digits = 2),
+                                          scientific = T)
+      
+      models_isotopes$R_squared[k] = signif(summary_mod$r.squared, digits = 2)
       
     }
   }
