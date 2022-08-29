@@ -15,25 +15,27 @@ model_irn <- function(data_i, data_g) {
   variables_list = c("absorption", "larvae", "egestion")
   nb_variables = length(variables_list)
   elements_list = c("C",
-               "N",
-               "P",
-               "Na",
-               "Mg",
-               "S",
-               "K",
-               "Ca")
+                    "N",
+                    "P",
+                    "Na",
+                    "Mg",
+                    "S",
+                    "K",
+                    "Ca")
   nb_elements = length(elements_list)
   
   
   # Creating a dataframe containing statistics for the publication
   
   constituent = c("total mass",
-                   "total mass",
-                   rep(elements_list, nb_variables))
-  variable = c("growth_efficiency",
-                rep("absorption", nb_elements+1),
-                rep("larvae", nb_elements),
-                rep("egestion", nb_elements))
+                  "total mass",
+                  rep(elements_list, nb_variables))
+  variable = c(
+    "growth_efficiency",
+    rep("absorption", nb_elements + 1),
+    rep("larvae", nb_elements),
+    rep("egestion", nb_elements)
+  )
   
   
   edf = rep(NA, length(constituent))
@@ -94,7 +96,11 @@ model_irn <- function(data_i, data_g) {
   
   write.csv(
     models_nutrients,
-    file = here::here("4_outputs", "1_statistical_results", "models_nutrients.csv"),
+    file = here::here(
+      "4_outputs",
+      "1_statistical_results",
+      "models_nutrients.csv"
+    ),
   )
   
   ###### 2. For isotopes #####
@@ -102,7 +108,7 @@ model_irn <- function(data_i, data_g) {
   variables_list = c("tf", "fldf", "ffdf")
   nb_variables = length(variables_list)
   isotopes_list = c("13C",
-               "15N")
+                    "15N")
   nb_isotopes = length(isotopes_list)
   
   
@@ -110,16 +116,18 @@ model_irn <- function(data_i, data_g) {
   
   isotope = c(rep(isotopes_list, nb_variables))
   variable = c(rep("tf", nb_isotopes),
-                rep("fldf", nb_isotopes),
-                rep("ffdf", nb_isotopes))
+               rep("fldf", nb_isotopes),
+               rep("ffdf", nb_isotopes))
   
   
-  edf = rep(NA, length(isotope))
+  F_stat = rep(NA, length(isotope))
+  equation = rep(NA, length(isotope))
   p_value = rep(NA, length(isotope))
   models_isotopes = data.frame(
     isotope = isotope,
     variable = variable,
-    edf = edf,
+    equation = equation,
+    F_stat = F_stat,
     p_value = p_value
   )
   
@@ -129,24 +137,34 @@ model_irn <- function(data_i, data_g) {
       data_variable_isotope = subset(data_variable, data_variable$element == isotopes_list[j])
       formula = as.formula(paste(
         "elemental_value",
-        "~ s(group_mass_specific_intake_rate_fw)"
+        "~ group_mass_specific_intake_rate_fw"
       ))
-      mod = mgcv::gam(formula, data = data_variable_isotope)
+      mod = lm(formula, data = data_variable_isotope)
       summary_mod = summary(mod)
       k = which(
         models_isotopes$variable == variables_list[i] &
           models_isotopes$isotope == isotopes_list[j]
       )
-      if (mod$converged == "TRUE") {
-        models_isotopes$edf[k] = summary_mod$edf
-        models_isotopes$p_value[k] = summary_mod$s.pv
-      }
+      models_isotopes$equation[k] = paste(
+        round(summary_mod$coefficients[1, 1], digits = 2),
+        round(summary_mod$coefficients[2, 1], digits = 2),
+        ".",
+        "msir"
+      )
+      models_isotopes$F_stat[k] = summary_mod$fstatistic[1]
+      models_isotopes$p_value[k] = summary_mod$coefficients[2, 4]
+      
+      
     }
   }
   
   write.csv(
     models_isotopes,
-    file = here::here("4_outputs", "1_statistical_results", "models_isotopes.csv"),
+    file = here::here(
+      "4_outputs",
+      "1_statistical_results",
+      "models_isotopes.csv"
+    ),
   )
   
 }
