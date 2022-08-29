@@ -765,7 +765,7 @@ plot_irn <- function(data_i, data_g) {
     aes(x = group_mass_specific_intake_rate_fw, y = `13C`)
   ) +
     geom_point(size = 2) +
-    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = latex2exp::TeX(r'($\delta 13C_{frass}-\delta 13C_{larvae}$)')) +
+    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = latex2exp::TeX(r'($\delta 13C_{frass}-\delta 13C_{food}$)')) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
