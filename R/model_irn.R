@@ -59,7 +59,7 @@ model_irn <- function(data_i, data_g) {
   mod = mgcv::gam(formula, data = data_i)
   summary_mod = summary(mod)
   if (mod$converged == "TRUE") {
-    models_nutrients$edf[1] = format(signif(summary_mod$edf, digits = 3), scientific = T)
+    models_nutrients$edf[1] = format(signif(summary_mod$edf, digits = 3), scientific = F)
     models_nutrients$p_value[1] = format(signif(summary_mod$s.pv, digits = 2), scientific = T)
   }
   
@@ -67,7 +67,7 @@ model_irn <- function(data_i, data_g) {
   mod = mgcv::gam(formula, data = data_i)
   summary_mod = summary(mod)
   if (mod$converged == "TRUE") {
-    models_nutrients$edf[2] = format(signif(summary_mod$edf, digits = 3), scientific = T)
+    models_nutrients$edf[2] = format(signif(summary_mod$edf, digits = 3), scientific = F)
     models_nutrients$p_value[2] = format(signif(summary_mod$s.pv, digits = 2), scientific = T)
   }
   
@@ -88,7 +88,7 @@ model_irn <- function(data_i, data_g) {
           models_nutrients$constituent == elements_list[j]
       )
       if (mod$converged == "TRUE") {
-        models_nutrients$edf[k] = format(signif(summary_mod$edf, digits = 3), scientific = T)
+        models_nutrients$edf[k] = format(signif(summary_mod$edf, digits = 3), scientific = F)
         models_nutrients$p_value[k] = format(signif(summary_mod$s.pv, digits = 2), scientific = T)
       }
     }
