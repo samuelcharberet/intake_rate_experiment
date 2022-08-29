@@ -168,7 +168,7 @@ model_irn <- function(data_i, data_g) {
         "msir"
       )
       
-      models_isotopes$n = length(mod$residuals)
+      models_isotopes$n[k] = length(mod$residuals)
       models_isotopes$F_stat[k] = signif(summary_mod$fstatistic[1], digits =
                                            2)
       models_isotopes$p_value[k] = format(signif(summary_mod$coefficients[2, 4], digits = 2),
