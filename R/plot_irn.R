@@ -788,7 +788,7 @@ plot_irn <- function(data_i, data_g) {
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
-    filename = "15neddf_&_msir.pdf",
+    filename = "15nffdf_&_msir.pdf",
     plot = p,
     device = cairo_pdf,
     path = here::here("4_outputs", "2_figures"),
@@ -834,7 +834,7 @@ plot_irn <- function(data_i, data_g) {
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
-    filename = "15neddf_&_aedw.pdf",
+    filename = "15nffdf_&_aedw.pdf",
     plot = p,
     device = cairo_pdf,
     path = here::here("4_outputs", "2_figures"),
@@ -854,14 +854,14 @@ plot_irn <- function(data_i, data_g) {
   
   p <- ggplot2::ggplot(
     data_fldf,
-    aes(x = absorption_efficiency_dw, y = `13C`)
+    aes(x = group_mass_specific_intake_rate_fw, y = `13C`)
   ) +
     geom_point(size = 2) +
-    labs(x = "Absorption efficiency (%)", y = latex2exp::TeX(r'($\delta 13C_{frass}-\delta 13C_{larvae}$)')) +
+    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = latex2exp::TeX(r'($\delta 13C_{frass}-\delta 13C_{larvae}$)')) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
-    filename = "13cfldf_&_aedw.pdf",
+    filename = "13cfldf_&_msir.pdf",
     plot = p,
     device = cairo_pdf,
     path = here::here("4_outputs", "2_figures"),
@@ -873,14 +873,14 @@ plot_irn <- function(data_i, data_g) {
   
   p <- ggplot2::ggplot(
     data_fldf,
-    aes(x = absorption_efficiency_dw, y = `15N`)
+    aes(x = group_mass_specific_intake_rate_fw, y = `15N`)
   ) +
     geom_point(size = 2) +
-    labs(x = "Absorption efficiency (%)", y = latex2exp::TeX(r'($\delta 15N_{frass}-\delta 15N_{larvae}$)')) +
+    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = latex2exp::TeX(r'($\delta 15N_{frass}-\delta 15N_{larvae}$)')) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
-    filename = "15nfldf_&_aedw.pdf",
+    filename = "15nfldf_&_msir.pdf",
     plot = p,
     device = cairo_pdf,
     path = here::here("4_outputs", "2_figures"),
