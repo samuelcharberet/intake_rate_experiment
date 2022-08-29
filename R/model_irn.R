@@ -59,16 +59,16 @@ model_irn <- function(data_i, data_g) {
   mod = mgcv::gam(formula, data = data_i)
   summary_mod = summary(mod)
   if (mod$converged == "TRUE") {
-    models_nutrients$edf[1] = summary_mod$edf
-    models_nutrients$p_value[1] = summary_mod$s.pv
+    models_nutrients$edf[1] = signif(summary_mod$edf, digits = 2)
+    models_nutrients$p_value[1] = signif(summary_mod$s.pv, digits = 2)
   }
   
   formula = as.formula(paste("absorption_efficiency_dw", "~ s(ingestion_rate_dw)"))
   mod = mgcv::gam(formula, data = data_i)
   summary_mod = summary(mod)
   if (mod$converged == "TRUE") {
-    models_nutrients$edf[2] = summary_mod$edf
-    models_nutrients$p_value[2] = summary_mod$s.pv
+    models_nutrients$edf[2] = signif(summary_mod$edf, digits = 2)
+    models_nutrients$p_value[2] = signif(summary_mod$s.pv, digits = 2)
   }
   
   # At the level of groups
@@ -88,8 +88,8 @@ model_irn <- function(data_i, data_g) {
           models_nutrients$constituent == elements_list[j]
       )
       if (mod$converged == "TRUE") {
-        models_nutrients$edf[k] = summary_mod$edf
-        models_nutrients$p_value[k] = summary_mod$s.pv
+        models_nutrients$edf[k] = signif(summary_mod$edf, digits = 2)
+        models_nutrients$p_value[k] = signif(summary_mod$s.pv, digits = 2)
       }
     }
   }
@@ -151,8 +151,9 @@ model_irn <- function(data_i, data_g) {
         ".",
         "msir"
       )
-      models_isotopes$F_stat[k] = summary_mod$fstatistic[1]
-      models_isotopes$p_value[k] = summary_mod$coefficients[2, 4]
+      models_isotopes$F_stat[k] = round(summary_mod$fstatistic[1], digits =
+                                          2)
+      models_isotopes$p_value[k] = signif(summary_mod$coefficients[2, 4], digits = 2)
       
       
     }
