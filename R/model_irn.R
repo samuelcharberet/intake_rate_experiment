@@ -155,8 +155,8 @@ model_irn <- function(data_i, data_g) {
     variable = variable,
     equation = equation,
     n = n,
-    F_stat = F_stat,
     R_squared = R_squared,
+    F_stat = F_stat,
     p_value = p_value
   )
   
@@ -178,6 +178,7 @@ model_irn <- function(data_i, data_g) {
         variables_list[i],
         " = ",
         round(summary_mod$coefficients[1, 1], digits = 2),
+        "+",
         round(summary_mod$coefficients[2, 1], digits = 2),
         ".",
         "msir"
