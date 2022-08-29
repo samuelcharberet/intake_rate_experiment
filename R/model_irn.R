@@ -64,9 +64,14 @@ model_irn <- function(data_i, data_g) {
   summary_mod = summary(mod)
   if (mod$converged == "TRUE") {
     models_nutrients$n[1] = summary_mod$n
-    models_nutrients$r_quared[1] = format(signif(summary_mod$r.sq, digits = 3), scientific = F)
+    models_nutrients$r_squared[1] = format(signif(summary_mod$r.sq, digits = 3), scientific = F)
     models_nutrients$edf[1] = format(signif(summary_mod$edf, digits = 3), scientific = F)
-    models_nutrients$p_value[1] = format(signif(summary_mod$s.pv, digits = 2), scientific = T)
+    if (summary_mod$s.pv == 0) {
+      models_nutrients$p_value[1] = "<2e-16"
+    }
+    else{
+      models_nutrients$p_value[1] = format(signif(summary_mod$s.pv, digits = 2), scientific = T)
+    }
   }
   
   formula = as.formula(paste("absorption_efficiency_dw", "~ s(ingestion_rate_dw)"))
@@ -74,9 +79,14 @@ model_irn <- function(data_i, data_g) {
   summary_mod = summary(mod)
   if (mod$converged == "TRUE") {
     models_nutrients$n[2] = summary_mod$n
-    models_nutrients$r_quared[2] = format(signif(summary_mod$r.sq, digits = 3), scientific = F)
+    models_nutrients$r_squared[2] = format(signif(summary_mod$r.sq, digits = 3), scientific = F)
     models_nutrients$edf[2] = format(signif(summary_mod$edf, digits = 3), scientific = F)
-    models_nutrients$p_value[2] = format(signif(summary_mod$s.pv, digits = 2), scientific = T)
+    if (summary_mod$s.pv == 0) {
+      models_nutrients$p_value[2] = "<2e-16"
+    }
+    else{
+      models_nutrients$p_value[2] = format(signif(summary_mod$s.pv, digits = 2), scientific = T)
+    }
   }
   
   # At the level of groups
@@ -97,9 +107,14 @@ model_irn <- function(data_i, data_g) {
       )
       if (mod$converged == "TRUE") {
         models_nutrients$n[k] = summary_mod$n
-        models_nutrients$r_quared[k] = format(signif(summary_mod$r.sq, digits = 3), scientific = F)
+        models_nutrients$r_squared[k] = format(signif(summary_mod$r.sq, digits = 3), scientific = F)
         models_nutrients$edf[k] = format(signif(summary_mod$edf, digits = 3), scientific = F)
-        models_nutrients$p_value[k] = format(signif(summary_mod$s.pv, digits = 2), scientific = T)
+        if (summary_mod$s.pv == 0) {
+          models_nutrients$p_value[k] = "<2e-16"
+        }
+        else{
+          models_nutrients$p_value[k] = format(signif(summary_mod$s.pv, digits = 2), scientific = T)
+        }
       }
     }
   }
