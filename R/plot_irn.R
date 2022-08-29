@@ -765,7 +765,7 @@ plot_irn <- function(data_i, data_g) {
     aes(x = group_mass_specific_intake_rate_fw, y = `13C`)
   ) +
     geom_point(size = 2) +
-    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = latex2exp::TeX(r"(\delta 13C_{frass}-\delta 13C_{food})")) +
+    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = latex2exp::TeX(r'($\delta 13C_{frass}-\delta 13C_{larvae}$)')) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
@@ -784,7 +784,7 @@ plot_irn <- function(data_i, data_g) {
     aes(x = group_mass_specific_intake_rate_fw, y = `15N`)
   ) +
     geom_point(size = 2) +
-    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = latex2exp::TeX(r"(\delta 15N_{frass}-\delta 15N_{food})")) +
+    labs(x = "Mass-specific intake rate (mg fw/ day / mg fw)", y = latex2exp::TeX(r'($\delta 15N_{frass}-\delta 15N_{food}$)')) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
@@ -811,7 +811,7 @@ plot_irn <- function(data_i, data_g) {
     aes(x = absorption_efficiency_dw, y = `13C`)
   ) +
     geom_point(size = 2) +
-    labs(x = "Absorption efficiency (%)", y = latex2exp::TeX(r"(\delta 13C_{frass}-\delta 13C_{food})")) +
+    labs(x = "Absorption efficiency (%)", y = latex2exp::TeX(r'($\delta 13C_{frass}-\delta 13C_{food}$)')) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
@@ -830,7 +830,7 @@ plot_irn <- function(data_i, data_g) {
     aes(x = absorption_efficiency_dw, y = `15N`)
   ) +
     geom_point(size = 2) +
-    labs(x = "Absorption efficiency (%)", y = latex2exp::TeX(r"(\delta 15N_{frass}-\delta 15N_{food})")) +
+    labs(x = "Absorption efficiency (%)", y = latex2exp::TeX(r'($\delta 15N_{frass}-\delta 15N_{food}$)')) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
@@ -857,7 +857,7 @@ plot_irn <- function(data_i, data_g) {
     aes(x = absorption_efficiency_dw, y = `13C`)
   ) +
     geom_point(size = 2) +
-    labs(x = "Absorption efficiency (%)", y = latex2exp::TeX(r"(\delta 13C_{frass}-\delta 13C_{larva})")) +
+    labs(x = "Absorption efficiency (%)", y = latex2exp::TeX(r'($\delta 13C_{frass}-\delta 13C_{larvae}$)')) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
@@ -876,7 +876,7 @@ plot_irn <- function(data_i, data_g) {
     aes(x = absorption_efficiency_dw, y = `15N`)
   ) +
     geom_point(size = 2) +
-    labs(x = "Absorption efficiency (%)", y = latex2exp::TeX(r"(\delta 15N_{frass}-\delta 15N_{larva})")) +
+    labs(x = "Absorption efficiency (%)", y = latex2exp::TeX(r'($\delta 15N_{frass}-\delta 15N_{larvae}$)')) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
