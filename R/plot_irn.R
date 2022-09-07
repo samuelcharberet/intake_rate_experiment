@@ -348,7 +348,7 @@ plot_irn <- function(data_i, data_g) {
   # Na, Mg, S, K, and Ca
   
   
-  elements = c("Na", "Mg", "S", "K", "Ca")
+  elements = c("C", "N", "Na", "Mg", "S", "K", "Ca")
   
   for (j in 1:nb_matrices) {
     data_matrix = subset(data_g, data_g$matrix == matrices[j])
