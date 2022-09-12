@@ -120,9 +120,29 @@ plot_irn <- function(data_i, data_g) {
   p <- ggplot2::ggplot(data_i,
                        aes(x = ingestion_rate_fw / ((bodymass_last_collection_date + bodymass_7th_instar_j0_fw) / 2
                        ), y = growth_efficiency_fw)) +
+    labs(x = "Mass specific ingestion rate (mg fw/day / mg fw indiv)", y = "Growth efficiency (% fw)") +
+    geom_point(size = 0, color="white") +
+    geom_vline(xintercept = 1, color = "steelblue3") +
+    geom_hline(yintercept = 0.5, color = "steelblue3")
+
+  ggsave(
+    filename = "gefw_&_msirfw_blank.pdf",
+    plot = p,
+    device = cairo_pdf,
+    path = here::here("4_outputs", "2_figures"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
+  
+  p <- ggplot2::ggplot(data_i,
+                       aes(x = ingestion_rate_fw / ((bodymass_last_collection_date + bodymass_7th_instar_j0_fw) / 2
+                       ), y = growth_efficiency_fw)) +
     geom_point(size = 2) +
     labs(x = "Mass specific ingestion rate (mg fw/day / mg fw indiv)", y = "Growth efficiency (% fw)") +
     geom_smooth(color = "steelblue3",  method = "gam")
+
   
   ggsave(
     filename = "gefw_&_msirfw.pdf",
@@ -241,6 +261,10 @@ plot_irn <- function(data_i, data_g) {
     units = "in"
   )
   
+  
+  ########## 2. Chemical balance ##########
+  
+  
   # Options for the plots
   
   matrices = c("larvae", "egestion", "absorption")
@@ -262,9 +286,6 @@ plot_irn <- function(data_i, data_g) {
   
   plots = vector("list", nb_matrices)
   names(plots) = matrices
-  
-  
-  ########## 2. Chemical balance ##########
   
   ###### CNP absorption efficiency, larval content, egestion content according to total mass-specific intake rate  ######
   
@@ -454,6 +475,8 @@ plot_irn <- function(data_i, data_g) {
   data_egestion$C_N = data_egestion$C / data_egestion$N
   data_egestion$N_P = data_egestion$N / data_egestion$P
   
+  # CN_egestion = f(msir)
+  
   p <- ggplot2::ggplot(data_egestion,
                        aes(x = group_mass_specific_intake_rate_fw, y = C_N)) +
     geom_point(size = 2) +
@@ -461,7 +484,7 @@ plot_irn <- function(data_i, data_g) {
     geom_smooth(color = "steelblue3",  method = "gam")
   
   ggsave(
-    filename = "cnegestion_&_grfw.pdf",
+    filename = "cnegestion_&_msir.pdf",
     plot = p,
     device = cairo_pdf,
     path = here::here("4_outputs", "2_figures"),
@@ -471,6 +494,28 @@ plot_irn <- function(data_i, data_g) {
     units = "in"
   )
   
+  # CN_egestion = f(ge)
+  
+  p <- ggplot2::ggplot(data_egestion,
+                       aes(x = growth_efficiency_fw, y = C_N)) +
+    geom_point(size = 2) +
+    labs(x = "Growth efficiency (% fw)", y = "Egestion C/N") +
+    geom_smooth(color = "steelblue3",  method = "gam")
+  
+  ggsave(
+    filename = "cnegestion_&_ge.pdf",
+    plot = p,
+    device = cairo_pdf,
+    path = here::here("4_outputs", "2_figures"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
+  
+  # NP_egestion = f(ge)
+  
+  
   p <- ggplot2::ggplot(data_egestion,
                        aes(x = group_mass_specific_intake_rate_fw, y = N_P)) +
     geom_point(size = 2) +
@@ -478,7 +523,7 @@ plot_irn <- function(data_i, data_g) {
     geom_smooth(color = "steelblue3",  method = "gam")
   
   ggsave(
-    filename = "npegestion_&_grfw.pdf",
+    filename = "npegestion_&_msir.pdf",
     plot = p,
     device = cairo_pdf,
     path = here::here("4_outputs", "2_figures"),
@@ -544,16 +589,16 @@ plot_irn <- function(data_i, data_g) {
     complete_plots[[i]] = ggpubr::ggarrange(
       CNP[[i]],
       ggpubr::ggarrange(
-        plots[[i]][[3]],
         plots[[i]][[4]],
-        NULL,
-        NULL,
         plots[[i]][[5]],
+        NULL,
+        NULL,
         plots[[i]][[6]],
+        plots[[i]][[7]],
         NULL,
         NULL,
         legend,
-        plots[[i]][[7]],
+        plots[[i]][[8]],
         NULL,
         NULL,
         ncol = 2,
