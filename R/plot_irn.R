@@ -124,6 +124,9 @@ plot_irn <- function(data_i, data_g) {
     geom_point(size = -1, color="white") +
     geom_vline(xintercept = 1, color = "steelblue3")
 
+    breaks = ggplot_build(p)$layout$panel_params[[1]]$x$breaks
+    p + scale_x_continuous(breaks=sort(c(breaks,1)))
+  
   ggsave(
     filename = "gefw_&_msirfw_blankone.pdf",
     plot = p,
