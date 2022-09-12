@@ -122,11 +122,28 @@ plot_irn <- function(data_i, data_g) {
                        ), y = growth_efficiency_fw)) +
     labs(x = "Mass specific ingestion rate (mg fw/day / mg fw indiv)", y = "Growth efficiency (% fw)") +
     geom_point(size = -1, color="white") +
-    geom_vline(xintercept = 1, color = "steelblue3") +
-    geom_hline(yintercept = 0.5, color = "steelblue3")
+    geom_vline(xintercept = 1, color = "steelblue3")
 
   ggsave(
-    filename = "gefw_&_msirfw_blank.pdf",
+    filename = "gefw_&_msirfw_blankone.pdf",
+    plot = p,
+    device = cairo_pdf,
+    path = here::here("4_outputs", "2_figures"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
+  
+  p <- ggplot2::ggplot(data_i,
+                       aes(x = ingestion_rate_fw / ((bodymass_last_collection_date + bodymass_7th_instar_j0_fw) / 2
+                       ), y = growth_efficiency_fw)) +
+    labs(x = "Mass specific ingestion rate (mg fw/day / mg fw indiv)", y = "Growth efficiency (% fw)") +
+    geom_point(size = -1, color="white") +
+    geom_hline(yintercept = 0.5, color = "steelblue3")
+  
+  ggsave(
+    filename = "gefw_&_msirfw_blanktwo.pdf",
     plot = p,
     device = cairo_pdf,
     path = here::here("4_outputs", "2_figures"),
