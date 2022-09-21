@@ -121,11 +121,11 @@ plot_irn <- function(data_i, data_g) {
                        aes(x = ingestion_rate_fw / ((bodymass_last_collection_date + bodymass_7th_instar_j0_fw) / 2
                        ), y = growth_efficiency_fw)) +
     labs(x = "Mass specific ingestion rate (mg fw/day / mg fw indiv)", y = "Growth efficiency (% fw)") +
-    geom_point(size = -1, color="white") +
+    geom_point(size = -1, color = "white") +
     geom_vline(xintercept = 1, color = "steelblue3")
-
-    breaks = ggplot_build(p)$layout$panel_params[[1]]$x$breaks
-  p <- p + scale_x_continuous(breaks=sort(c(breaks,1)))
+  
+  breaks = ggplot_build(p)$layout$panel_params[[1]]$x$breaks
+  p <- p + scale_x_continuous(breaks = sort(c(breaks, 1)))
   
   ggsave(
     filename = "gefw_&_msirfw_blankone.pdf",
@@ -142,7 +142,7 @@ plot_irn <- function(data_i, data_g) {
                        aes(x = ingestion_rate_fw / ((bodymass_last_collection_date + bodymass_7th_instar_j0_fw) / 2
                        ), y = growth_efficiency_fw)) +
     labs(x = "Mass specific ingestion rate (mg fw/day / mg fw indiv)", y = "Growth efficiency (% fw)") +
-    geom_point(size = -1, color="white") +
+    geom_point(size = -1, color = "white") +
     geom_hline(yintercept = 0.5, color = "steelblue3")
   
   ggsave(
@@ -161,10 +161,10 @@ plot_irn <- function(data_i, data_g) {
                        ), y = growth_efficiency_fw)) +
     geom_point(size = 2) +
     labs(x = "Mass specific ingestion rate (mg fw/day / mg fw indiv)", y = "Growth efficiency (% fw)") +
-    geom_smooth(color = "steelblue3",  method = "gam")+
+    geom_smooth(color = "steelblue3",  method = "gam") +
     geom_vline(xintercept = 1, color = "steelblue3") +
     geom_hline(yintercept = 0.5, color = "steelblue3")
-
+  
   
   ggsave(
     filename = "gefw_&_msirfw.pdf",
@@ -355,7 +355,7 @@ plot_irn <- function(data_i, data_g) {
       )
     ) +
       
-      scale_y_continuous(sec.axis = sec_axis( ~ . / y_axis_coef)) +
+      scale_y_continuous(sec.axis = sec_axis(~ . / y_axis_coef)) +
       geom_point(size = 2) +
       geom_smooth(method = "gam") +
       scale_color_manual(
@@ -969,7 +969,7 @@ plot_irn <- function(data_i, data_g) {
     units = "in"
   )
   
-  ######  Isotopic absorption efficiency ratio (AER) ######
+  ######  Isotopic absorption efficiency ratio (AER) according to MSIR ######
   
   data_aer = subset(data_g, data_g$matrix == "iaer")
   data_aer = pivot_wider(data_aer,
@@ -1010,4 +1010,43 @@ plot_irn <- function(data_i, data_g) {
     height = 4,
     units = "in"
   )
+  
+  
+  ######  Isotopic absorption efficiency ratio (AER) according to AE ######
+  
+  
+  p <- ggplot2::ggplot(data_aer,
+                       aes(x = absorption_efficiency_dw, y = `C`)) +
+    geom_point(size = 2) +
+    labs(x = "Absorption efficiency (%)", y = "C IAER") +
+    geom_smooth(color = "steelblue3",  method = "lm")
+  
+  ggsave(
+    filename = "ciaer_&_ae.pdf",
+    plot = p,
+    device = cairo_pdf,
+    path = here::here("4_outputs", "2_figures"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
+  
+  p <- ggplot2::ggplot(data_aer,
+                       aes(x = absorption_efficiency_dw, y = `N`)) +
+    geom_point(size = 2) +
+    labs(x = "Absorption efficiency (%)", y = "N IAER") +
+    geom_smooth(color = "steelblue3",  method = "lm")
+  
+  ggsave(
+    filename = "niaer_&_ae.pdf",
+    plot = p,
+    device = cairo_pdf,
+    path = here::here("4_outputs", "2_figures"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
+  
 }

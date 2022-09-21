@@ -130,8 +130,20 @@ model_irn <- function(data_i, data_g) {
   
   ###### 2. For isotopes #####
   
-  variables_list = c("tf", "fldf", "ffdf")
-  nb_variables = length(variables_list)
+  # We wish to build models to test
+  # The effect of growth rate on trophic fractionations
+  # The effect of absorption efficiency on the FLDF
+  # The effect of mass-specific intake rate on IAER
+  
+  dependant_variables_list = c("tf", "fldf", "iaer")
+  independant_variables_list = c(
+    "growth_rate",
+    "absorption_efficiency_dw",
+    "group_mass_specific_intake_rate_fw"
+  )
+  
+  nb_dependant_variables = length(dependant_variables_list)
+  
   isotopes_list = c("13C",
                     "15N")
   nb_isotopes = length(isotopes_list)
@@ -139,20 +151,18 @@ model_irn <- function(data_i, data_g) {
   
   # Creating a dataframe containing statistics for the publication
   
-  isotope = c(rep(isotopes_list, nb_variables))
-  variable = c(rep("tf", nb_isotopes),
-               rep("fldf", nb_isotopes),
-               rep("ffdf", nb_isotopes))
+  # Column for isotope
+  nb_row = nb_isotopes * nb_dependant_variables
   
   
-  n = rep(NA, length(isotope))
-  F_stat = rep(NA, length(isotope))
-  R_squared = rep(NA, length(isotope))
-  equation = rep(NA, length(isotope))
-  p_value = rep(NA, length(isotope))
+  n = rep(NA, nb_row)
+  F_stat = rep(NA, nb_row)
+  R_squared = rep(NA, nb_row)
+  equation = rep(NA, nb_row)
+  p_value = rep(NA, nb_row)
+  
+  # Creating the dataframe
   models_isotopes = data.frame(
-    isotope = isotope,
-    variable = variable,
     equation = equation,
     n = n,
     R_squared = R_squared,
@@ -160,35 +170,55 @@ model_irn <- function(data_i, data_g) {
     p_value = p_value
   )
   
-  for (i in 1:nb_variables) {
-    data_variable = subset(data_g, data_g$matrix == variables_list[i])
+  k = 0
+  
+  for (i in 1:nb_dependant_variables) {
+    data_variable = subset(data_g, data_g$matrix == dependant_variables_list[i])
     for (j in 1:nb_isotopes) {
-      data_variable_isotope = subset(data_variable, data_variable$element == isotopes_list[j])
-      formula = as.formula(paste(
-        "elemental_value",
-        "~ group_mass_specific_intake_rate_fw"
-      ))
+      data_variable_isotope = subset(
+        data_variable,
+        substr(
+          data_variable$element,
+          nchar(data_variable$element),
+          nchar(data_variable$element)
+        ) == substr(
+          isotopes_list[j],
+          nchar(isotopes_list[j]),
+          nchar(isotopes_list[j])
+        )
+      )
+      
+      formula = as.formula(paste("elemental_value",
+                                 "~ ",
+                                 independant_variables_list[i]))
+      
       mod = lm(formula, data = data_variable_isotope)
       summary_mod = summary(mod)
-      k = which(
-        models_isotopes$variable == variables_list[i] &
-          models_isotopes$isotope == isotopes_list[j]
-      )
+      k = k + 1
+
+      
       models_isotopes$equation[k] = paste(
-        variables_list[i],
+        isotopes_list[j],
+        dependant_variables_list[i],
         " = ",
-        round(summary_mod$coefficients[1, 1], digits = 2),
-        "+",
         round(summary_mod$coefficients[2, 1], digits = 2),
-        ".",
-        "msir"
+        "x",
+        independant_variables_list[i],
+        "+",
+        round(summary_mod$coefficients[1, 1], digits = 2)
       )
       
       models_isotopes$n[k] = length(mod$residuals)
       models_isotopes$F_stat[k] = signif(summary_mod$fstatistic[1], digits =
                                            2)
-      models_isotopes$p_value[k] = format(signif(summary_mod$coefficients[2, 4], digits = 2),
-                                          scientific = T)
+      models_isotopes$p_value[k] = scales::pvalue(
+        summary_mod$coefficients[2, 4],
+        accuracy = 0.01,
+        # Number to round to
+        decimal.mark = ".",
+        # The character to be used to indicate the numeric decimal point
+        add_p = TRUE
+      )
       
       models_isotopes$R_squared[k] = signif(summary_mod$r.squared, digits = 2)
       
