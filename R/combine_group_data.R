@@ -146,8 +146,8 @@ combine_group_data <- function(data_i, data_g, data_fc) {
   # Isotopic absorption efficiency ratios
 
   
-  data_g$`C_iaer` = data_g$`13C_absorption_efficiency_dw`/ data_g$`12C_absorption_efficiency_dw`
-  data_g$`N_iaer` = data_g$`15N_absorption_efficiency_dw`/data_g$`14N_absorption_efficiency_dw`
+  data_g$`C_iaer` = 1000*(data_g$`13C_absorption_efficiency_dw`/ data_g$`12C_absorption_efficiency_dw` -1)
+  data_g$`N_iaer` = 1000*(data_g$`15N_absorption_efficiency_dw`/data_g$`14N_absorption_efficiency_dw`-1)
   
   
   # Isotopic fractionation

@@ -201,11 +201,11 @@ model_irn <- function(data_i, data_g) {
         isotopes_list[j],
         dependant_variables_list[i],
         " = ",
-        round(summary_mod$coefficients[2, 1], digits = 2),
+        signif(summary_mod$coefficients[2, 1], digits = 2),
         "x",
         independant_variables_list[i],
         "+",
-        round(summary_mod$coefficients[1, 1], digits = 2)
+        signif(summary_mod$coefficients[1, 1], digits = 5)
       )
       
       models_isotopes$n[k] = length(mod$residuals)
