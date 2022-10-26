@@ -218,14 +218,14 @@ plot_irn <- function(data_i, data_g) {
             day ^ {
               -1
             },
-            ")",)
+            ")", )
     ), y = expression(paste("Growth rate",
                             " (",
                             mg[body],
                             " ", day ^ {
                               -1
                             },
-                            ")",))) +
+                            ")", ))) +
     geom_smooth(color = "steelblue3",  method = "gam")
   
   ggsave(
@@ -374,7 +374,7 @@ plot_irn <- function(data_i, data_g) {
       )
     ) +
       
-      scale_y_continuous(sec.axis = sec_axis(~ . / y_axis_coef)) +
+      scale_y_continuous(sec.axis = sec_axis( ~ . / y_axis_coef)) +
       geom_point(size = 2) +
       geom_smooth(method = "gam") +
       scale_color_manual(
@@ -511,7 +511,7 @@ plot_irn <- function(data_i, data_g) {
         -1
       }, " ", day ^ {
         -1
-      }, ")", )
+      }, ")",)
     ), y = "Larvae C/N") +
     geom_smooth(color = "steelblue3",  method = "gam")
   
@@ -534,7 +534,7 @@ plot_irn <- function(data_i, data_g) {
         -1
       }, " ", day ^ {
         -1
-      }, ")", )
+      }, ")",)
     ), y = "Larvae N/P") +
     geom_smooth(color = "steelblue3",  method = "gam")
   
@@ -568,7 +568,7 @@ plot_irn <- function(data_i, data_g) {
         -1
       }, " ", day ^ {
         -1
-      }, ")", )
+      }, ")",)
     ), y = "Egestion C/N") +
     geom_smooth(color = "steelblue3",  method = "gam")
   
@@ -613,7 +613,7 @@ plot_irn <- function(data_i, data_g) {
         -1
       }, " ", day ^ {
         -1
-      }, ")", )
+      }, ")",)
     ), y = "Egestion N/P") +
     geom_smooth(color = "steelblue3",  method = "gam")
   
@@ -784,7 +784,7 @@ plot_irn <- function(data_i, data_g) {
         -1
       }, " ", day ^ {
         -1
-      }, ")", )
+      }, ")",)
     ), y = expression(paste(Delta, "13C"))) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
@@ -807,7 +807,7 @@ plot_irn <- function(data_i, data_g) {
         -1
       }, " ", day ^ {
         -1
-      }, ")", )
+      }, ")",)
     ), y = expression(paste(Delta, "15N"))) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
@@ -834,7 +834,7 @@ plot_irn <- function(data_i, data_g) {
                               " ", day ^ {
                                 -1
                               },
-                              ")",)), y = expression(paste(Delta, "13C"))) +
+                              ")", )), y = expression(paste(Delta, "13C"))) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
@@ -857,7 +857,7 @@ plot_irn <- function(data_i, data_g) {
                               " ", day ^ {
                                 -1
                               },
-                              ")",)), y = expression(paste(Delta, "15N"))) +
+                              ")", )), y = expression(paste(Delta, "15N"))) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
@@ -966,7 +966,7 @@ plot_irn <- function(data_i, data_g) {
           -1
         }, " ", day ^ {
           -1
-        }, ")", )
+        }, ")",)
       ),
       y = latex2exp::TeX(r'($\delta 13C_{frass}-\delta 13C_{food}$)')
     ) +
@@ -992,7 +992,7 @@ plot_irn <- function(data_i, data_g) {
           -1
         }, " ", day ^ {
           -1
-        }, ")", )
+        }, ")",)
       ),
       y = latex2exp::TeX(r'($\delta 15N_{frass}-\delta 15N_{food}$)')
     ) +
@@ -1070,7 +1070,7 @@ plot_irn <- function(data_i, data_g) {
           -1
         }, " ", day ^ {
           -1
-        }, ")", )
+        }, ")",)
       ),
       y = latex2exp::TeX(r'($\delta 13C_{frass}-\delta 13C_{larvae}$)')
     ) +
@@ -1096,7 +1096,7 @@ plot_irn <- function(data_i, data_g) {
           -1
         }, " ", day ^ {
           -1
-        }, ")", )
+        }, ")",)
       ),
       y = latex2exp::TeX(r'($\delta 15N_{frass}-\delta 15N_{larvae}$)')
     ) +
@@ -1129,7 +1129,7 @@ plot_irn <- function(data_i, data_g) {
         -1
       }, " ", day ^ {
         -1
-      }, ")", )
+      }, ")",)
     ), y = "C IAER") +
     geom_smooth(color = "steelblue3",  method = "lm")
   
@@ -1152,7 +1152,7 @@ plot_irn <- function(data_i, data_g) {
         -1
       }, " ", day ^ {
         -1
-      }, ")", )
+      }, ")",)
     ), y = "N IAER") +
     geom_smooth(color = "steelblue3",  method = "lm")
   
@@ -1237,14 +1237,16 @@ plot_irn <- function(data_i, data_g) {
       widths = c(1, 1)
     ),
     top = "",
-    bottom = expression(
+    bottom = ggpubr::text_grob(expression(
       paste("Mass-specific intake rate", " (", mg[food], " ", mg[body] ^ {
         -1
       }, " ", day ^ {
         -1
-      }, ")", )
-    )
+      }, ")")
+    ), size = 14)
   )
+  
+  
   
   bottom_part = ggpubr::annotate_figure(
     ggpubr::ggarrange(
@@ -1260,26 +1262,35 @@ plot_irn <- function(data_i, data_g) {
       heights = c(1, 0.05),
       widths = c(1, 1)
     ),
-    bottom = expression(paste("Growth rate",
-                              " (",
-                              mg[body],
-                              " ", day ^ {
-                                -1
-                              },
-                              ")",))
+    bottom = ggpubr::text_grob(expression(
+      paste("Growth rate",
+            " (",
+            mg[body],
+            " ", day ^ {
+              -1
+            },
+            ")")
+    ), size = 14)
   )
   
   
   
-  # Annotating the complete absorption efficiency plot with axes titles
+  # Creating the complete isotopy figure
   
   
   complete_plot = ggpubr::ggarrange(top_part, bottom_part, ncol = 1, nrow = 2)
+  complete_plot = ggpubr::annotate_figure(complete_plot, bottom = expression(paste("Growth rate",
+                                                                                   " (",
+                                                                                   mg[body],
+                                                                                   " ", day ^ {
+                                                                                     -1
+                                                                                   },
+                                                                                   ")",)))
   
   # Saving the the complete plots
   
   ggsave(
-    filename = paste(y_plot_names[i], "alldw_&_msirfw.pdf", sep = ""),
+    filename = "isotopy_figure.pdf",
     plot = complete_plot,
     device = cairo_pdf,
     path = here::here("4_outputs", "2_figures"),
