@@ -1,3 +1,10 @@
+
+library(targets)
+library(ggplot2)
+library(tidyr)
+library(mgcv)
+
+
 lapply(list.files(here::here("R"), recursive = TRUE, full.names = T), source)
 
 data_irn_individuals <-
