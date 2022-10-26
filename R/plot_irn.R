@@ -206,27 +206,17 @@ plot_irn <- function(data_i, data_g) {
                                  aes(x = ingestion_rate_fw / ((bodymass_7th_instar_j3_fw + bodymass_7th_instar_j0_fw) / 2
                                  ), y = growth_rate)) +
     geom_point(size = 2) +
-    labs(x = expression(
-      paste("Mass-specific intake rate",
-            " (",
-            mg[food],
-            " ",
-            mg[body] ^ {
-              -1
-            },
-            " ",
-            day ^ {
-              -1
-            },
-            ")", )
-    ), y = expression(paste("Growth rate",
-                            " (",
-                            mg[body],
-                            " ", day ^ {
-                              -1
-                            },
-                            ")", ))) +
-    geom_smooth(color = "steelblue3",  method = "gam")
+    xlim(0,NA) +
+    labs(x = "Individual mass-specific intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)",
+         y = expression(paste("Growth rate",
+                              " (",
+                              mg[body (fw)],
+                              " ", day ^ {
+                                -1
+                              },
+                              ")", ))) +
+    geom_smooth(color = "steelblue3",  method = "gam") +
+    theme(axis.title.x = element_markdown())
   
   ggsave(
     filename = "grfw_&_msirfw.pdf",
@@ -386,9 +376,9 @@ plot_irn <- function(data_i, data_g) {
           paste(
             "Mass-specific intake rate",
             " (",
-            mg[food],
+            mg[food(fw)],
             " ",
-            mg[body] ^ {
+            mg[body (fw)] ^ {
               -1
             },
             " ",
@@ -459,9 +449,9 @@ plot_irn <- function(data_i, data_g) {
             paste(
               "Mass-specific intake rate",
               " (",
-              mg[food],
+              mg[food(fw)],
               " ",
-              mg[body] ^ {
+              mg[body (fw)] ^ {
                 -1
               },
               " ",
@@ -507,7 +497,7 @@ plot_irn <- function(data_i, data_g) {
                        aes(x = group_mass_specific_intake_rate_fw, y = C_N)) +
     geom_point(size = 2) +
     labs(x = expression(
-      paste("Mass-specific intake rate", " (", mg[food], " ", mg[body] ^ {
+      paste("Mass-specific intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
         -1
       }, " ", day ^ {
         -1
@@ -530,7 +520,7 @@ plot_irn <- function(data_i, data_g) {
                        aes(x = group_mass_specific_intake_rate_fw, y = N_P)) +
     geom_point(size = 2) +
     labs(x = expression(
-      paste("Mass-specific intake rate", " (", mg[food], " ", mg[body] ^ {
+      paste("Mass-specific intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
         -1
       }, " ", day ^ {
         -1
@@ -564,7 +554,7 @@ plot_irn <- function(data_i, data_g) {
                        aes(x = group_mass_specific_intake_rate_fw, y = C_N)) +
     geom_point(size = 2) +
     labs(x = expression(
-      paste("Mass-specific intake rate", " (", mg[food], " ", mg[body] ^ {
+      paste("Mass-specific intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
         -1
       }, " ", day ^ {
         -1
@@ -609,7 +599,7 @@ plot_irn <- function(data_i, data_g) {
                        aes(x = group_mass_specific_intake_rate_fw, y = N_P)) +
     geom_point(size = 2) +
     labs(x = expression(
-      paste("Mass-specific intake rate", " (", mg[food], " ", mg[body] ^ {
+      paste("Mass-specific intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
         -1
       }, " ", day ^ {
         -1
@@ -722,9 +712,9 @@ plot_irn <- function(data_i, data_g) {
         paste(
           "Mass-specific intake rate",
           " (",
-          mg[food],
+          mg[food(fw)],
           " ",
-          mg[body] ^ {
+          mg[body (fw)] ^ {
             -1
           },
           " ",
@@ -780,7 +770,7 @@ plot_irn <- function(data_i, data_g) {
                        aes(x = group_mass_specific_intake_rate_fw, y = `13C`)) +
     geom_point(size = 1.5) +
     labs(x = expression(
-      paste("Mass-specific intake rate", " (", mg[food], " ", mg[body] ^ {
+      paste("Mass-specific intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
         -1
       }, " ", day ^ {
         -1
@@ -803,7 +793,7 @@ plot_irn <- function(data_i, data_g) {
                        aes(x = group_mass_specific_intake_rate_fw, y = `15N`)) +
     geom_point(size = 1.5) +
     labs(x = expression(
-      paste("Mass-specific intake rate", " (", mg[food], " ", mg[body] ^ {
+      paste("Mass-specific intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
         -1
       }, " ", day ^ {
         -1
@@ -828,9 +818,10 @@ plot_irn <- function(data_i, data_g) {
   ctf_gr <- ggplot2::ggplot(data_tf,
                             aes(x = growth_rate, y = `13C`)) +
     geom_point(size = 1.5) +
+    xlim(0,NA) +
     labs(x = expression(paste("Growth rate",
                               " (",
-                              mg[body],
+                              mg[body (fw)],
                               " ", day ^ {
                                 -1
                               },
@@ -851,9 +842,10 @@ plot_irn <- function(data_i, data_g) {
   ntf_gr <- ggplot2::ggplot(data_tf,
                             aes(x = growth_rate, y = `15N`)) +
     geom_point(size = 1.5) +
+    xlim(0,NA) +
     labs(x = expression(paste("Growth rate",
                               " (",
-                              mg[body],
+                              mg[body (fw)],
                               " ", day ^ {
                                 -1
                               },
@@ -962,7 +954,7 @@ plot_irn <- function(data_i, data_g) {
     geom_point(size = 1.5) +
     labs(
       x = expression(
-        paste("Mass-specific intake rate", " (", mg[food], " ", mg[body] ^ {
+        paste("Mass-specific intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
           -1
         }, " ", day ^ {
           -1
@@ -988,7 +980,7 @@ plot_irn <- function(data_i, data_g) {
     geom_point(size = 1.5) +
     labs(
       x = expression(
-        paste("Mass-specific intake rate", " (", mg[food], " ", mg[body] ^ {
+        paste("Mass-specific intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
           -1
         }, " ", day ^ {
           -1
@@ -1066,7 +1058,7 @@ plot_irn <- function(data_i, data_g) {
     geom_point(size = 1.5) +
     labs(
       x = expression(
-        paste("Mass-specific intake rate", " (", mg[food], " ", mg[body] ^ {
+        paste("Mass-specific intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
           -1
         }, " ", day ^ {
           -1
@@ -1092,7 +1084,7 @@ plot_irn <- function(data_i, data_g) {
     geom_point(size = 1.5) +
     labs(
       x = expression(
-        paste("Mass-specific intake rate", " (", mg[food], " ", mg[body] ^ {
+        paste("Mass-specific intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
           -1
         }, " ", day ^ {
           -1
@@ -1124,14 +1116,11 @@ plot_irn <- function(data_i, data_g) {
   ciaer_msir <- ggplot2::ggplot(data_aer,
                                 aes(x = group_mass_specific_intake_rate_fw, y = `C`)) +
     geom_point(size = 1.5) +
-    labs(x = expression(
-      paste("Mass-specific intake rate", " (", mg[food], " ", mg[body] ^ {
-        -1
-      }, " ", day ^ {
-        -1
-      }, ")",)
-    ), y = "C IAER") +
-    geom_smooth(color = "steelblue3",  method = "lm")
+    xlim(0,NA) +
+    labs(x = "Group mass-specific intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)",
+         y = "C IAER") +
+    geom_smooth(color = "steelblue3",  method = "lm") +
+    theme(axis.title.x = element_markdown())
   
   ggsave(
     filename = "ciaer_&_msir.pdf",
@@ -1148,11 +1137,20 @@ plot_irn <- function(data_i, data_g) {
                                 aes(x = group_mass_specific_intake_rate_fw, y = `N`)) +
     geom_point(size = 1.5) +
     labs(x = expression(
-      paste("Mass-specific intake rate", " (", mg[food], " ", mg[body] ^ {
-        -1
-      }, " ", day ^ {
-        -1
-      }, ")",)
+      paste(
+        "Group mass-specific intake rate",
+        " (",
+        mg[food (fw)],
+        " ",
+        mg[body (fw)] ^ {
+          -1
+        },
+        " ",
+        day ^ {
+          -1
+        },
+        ")",
+      )
     ), y = "N IAER") +
     geom_smooth(color = "steelblue3",  method = "lm")
   
@@ -1209,14 +1207,13 @@ plot_irn <- function(data_i, data_g) {
   # A theme specific to this figure
   ggplot2::theme_set(
     theme_classic() + theme(
-      text = element_text(size = 14),
+      text = element_text(size = 12),
       panel.grid.major = element_line(
         color = "gray95",
         size = 0.5,
         linetype = 1
       ),
       legend.position = "none",
-      axis.title.x = element_blank(),
     )
   )
   
@@ -1226,51 +1223,52 @@ plot_irn <- function(data_i, data_g) {
     ggpubr::ggarrange(
       plots[[1]],
       plots[[2]],
-      NULL,
-      NULL,
       ncol = 2,
-      nrow = 2,
-      labels = c("a.", "b.", "", ""),
+      nrow = 1,
+      labels = c("a.", "b."),
       label.y = 1.1,
       label.x = 0,
-      heights = c(1, 0.05),
-      widths = c(1, 1)
+      heights = 1,
+      widths = c(1,1)
     ),
     top = "",
-    bottom = ggpubr::text_grob(expression(
-      paste("Mass-specific intake rate", " (", mg[food], " ", mg[body] ^ {
-        -1
-      }, " ", day ^ {
-        -1
-      }, ")")
-    ), size = 14)
   )
   
-  
+  ggplot2::theme_set(
+    theme_classic() + theme(
+      text = element_text(size = 12),
+      panel.grid.major = element_line(
+        color = "gray95",
+        size = 0.5,
+        linetype = 1
+      ),
+      legend.position = "none",
+      axis.title.x = element_blank()
+    )
+  )
   
   bottom_part = ggpubr::annotate_figure(
     ggpubr::ggarrange(
       plots[[3]],
       plots[[4]],
-      NULL,
-      NULL,
       ncol = 2,
-      nrow = 2,
-      labels = c("c.", "d.", "", ""),
+      nrow = 1,
+      labels = c("c.", "d."),
       label.y = 1.1,
       label.x = 0,
-      heights = c(1, 0.05),
-      widths = c(1, 1)
+      heights = 1,
+      widths = c(1,1)
     ),
+    top = "",
     bottom = ggpubr::text_grob(expression(
       paste("Growth rate",
             " (",
-            mg[body],
+            mg[body (fw)],
             " ", day ^ {
               -1
             },
             ")")
-    ), size = 14)
+    ), size = 12)
   )
   
   
@@ -1279,13 +1277,6 @@ plot_irn <- function(data_i, data_g) {
   
   
   complete_plot = ggpubr::ggarrange(top_part, bottom_part, ncol = 1, nrow = 2)
-  complete_plot = ggpubr::annotate_figure(complete_plot, bottom = expression(paste("Growth rate",
-                                                                                   " (",
-                                                                                   mg[body],
-                                                                                   " ", day ^ {
-                                                                                     -1
-                                                                                   },
-                                                                                   ")",)))
   
   # Saving the the complete plots
   
@@ -1296,7 +1287,7 @@ plot_irn <- function(data_i, data_g) {
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 8,
-    height = 5,
+    height = 6,
     units = "in"
   )
   

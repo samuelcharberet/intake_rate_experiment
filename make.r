@@ -3,6 +3,7 @@ library(targets)
 library(ggplot2)
 library(tidyr)
 library(mgcv)
+library(ggtext)
 
 
 lapply(list.files(here::here("R"), recursive = TRUE, full.names = T), source)
