@@ -156,8 +156,10 @@ model_irn <- function(data_i, data_g) {
   
   
   n = rep(NA, nb_row)
+  formula = rep(NA, nb_row)
   F_stat = rep(NA, nb_row)
   R_squared = rep(NA, nb_row)
+  edf = rep(NA, nb_row)
   equation = rep(NA, nb_row)
   p_value = rep(NA, nb_row)
   
@@ -167,6 +169,14 @@ model_irn <- function(data_i, data_g) {
     n = n,
     R_squared = R_squared,
     F_stat = F_stat,
+    p_value = p_value
+  )
+  
+  gam_isotopes = data.frame(
+    formula = formula,
+    n = n,
+    R_squared = R_squared,
+    edf = edf,
     p_value = p_value
   )
   
@@ -188,14 +198,48 @@ model_irn <- function(data_i, data_g) {
         )
       )
       
-      formula = as.formula(paste("elemental_value",
-                                 "~ ",
-                                 independant_variables_list[i]))
+      formula_lm = as.formula(paste("elemental_value",
+                                    "~ ",
+                                    independant_variables_list[i]))
       
-      mod = lm(formula, data = data_variable_isotope)
-      summary_mod = summary(mod)
+      formula_gam = as.formula(paste(
+        "elemental_value",
+        "~ ",
+        "s",
+        "(",
+        independant_variables_list[i],
+        ")"
+      ))
+      
+      mod_linear = lm(formula_lm, data = data_variable_isotope)
+      summary_mod = summary(mod_linear)
+      mod_gam = mgcv::gam(formula_gam, data = data_variable_isotope)
+      summary_gam = summary(mod_gam)
+      
       k = k + 1
-
+      
+      if (mod_gam$converged == "TRUE") {
+        gam_isotopes$formula[k] = paste(
+          isotopes_list[j],
+          dependant_variables_list[i],
+          " = ",
+          "a",
+          "x",
+          independant_variables_list[i],
+          "+",
+          "b"
+        )
+        gam_isotopes$n[k] = summary_gam$n
+        gam_isotopes$r_squared[k] = format(signif(summary_gam$r.sq, digits = 3), scientific = F)
+        gam_isotopes$edf[k] = format(signif(summary_gam$edf, digits = 3), scientific = F)
+        if (summary_gam$s.pv == 0) {
+          gam_isotopes$p_value[k] = "<2e-16"
+        }
+        else{
+          gam_isotopes$p_value[k] = format(signif(summary_gam$s.pv, digits = 2), scientific = T)
+        }
+      }
+      
       
       models_isotopes$equation[k] = paste(
         isotopes_list[j],
@@ -230,8 +274,15 @@ model_irn <- function(data_i, data_g) {
     file = here::here(
       "4_outputs",
       "1_statistical_results",
-      "models_isotopes.csv"
-    ),
+      "models_isotopes_linear.csv"
+    )
+  )
+  
+  write.csv(
+    gam_isotopes,
+    file = here::here("4_outputs",
+                      "1_statistical_results",
+                      "gam_isotopes.csv")
   )
   
 }

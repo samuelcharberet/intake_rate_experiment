@@ -10,6 +10,7 @@ library(ggplot2)
 library(tidyr)
 library(mgcv)
 library(ggtext)
+library(formula.tools)
 
 # We source all functions contained in all files in the R directory
 lapply(list.files(here::here("R"), recursive = TRUE, full.names = T), source)

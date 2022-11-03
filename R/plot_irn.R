@@ -1119,7 +1119,7 @@ plot_irn <- function(data_i, data_g) {
     xlim(0,NA) +
     labs(x = "Group mass-specific intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)",
          y = "C IAER") +
-    geom_smooth(color = "steelblue3",  method = "lm") +
+    geom_smooth(color = "steelblue3",  method = "gam") +
     theme(axis.title.x = element_markdown())
   
   ggsave(
