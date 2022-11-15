@@ -107,11 +107,6 @@ combine_group_data <- function(data_i, data_g, data_fc) {
   
   data_g$`14N_food` = data_g$food_N/(1+(((data_g$`food_d15N`/1000)+1)*0.003663))
   data_g$`15N_food` = data_g$food_N-data_g$`14N_food`
-  
-  
-  # Simulate some data while waiting for larvae K data to come
-
-  data_g$K_larvae = rnorm(nrow(data_g), 0.03, 0.003)
 
   # We compute the group intake rate
   

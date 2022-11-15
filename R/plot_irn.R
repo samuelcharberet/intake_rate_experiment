@@ -318,100 +318,125 @@ plot_irn <- function(data_i, data_g) {
   plots = vector("list", nb_matrices)
   names(plots) = matrices
   
-  ###### CNP absorption efficiency, larval content, egestion content according to total mass-specific intake rate  ######
   
   
-  CNP = vector("list", nb_matrices)
-  names(CNP) = matrices
-  y_axes = c("%dw", "%dw", "Elemental absorption efficiency (%dw)")
-  y_plot_names = c("lc", "ec", "eae")
+  ###### Differences in elemental content between the matrices: food, larva, frass ######
   
-  for (i in 1:nb_matrices) {
-    data_matrix = subset(
-      data_g,
-      data_g$matrix == matrices[i] &
-        data_g$element == "C" |
-        data_g$matrix == matrices[i] &
-        data_g$element == "N" |
-        data_g$matrix == matrices[i] &
-        data_g$element == "P"
+  elements = c("C", "N", "P", "Na", "Mg", "S", "K", "Ca")
+  nb_elements = length(elements)
+  units = c("%", "%", "ppm", "ppm", "ppm", "ppm", "ppm", "ppm")
+  
+  plots_matrices = vector("list", nb_elements)
+  
+  for (i in 1:nb_elements) {
+    data_element = as.data.frame(subset(data_g, data_g$element == elements[i]))
+    food_col = which(names(data_element) == paste("food_", elements[i], sep =
+                                                    ""))
+    
+    # Food elemental content
+    average_food = mean(data_element[, food_col])
+    sd_food = sd(data_element[, food_col])
+    
+    # Larvae elemental content
+    average_larvae = mean(data_element[which(data_element$matrix == "larvae"), ]$elemental_value, na.rm =
+                            T)
+    sd_larvae = sd(data_element[which(data_element$matrix == "larvae"), ]$elemental_value, na.rm =
+                     T)
+    
+    # Egestion (frass) elemental content
+    average_egestion = mean(data_element[which(data_element$matrix == "egestion"), ]$elemental_value, na.rm =
+                              T)
+    sd_egestion = sd(data_element[which(data_element$matrix == "egestion"), ]$elemental_value, na.rm =
+                       T)
+    data <- data.frame(
+      name = c("Food", "Larvae", "Frass"),
+      value = c(average_food, average_larvae, average_egestion),
+      sd = c(sd_food, sd_larvae, sd_egestion)
     )
     
-    y_axis_coef = mean(data_matrix$elemental_value[which(data_matrix$element ==
-                                                           "C")], na.rm = T) / (mean(c(
-                                                             mean(data_matrix$elemental_value[which(data_matrix$element == "N")], na.rm = T),
-                                                             mean(data_matrix$elemental_value[which(data_matrix$element == "P")], na.rm =
-                                                                    T)
-                                                           )))
-    
-    data_matrix$elemental_value[which(data_matrix$element ==
-                                        "N")] = data_matrix$elemental_value[which(data_matrix$element ==
-                                                                                    "N")] *
-      y_axis_coef
-    data_matrix$elemental_value[which(data_matrix$element ==
-                                        "P")] = data_matrix$elemental_value[which(data_matrix$element ==
-                                                                                    "P")] *
-      y_axis_coef
-    
-    CNP[[i]] <- ggplot2::ggplot(
-      data_matrix
-      ,
-      aes(
-        x = group_mass_specific_intake_rate_fw,
-        y = elemental_value,
-        colour = element,
-        fill =  element
-      )
-    ) +
-      
-      scale_y_continuous(sec.axis = sec_axis(~ . / y_axis_coef)) +
-      geom_point(size = 2) +
-      geom_smooth(method = "gam") +
-      scale_color_manual(
-        values = c("C" = "#808080", "N" = "#5A5ACA", "P" = "#EC9200"),
-        aesthetics = c("colour", "fill")
+    # Bar plot + error bar
+    p = ggplot(data) +
+      geom_bar(
+        aes(x = name, y = value),
+        width = 0.5,
+        stat = "identity",
+        fill = "skyblue",
+        alpha = 0.7
       ) +
-      labs(
-        x = expression(
-          paste(
-            "Mass-specific intake rate",
-            " (",
-            mg[food(fw)],
-            " ",
-            mg[body (fw)] ^ {
-              -1
-            },
-            " ",
-            day ^ {
-              -1
-            },
-            ")",
-          )
+      geom_errorbar(
+        aes(
+          x = name,
+          ymin = value - sd,
+          ymax = value + sd
         ),
-        y = y_axes[i],
-        fill = "Element",
-        color = "Element"
+        width = 0.2,
+        colour = "orange",
+        alpha = 0.9,
+        size = 1
       ) +
-      theme(
-        axis.text.y = element_text(color = "#808080"),
-        axis.line.y = element_line(color = "#808080"),
-        axis.ticks.y = element_line(color = "#808080"),
-        axis.text.y.right = element_text(color = "#5A5ACA"),
-        axis.line.y.right = element_line(color = "#5A5ACA"),
-        axis.ticks.y.right = element_line(color = "#5A5ACA")
-      )
+      labs(x = "",
+           y = paste(elements[i], " (", units[i], ")", sep = "")) +
+      scale_x_discrete(limits = c("Food", "Larvae", "Frass"))
     
+    plots_matrices[[i]] = p
+    
+    # Save each plot
     ggsave(
-      filename = paste("CNP", y_plot_names[i], "dw_&_msirfw.pdf", sep = ""),
-      plot = CNP[[i]],
+      filename = paste("matrices_", elements[i], ".pdf", sep = ""),
+      plot = p,
       device = cairo_pdf,
       path = here::here("4_outputs", "2_figures"),
       scale = 1,
-      width = 6,
-      height = 4,
+      width = 3,
+      height = 3,
       units = "in"
     )
   }
+  
+  # Create the complete matrices plots
+  complete_matrices = ggpubr::ggarrange(
+    plots_matrices[[1]],
+    plots_matrices[[2]],
+    plots_matrices[[3]],
+    plots_matrices[[4]],
+    plots_matrices[[5]],
+    plots_matrices[[6]],
+    plots_matrices[[7]],
+    plots_matrices[[8]],
+    ncol = 4,
+    nrow = 3,
+    labels = c("a.",
+               "b.",
+               "c.",
+               "d.",
+               "e.",
+               "f.",
+               "g.",
+               "h."),
+    label.y = 1,
+    label.x = 0,
+    heights = c(1, 1),
+    widths = c(1, 1, 1, 1)
+  )
+  
+  # Save the complete plot
+  ggsave(
+    filename = paste("matrices_", "all_elements", ".pdf", sep = ""),
+    plot = complete_matrices,
+    device = cairo_pdf,
+    path = here::here("4_outputs", "2_figures"),
+    scale = 1,
+    width = 13,
+    height = 7,
+    units = "in"
+  )
+  
+  
+  ###### CNP absorption efficiency, larval content, egestion content according to total mass-specific intake rate  ######
+  
+  
+  y_axes = c("%dw", "%dw", "Elemental absorption efficiency (%dw)")
+  y_plot_names = c("lc", "ec", "eae")
   
   # Creating the list of plots for the other elements
   
@@ -426,8 +451,7 @@ plot_irn <- function(data_i, data_g) {
   # Na, Mg, S, K, and Ca
   
   
-  elements = c("C", "N", "P", "Na", "Mg", "S", "K", "Ca")
-  nb_elements = length(elements)
+  
   for (j in 1:nb_matrices) {
     data_matrix = subset(data_g, data_g$matrix == matrices[j])
     for (i in 1:nb_elements) {
@@ -485,7 +509,7 @@ plot_irn <- function(data_i, data_g) {
           subset(data_matrix, data_matrix$element == elements[i]) ,
           aes(
             x = group_mass_specific_intake_rate_fw,
-            y = elemental_value/absorption_efficiency_dw,
+            y = elemental_value / absorption_efficiency_dw,
             colour = element,
             fill =  element
           )
@@ -511,14 +535,20 @@ plot_irn <- function(data_i, data_g) {
                 ")",
               )
             ),
-            y = paste("Relative",tolower(y_axes[j])),
+            y = paste("Relative", tolower(y_axes[j])),
             fill = "Element",
             color = "Element"
           )
         
         # Save each plot
         ggsave(
-          filename = paste("relative",matrices[j], elements[i], "dw_&_msirfw.pdf", sep = ""),
+          filename = paste(
+            "relative",
+            matrices[j],
+            elements[i],
+            "dw_&_msirfw.pdf",
+            sep = ""
+          ),
           plot = plot,
           device = cairo_pdf,
           path = here::here("4_outputs", "2_figures"),
@@ -724,34 +754,49 @@ plot_irn <- function(data_i, data_g) {
   
   for (i in 1:nb_matrices) {
     complete_plots[[i]] = ggpubr::ggarrange(
-      CNP[[i]],
-      ggpubr::ggarrange(
-        plots[[i]][[4]],
-        plots[[i]][[5]],
-        NULL,
-        NULL,
-        plots[[i]][[6]],
-        plots[[i]][[7]],
-        NULL,
-        NULL,
-        legend,
-        plots[[i]][[8]],
-        NULL,
-        NULL,
-        ncol = 2,
-        nrow = 6,
-        labels = c("b.", "c.", "", "", "d.", "e.", "", "", "", "f.", "", ""),
-        label.y = 1.1,
-        label.x = 0,
-        heights = c(1, 0.05, 1, 0.05, 1, 0.1),
-        widths = c(1, 1)
+      plots[[i]][[4]],
+      plots[[i]][[4]],
+      plots[[i]][[4]],
+      NULL,
+      NULL,
+      NULL,
+      plots[[i]][[4]],
+      plots[[i]][[5]],
+      plots[[i]][[6]],
+      NULL,
+      NULL,
+      NULL,
+      plots[[i]][[7]],
+      plots[[i]][[8]],
+      legend,
+      NULL,
+      NULL,
+      NULL,
+      ncol = 3,
+      nrow = 6,
+      labels = c(
+        "a.",
+        "b.",
+        "c.",
+        "",
+        "",
+        "",
+        "d.",
+        "e.",
+        "f.",
+        "",
+        "",
+        "",
+        "g.",
+        "h.",
+        "",
+        "",
+        "",
+        ""
       ),
-      ncol = 2,
-      nrow = 1,
-      label.y = 1.03,
+      label.y = 1.1,
       label.x = 0,
-      labels = c("a.", ""),
-      heights = 1,
+      heights = c(1, 0.05, 1, 0.05, 1, 0.1),
       widths = c(1, 1)
     )
     
