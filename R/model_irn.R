@@ -252,7 +252,7 @@ model_irn <- function(data_i, data_g) {
         signif(summary_mod$coefficients[1, 1], digits = 5)
       )
       
-      models_isotopes$n[k] = length(mod$residuals)
+      models_isotopes$n[k] = length(data_variable_isotope$elemental_value) - sum(is.na(data_variable_isotope$elemental_value))
       models_isotopes$F_stat[k] = signif(summary_mod$fstatistic[1], digits =
                                            2)
       models_isotopes$p_value[k] = scales::pvalue(

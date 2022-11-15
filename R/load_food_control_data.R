@@ -52,13 +52,9 @@ load_food_control_data = function(path){
   data_irn_food_control$food_water_content = (data_irn_food_control$food_fw - data_irn_food_control$food_dw) /
     data_irn_food_control$food_fw
   
-  data_irn_food_control$food_P = 0.05
-  data_irn_food_control$food_S = 0.05
-  data_irn_food_control$food_Na = 0.05
-  data_irn_food_control$food_Mg = 0.05
+  # Simulate some data while waiting for the food K data to come 
   data_irn_food_control$food_K = 0.05
-  data_irn_food_control$food_Ca = 0.05
-  
+
   
   return(data_irn_food_control)
 }

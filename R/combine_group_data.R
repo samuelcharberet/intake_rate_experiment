@@ -109,21 +109,10 @@ combine_group_data <- function(data_i, data_g, data_fc) {
   data_g$`15N_food` = data_g$food_N-data_g$`14N_food`
   
   
-  # Simulate some data while waiting for the chemical analysis to be done
-  data_g$P_egestion = rnorm(nrow(data_g), 0.5, 0.08)
-  data_g$S_egestion = rnorm(nrow(data_g), 0.03, 0.003)
-  data_g$Na_egestion = rnorm(nrow(data_g), 0.03, 0.003)
-  data_g$Mg_egestion = rnorm(nrow(data_g), 0.03, 0.003)
-  data_g$K_egestion = rnorm(nrow(data_g), 0.03, 0.003)
-  data_g$Ca_egestion = rnorm(nrow(data_g), 0.03, 0.003)
-  
-  data_g$P_larvae = rnorm(nrow(data_g), 0.5, 0.08)
-  data_g$S_larvae = rnorm(nrow(data_g), 0.03, 0.003)
-  data_g$Na_larvae = rnorm(nrow(data_g), 0.03, 0.003)
-  data_g$Mg_larvae = rnorm(nrow(data_g), 0.03, 0.003)
+  # Simulate some data while waiting for larvae K data to come
+
   data_g$K_larvae = rnorm(nrow(data_g), 0.03, 0.003)
-  data_g$Ca_larvae = rnorm(nrow(data_g), 0.03, 0.003)
-  
+
   # We compute the group intake rate
   
   data_g$group_mass_specific_intake_rate_fw = data_g$food_consumed_collection_days_fw/(data_g$number_collection_days*((data_g$groupmass_7th_instar_j0_fw+data_g$groupmass_7th_instar_j3_fw)/2))
