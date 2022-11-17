@@ -432,11 +432,11 @@ plot_irn <- function(data_i, data_g) {
   )
   
   
-  ###### CNP absorption efficiency, larval content, egestion content according to total mass-specific intake rate  ######
+  ###### Elements absorption efficiency, larval content, egestion content according to total mass-specific intake rate  ######
   
   
   y_axes = c("%dw", "%dw", "Elemental absorption efficiency (%dw)")
-  y_plot_names = c("lc", "ec", "eae")
+  y_plot_names = c("larvae_content", "egestion_content", "elemental_abs_eff")
   
   # Creating the list of plots for the other elements
   
