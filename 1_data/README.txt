@@ -1,3 +1,5 @@
+# Data files description
+
 Data are splitted in 4 files
 
 1. data_irn_food_controls contains data relative to the food controls.
@@ -5,23 +7,26 @@ Data are splitted in 4 files
 3. data_irn_individuals contains data relative to individuals that were submitted to food level treatments.
 4. data_irn_individuals_controls contain data relative to control individuals used to have a 7th instar start reference point.
 
-date
-tube_food_control_ID
-empty_tube_food_control_mass
-fw_filled_tube_food_control_mass
-dw_filled_tube_food_control_mass
-tube_food_control_unit
-food_fw
-food_dw
-food_water_content
-food_C
-food_N
-food_P
-food_S
-food_Na
-food_Mg
-food_K
-food_Ca
-food_d13C
-food_d15N
+## Description of data_irn_food_controls
 
+| Column| Description |
+| --- | --- |
+| date | date of food control sample collection |
+| tube_food_control_ID | unique sample identifier |
+| empty_tube_food_control_mass | empty tube weight |
+| fw_filled_tube_food_control_mass | filled tube weight before drying |
+| dw_filled_tube_food_control_mass | filled tube weight after drying |
+| tube_food_control_unit | unit of weights |
+| food_fw | food weight in fresh weight |
+| food_dw | food weight in dry weight |
+| food_water_content| food water proportion |
+| food_C | food carbon proportion in % dw|
+| food_N | food nitrogen proportion in % dw|
+| food_P | food phosphorus proportion in ppm dw |
+| food_S | food sulfur proportion in ppm dw |
+| food_Na | food sodium proportion in ppm dw |
+| food_Mg | food magnesium proportion in ppm dw|
+| food_K | food potassium proportion in ppm dw|
+| food_Ca | food calcium proportion in ppm dw|
+| food_d13C | food d13C |
+| food_d15N | food d15N |
