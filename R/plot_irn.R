@@ -823,7 +823,7 @@ plot_irn <- function(data_i, data_g) {
       path = here::here("4_outputs", "2_figures"),
       scale = 1,
       width = 13,
-      height = 7,
+      height = 5,
       units = "in"
     )
   }
