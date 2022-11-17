@@ -214,7 +214,7 @@ plot_irn <- function(data_i, data_g) {
                               " ", day ^ {
                                 -1
                               },
-                              ")",))) +
+                              ")", ))) +
     geom_smooth(color = "steelblue3",  method = "gam") +
     theme(axis.title.x = element_markdown())
   
@@ -338,15 +338,15 @@ plot_irn <- function(data_i, data_g) {
     sd_food = sd(data_element[, food_col])
     
     # Larvae elemental content
-    average_larvae = mean(data_element[which(data_element$matrix == "larvae"), ]$elemental_value, na.rm =
+    average_larvae = mean(data_element[which(data_element$matrix == "larvae"),]$elemental_value, na.rm =
                             T)
-    sd_larvae = sd(data_element[which(data_element$matrix == "larvae"), ]$elemental_value, na.rm =
+    sd_larvae = sd(data_element[which(data_element$matrix == "larvae"),]$elemental_value, na.rm =
                      T)
     
     # Egestion (frass) elemental content
-    average_egestion = mean(data_element[which(data_element$matrix == "egestion"), ]$elemental_value, na.rm =
+    average_egestion = mean(data_element[which(data_element$matrix == "egestion"),]$elemental_value, na.rm =
                               T)
-    sd_egestion = sd(data_element[which(data_element$matrix == "egestion"), ]$elemental_value, na.rm =
+    sd_egestion = sd(data_element[which(data_element$matrix == "egestion"),]$elemental_value, na.rm =
                        T)
     data <- data.frame(
       name = c("Food", "Larvae", "Frass"),
@@ -435,7 +435,9 @@ plot_irn <- function(data_i, data_g) {
   ###### Elements absorption efficiency, larval content, egestion content according to total mass-specific intake rate  ######
   
   
-  y_axes = c("%dw", "%dw", "Elemental absorption efficiency (%dw)")
+  y_axes = c("Larvae", "Frass", "Absorbed")
+  units = cbind(units, units, "%")
+  
   y_plot_names = c("larvae_content", "egestion_content", "elemental_abs_eff")
   
   # Creating the list of plots for the other elements
@@ -447,8 +449,7 @@ plot_irn <- function(data_i, data_g) {
   
   
   # A for loop to create the plots of absorption efficiency, larvae content and egestion content
-  # according to mass-specific ingestion rate for
-  # Na, Mg, S, K, and Ca
+  # according to mass-specific ingestion rate for all elements
   
   
   
@@ -485,7 +486,8 @@ plot_irn <- function(data_i, data_g) {
               ")",
             )
           ),
-          y = y_axes[j],
+          y = paste(y_axes[j], elements[i], paste("(", units[i, j], ")", sep =
+                                                    ""), sep = " ") ,
           fill = "Element",
           color = "Element"
         )
@@ -504,7 +506,7 @@ plot_irn <- function(data_i, data_g) {
       
       ### Relative absorption efficiency
       
-      if (y_axes[j] == "Elemental absorption efficiency (%dw)") {
+      if (y_axes[j] == "Absorbed") {
         plot = ggplot2::ggplot(
           subset(data_matrix, data_matrix$element == elements[i]) ,
           aes(
@@ -535,7 +537,7 @@ plot_irn <- function(data_i, data_g) {
                 ")",
               )
             ),
-            y = paste("Relative", tolower(y_axes[j])),
+            y = paste("Relative", elements[i], "absorption"),
             fill = "Element",
             color = "Element"
           )
@@ -583,7 +585,7 @@ plot_irn <- function(data_i, data_g) {
         -1
       }, " ", day ^ {
         -1
-      }, ")", )
+      }, ")",)
     ), y = "Larvae C/N") +
     geom_smooth(color = "steelblue3",  method = "gam")
   
@@ -606,7 +608,7 @@ plot_irn <- function(data_i, data_g) {
         -1
       }, " ", day ^ {
         -1
-      }, ")", )
+      }, ")",)
     ), y = "Larvae N/P") +
     geom_smooth(color = "steelblue3",  method = "gam")
   
@@ -640,7 +642,7 @@ plot_irn <- function(data_i, data_g) {
         -1
       }, " ", day ^ {
         -1
-      }, ")", )
+      }, ")",)
     ), y = "Egestion C/N") +
     geom_smooth(color = "steelblue3",  method = "gam")
   
@@ -685,7 +687,7 @@ plot_irn <- function(data_i, data_g) {
         -1
       }, " ", day ^ {
         -1
-      }, ")", )
+      }, ")",)
     ), y = "Egestion N/P") +
     geom_smooth(color = "steelblue3",  method = "gam")
   
@@ -713,8 +715,7 @@ plot_irn <- function(data_i, data_g) {
         linetype = 1
       ),
       legend.position = "none",
-      axis.title.x = element_blank(),
-      axis.title.y = element_blank()
+      axis.title.x = element_blank()
     )
   )
   
@@ -754,50 +755,38 @@ plot_irn <- function(data_i, data_g) {
   
   for (i in 1:nb_matrices) {
     complete_plots[[i]] = ggpubr::ggarrange(
-      plots[[i]][[4]],
-      plots[[i]][[4]],
+      plots[[i]][[1]],
+      plots[[i]][[2]],
+      plots[[i]][[3]],
       plots[[i]][[4]],
       NULL,
       NULL,
       NULL,
-      plots[[i]][[4]],
+      NULL,
       plots[[i]][[5]],
       plots[[i]][[6]],
-      NULL,
-      NULL,
-      NULL,
       plots[[i]][[7]],
       plots[[i]][[8]],
-      legend,
-      NULL,
-      NULL,
-      NULL,
-      ncol = 3,
-      nrow = 6,
+      ncol = 4,
+      nrow = 3,
       labels = c(
         "a.",
         "b.",
         "c.",
+        "d.",
+        "",
         "",
         "",
         "",
         "d.",
         "e.",
         "f.",
-        "",
-        "",
-        "",
-        "g.",
-        "h.",
-        "",
-        "",
-        "",
-        ""
+        "g."
       ),
       label.y = 1.1,
       label.x = 0,
-      heights = c(1, 0.05, 1, 0.05, 1, 0.1),
-      widths = c(1, 1)
+      heights = c(1, 0.05, 1),
+      widths = c(1, 1, 1, 1)
     )
     
     # Annotating the complete absorption efficiency plot with axes titles
@@ -833,11 +822,12 @@ plot_irn <- function(data_i, data_g) {
       device = cairo_pdf,
       path = here::here("4_outputs", "2_figures"),
       scale = 1,
-      width = 8,
-      height = 5,
+      width = 13,
+      height = 7,
       units = "in"
     )
   }
+  
   
   
   ########## 3. Isotopy figures ##########
@@ -871,7 +861,7 @@ plot_irn <- function(data_i, data_g) {
         -1
       }, " ", day ^ {
         -1
-      }, ")", )
+      }, ")",)
     ), y = expression(paste(Delta, "13C"))) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
@@ -894,7 +884,7 @@ plot_irn <- function(data_i, data_g) {
         -1
       }, " ", day ^ {
         -1
-      }, ")", )
+      }, ")",)
     ), y = expression(paste(Delta, "15N"))) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
@@ -922,7 +912,7 @@ plot_irn <- function(data_i, data_g) {
                               " ", day ^ {
                                 -1
                               },
-                              ")",)), y = expression(paste(Delta, "13C"))) +
+                              ")", )), y = expression(paste(Delta, "13C"))) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
@@ -946,7 +936,7 @@ plot_irn <- function(data_i, data_g) {
                               " ", day ^ {
                                 -1
                               },
-                              ")",)), y = expression(paste(Delta, "15N"))) +
+                              ")", )), y = expression(paste(Delta, "15N"))) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
@@ -1055,7 +1045,7 @@ plot_irn <- function(data_i, data_g) {
           -1
         }, " ", day ^ {
           -1
-        }, ")", )
+        }, ")",)
       ),
       y = latex2exp::TeX(r'($\delta 13C_{frass}-\delta 13C_{food}$)')
     ) +
@@ -1081,7 +1071,7 @@ plot_irn <- function(data_i, data_g) {
           -1
         }, " ", day ^ {
           -1
-        }, ")", )
+        }, ")",)
       ),
       y = latex2exp::TeX(r'($\delta 15N_{frass}-\delta 15N_{food}$)')
     ) +
@@ -1159,7 +1149,7 @@ plot_irn <- function(data_i, data_g) {
           -1
         }, " ", day ^ {
           -1
-        }, ")", )
+        }, ")",)
       ),
       y = latex2exp::TeX(r'($\delta 13C_{frass}-\delta 13C_{larvae}$)')
     ) +
@@ -1185,7 +1175,7 @@ plot_irn <- function(data_i, data_g) {
           -1
         }, " ", day ^ {
           -1
-        }, ")", )
+        }, ")",)
       ),
       y = latex2exp::TeX(r'($\delta 15N_{frass}-\delta 15N_{larvae}$)')
     ) +
