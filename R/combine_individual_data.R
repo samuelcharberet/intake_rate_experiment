@@ -106,6 +106,15 @@ combine_individual_data <- function(data_fc, data_ic, data_i) {
     data_i$number_collection_days
   data_i$ingestion_rate_fw_unit = "mg fw / day"
   
+  ##### Egestion rate #####
+  
+  # The egestion rate is equal to the total amount of frass produced over the collection days divided by the number of days
+  
+  # In dry weight
+  data_i$egestion_rate_dw = data_i$egestion_mass_dw /
+    data_i$number_collection_days
+  data_i$egestion_rate_dw_unit = "mg dw / day"
+  
   ##### Absorbed mass of food #####
   
   # In dry weight only, because we don't have the water content of frass.

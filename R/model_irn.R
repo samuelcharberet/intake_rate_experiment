@@ -41,6 +41,7 @@ model_irn <- function(data_i, data_g) {
   r_squared = rep(NA, length(constituent))
   edf = rep(NA, length(constituent))
   p_value = rep(NA, length(constituent))
+  difference = rep(NA, length(constituent))
   
   models_nutrients = data.frame(
     constituent = constituent,
@@ -48,7 +49,8 @@ model_irn <- function(data_i, data_g) {
     n = n,
     r_squared = r_squared,
     edf = edf,
-    p_value = p_value
+    p_value = p_value,
+    difference = difference
   )
   
   # We have two datasets, one at the level of individuals
@@ -109,6 +111,7 @@ model_irn <- function(data_i, data_g) {
         models_nutrients$n[k] = summary_mod$n
         models_nutrients$r_squared[k] = format(signif(summary_mod$r.sq, digits = 3), scientific = F)
         models_nutrients$edf[k] = format(signif(summary_mod$edf, digits = 3), scientific = F)
+        models_nutrients$difference[k] = (max(mod$fitted.values)/min(mod$fitted.values))-1
         if (summary_mod$s.pv == 0) {
           models_nutrients$p_value[k] = "<2e-16"
         }

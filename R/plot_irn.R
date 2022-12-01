@@ -94,19 +94,19 @@ plot_irn <- function(data_i, data_g) {
   ########## 1. Mass balance figures ##########
   
   
-  ###### Absorption efficiency according to mass specific ingestion rate ######
+  ###### Absorption efficiency according to mass specific intake rate ######
   
   
-  p <- ggplot2::ggplot(data_i,
+  aedw_msirfw <- ggplot2::ggplot(data_i,
                        aes(x = ingestion_rate_fw / ((bodymass_last_collection_date + bodymass_7th_instar_j0_fw) / 2
                        ), y = absorption_efficiency_dw)) +
     geom_point(size = 2) +
-    labs(x = "Mass specific ingestion rate (mg fw/ day / mg fw indiv)", y = "Absorption efficiency (% dw)") +
+    labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Absorption efficiency (% dw)") +
     geom_smooth(color = "steelblue3",  method = "gam")
   
   ggsave(
     filename = "aedw_&_msirfw.pdf",
-    plot = p,
+    plot = aedw_msirfw,
     device = cairo_pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
@@ -115,12 +115,12 @@ plot_irn <- function(data_i, data_g) {
     units = "in"
   )
   
-  ###### Growth efficiency in fresh weight according to the mass specific ingestion rate in fresh weight  ######
+  ###### Growth efficiency in fresh weight according to the mass specific intake rate in fresh weight  ######
   
   p <- ggplot2::ggplot(data_i,
                        aes(x = ingestion_rate_fw / ((bodymass_last_collection_date + bodymass_7th_instar_j0_fw) / 2
                        ), y = growth_efficiency_fw)) +
-    labs(x = "Mass specific ingestion rate (mg fw/day / mg fw indiv)", y = "Growth efficiency (% fw)") +
+    labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Growth efficiency (% fw)") +
     geom_point(size = -1, color = "white") +
     geom_vline(xintercept = 1, color = "steelblue3")
   
@@ -141,7 +141,7 @@ plot_irn <- function(data_i, data_g) {
   p <- ggplot2::ggplot(data_i,
                        aes(x = ingestion_rate_fw / ((bodymass_last_collection_date + bodymass_7th_instar_j0_fw) / 2
                        ), y = growth_efficiency_fw)) +
-    labs(x = "Mass specific ingestion rate (mg fw/day / mg fw indiv)", y = "Growth efficiency (% fw)") +
+    labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Growth efficiency (% fw)") +
     geom_point(size = -1, color = "white") +
     geom_hline(yintercept = 0.5, color = "steelblue3")
   
@@ -156,11 +156,11 @@ plot_irn <- function(data_i, data_g) {
     units = "in"
   )
   
-  p <- ggplot2::ggplot(data_i,
+  gefw_msirfw <- ggplot2::ggplot(data_i,
                        aes(x = ingestion_rate_fw / ((bodymass_last_collection_date + bodymass_7th_instar_j0_fw) / 2
                        ), y = growth_efficiency_fw)) +
     geom_point(size = 2) +
-    labs(x = "Mass specific ingestion rate (mg fw/day / mg fw indiv)", y = "Growth efficiency (% fw)") +
+    labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Growth efficiency (% fw)") +
     geom_smooth(color = "steelblue3",  method = "gam") +
     geom_vline(xintercept = 1, color = "steelblue3") +
     geom_hline(yintercept = 0.5, color = "steelblue3")
@@ -168,7 +168,7 @@ plot_irn <- function(data_i, data_g) {
   
   ggsave(
     filename = "gefw_&_msirfw.pdf",
-    plot = p,
+    plot = gefw_msirfw,
     device = cairo_pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
@@ -177,7 +177,7 @@ plot_irn <- function(data_i, data_g) {
     units = "in"
   )
   
-  ###### Growth efficiency in dry weight according to the mass specific ingestion rate in dry weight  ######
+  ###### Growth efficiency in dry weight according to the mass specific intake rate in dry weight  ######
   
   
   p <- ggplot2::ggplot(data_i,
@@ -186,7 +186,7 @@ plot_irn <- function(data_i, data_g) {
                        ) / 2
                        ), y = growth_efficiency_dw)) +
     geom_point(size = 2) +
-    labs(x = "Mass specific ingestion rate (mg dw/day / mg dw indiv)", y = "Growth efficiency (% dw)") +
+    labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Growth efficiency (% dw)") +
     geom_smooth(color = "steelblue3",  method = "gam")
   
   ggsave(
@@ -207,7 +207,7 @@ plot_irn <- function(data_i, data_g) {
                                  ), y = growth_rate)) +
     geom_point(size = 2) +
     xlim(0, NA) +
-    labs(x = "Individual mass-specific intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)",
+    labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)",
          y = expression(paste("Growth rate",
                               " (",
                               mg[body (fw)],
@@ -292,6 +292,40 @@ plot_irn <- function(data_i, data_g) {
     units = "in"
   )
   
+  ###### A figure capturing important results in mass budget ######
+  
+  complete_plot = ggpubr::ggarrange(
+    ggpubr::ggarrange(
+      grfw_msirfw,
+      aedw_msirfw,
+      ncol = 1,
+      nrow = 2,
+      labels = c("a.",
+                 "b."),
+      label.y = 1.1,
+      label.x = 0,
+      heights = c(1, 1)
+    ),
+    gefw_msirfw,
+    ncol = 2,
+    nrow = 1,
+    labels = c("",
+               "c."),
+    label.y = 1.1,
+    label.x = 0,
+    widths = c(1, 1)
+  )
+  
+  ggsave(
+    filename = paste("total_mass_balance.pdf", sep = ""),
+    plot = complete_plot,
+    device = cairo_pdf,
+    path = here::here("4_outputs", "2_figures"),
+    scale = 1,
+    width = 13,
+    height = 7,
+    units = "in"
+  )
   
   ########## 2. Chemical balance figures ##########
   
@@ -431,6 +465,30 @@ plot_irn <- function(data_i, data_g) {
     units = "in"
   )
   
+  ##### Growth rate hypothesis #####
+  # We check whether the growth rate in positively related to P body content
+  # according to the growth rate hypothesis of Elser
+  data_larvae = subset(data_g, data_g$matrix == "larvae")
+  data_larvae = pivot_wider(data_larvae, names_from = element, values_from = elemental_value)
+  
+  p <- ggplot2::ggplot(data_larvae,
+                       aes(x = growth_rate, y = P)) +
+    geom_point(size = 2) +
+    labs(x = expression(paste("Growth rate", " (", mg[body (fw)], " ", day ^ {
+      -1
+    }, ")")), y = "Larvae P (ppm)") +
+    geom_smooth(color = "steelblue3",  method = "gam")
+  
+  ggsave(
+    filename = "larvaePdw_&_gr.pdf",
+    plot = p,
+    device = cairo_pdf,
+    path = here::here("4_outputs", "2_figures"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
   
   ###### Elements absorption efficiency, larval content, egestion content according to total mass-specific intake rate  ######
   
@@ -449,7 +507,7 @@ plot_irn <- function(data_i, data_g) {
   
   
   # A for loop to create the plots of absorption efficiency, larvae content and egestion content
-  # according to mass-specific ingestion rate for all elements
+  # according to mass-specific intake rate for all elements
   
   
   
@@ -472,7 +530,7 @@ plot_irn <- function(data_i, data_g) {
         labs(
           x = expression(
             paste(
-              "Mass-specific intake rate",
+              "Intake rate",
               " (",
               mg[food(fw)],
               " ",
@@ -523,7 +581,7 @@ plot_irn <- function(data_i, data_g) {
           labs(
             x = expression(
               paste(
-                "Mass-specific intake rate",
+                "Intake rate",
                 " (",
                 mg[food(fw)],
                 " ",
@@ -560,8 +618,6 @@ plot_irn <- function(data_i, data_g) {
           units = "in"
         )
       }
-      
-      
     }
   }
   
@@ -581,7 +637,7 @@ plot_irn <- function(data_i, data_g) {
                        aes(x = group_mass_specific_intake_rate_fw, y = C_N)) +
     geom_point(size = 2) +
     labs(x = expression(
-      paste("Mass-specific intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
+      paste("Intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
         -1
       }, " ", day ^ {
         -1
@@ -604,7 +660,7 @@ plot_irn <- function(data_i, data_g) {
                        aes(x = group_mass_specific_intake_rate_fw, y = N_P)) +
     geom_point(size = 2) +
     labs(x = expression(
-      paste("Mass-specific intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
+      paste("Intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
         -1
       }, " ", day ^ {
         -1
@@ -638,7 +694,7 @@ plot_irn <- function(data_i, data_g) {
                        aes(x = group_mass_specific_intake_rate_fw, y = C_N)) +
     geom_point(size = 2) +
     labs(x = expression(
-      paste("Mass-specific intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
+      paste("Intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
         -1
       }, " ", day ^ {
         -1
@@ -683,7 +739,7 @@ plot_irn <- function(data_i, data_g) {
                        aes(x = group_mass_specific_intake_rate_fw, y = N_P)) +
     geom_point(size = 2) +
     labs(x = expression(
-      paste("Mass-specific intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
+      paste("Intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
         -1
       }, " ", day ^ {
         -1
@@ -769,20 +825,18 @@ plot_irn <- function(data_i, data_g) {
       plots[[i]][[8]],
       ncol = 4,
       nrow = 3,
-      labels = c(
-        "a.",
-        "b.",
-        "c.",
-        "d.",
-        "",
-        "",
-        "",
-        "",
-        "d.",
-        "e.",
-        "f.",
-        "g."
-      ),
+      labels = c("a.",
+                 "b.",
+                 "c.",
+                 "d.",
+                 "",
+                 "",
+                 "",
+                 "",
+                 "d.",
+                 "e.",
+                 "f.",
+                 "g."),
       label.y = 1.1,
       label.x = 0,
       heights = c(1, 0.05, 1),
@@ -796,7 +850,7 @@ plot_irn <- function(data_i, data_g) {
       complete_plots[[i]],
       bottom = ggpubr::text_grob(expression(
         paste(
-          "Mass-specific intake rate",
+          "Intake rate",
           " (",
           mg[food(fw)],
           " ",
@@ -830,6 +884,8 @@ plot_irn <- function(data_i, data_g) {
   
   
   
+  
+  
   ########## 3. Isotopy figures ##########
   
   ######  Isotopic fractionation between the larvae and food (trophic fractionation) as a function of MSIR ######
@@ -857,7 +913,7 @@ plot_irn <- function(data_i, data_g) {
                        aes(x = group_mass_specific_intake_rate_fw, y = `13C`)) +
     geom_point(size = 1.5) +
     labs(x = expression(
-      paste("Mass-specific intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
+      paste("Intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
         -1
       }, " ", day ^ {
         -1
@@ -880,7 +936,7 @@ plot_irn <- function(data_i, data_g) {
                        aes(x = group_mass_specific_intake_rate_fw, y = `15N`)) +
     geom_point(size = 1.5) +
     labs(x = expression(
-      paste("Mass-specific intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
+      paste("Intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
         -1
       }, " ", day ^ {
         -1
@@ -1041,7 +1097,7 @@ plot_irn <- function(data_i, data_g) {
     geom_point(size = 1.5) +
     labs(
       x = expression(
-        paste("Mass-specific intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
+        paste("Intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
           -1
         }, " ", day ^ {
           -1
@@ -1067,7 +1123,7 @@ plot_irn <- function(data_i, data_g) {
     geom_point(size = 1.5) +
     labs(
       x = expression(
-        paste("Mass-specific intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
+        paste("Intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
           -1
         }, " ", day ^ {
           -1
@@ -1145,7 +1201,7 @@ plot_irn <- function(data_i, data_g) {
     geom_point(size = 1.5) +
     labs(
       x = expression(
-        paste("Mass-specific intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
+        paste("Intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
           -1
         }, " ", day ^ {
           -1
@@ -1171,7 +1227,7 @@ plot_irn <- function(data_i, data_g) {
     geom_point(size = 1.5) +
     labs(
       x = expression(
-        paste("Mass-specific intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
+        paste("Intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
           -1
         }, " ", day ^ {
           -1
@@ -1204,7 +1260,7 @@ plot_irn <- function(data_i, data_g) {
                                 aes(x = group_mass_specific_intake_rate_fw, y = `C`)) +
     geom_point(size = 1.5) +
     xlim(0, NA) +
-    labs(x = "Group mass-specific intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)",
+    labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)",
          y = "C IAER") +
     geom_smooth(color = "steelblue3",  method = "gam") +
     theme(axis.title.x = element_markdown())
@@ -1225,7 +1281,7 @@ plot_irn <- function(data_i, data_g) {
     geom_point(size = 1.5) +
     labs(x = expression(
       paste(
-        "Group mass-specific intake rate",
+        "Intake rate",
         " (",
         mg[food (fw)],
         " ",

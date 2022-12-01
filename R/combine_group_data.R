@@ -112,6 +112,11 @@ combine_group_data <- function(data_i, data_g, data_fc) {
   
   data_g$group_mass_specific_intake_rate_fw = data_g$food_consumed_collection_days_fw/(data_g$number_collection_days*((data_g$groupmass_7th_instar_j0_fw+data_g$groupmass_7th_instar_j3_fw)/2))
   
+  
+  # We compute the group egestion rate
+  
+  data_g$group_egestion_rate_dw = data_g$egestion_group_mass_dw/data_g$number_collection_days
+  
   # Computes the element absorption efficiency
   
   data_g$C_absorption_efficiency_dw = 1-((data_g$C_egestion*data_g$egestion_group_mass_dw)/(data_g$food_C*data_g$food_consumed_collection_days_dw))
@@ -126,6 +131,21 @@ combine_group_data <- function(data_i, data_g, data_fc) {
   data_g$`13C_absorption_efficiency_dw` = 1-((data_g$`13C_egestion`*data_g$egestion_group_mass_dw)/(data_g$`13C_food`*data_g$food_consumed_collection_days_dw))
   data_g$`14N_absorption_efficiency_dw` = 1-((data_g$`14N_egestion`*data_g$egestion_group_mass_dw)/(data_g$`14N_food`*data_g$food_consumed_collection_days_dw))
   data_g$`15N_absorption_efficiency_dw` = 1-((data_g$`15N_egestion`*data_g$egestion_group_mass_dw)/(data_g$`15N_food`*data_g$food_consumed_collection_days_dw))
+  
+  # Computes the element egestion rate
+  
+  data_g$C_egestion_rate_dw = data_g$C_egestion*data_g$group_egestion_rate_dw
+  data_g$N_egestion_rate_dw = data_g$N_egestion*data_g$group_egestion_rate_dw
+  data_g$P_egestion_rate_dw = data_g$P_egestion*data_g$group_egestion_rate_dw
+  data_g$S_egestion_rate_dw = data_g$S_egestion*data_g$group_egestion_rate_dw
+  data_g$Na_egestion_rate_dw = data_g$Na_egestion*data_g$group_egestion_rate_dw
+  data_g$Mg_egestion_rate_dw = data_g$Mg_egestion*data_g$group_egestion_rate_dw
+  data_g$K_egestion_rate_dw = data_g$K_egestion*data_g$group_egestion_rate_dw
+  data_g$Ca_egestion_rate_dw = data_g$Ca_egestion*data_g$group_egestion_rate_dw
+  data_g$`12C_egestion_rate_dw` = data_g$`12C_egestion`*data_g$group_egestion_rate_dw
+  data_g$`13C_egestion_rate_dw` = data_g$`13C_egestion`*data_g$group_egestion_rate_dw
+  data_g$`14N_egestion_rate_dw` = data_g$`14N_egestion`*data_g$group_egestion_rate_dw
+  data_g$`15N_egestion_rate_dw` = data_g$`15N_egestion`*data_g$group_egestion_rate_dw
   
   # Isotopic absorption efficiency ratios
 
