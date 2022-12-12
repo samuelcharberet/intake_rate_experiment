@@ -98,11 +98,11 @@ plot_irn <- function(data_i, data_g) {
   
   
   aedw_msirfw <- ggplot2::ggplot(data_i,
-                       aes(x = ingestion_rate_fw / ((bodymass_last_collection_date + bodymass_7th_instar_j0_fw) / 2
-                       ), y = absorption_efficiency_dw*100)) +
+                                 aes(x = ingestion_rate_fw / ((bodymass_last_collection_date + bodymass_7th_instar_j0_fw) / 2
+                                 ), y = absorption_efficiency_dw * 100)) +
     geom_point(size = 2) +
     labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Absorption efficiency (% dw)") +
-    geom_smooth(color = "steelblue3",  method = "gam")+
+    geom_smooth(color = "steelblue3",  method = "gam") +
     theme(axis.title.x = element_markdown())
   
   ggsave(
@@ -120,10 +120,10 @@ plot_irn <- function(data_i, data_g) {
   
   p <- ggplot2::ggplot(data_i,
                        aes(x = ingestion_rate_fw / ((bodymass_last_collection_date + bodymass_7th_instar_j0_fw) / 2
-                       ), y = growth_efficiency_fw*100)) +
+                       ), y = growth_efficiency_fw * 100)) +
     labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Growth efficiency (% fw)") +
     geom_point(size = -1, color = "white") +
-    geom_vline(xintercept = 1, color = "steelblue3")+
+    geom_vline(xintercept = 1, color = "steelblue3") +
     theme(axis.title.x = element_markdown())
   
   breaks = ggplot_build(p)$layout$panel_params[[1]]$x$breaks
@@ -142,10 +142,10 @@ plot_irn <- function(data_i, data_g) {
   
   p <- ggplot2::ggplot(data_i,
                        aes(x = ingestion_rate_fw / ((bodymass_last_collection_date + bodymass_7th_instar_j0_fw) / 2
-                       ), y = growth_efficiency_fw*100)) +
+                       ), y = growth_efficiency_fw * 100)) +
     labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Growth efficiency (% fw)") +
     geom_point(size = -1, color = "white") +
-    geom_hline(yintercept = 0.5, color = "steelblue3")+
+    geom_hline(yintercept = 50, color = "steelblue3") +
     theme(axis.title.x = element_markdown())
   
   ggsave(
@@ -160,13 +160,13 @@ plot_irn <- function(data_i, data_g) {
   )
   
   gefw_msirfw <- ggplot2::ggplot(data_i,
-                       aes(x = ingestion_rate_fw / ((bodymass_last_collection_date + bodymass_7th_instar_j0_fw) / 2
-                       ), y = growth_efficiency_fw*100)) +
+                                 aes(x = ingestion_rate_fw / ((bodymass_last_collection_date + bodymass_7th_instar_j0_fw) / 2
+                                 ), y = growth_efficiency_fw * 100)) +
     geom_point(size = 2) +
     labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Growth efficiency (% fw)") +
     geom_smooth(color = "steelblue3",  method = "gam") +
     geom_vline(xintercept = 1, color = "steelblue3") +
-    geom_hline(yintercept = 0.5, color = "steelblue3")+
+    geom_hline(yintercept = 50, color = "steelblue3") +
     theme(axis.title.x = element_markdown())
   
   
@@ -191,7 +191,7 @@ plot_irn <- function(data_i, data_g) {
                        ), y = growth_efficiency_dw)) +
     geom_point(size = 2) +
     labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Growth efficiency (% dw)") +
-    geom_smooth(color = "steelblue3",  method = "gam")+
+    geom_smooth(color = "steelblue3",  method = "gam") +
     theme(axis.title.x = element_markdown())
   
   ggsave(
@@ -219,7 +219,7 @@ plot_irn <- function(data_i, data_g) {
                               " ", day ^ {
                                 -1
                               },
-                              ")", ))) +
+                              ")",))) +
     geom_smooth(color = "steelblue3",  method = "gam") +
     theme(axis.title.x = element_markdown())
   
@@ -237,7 +237,7 @@ plot_irn <- function(data_i, data_g) {
   ###### Growth efficiency in fresh weight according to growth rate  in fresh weight ######
   
   p <- ggplot2::ggplot(data_i,
-                       aes(x = growth_rate, y = growth_efficiency_fw*100)) +
+                       aes(x = growth_rate, y = growth_efficiency_fw * 100)) +
     geom_point(size = 2) +
     labs(x = "Growth rate (mg fw / day)", y = "Growth efficiency (% fw)") +
     geom_smooth(color = "steelblue3",  method = "gam")
@@ -281,13 +281,36 @@ plot_irn <- function(data_i, data_g) {
   ###### Growth efficiency according to absorption efficiency  ######
   
   p <- ggplot2::ggplot(data_i,
-                       aes(x = absorption_efficiency_dw*100, y = growth_efficiency_dw)) +
+                       aes(x = absorption_efficiency_dw * 100, y = growth_efficiency_dw)) +
     geom_point(size = 2) +
     labs(x = "Absoprtion efficiency (% dw)", y = "Growth efficiency (% dw)") +
     geom_smooth(color = "steelblue3", method = "gam")
   
   ggsave(
     filename = "gedw_&_aedw.pdf",
+    plot = p,
+    device = cairo_pdf,
+    path = here::here("4_outputs", "2_figures"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
+  
+  ###### Mass-specific egestion rate according to mass-specific ingestion rate  ######
+  
+  p <- ggplot2::ggplot(data_i,
+                       aes(x = ingestion_rate_fw / ((bodymass_7th_instar_j3_fw + bodymass_7th_instar_j0_fw) / 2
+                       ), y = egestion_rate_dw / ((bodymass_7th_instar_j3_fw + bodymass_7th_instar_j0_fw) / 2
+                       ))) +
+    geom_point(size = 2) +
+    labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Egestion rate <br> (mg<sub>frass(dw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)") +
+    geom_smooth(color = "steelblue3", method = "gam")+
+    theme(axis.title.x = element_markdown(),
+          axis.title.y = element_markdown())
+  
+  ggsave(
+    filename = "mser_&_msir.pdf",
     plot = p,
     device = cairo_pdf,
     path = here::here("4_outputs", "2_figures"),
@@ -377,15 +400,15 @@ plot_irn <- function(data_i, data_g) {
     sd_food = sd(data_element[, food_col])
     
     # Larvae elemental content
-    average_larvae = mean(data_element[which(data_element$matrix == "larvae"),]$elemental_value, na.rm =
+    average_larvae = mean(data_element[which(data_element$matrix == "larvae"), ]$elemental_value, na.rm =
                             T)
-    sd_larvae = sd(data_element[which(data_element$matrix == "larvae"),]$elemental_value, na.rm =
+    sd_larvae = sd(data_element[which(data_element$matrix == "larvae"), ]$elemental_value, na.rm =
                      T)
     
     # Egestion (frass) elemental content
-    average_egestion = mean(data_element[which(data_element$matrix == "egestion"),]$elemental_value, na.rm =
+    average_egestion = mean(data_element[which(data_element$matrix == "egestion"), ]$elemental_value, na.rm =
                               T)
-    sd_egestion = sd(data_element[which(data_element$matrix == "egestion"),]$elemental_value, na.rm =
+    sd_egestion = sd(data_element[which(data_element$matrix == "egestion"), ]$elemental_value, na.rm =
                        T)
     data <- data.frame(
       name = c("Food", "Larvae", "Frass"),
@@ -533,22 +556,20 @@ plot_irn <- function(data_i, data_g) {
         scale_color_manual(values = colours[i],
                            aesthetics = c("colour", "fill")) +
         labs(
-          x = expression(
-            paste(
-              "Intake rate",
-              " (",
-              mg[food(fw)],
-              " ",
-              mg[body (fw)] ^ {
-                -1
-              },
-              " ",
-              day ^ {
-                -1
-              },
-              ")",
-            )
-          ),
+          x = expression(paste(
+            "Intake rate",
+            " (",
+            mg[food(fw)],
+            " ",
+            mg[body (fw)] ^ {
+              -1
+            },
+            " ",
+            day ^ {
+              -1
+            },
+            ")",
+          )),
           y = paste(y_axes[j], elements[i], paste("(", units[i, j], ")", sep =
                                                     ""), sep = " ") ,
           fill = "Element",
@@ -584,22 +605,20 @@ plot_irn <- function(data_i, data_g) {
           scale_color_manual(values = colours[i],
                              aesthetics = c("colour", "fill")) +
           labs(
-            x = expression(
-              paste(
-                "Intake rate",
-                " (",
-                mg[food(fw)],
-                " ",
-                mg[body (fw)] ^ {
-                  -1
-                },
-                " ",
-                day ^ {
-                  -1
-                },
-                ")",
-              )
-            ),
+            x = expression(paste(
+              "Intake rate",
+              " (",
+              mg[food(fw)],
+              " ",
+              mg[body (fw)] ^ {
+                -1
+              },
+              " ",
+              day ^ {
+                -1
+              },
+              ")",
+            )),
             y = paste("Relative", elements[i], "absorption"),
             fill = "Element",
             color = "Element"
@@ -641,17 +660,17 @@ plot_irn <- function(data_i, data_g) {
   p <- ggplot2::ggplot(data_larvae,
                        aes(x = group_mass_specific_intake_rate_fw, y = C_N)) +
     geom_point(size = 2) +
-    labs(x = expression(
-      paste("Intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
+    labs(x = expression(paste(
+      "Intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
         -1
       }, " ", day ^ {
         -1
-      }, ")",)
-    ), y = "Larvae C/N") +
+      }, ")",
+    )), y = "Larvae C/N") +
     geom_smooth(color = "steelblue3",  method = "gam")
   
   ggsave(
-    filename = "cnlarvae_&_grfw.pdf",
+    filename = "cnlarvae_&_gmsir.pdf",
     plot = p,
     device = cairo_pdf,
     path = here::here("4_outputs", "2_figures"),
@@ -664,17 +683,17 @@ plot_irn <- function(data_i, data_g) {
   p <- ggplot2::ggplot(data_larvae,
                        aes(x = group_mass_specific_intake_rate_fw, y = N_P)) +
     geom_point(size = 2) +
-    labs(x = expression(
-      paste("Intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
+    labs(x = expression(paste(
+      "Intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
         -1
       }, " ", day ^ {
         -1
-      }, ")",)
-    ), y = "Larvae N/P") +
+      }, ")",
+    )), y = "Larvae N/P") +
     geom_smooth(color = "steelblue3",  method = "gam")
   
   ggsave(
-    filename = "nplarvae_&_grfw.pdf",
+    filename = "nplarvae_&_gmsir.pdf",
     plot = p,
     device = cairo_pdf,
     path = here::here("4_outputs", "2_figures"),
@@ -698,13 +717,13 @@ plot_irn <- function(data_i, data_g) {
   p <- ggplot2::ggplot(data_egestion,
                        aes(x = group_mass_specific_intake_rate_fw, y = C_N)) +
     geom_point(size = 2) +
-    labs(x = expression(
-      paste("Intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
+    labs(x = expression(paste(
+      "Intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
         -1
       }, " ", day ^ {
         -1
-      }, ")",)
-    ), y = "Egestion C/N") +
+      }, ")",
+    )), y = "Egestion C/N") +
     geom_smooth(color = "steelblue3",  method = "gam")
   
   ggsave(
@@ -721,7 +740,7 @@ plot_irn <- function(data_i, data_g) {
   # CN_egestion = f(ge)
   
   p <- ggplot2::ggplot(data_egestion,
-                       aes(x = growth_efficiency_fw*100, y = C_N)) +
+                       aes(x = growth_efficiency_fw * 100, y = C_N)) +
     geom_point(size = 2) +
     labs(x = "Growth efficiency (% fw)", y = "Egestion C/N") +
     geom_smooth(color = "steelblue3",  method = "gam")
@@ -743,13 +762,13 @@ plot_irn <- function(data_i, data_g) {
   p <- ggplot2::ggplot(data_egestion,
                        aes(x = group_mass_specific_intake_rate_fw, y = N_P)) +
     geom_point(size = 2) +
-    labs(x = expression(
-      paste("Intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
+    labs(x = expression(paste(
+      "Intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
         -1
       }, " ", day ^ {
         -1
-      }, ")",)
-    ), y = "Egestion N/P") +
+      }, ")",
+    )), y = "Egestion N/P") +
     geom_smooth(color = "steelblue3",  method = "gam")
   
   ggsave(
@@ -854,20 +873,18 @@ plot_irn <- function(data_i, data_g) {
     complete_plots[[i]] = ggpubr::annotate_figure(
       complete_plots[[i]],
       bottom = ggpubr::text_grob(expression(
-        paste(
-          "Intake rate",
-          " (",
-          mg[food(fw)],
-          " ",
-          mg[body (fw)] ^ {
-            -1
-          },
-          " ",
-          day ^ {
-            -1
-          },
-          ")",
-        )
+        paste("Intake rate",
+              " (",
+              mg[food(fw)],
+              " ",
+              mg[body (fw)] ^ {
+                -1
+              },
+              " ",
+              day ^ {
+                -1
+              },
+              ")",)
       )),
       left = ggpubr::text_grob(y_axes[i], rot = 90),
       top = ""
@@ -888,8 +905,77 @@ plot_irn <- function(data_i, data_g) {
   }
   
   
+  ##### Make a layered plot with all curves on top of each other for absorption efficiency  ##### 
+  
+  data_abs = subset(data_g, data_g$matrix =="absorption")
+  # Removing 15N and 13C
+  data_abs = data_abs[!(data_abs$element %in% c("15N","14N", "13C", "12C")),]
+
+    p = ggplot2::ggplot(
+      data_abs ,
+      aes(
+        x = group_mass_specific_intake_rate_fw,
+        y = elemental_value,
+        colour = element,
+        group = element,
+        fill =  element
+      )
+    ) +
+    geom_point(alpha=0.1) +
+    geom_smooth(method = "gam", se = FALSE) +
+    scale_color_manual(values = legend_colours,
+                       aesthetics = c("colour", "fill")) +
+    labs(
+      x = expression(paste(
+        "Intake rate",
+        " (",
+        mg[food(fw)],
+        " ",
+        mg[body (fw)] ^ {
+          -1
+        },
+        " ",
+        day ^ {
+          -1
+        },
+        ")",
+      )),
+      y = "Absorption (%)" ,
+      fill = "Element",
+      color = "Element"
+    ) +
+    theme(legend.position="right")
+  
+  # Save each plot
+  ggsave(
+    filename = paste("absorption_efficiencies", "layered", "dw_&_msirfw.pdf", sep = ""),
+    plot = p,
+    device = cairo_pdf,
+    path = here::here("4_outputs", "2_figures"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
+  
+  ##### Make a stacked area chart for  plot with all curves on top of each other for absorption efficiency  ##### 
+  data_larvae = subset(data_g, data_g$matrix =="larvae")
+  # Removing 15N and 13C
+  data_larvae = data_larvae[!(data_larvae$element %in% c("d15N", "d13C")),]
+  test = pivot_wider(data_larvae, names_from = element, values_from = elemental_value )
+  pdf("larvae_nutrient_covariations.pdf") 
+  plot(test[,55:62])
+  dev.off()
   
   
+  ##### Make a stacked area chart for  plot with all curves on top of each other for absorption efficiency  ##### 
+  data_larvae = subset(data_g, data_g$matrix =="egestion")
+  # Removing 15N and 13C
+  data_larvae = data_larvae[!(data_larvae$element %in% c("d15N", "d13C")),]
+  test = pivot_wider(data_larvae, names_from = element, values_from = elemental_value )
+  pdf("frass_nutrient_covariations.pdf") 
+  p = plot(test[,55:62])
+  dev.off()
   
   ########## 3. Isotopy figures ##########
   
@@ -897,7 +983,6 @@ plot_irn <- function(data_i, data_g) {
   
   ggplot2::theme_set(
     theme_classic() + theme(
-      text = element_text(size = 14),
       legend.position = 'right',
       aspect.ratio = 0.618,
       panel.grid.major = element_line(
@@ -917,13 +1002,13 @@ plot_irn <- function(data_i, data_g) {
   p <- ggplot2::ggplot(data_tf,
                        aes(x = group_mass_specific_intake_rate_fw, y = `13C`)) +
     geom_point(size = 1.5) +
-    labs(x = expression(
-      paste("Intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
+    labs(x = expression(paste(
+      "Intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
         -1
       }, " ", day ^ {
         -1
-      }, ")",)
-    ), y = expression(paste(Delta, "13C"))) +
+      }, ")",
+    )), y = expression(paste(Delta, "13C"))) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
@@ -940,13 +1025,13 @@ plot_irn <- function(data_i, data_g) {
   p <- ggplot2::ggplot(data_tf,
                        aes(x = group_mass_specific_intake_rate_fw, y = `15N`)) +
     geom_point(size = 1.5) +
-    labs(x = expression(
-      paste("Intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
+    labs(x = expression(paste(
+      "Intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
         -1
       }, " ", day ^ {
         -1
-      }, ")",)
-    ), y = expression(paste(Delta, "15N"))) +
+      }, ")",
+    )), y = expression(paste(Delta, "15N"))) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
@@ -973,7 +1058,7 @@ plot_irn <- function(data_i, data_g) {
                               " ", day ^ {
                                 -1
                               },
-                              ")", )), y = expression(paste(Delta, "13C"))) +
+                              ")",)), y = expression(paste(Delta, "13C"))) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
@@ -997,7 +1082,7 @@ plot_irn <- function(data_i, data_g) {
                               " ", day ^ {
                                 -1
                               },
-                              ")", )), y = expression(paste(Delta, "15N"))) +
+                              ")",)), y = expression(paste(Delta, "15N"))) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
@@ -1056,7 +1141,7 @@ plot_irn <- function(data_i, data_g) {
   
   
   p <- ggplot2::ggplot(data_tf,
-                       aes(x = growth_efficiency_fw*100, y = `13C`)) +
+                       aes(x = growth_efficiency_fw * 100, y = `13C`)) +
     geom_point(size = 1.5) +
     labs(x = "Growth efficiency (%fw)", y = expression(paste(Delta, "13C"))) +
     geom_smooth(color = "steelblue3",  method = "lm")
@@ -1073,7 +1158,7 @@ plot_irn <- function(data_i, data_g) {
   )
   
   p <- ggplot2::ggplot(data_tf,
-                       aes(x = growth_efficiency_fw*100, y = `15N`)) +
+                       aes(x = growth_efficiency_fw * 100, y = `15N`)) +
     geom_point(size = 1.5) +
     labs(x = "Growth efficiency (%fw)", y = expression(paste(Delta, "15N"))) +
     geom_smooth(color = "steelblue3",  method = "lm")
@@ -1101,13 +1186,13 @@ plot_irn <- function(data_i, data_g) {
                        aes(x = group_mass_specific_intake_rate_fw, y = `13C`)) +
     geom_point(size = 1.5) +
     labs(
-      x = expression(
-        paste("Intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
+      x = expression(paste(
+        "Intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
           -1
         }, " ", day ^ {
           -1
-        }, ")",)
-      ),
+        }, ")",
+      )),
       y = latex2exp::TeX(r'($\delta 13C_{frass}-\delta 13C_{food}$)')
     ) +
     geom_smooth(color = "steelblue3",  method = "lm")
@@ -1127,13 +1212,13 @@ plot_irn <- function(data_i, data_g) {
                        aes(x = group_mass_specific_intake_rate_fw, y = `15N`)) +
     geom_point(size = 1.5) +
     labs(
-      x = expression(
-        paste("Intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
+      x = expression(paste(
+        "Intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
           -1
         }, " ", day ^ {
           -1
-        }, ")",)
-      ),
+        }, ")",
+      )),
       y = latex2exp::TeX(r'($\delta 15N_{frass}-\delta 15N_{food}$)')
     ) +
     geom_smooth(color = "steelblue3",  method = "lm")
@@ -1158,7 +1243,7 @@ plot_irn <- function(data_i, data_g) {
   
   
   p <- ggplot2::ggplot(data_ffdf,
-                       aes(x = absorption_efficiency_dw*100, y = `13C`)) +
+                       aes(x = absorption_efficiency_dw * 100, y = `13C`)) +
     geom_point(size = 1.5) +
     labs(x = "Absorption efficiency (%)",
          y = latex2exp::TeX(r'($\delta 13C_{frass}-\delta 13C_{food}$)')) +
@@ -1176,7 +1261,7 @@ plot_irn <- function(data_i, data_g) {
   )
   
   p <- ggplot2::ggplot(data_ffdf,
-                       aes(x = absorption_efficiency_dw*100, y = `15N`)) +
+                       aes(x = absorption_efficiency_dw * 100, y = `15N`)) +
     geom_point(size = 1.5) +
     labs(x = "Absorption efficiency (%)",
          y = latex2exp::TeX(r'($\delta 15N_{frass}-\delta 15N_{food}$)')) +
@@ -1205,13 +1290,13 @@ plot_irn <- function(data_i, data_g) {
                        aes(x = group_mass_specific_intake_rate_fw, y = `13C`)) +
     geom_point(size = 1.5) +
     labs(
-      x = expression(
-        paste("Intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
+      x = expression(paste(
+        "Intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
           -1
         }, " ", day ^ {
           -1
-        }, ")",)
-      ),
+        }, ")",
+      )),
       y = latex2exp::TeX(r'($\delta 13C_{frass}-\delta 13C_{larvae}$)')
     ) +
     geom_smooth(color = "steelblue3",  method = "lm")
@@ -1231,13 +1316,13 @@ plot_irn <- function(data_i, data_g) {
                        aes(x = group_mass_specific_intake_rate_fw, y = `15N`)) +
     geom_point(size = 1.5) +
     labs(
-      x = expression(
-        paste("Intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
+      x = expression(paste(
+        "Intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
           -1
         }, " ", day ^ {
           -1
-        }, ")",)
-      ),
+        }, ")",
+      )),
       y = latex2exp::TeX(r'($\delta 15N_{frass}-\delta 15N_{larvae}$)')
     ) +
     geom_smooth(color = "steelblue3",  method = "lm")
@@ -1284,22 +1369,20 @@ plot_irn <- function(data_i, data_g) {
   niaer_msir <- ggplot2::ggplot(data_aer,
                                 aes(x = group_mass_specific_intake_rate_fw, y = `N`)) +
     geom_point(size = 1.5) +
-    labs(x = expression(
-      paste(
-        "Intake rate",
-        " (",
-        mg[food (fw)],
-        " ",
-        mg[body (fw)] ^ {
-          -1
-        },
-        " ",
-        day ^ {
-          -1
-        },
-        ")",
-      )
-    ), y = "N IAER") +
+    labs(x = expression(paste(
+      "Intake rate",
+      " (",
+      mg[food (fw)],
+      " ",
+      mg[body (fw)] ^ {
+        -1
+      },
+      " ",
+      day ^ {
+        -1
+      },
+      ")",
+    )), y = "N IAER") +
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
@@ -1318,7 +1401,7 @@ plot_irn <- function(data_i, data_g) {
   
   
   p <- ggplot2::ggplot(data_aer,
-                       aes(x = absorption_efficiency_dw*100, y = `C`)) +
+                       aes(x = absorption_efficiency_dw * 100, y = `C`)) +
     geom_point(size = 1.5) +
     labs(x = "Absorption efficiency (%)", y = "C IAER") +
     geom_smooth(color = "steelblue3",  method = "lm")
@@ -1335,7 +1418,7 @@ plot_irn <- function(data_i, data_g) {
   )
   
   p <- ggplot2::ggplot(data_aer,
-                       aes(x = absorption_efficiency_dw*100, y = `N`)) +
+                       aes(x = absorption_efficiency_dw * 100, y = `N`)) +
     geom_point(size = 1.5) +
     labs(x = "Absorption efficiency (%)", y = "N IAER") +
     geom_smooth(color = "steelblue3",  method = "lm")
