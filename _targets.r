@@ -11,6 +11,7 @@ library(tidyr)
 library(mgcv)
 library(ggtext)
 library(formula.tools)
+library(fmsb)
 
 # We source all functions contained in all files in the R directory
 lapply(list.files(here::here("R"), recursive = TRUE, full.names = T), source)
@@ -86,7 +87,7 @@ list(
   # Plot the data
   tar_target(
     plots_irn,
-    plot_irn(data_i = data_irn_indivuals_combined, data_g = data_irn_groups_combined)
+    plot_irn(data_i = data_irn_indivuals_combined, data_g = data_irn_groups_combined, data_model = models_irn)
   ),
   
   # Generate report Rmd

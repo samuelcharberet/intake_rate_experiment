@@ -5,7 +5,7 @@
 #'
 #' @examples
 
-plot_irn <- function(data_i, data_g) {
+plot_irn <- function(data_i, data_g, data_model) {
   # Set global options for the ggplot2 plots
   ggplot2::theme_set(
     theme_classic() + theme(
@@ -219,7 +219,7 @@ plot_irn <- function(data_i, data_g) {
                               " ", day ^ {
                                 -1
                               },
-                              ")",))) +
+                              ")", ))) +
     geom_smooth(color = "steelblue3",  method = "gam") +
     theme(axis.title.x = element_markdown())
   
@@ -305,7 +305,7 @@ plot_irn <- function(data_i, data_g) {
                        ))) +
     geom_point(size = 2) +
     labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Egestion rate <br> (mg<sub>frass(dw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)") +
-    geom_smooth(color = "steelblue3", method = "gam")+
+    geom_smooth(color = "steelblue3", method = "gam") +
     theme(axis.title.x = element_markdown(),
           axis.title.y = element_markdown())
   
@@ -400,15 +400,15 @@ plot_irn <- function(data_i, data_g) {
     sd_food = sd(data_element[, food_col])
     
     # Larvae elemental content
-    average_larvae = mean(data_element[which(data_element$matrix == "larvae"), ]$elemental_value, na.rm =
+    average_larvae = mean(data_element[which(data_element$matrix == "larvae"),]$elemental_value, na.rm =
                             T)
-    sd_larvae = sd(data_element[which(data_element$matrix == "larvae"), ]$elemental_value, na.rm =
+    sd_larvae = sd(data_element[which(data_element$matrix == "larvae"),]$elemental_value, na.rm =
                      T)
     
     # Egestion (frass) elemental content
-    average_egestion = mean(data_element[which(data_element$matrix == "egestion"), ]$elemental_value, na.rm =
+    average_egestion = mean(data_element[which(data_element$matrix == "egestion"),]$elemental_value, na.rm =
                               T)
-    sd_egestion = sd(data_element[which(data_element$matrix == "egestion"), ]$elemental_value, na.rm =
+    sd_egestion = sd(data_element[which(data_element$matrix == "egestion"),]$elemental_value, na.rm =
                        T)
     data <- data.frame(
       name = c("Food", "Larvae", "Frass"),
@@ -884,7 +884,7 @@ plot_irn <- function(data_i, data_g) {
               day ^ {
                 -1
               },
-              ")",)
+              ")", )
       )),
       left = ggpubr::text_grob(y_axes[i], rot = 90),
       top = ""
@@ -905,23 +905,35 @@ plot_irn <- function(data_i, data_g) {
   }
   
   
-  ##### Make a layered plot with all curves on top of each other for absorption efficiency  ##### 
-  
-  data_abs = subset(data_g, data_g$matrix =="absorption")
-  # Removing 15N and 13C
-  data_abs = data_abs[!(data_abs$element %in% c("15N","14N", "13C", "12C")),]
-
-    p = ggplot2::ggplot(
-      data_abs ,
-      aes(
-        x = group_mass_specific_intake_rate_fw,
-        y = elemental_value,
-        colour = element,
-        group = element,
-        fill =  element
+  ##### Make a layered plot with all curves on top of each other for absorption efficiency  #####
+  ggplot2::theme_set(
+    theme_classic() + theme(
+      text = element_text(size = 14),
+      legend.position = 'right',
+      aspect.ratio = 0.618,
+      panel.grid.major = element_line(
+        color = "gray95",
+        size = 0.5,
+        linetype = 1
       )
-    ) +
-    geom_point(alpha=0.1) +
+    )
+  )
+  
+  data_abs = subset(data_g, data_g$matrix == "absorption")
+  # Removing 15N and 13C
+  data_abs = data_abs[!(data_abs$element %in% c("15N", "14N", "13C", "12C")), ]
+  
+  p = ggplot2::ggplot(
+    data_abs ,
+    aes(
+      x = group_mass_specific_intake_rate_fw,
+      y = elemental_value,
+      colour = element,
+      group = element,
+      fill =  element
+    )
+  ) +
+    geom_point(alpha = 0.1) +
     geom_smooth(method = "gam", se = FALSE) +
     scale_color_manual(values = legend_colours,
                        aesthetics = c("colour", "fill")) +
@@ -944,11 +956,16 @@ plot_irn <- function(data_i, data_g) {
       fill = "Element",
       color = "Element"
     ) +
-    theme(legend.position="right")
+    theme(legend.position = "right")
   
   # Save each plot
   ggsave(
-    filename = paste("absorption_efficiencies", "layered", "dw_&_msirfw.pdf", sep = ""),
+    filename = paste(
+      "absorption_efficiencies",
+      "layered",
+      "dw_&_msirfw.pdf",
+      sep = ""
+    ),
     plot = p,
     device = cairo_pdf,
     path = here::here("4_outputs", "2_figures"),
@@ -958,24 +975,84 @@ plot_irn <- function(data_i, data_g) {
     units = "in"
   )
   
-  ##### Make a stacked area chart for  plot with all curves on top of each other for absorption efficiency  ##### 
-  data_larvae = subset(data_g, data_g$matrix =="larvae")
+  ##### Nutrient co variations in larvae and egestions #####
+  data_larvae = subset(data_g, data_g$matrix == "larvae")
   # Removing 15N and 13C
-  data_larvae = data_larvae[!(data_larvae$element %in% c("d15N", "d13C")),]
-  test = pivot_wider(data_larvae, names_from = element, values_from = elemental_value )
-  pdf("larvae_nutrient_covariations.pdf") 
-  plot(test[,55:62])
+  data_larvae = data_larvae[!(data_larvae$element %in% c("d15N", "d13C")), ]
+  test = pivot_wider(data_larvae, names_from = element, values_from = elemental_value)
+  pdf(here::here(
+    "4_outputs",
+    "2_figures",
+    "larvae_nutrient_covariations.pdf"
+  ))
+  plot(test[, 55:62])
   dev.off()
   
-  
-  ##### Make a stacked area chart for  plot with all curves on top of each other for absorption efficiency  ##### 
-  data_larvae = subset(data_g, data_g$matrix =="egestion")
+  data_larvae = subset(data_g, data_g$matrix == "egestion")
   # Removing 15N and 13C
-  data_larvae = data_larvae[!(data_larvae$element %in% c("d15N", "d13C")),]
-  test = pivot_wider(data_larvae, names_from = element, values_from = elemental_value )
-  pdf("frass_nutrient_covariations.pdf") 
-  p = plot(test[,55:62])
+  data_larvae = data_larvae[!(data_larvae$element %in% c("d15N", "d13C")), ]
+  test = pivot_wider(data_larvae, names_from = element, values_from = elemental_value)
+  pdf(here::here(
+    "4_outputs",
+    "2_figures",
+    "frass_nutrient_covariations.pdf"
+  ))
+  p = plot(test[, 55:62])
   dev.off()
+  
+  ##### A radar chart to represent variations in larvae nutritional content #####
+  
+  # To use the fmsb package, I have to add 2 lines to the dataframe: the max and min of each variable to show on the plot!
+  
+  # Color vector
+  colors_border = c(rgb(0.2, 0.5, 0.5, 0.9),
+                    rgb(0.8, 0.2, 0.5, 0.9) ,
+                    rgb(0.7, 0.5, 0.1, 0.9))
+  colors_in = c(rgb(0.2, 0.5, 0.5, 0.4),
+                rgb(0.8, 0.2, 0.5, 0.4) ,
+                rgb(0.7, 0.5, 0.1, 0.4))
+  
+  pdf(
+    here::here("4_outputs", "2_figures", "larvae_radar_chart.pdf"),
+    width = 10,
+    height = 5
+  )
+  
+  # plot with default options:
+  radarchart(
+    data_model  ,
+    axistype = 1 ,
+    #custom polygon
+    pcol = colors_border ,
+    pfcol = colors_in ,
+    plwd = 4 ,
+    plty = 1,
+    #custom the grid
+    cglcol = "grey",
+    cglty = 1,
+    axislabcol = "grey",
+    cglwd = 0.8,
+    #custom labels
+    vlcex = 0.8
+  )
+  
+  # Add a legend
+  legend(
+    x = 1,
+    y = 1,
+    legend = c(
+      "Low intake rate (=0.4)",
+      "Intermediate intake rate (=0.8)",
+      "High intake rate (=1.2)"
+    ),
+    bty = "n",
+    pch = 20 ,
+    col = colors_border ,
+    cex = 1.2,
+    pt.cex = 3
+  )
+  dev.off()
+  
   
   ########## 3. Isotopy figures ##########
   
@@ -1058,7 +1135,7 @@ plot_irn <- function(data_i, data_g) {
                               " ", day ^ {
                                 -1
                               },
-                              ")",)), y = expression(paste(Delta, "13C"))) +
+                              ")", )), y = expression(paste(Delta, "13C"))) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
@@ -1082,7 +1159,7 @@ plot_irn <- function(data_i, data_g) {
                               " ", day ^ {
                                 -1
                               },
-                              ")",)), y = expression(paste(Delta, "15N"))) +
+                              ")", )), y = expression(paste(Delta, "15N"))) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
