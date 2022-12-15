@@ -5,8 +5,7 @@
 #'
 #' @examples
 model_irn <- function(data_i, data_g) {
-  ###### 1. For chemical elements #####
-  
+
   variables_list = c("absorption", "larvae", "egestion")
   nb_variables = length(variables_list)
   elements_list = c("C",
@@ -49,86 +48,94 @@ model_irn <- function(data_i, data_g) {
   )
   
   n_polygon = 3
-  gam_values_radar = as.data.frame(matrix(rep(NA , (n_polygon + 2) * nb_elements) , ncol = nb_elements))
-  colnames(gam_values_radar) <- elements_list
-  rownames(gam_values_radar) <- c("max", "min", "IR_0.4", "IR_0.8", "IR_1.2")
+  lm_larvae_values_radar = as.data.frame(matrix(rep(NA , (n_polygon + 2) * nb_elements) , ncol = nb_elements))
+  colnames(lm_larvae_values_radar) <- elements_list
+  rownames(lm_larvae_values_radar) <-
+    c("max", "min", "IR_0.4", "IR_0.8", "IR_1.2")
   
-  # We have two datasets, one at the level of individuals
-  # and another at the level of the group
+  # We have two datasets, one at the level of individuals for total mass balance
+  # and another at the level of the group, for chemical data only
   
   n_mod_data_i = length(which(constituent == "total mass"))
   n_mod_data_g = length(constituent) - length(which(constituent == "total mass"))
   
-  # At the level of individuals
+  ###### 1. Total mass balance ######
   
   formula = as.formula(paste("growth_efficiency_fw", "~ s(ingestion_rate_fw)"))
-  mod = mgcv::gam(formula, data = data_i)
-  summary_mod = summary(mod)
-  if (mod$converged == "TRUE") {
-    models_nutrients$n[1] = summary_mod$n
-    models_nutrients$r_squared[1] = format(signif(summary_mod$r.sq, digits = 3), scientific = F)
-    models_nutrients$edf[1] = format(signif(summary_mod$edf, digits = 3), scientific = F)
-    if (summary_mod$s.pv == 0) {
+  gam_mod = mgcv::gam(formula, data = data_i)
+  summary_gam = summary(gam_mod)
+  if (gam_mod$converged == "TRUE") {
+    models_nutrients$n[1] = summary_gam$n
+    models_nutrients$r_squared[1] = format(signif(summary_gam$r.sq, digits = 3), scientific = F)
+    models_nutrients$edf[1] = format(signif(summary_gam$edf, digits = 3), scientific = F)
+    if (summary_gam$s.pv == 0) {
       models_nutrients$p_value[1] = "<2e-16"
     }
     else{
-      models_nutrients$p_value[1] = format(signif(summary_mod$s.pv, digits = 2), scientific = T)
+      models_nutrients$p_value[1] = format(signif(summary_gam$s.pv, digits = 2), scientific = T)
     }
   }
   
   formula = as.formula(paste("absorption_efficiency_dw", "~ s(ingestion_rate_dw)"))
   mod = mgcv::gam(formula, data = data_i)
-  summary_mod = summary(mod)
-  if (mod$converged == "TRUE") {
-    models_nutrients$n[2] = summary_mod$n
-    models_nutrients$r_squared[2] = format(signif(summary_mod$r.sq, digits = 3), scientific = F)
-    models_nutrients$edf[2] = format(signif(summary_mod$edf, digits = 3), scientific = F)
-    if (summary_mod$s.pv == 0) {
+  summary_gam = summary(mod)
+  if (gam_mod$converged == "TRUE") {
+    models_nutrients$n[2] = summary_gam$n
+    models_nutrients$r_squared[2] = format(signif(summary_gam$r.sq, digits = 3), scientific = F)
+    models_nutrients$edf[2] = format(signif(summary_gam$edf, digits = 3), scientific = F)
+    if (summary_gam$s.pv == 0) {
       models_nutrients$p_value[2] = "<2e-16"
     }
     else{
-      models_nutrients$p_value[2] = format(signif(summary_mod$s.pv, digits = 2), scientific = T)
+      models_nutrients$p_value[2] = format(signif(summary_gam$s.pv, digits = 2), scientific = T)
     }
   }
   
-  # At the level of groups
+  ###### 2. Chemical balance ######
   
   for (i in 1:nb_variables) {
     data_variable = subset(data_g, data_g$matrix == variables_list[i])
     for (j in 1:nb_elements) {
       data_variable_element = subset(data_variable, data_variable$element == elements_list[j])
-      formula = as.formula(paste(
+      formula_gam = as.formula(paste(
         "elemental_value",
         "~ s(group_mass_specific_intake_rate_fw)"
       ))
-      mod = mgcv::gam(formula, data = data_variable_element)
-      summary_mod = summary(mod)
+      gam_mod = mgcv::gam(formula_gam, data = data_variable_element, gamma =
+                            7)
+      formula_lm = as.formula(paste(
+        "elemental_value",
+        "~ group_mass_specific_intake_rate_fw"
+      ))
+      lm_mod = lm(formula_lm, data = data_variable_element)
+      summary_gam = summary(gam_mod)
+      summary_lm = summary(lm_mod)
       k = which(
         models_nutrients$variable == variables_list[i] &
           models_nutrients$constituent == elements_list[j]
       )
-      if (mod$converged == "TRUE") {
-        models_nutrients$n[k] = summary_mod$n
-        models_nutrients$r_squared[k] = format(signif(summary_mod$r.sq, digits = 3), scientific = F)
-        models_nutrients$edf[k] = format(signif(summary_mod$edf, digits = 3), scientific = F)
-        models_nutrients$difference[k] = (max(mod$fitted.values) / min(mod$fitted.values)) -
+      if (gam_mod$converged == "TRUE") {
+        models_nutrients$n[k] = summary_gam$n
+        models_nutrients$r_squared[k] = format(signif(summary_gam$r.sq, digits = 3), scientific = F)
+        models_nutrients$edf[k] = format(signif(summary_gam$edf, digits = 3), scientific = F)
+        models_nutrients$difference[k] = (max(gam_mod$fitted.values) / min(gam_mod$fitted.values)) -
           1
-
         
-        if (summary_mod$s.pv == 0) {
+        
+        if (summary_gam$s.pv == 0) {
           models_nutrients$p_value[k] = "<2e-16"
         }
         else{
-          models_nutrients$p_value[k] = format(signif(summary_mod$s.pv, digits = 2), scientific = T)
+          models_nutrients$p_value[k] = format(signif(summary_gam$s.pv, digits = 2), scientific = T)
         }
-        if (variables_list[i] == "larvae"){
+        if (variables_list[i] == "larvae") {
           # We want to estimate the fitted GAM values of larvae content for GMSIR of 0.4, 0.8, and 1.2
           new_data = as.data.frame(c(0.4, 0.8, 1.2))
           colnames(new_data) = "group_mass_specific_intake_rate_fw"
           
-          gam_values_radar["max" , j]= max(mod$fitted.values)
-          gam_values_radar["min", j] = min(mod$fitted.values)
-          gam_values_radar[3:5, j] = predict(mod, new_data)
+          lm_larvae_values_radar["max" , j] = max(lm_mod$fitted.values)
+          lm_larvae_values_radar["min", j] = min(lm_mod$fitted.values)
+          lm_larvae_values_radar[3:5, j] = predict(lm_mod, new_data)
           
         }
       }
@@ -145,15 +152,15 @@ model_irn <- function(data_i, data_g) {
   )
   
   write.csv(
-    gam_values_radar,
+    lm_larvae_values_radar,
     file = here::here(
       "4_outputs",
       "1_statistical_results",
-      "gam_values_radar.csv"
+      "lm_larvae_values_radar.csv"
     )
   )
   
-  ###### 2. For isotopes #####
+  ###### 3. For isotopes #####
   
   # We wish to build models to test
   # The effect of growth rate on trophic fractionations
@@ -310,6 +317,6 @@ model_irn <- function(data_i, data_g) {
                       "gam_isotopes.csv")
   )
   
-  return(gam_values_radar)
+  return(lm_larvae_values_radar)
   
 }

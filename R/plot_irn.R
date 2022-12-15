@@ -54,7 +54,7 @@ plot_irn <- function(data_i, data_g, data_model) {
     labs(x = "Total amount of food consumed (mg dw)", y = "Bodymass at the end of the 7th instar (mg dw)") +
     geom_smooth(formula = y ~ x,
                 color = "steelblue3",
-                method = "gam")
+                method = "lm")
   
   ggsave(
     filename = "bm_j3_dw_&_food_consumed.pdf",
@@ -74,7 +74,7 @@ plot_irn <- function(data_i, data_g, data_model) {
     labs(x = "Total amount of food consumed (mg dw)", y = "Bodymass of the imago (mg dw)") +
     geom_smooth(formula = y ~ x,
                 color = "steelblue3",
-                method = "gam")
+                method = "lm")
   
   ggsave(
     filename = "bm_imago_dw_&_food_provided_fw.pdf",
@@ -552,7 +552,7 @@ plot_irn <- function(data_i, data_g, data_model) {
         )
       ) +
         geom_point(size = 2) +
-        geom_smooth(method = "gam") +
+        geom_smooth(method = "lm") +
         scale_color_manual(values = colours[i],
                            aesthetics = c("colour", "fill")) +
         labs(
@@ -769,7 +769,7 @@ plot_irn <- function(data_i, data_g, data_model) {
         -1
       }, ")",
     )), y = "Egestion N/P") +
-    geom_smooth(color = "steelblue3",  method = "gam")
+    geom_smooth(color = "steelblue3",  method = "loess", span=1)
   
   ggsave(
     filename = "npegestion_&_msir.pdf",
@@ -927,14 +927,14 @@ plot_irn <- function(data_i, data_g, data_model) {
     data_abs ,
     aes(
       x = group_mass_specific_intake_rate_fw,
-      y = elemental_value,
+      y = elemental_value*100,
       colour = element,
       group = element,
       fill =  element
     )
   ) +
     geom_point(alpha = 0.1) +
-    geom_smooth(method = "gam", se = FALSE) +
+    geom_smooth(method = "lm", se = FALSE) +
     scale_color_manual(values = legend_colours,
                        aesthetics = c("colour", "fill")) +
     labs(
@@ -1001,31 +1001,27 @@ plot_irn <- function(data_i, data_g, data_model) {
   dev.off()
   
   ##### A radar chart to represent variations in larvae nutritional content #####
-  
+  # Using predicted values from the linear models
   # To use the fmsb package, I have to add 2 lines to the dataframe: the max and min of each variable to show on the plot!
   
   # Color vector
-  colors_border = c(rgb(0.2, 0.5, 0.5, 0.9),
-                    rgb(0.8, 0.2, 0.5, 0.9) ,
-                    rgb(0.7, 0.5, 0.1, 0.9))
-  colors_in = c(rgb(0.2, 0.5, 0.5, 0.4),
-                rgb(0.8, 0.2, 0.5, 0.4) ,
-                rgb(0.7, 0.5, 0.1, 0.4))
   
   pdf(
     here::here("4_outputs", "2_figures", "larvae_radar_chart.pdf"),
-    width = 10,
+    width = 11,
     height = 5
   )
+  colors_fill = ggsci::pal_futurama(alpha = 0.2)(3)
+  colors_border = ggsci::pal_futurama(alpha = 0.7)(3)
   
   # plot with default options:
   radarchart(
-    data_model  ,
+    data_model,
     axistype = 1 ,
     #custom polygon
-    pcol = colors_border ,
-    pfcol = colors_in ,
-    plwd = 4 ,
+    pcol = colors_border[c(3, 1, 2)],
+    pfcol = colors_fill[c(3, 1, 2)] ,
+    plwd = 2 ,
     plty = 1,
     #custom the grid
     cglcol = "grey",
@@ -1033,13 +1029,13 @@ plot_irn <- function(data_i, data_g, data_model) {
     axislabcol = "grey",
     cglwd = 0.8,
     #custom labels
-    vlcex = 0.8
+    vlcex = 1
   )
   
   # Add a legend
   legend(
-    x = 1,
-    y = 1,
+    x = 1.2,
+    y = 0.8,
     legend = c(
       "Low intake rate (=0.4)",
       "Intermediate intake rate (=0.8)",
@@ -1047,7 +1043,7 @@ plot_irn <- function(data_i, data_g, data_model) {
     ),
     bty = "n",
     pch = 20 ,
-    col = colors_border ,
+    col = colors_border[c(3, 1, 2)] ,
     cex = 1.2,
     pt.cex = 3
   )
