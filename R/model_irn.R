@@ -5,7 +5,6 @@
 #'
 #' @examples
 model_irn <- function(data_i, data_g) {
-
   variables_list = c("absorption", "larvae", "egestion")
   nb_variables = length(variables_list)
   elements_list = c("C",
@@ -19,7 +18,7 @@ model_irn <- function(data_i, data_g) {
   nb_elements = length(elements_list)
   
   
-  # Creating a dataframe containing statistics for the publication
+  # Creating a dataframe containing GAM statistics for the publication
   
   constituent = c("total mass",
                   "total mass",
@@ -47,14 +46,21 @@ model_irn <- function(data_i, data_g) {
     difference = difference
   )
   
+  # Creating a dataframe containing selected predicted values to generate a radar chart
+  
   n_polygon = 3
-  lm_larvae_values_radar = as.data.frame(matrix(rep(NA , (n_polygon + 2) * nb_elements) , ncol = nb_elements))
-  colnames(lm_larvae_values_radar) <- elements_list
-  rownames(lm_larvae_values_radar) <-
+  gam_larvae_values_radar = as.data.frame(matrix(rep(NA , (n_polygon + 2) * nb_elements) , ncol = nb_elements))
+  colnames(gam_larvae_values_radar) <- elements_list
+  rownames(gam_larvae_values_radar) <-
+    c("max", "min", "IR_0.4", "IR_0.8", "IR_1.2")
+  
+  gam_frass_values_radar = as.data.frame(matrix(rep(NA , (n_polygon + 2) * nb_elements) , ncol = nb_elements))
+  colnames(gam_frass_values_radar) <- elements_list
+  rownames(gam_frass_values_radar) <-
     c("max", "min", "IR_0.4", "IR_0.8", "IR_1.2")
   
   # We have two datasets, one at the level of individuals for total mass balance
-  # and another at the level of the group, for chemical data only
+  # and another at the level of the group, for chemical data only (elements and isotopes)
   
   n_mod_data_i = length(which(constituent == "total mass"))
   n_mod_data_g = length(constituent) - length(which(constituent == "total mass"))
@@ -62,7 +68,7 @@ model_irn <- function(data_i, data_g) {
   ###### 1. Total mass balance ######
   
   formula = as.formula(paste("growth_efficiency_fw", "~ s(ingestion_rate_fw)"))
-  gam_mod = mgcv::gam(formula, data = data_i)
+  gam_mod = mgcv::gam(formula, data = data_i) # a GEM model for growth efficiency according to IR
   summary_gam = summary(gam_mod)
   if (gam_mod$converged == "TRUE") {
     models_nutrients$n[1] = summary_gam$n
@@ -94,20 +100,19 @@ model_irn <- function(data_i, data_g) {
   ###### 2. Chemical balance ######
   
   for (i in 1:nb_variables) {
-    data_variable = subset(data_g, data_g$matrix == variables_list[i])
+    data_variable = subset(data_g, data_g$matrix == variables_list[i]) # selecting only element i
     for (j in 1:nb_elements) {
-      data_variable_element = subset(data_variable, data_variable$element == elements_list[j])
+      data_variable_element = subset(data_variable, data_variable$element == elements_list[j]) # selecting only matrix j
       formula_gam = as.formula(paste(
         "elemental_value",
-        "~ s(group_mass_specific_intake_rate_fw)"
+        "~ s(group_mass_specific_intake_rate_fw,sp=20)"
       ))
-      gam_mod = mgcv::gam(formula_gam, data = data_variable_element, gamma =
-                            7)
+      gam_mod = mgcv::gam(formula_gam, data = data_variable_element) # creates a GAM for this element i in matrix j according to IR
       formula_lm = as.formula(paste(
         "elemental_value",
         "~ group_mass_specific_intake_rate_fw"
       ))
-      lm_mod = lm(formula_lm, data = data_variable_element)
+      lm_mod = lm(formula_lm, data = data_variable_element) # creates a LMfor this element i in matrix j according to IR
       summary_gam = summary(gam_mod)
       summary_lm = summary(lm_mod)
       k = which(
@@ -133,9 +138,19 @@ model_irn <- function(data_i, data_g) {
           new_data = as.data.frame(c(0.4, 0.8, 1.2))
           colnames(new_data) = "group_mass_specific_intake_rate_fw"
           
-          lm_larvae_values_radar["max" , j] = max(lm_mod$fitted.values)
-          lm_larvae_values_radar["min", j] = min(lm_mod$fitted.values)
-          lm_larvae_values_radar[3:5, j] = predict(lm_mod, new_data)
+          gam_larvae_values_radar["max" , j] = max(gam_mod$fitted.values)
+          gam_larvae_values_radar["min", j] = min(gam_mod$fitted.values)
+          gam_larvae_values_radar[3:5, j] = predict(gam_mod, new_data)
+          
+        }
+        if (variables_list[i] == "egestion") {
+          # We want to estimate the fitted GAM values of larvae content for GMSIR of 0.4, 0.8, and 1.2
+          new_data = as.data.frame(c(0.4, 0.8, 1.2))
+          colnames(new_data) = "group_mass_specific_intake_rate_fw"
+          
+          gam_frass_values_radar["max" , j] = max(gam_mod$fitted.values)
+          gam_frass_values_radar["min", j] = min(gam_mod$fitted.values)
+          gam_frass_values_radar[3:5, j] = predict(gam_mod, new_data)
           
         }
       }
@@ -152,11 +167,20 @@ model_irn <- function(data_i, data_g) {
   )
   
   write.csv(
-    lm_larvae_values_radar,
+    gam_larvae_values_radar,
     file = here::here(
       "4_outputs",
       "1_statistical_results",
-      "lm_larvae_values_radar.csv"
+      "gam_larvae_radar.csv"
+    )
+  )
+  
+  write.csv(
+    gam_frass_values_radar,
+    file = here::here(
+      "4_outputs",
+      "1_statistical_results",
+      "gam_frass_radar.csv"
     )
   )
   
@@ -317,6 +341,7 @@ model_irn <- function(data_i, data_g) {
                       "gam_isotopes.csv")
   )
   
-  return(lm_larvae_values_radar)
+  list_radar = list(gam_larvae_values_radar, gam_frass_values_radar)
+  return(list_radar)
   
 }

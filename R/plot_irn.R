@@ -1000,23 +1000,71 @@ plot_irn <- function(data_i, data_g, data_model) {
   p = plot(test[, 55:62])
   dev.off()
   
-  ##### A radar chart to represent variations in larvae nutritional content #####
-  # Using predicted values from the linear models
-  # To use the fmsb package, I have to add 2 lines to the dataframe: the max and min of each variable to show on the plot!
+  ##### A radar chart to represent variations in larvae and egestion nutritional content #####
+  # Using predicted values from the GAM
   
-  # Color vector
+  ### For larvae
   
   pdf(
     here::here("4_outputs", "2_figures", "larvae_radar_chart.pdf"),
     width = 11,
     height = 5
   )
+  
+  # Color vector
   colors_fill = ggsci::pal_futurama(alpha = 0.2)(3)
   colors_border = ggsci::pal_futurama(alpha = 0.7)(3)
   
   # plot with default options:
   radarchart(
-    data_model,
+    data_model[[1]],
+    axistype = 1 ,
+    #custom polygon
+    pcol = colors_border[c(3, 1, 2)],
+    pfcol = colors_fill[c(3, 1, 2)] ,
+    plwd = 2 ,
+    plty = 1,
+    #custom the grid
+    cglcol = "grey",
+    cglty = 1,
+    axislabcol = "grey",
+    cglwd = 0.8,
+    #custom labels
+    vlcex = 1
+  )
+  
+  # Add a legend
+  legend(
+    x = 1.2,
+    y = 0.8,
+    legend = c(
+      "Low intake rate (=0.4)",
+      "Intermediate intake rate (=0.8)",
+      "High intake rate (=1.2)"
+    ),
+    bty = "n",
+    pch = 20 ,
+    col = colors_border[c(3, 1, 2)] ,
+    cex = 1.2,
+    pt.cex = 3
+  )
+  dev.off()
+  
+  ### For egestions
+  
+  pdf(
+    here::here("4_outputs", "2_figures", "frass_radar_chart.pdf"),
+    width = 11,
+    height = 5
+  )
+  
+  # Color vector
+  colors_fill = ggsci::pal_futurama(alpha = 0.2)(3)
+  colors_border = ggsci::pal_futurama(alpha = 0.7)(3)
+  
+  # plot with default options:
+  radarchart(
+    data_model[[2]],
     axistype = 1 ,
     #custom polygon
     pcol = colors_border[c(3, 1, 2)],
