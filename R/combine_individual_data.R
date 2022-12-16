@@ -120,6 +120,10 @@ combine_individual_data <- function(data_fc, data_ic, data_i) {
   # In dry weight only, because we don't have the water content of frass.
   data_i$absorbed_mass_dw = data_i$food_consumed_collection_days_dw - data_i$egestion_mass_dw
   
+  ##### Absorption rate of food #####
+  
+  data_i$absorption_rate_dw = (data_i$food_consumed_collection_days_dw - data_i$egestion_mass_dw) / data_i$number_collection_days
+  
   ##### Absorption efficiency of food #####
   
   data_i$absorption_efficiency_dw = 1 - (data_i$egestion_mass_dw / data_i$food_consumed_collection_days_dw)

@@ -94,6 +94,29 @@ plot_irn <- function(data_i, data_g, data_model) {
   ########## 1. Mass balance figures ##########
   
   
+  ###### Absorption rate according to mass specific intake rate ######
+  
+  
+  ardw_msirfw <- ggplot2::ggplot(data_i,
+                                 aes(x = ingestion_rate_fw / ((bodymass_last_collection_date + bodymass_7th_instar_j0_fw) / 2
+                                 ), y = absorption_rate_dw)) +
+    geom_point(size = 2) +
+    labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Absorption rate <br> (mg<sub>(dw)</sub> day<sup>-1</sup>)") +
+    geom_smooth(color = "steelblue3",  method = "gam") +
+    theme(axis.title.x = element_markdown(),
+          axis.title.y = element_markdown())
+  
+  ggsave(
+    filename = "ardw_&_msirfw.pdf",
+    plot = ardw_msirfw,
+    device = cairo_pdf,
+    path = here::here("4_outputs", "2_figures"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
+  
   ###### Absorption efficiency according to mass specific intake rate ######
   
   
@@ -208,7 +231,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   ###### Growth rate in fresh weight according to the mass specific intake rate  ######
   
   grfw_msirfw <- ggplot2::ggplot(data_i,
-                                 aes(x = ingestion_rate_fw / ((bodymass_7th_instar_j3_fw + bodymass_7th_instar_j0_fw) / 2
+                                 aes(x = ingestion_rate_fw / ((bodymass_last_collection_date + bodymass_7th_instar_j0_fw) / 2
                                  ), y = growth_rate)) +
     geom_point(size = 2) +
     xlim(0, NA) +
@@ -323,23 +346,15 @@ plot_irn <- function(data_i, data_g, data_model) {
   ###### A figure capturing important results in mass budget ######
   
   complete_plot = ggpubr::ggarrange(
-    ggpubr::ggarrange(
-      grfw_msirfw,
-      aedw_msirfw,
-      ncol = 1,
-      nrow = 2,
-      labels = c("a.",
-                 "b."),
-      label.y = 1.1,
-      label.x = 0,
-      heights = c(1, 1)
-    ),
+    ardw_msirfw,
+    aedw_msirfw,
+    grfw_msirfw,
     gefw_msirfw,
     ncol = 2,
-    nrow = 1,
-    labels = c("",
-               "c."),
-    label.y = 1.1,
+    nrow = 2,
+    labels = c("a.", "b.",
+               "c.", "d."),
+    label.y = 1,
     label.x = 0,
     widths = c(1, 1)
   )
@@ -769,7 +784,9 @@ plot_irn <- function(data_i, data_g, data_model) {
         -1
       }, ")",
     )), y = "Egestion N/P") +
-    geom_smooth(color = "steelblue3",  method = "loess", span=1)
+    geom_smooth(color = "steelblue3",
+                method = "loess",
+                span = 1)
   
   ggsave(
     filename = "npegestion_&_msir.pdf",
@@ -927,7 +944,7 @@ plot_irn <- function(data_i, data_g, data_model) {
     data_abs ,
     aes(
       x = group_mass_specific_intake_rate_fw,
-      y = elemental_value*100,
+      y = elemental_value * 100,
       colour = element,
       group = element,
       fill =  element
