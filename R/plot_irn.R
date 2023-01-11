@@ -103,7 +103,9 @@ plot_irn <- function(data_i, data_g, data_model) {
     geom_point(size = 2) +
     xlim(0, NA) +
     labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Absorption rate <br> (mg<sub>(dw)</sub> day<sup>-1</sup>)") +
-    geom_smooth(color = "steelblue3",  method = "gam") +
+    geom_smooth(color = "steelblue3",
+                method = "loess",
+                span = 0.75) +
     theme(axis.title.x = element_markdown(),
           axis.title.y = element_markdown())
   
@@ -127,7 +129,9 @@ plot_irn <- function(data_i, data_g, data_model) {
     geom_point(size = 2) +
     xlim(0, NA) +
     labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Absorption efficiency (% dw)") +
-    geom_smooth(color = "steelblue3",  method = "gam") +
+    geom_smooth(color = "steelblue3",
+                method = "loess",
+                span = 0.75) +
     theme(axis.title.x = element_markdown())
   
   ggsave(
@@ -193,7 +197,9 @@ plot_irn <- function(data_i, data_g, data_model) {
     geom_hline(yintercept = 50, color = "black") +
     geom_point(size = 2) +
     labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Growth efficiency (% fw)") +
-    geom_smooth(color = "steelblue3",  method = "gam") +
+    geom_smooth(color = "steelblue3",
+                method = "loess",
+                span = 0.75) +
     theme(axis.title.x = element_markdown())
   
   
@@ -218,7 +224,9 @@ plot_irn <- function(data_i, data_g, data_model) {
                        ), y = growth_efficiency_dw)) +
     geom_point(size = 2) +
     labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Growth efficiency (% dw)") +
-    geom_smooth(color = "steelblue3",  method = "gam") +
+    geom_smooth(color = "steelblue3",
+                method = "loess",
+                span = 0.75) +
     theme(axis.title.x = element_markdown())
   
   ggsave(
@@ -246,8 +254,10 @@ plot_irn <- function(data_i, data_g, data_model) {
                               " ", day ^ {
                                 -1
                               },
-                              ")", ))) +
-    geom_smooth(color = "steelblue3",  method = "gam") +
+                              ")",))) +
+    geom_smooth(color = "steelblue3",
+                method = "loess",
+                span = 0.75) +
     theme(axis.title.x = element_markdown())
   
   ggsave(
@@ -267,7 +277,9 @@ plot_irn <- function(data_i, data_g, data_model) {
                        aes(x = growth_rate, y = growth_efficiency_fw * 100)) +
     geom_point(size = 2) +
     labs(x = "Growth rate (mg fw / day)", y = "Growth efficiency (% fw)") +
-    geom_smooth(color = "steelblue3",  method = "gam")
+    geom_smooth(color = "steelblue3",
+                method = "loess",
+                span = 0.75)
   
   ggsave(
     filename = "gefw_&_grfw.pdf",
@@ -291,7 +303,9 @@ plot_irn <- function(data_i, data_g, data_model) {
                        ), y = growth_investment_dw)) +
     geom_point(size = 2) +
     labs(x = "Mass-specific absorbed mass (% dw)", y = " Growth investment (% dw)") +
-    geom_smooth(color = "steelblue3", method = "gam")
+    geom_smooth(color = "steelblue3",
+                method = "loess",
+                span = 0.75)
   
   ggsave(
     filename = "gidw_&_msamdw.pdf",
@@ -311,7 +325,9 @@ plot_irn <- function(data_i, data_g, data_model) {
                        aes(x = absorption_efficiency_dw * 100, y = growth_efficiency_dw)) +
     geom_point(size = 2) +
     labs(x = "Absoprtion efficiency (% dw)", y = "Growth efficiency (% dw)") +
-    geom_smooth(color = "steelblue3", method = "gam")
+    geom_smooth(color = "steelblue3",
+                method = "loess",
+                span = 0.75)
   
   ggsave(
     filename = "gedw_&_aedw.pdf",
@@ -332,7 +348,9 @@ plot_irn <- function(data_i, data_g, data_model) {
                        ))) +
     geom_point(size = 2) +
     labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Egestion rate <br> (mg<sub>frass(dw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)") +
-    geom_smooth(color = "steelblue3", method = "gam") +
+    geom_smooth(color = "steelblue3",
+                method = "loess",
+                span = 0.75) +
     theme(axis.title.x = element_markdown(),
           axis.title.y = element_markdown())
   
@@ -419,15 +437,15 @@ plot_irn <- function(data_i, data_g, data_model) {
     sd_food = sd(data_element[, food_col])
     
     # Larvae elemental content
-    average_larvae = mean(data_element[which(data_element$matrix == "larvae"),]$elemental_value, na.rm =
+    average_larvae = mean(data_element[which(data_element$matrix == "larvae"), ]$elemental_value, na.rm =
                             T)
-    sd_larvae = sd(data_element[which(data_element$matrix == "larvae"),]$elemental_value, na.rm =
+    sd_larvae = sd(data_element[which(data_element$matrix == "larvae"), ]$elemental_value, na.rm =
                      T)
     
     # Egestion (frass) elemental content
-    average_egestion = mean(data_element[which(data_element$matrix == "egestion"),]$elemental_value, na.rm =
+    average_egestion = mean(data_element[which(data_element$matrix == "egestion"), ]$elemental_value, na.rm =
                               T)
-    sd_egestion = sd(data_element[which(data_element$matrix == "egestion"),]$elemental_value, na.rm =
+    sd_egestion = sd(data_element[which(data_element$matrix == "egestion"), ]$elemental_value, na.rm =
                        T)
     data <- data.frame(
       name = c("Food", "Larvae", "Frass"),
@@ -524,7 +542,9 @@ plot_irn <- function(data_i, data_g, data_model) {
     labs(x = expression(paste("Growth rate", " (", mg[body (fw)], " ", day ^ {
       -1
     }, ")")), y = "Larvae P (ppm)") +
-    geom_smooth(color = "steelblue3",  method = "gam")
+    geom_smooth(color = "steelblue3",
+                method = "loess",
+                span = 0.75)
   
   ggsave(
     filename = "larvaePdw_&_gr.pdf",
@@ -571,7 +591,7 @@ plot_irn <- function(data_i, data_g, data_model) {
         )
       ) +
         geom_point(size = 2) +
-        geom_smooth(method = "lm") +
+        geom_smooth(method = "loess", span = 0.75) +
         scale_color_manual(values = colours[i],
                            aesthetics = c("colour", "fill")) +
         labs(
@@ -620,7 +640,7 @@ plot_irn <- function(data_i, data_g, data_model) {
           )
         ) +
           geom_point(size = 2) +
-          geom_smooth(method = "gam") +
+          geom_smooth(method = "loess", span = 0.75) +
           scale_color_manual(values = colours[i],
                              aesthetics = c("colour", "fill")) +
           labs(
@@ -689,7 +709,7 @@ plot_irn <- function(data_i, data_g, data_model) {
         -1
       }, ")",
     )), y = "Larvae C/N") +
-    geom_smooth(color = "steelblue3",  method = "gam")
+    geom_smooth(color = "steelblue3")
   
   ggsave(
     filename = "cnlarvae_&_gmsir.pdf",
@@ -714,7 +734,7 @@ plot_irn <- function(data_i, data_g, data_model) {
         -1
       }, ")",
     )), y = "Larvae N/P") +
-    geom_smooth(color = "steelblue3",  method = "gam") +
+    geom_smooth(color = "steelblue3") +
     scale_y_continuous(
       labels = function(x)
         format(x, scientific = TRUE)
@@ -744,7 +764,7 @@ plot_irn <- function(data_i, data_g, data_model) {
         -1
       }, ")",
     )), y = "Larvae C/P") +
-    geom_smooth(color = "steelblue3",  method = "gam") +
+    geom_smooth(color = "steelblue3") +
     scale_y_continuous(
       labels = function(x)
         format(x, scientific = TRUE)
@@ -784,7 +804,7 @@ plot_irn <- function(data_i, data_g, data_model) {
         -1
       }, ")",
     )), y = "Egestion C/N") +
-    geom_smooth(color = "steelblue3",  method = "gam") 
+    geom_smooth(color = "steelblue3")
   
   ggsave(
     filename = "cnegestion_&_msir.pdf",
@@ -809,8 +829,7 @@ plot_irn <- function(data_i, data_g, data_model) {
         -1
       }, ")",
     )), y = "Egestion N/P") +
-    geom_smooth(color = "steelblue3",
-                method = "gam") +
+    geom_smooth(color = "steelblue3") +
     scale_y_continuous(
       labels = function(x)
         format(x, scientific = TRUE)
@@ -839,8 +858,7 @@ plot_irn <- function(data_i, data_g, data_model) {
         -1
       }, ")",
     )), y = "Egestion C/P") +
-    geom_smooth(color = "steelblue3",
-                method = "gam") +
+    geom_smooth(color = "steelblue3") +
     scale_y_continuous(
       labels = function(x)
         format(x, scientific = TRUE)
@@ -854,6 +872,40 @@ plot_irn <- function(data_i, data_g, data_model) {
     scale = 1,
     width = 6,
     height = 4,
+    units = "in"
+  )
+  
+  ##### Stoichiometric ratio of larvae and egestions #####
+  
+  complete_stoichiometry = ggpubr::ggarrange(
+    cn_larvae,
+    cp_larvae,
+    np_larvae,
+    cn_egestion,
+    cp_egestion,
+    np_egestion,
+    ncol = 3,
+    nrow = 2,
+    labels = c("a.",
+               "b.",
+               "c.",
+               "d.",
+               "e.",
+               "f."),
+    label.y = 1,
+    label.x = 0,
+    heights = c(1, 1, 1),
+    widths = c(1, 1)
+  )
+  
+  ggsave(
+    filename = paste("egestion_larvae_", "stoichiometry", ".pdf", sep = ""),
+    plot = complete_stoichiometry,
+    device = cairo_pdf,
+    path = here::here("4_outputs", "2_figures"),
+    scale = 1,
+    width = 14,
+    height = 8,
     units = "in"
   )
   
@@ -959,7 +1011,7 @@ plot_irn <- function(data_i, data_g, data_model) {
               day ^ {
                 -1
               },
-              ")", )
+              ")",)
       )),
       left = ggpubr::text_grob(y_axes[i], rot = 90),
       top = ""
@@ -979,39 +1031,7 @@ plot_irn <- function(data_i, data_g, data_model) {
     )
   }
   
-  ##### Stoichiometric ratio of larvae and egestions #####
   
-  complete_stoichiometry = ggpubr::ggarrange(
-    cn_larvae,
-    cn_egestion,
-    cp_larvae,
-    cp_egestion,
-    np_larvae,
-    np_egestion,
-    ncol = 2,
-    nrow = 3,
-    labels = c("a.",
-               "b.",
-               "c.",
-               "d.",
-               "e.",
-               "f."),
-    label.y = 1,
-    label.x = 0,
-    heights = c(1, 1, 1),
-    widths = c(1, 1)
-  )
-  
-  ggsave(
-    filename = paste("egestion_larvae_", "stoichiometry", ".pdf", sep = ""),
-    plot = complete_stoichiometry,
-    device = cairo_pdf,
-    path = here::here("4_outputs", "2_figures"),
-    scale = 1,
-    width = 7,
-    height = 7,
-    units = "in"
-  )
   
   ##### Make a layered plot with all curves on top of each other for absorption efficiency  #####
   ggplot2::theme_set(
@@ -1029,7 +1049,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   data_abs = subset(data_g, data_g$matrix == "absorption")
   # Removing 15N and 13C
-  data_abs = data_abs[!(data_abs$element %in% c("15N", "14N", "13C", "12C")), ]
+  data_abs = data_abs[!(data_abs$element %in% c("15N", "14N", "13C", "12C")),]
   
   p = ggplot2::ggplot(
     data_abs ,
@@ -1042,7 +1062,9 @@ plot_irn <- function(data_i, data_g, data_model) {
     )
   ) +
     geom_point(alpha = 0.1) +
-    geom_smooth(method = "lm", se = FALSE) +
+    geom_smooth(method = "loess",
+                se = FALSE,
+                span = 0.75) +
     scale_color_manual(values = legend_colours,
                        aesthetics = c("colour", "fill")) +
     labs(
@@ -1086,7 +1108,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   ##### Nutrient co variations in larvae and egestions #####
   data_larvae = subset(data_g, data_g$matrix == "larvae")
   # Removing 15N and 13C
-  data_larvae = data_larvae[!(data_larvae$element %in% c("d15N", "d13C")), ]
+  data_larvae = data_larvae[!(data_larvae$element %in% c("d15N", "d13C")),]
   test = pivot_wider(data_larvae, names_from = element, values_from = elemental_value)
   pdf(here::here(
     "4_outputs",
@@ -1098,7 +1120,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   data_larvae = subset(data_g, data_g$matrix == "egestion")
   # Removing 15N and 13C
-  data_larvae = data_larvae[!(data_larvae$element %in% c("d15N", "d13C")), ]
+  data_larvae = data_larvae[!(data_larvae$element %in% c("d15N", "d13C")),]
   test = pivot_wider(data_larvae, names_from = element, values_from = elemental_value)
   pdf(here::here(
     "4_outputs",
@@ -1287,7 +1309,7 @@ plot_irn <- function(data_i, data_g, data_model) {
                               " ", day ^ {
                                 -1
                               },
-                              ")", )), y = expression(paste(Delta, "13C"))) +
+                              ")",)), y = expression(paste(Delta, "13C"))) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
@@ -1311,7 +1333,7 @@ plot_irn <- function(data_i, data_g, data_model) {
                               " ", day ^ {
                                 -1
                               },
-                              ")", )), y = expression(paste(Delta, "15N"))) +
+                              ")",)), y = expression(paste(Delta, "15N"))) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
@@ -1581,7 +1603,9 @@ plot_irn <- function(data_i, data_g, data_model) {
     xlim(0, NA) +
     labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)",
          y = "C IAER") +
-    geom_smooth(color = "steelblue3",  method = "gam") +
+    geom_smooth(color = "steelblue3",
+                method = "loess",
+                span = 0.75) +
     theme(axis.title.x = element_markdown())
   
   ggsave(
