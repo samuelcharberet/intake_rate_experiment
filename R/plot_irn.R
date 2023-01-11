@@ -185,11 +185,11 @@ plot_irn <- function(data_i, data_g, data_model) {
   gefw_msirfw <- ggplot2::ggplot(data_i,
                                  aes(x = ingestion_rate_fw / ((bodymass_last_collection_date + bodymass_7th_instar_j0_fw) / 2
                                  ), y = growth_efficiency_fw * 100)) +
+    geom_vline(xintercept = 1, color = "black") +
+    geom_hline(yintercept = 50, color = "black") +
     geom_point(size = 2) +
     labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Growth efficiency (% fw)") +
     geom_smooth(color = "steelblue3",  method = "gam") +
-    geom_vline(xintercept = 1, color = "steelblue3") +
-    geom_hline(yintercept = 50, color = "steelblue3") +
     theme(axis.title.x = element_markdown())
   
   
@@ -662,7 +662,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   ######  CNP stoichiometry ######
   
-  # Making C:N and N:P plots for larvae and egestion as a function of
+  # Making C:N, N:P, and C:P plots for larvae and egestion as a function of
   # the mass-specific intake rate
   
   # For the larvae
@@ -671,8 +671,11 @@ plot_irn <- function(data_i, data_g, data_model) {
   data_larvae = pivot_wider(data_larvae, names_from = element, values_from = elemental_value)
   data_larvae$C_N = data_larvae$C / data_larvae$N
   data_larvae$N_P = data_larvae$N / data_larvae$P
+  data_larvae$C_P = data_larvae$C / data_larvae$P
   
-  p <- ggplot2::ggplot(data_larvae,
+  # Larvae CN
+  
+  cn_larvae <- ggplot2::ggplot(data_larvae,
                        aes(x = group_mass_specific_intake_rate_fw, y = C_N)) +
     geom_point(size = 2) +
     labs(x = expression(paste(
@@ -686,7 +689,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   ggsave(
     filename = "cnlarvae_&_gmsir.pdf",
-    plot = p,
+    plot = cn_larvae,
     device = cairo_pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
@@ -695,7 +698,9 @@ plot_irn <- function(data_i, data_g, data_model) {
     units = "in"
   )
   
-  p <- ggplot2::ggplot(data_larvae,
+  # Larvae NP
+  
+  np_larvae <- ggplot2::ggplot(data_larvae,
                        aes(x = group_mass_specific_intake_rate_fw, y = N_P)) +
     geom_point(size = 2) +
     labs(x = expression(paste(
@@ -709,7 +714,33 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   ggsave(
     filename = "nplarvae_&_gmsir.pdf",
-    plot = p,
+    plot = np_larvae,
+    device = cairo_pdf,
+    path = here::here("4_outputs", "2_figures"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
+  
+  # Larvae CP
+  
+  
+  cp_larvae <- ggplot2::ggplot(data_larvae,
+                       aes(x = group_mass_specific_intake_rate_fw, y = C_P)) +
+    geom_point(size = 2) +
+    labs(x = expression(paste(
+      "Intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
+        -1
+      }, " ", day ^ {
+        -1
+      }, ")",
+    )), y = "Larvae C/P") +
+    geom_smooth(color = "steelblue3",  method = "gam")
+  
+  ggsave(
+    filename = "cplarvae_&_gmsir.pdf",
+    plot = cp_larvae,
     device = cairo_pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
@@ -726,10 +757,12 @@ plot_irn <- function(data_i, data_g, data_model) {
                               values_from = elemental_value)
   data_egestion$C_N = data_egestion$C / data_egestion$N
   data_egestion$N_P = data_egestion$N / data_egestion$P
+  data_egestion$C_P = data_egestion$C / data_egestion$P
+  
   
   # CN_egestion = f(msir)
   
-  p <- ggplot2::ggplot(data_egestion,
+  cn_egestion <- ggplot2::ggplot(data_egestion,
                        aes(x = group_mass_specific_intake_rate_fw, y = C_N)) +
     geom_point(size = 2) +
     labs(x = expression(paste(
@@ -743,7 +776,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   ggsave(
     filename = "cnegestion_&_msir.pdf",
-    plot = p,
+    plot = cn_egestion,
     device = cairo_pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
@@ -751,30 +784,10 @@ plot_irn <- function(data_i, data_g, data_model) {
     height = 4,
     units = "in"
   )
+
+  # NP_egestion = f(msir)
   
-  # CN_egestion = f(ge)
-  
-  p <- ggplot2::ggplot(data_egestion,
-                       aes(x = growth_efficiency_fw * 100, y = C_N)) +
-    geom_point(size = 2) +
-    labs(x = "Growth efficiency (% fw)", y = "Egestion C/N") +
-    geom_smooth(color = "steelblue3",  method = "gam")
-  
-  ggsave(
-    filename = "cnegestion_&_ge.pdf",
-    plot = p,
-    device = cairo_pdf,
-    path = here::here("4_outputs", "2_figures"),
-    scale = 1,
-    width = 6,
-    height = 4,
-    units = "in"
-  )
-  
-  # NP_egestion = f(ge)
-  
-  
-  p <- ggplot2::ggplot(data_egestion,
+  np_egestion <- ggplot2::ggplot(data_egestion,
                        aes(x = group_mass_specific_intake_rate_fw, y = N_P)) +
     geom_point(size = 2) +
     labs(x = expression(paste(
@@ -790,7 +803,34 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   ggsave(
     filename = "npegestion_&_msir.pdf",
-    plot = p,
+    plot = np_egestion,
+    device = cairo_pdf,
+    path = here::here("4_outputs", "2_figures"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
+  
+  # CP_egestion = f(msir)
+  
+  cp_egestion <- ggplot2::ggplot(data_egestion,
+                       aes(x = group_mass_specific_intake_rate_fw, y = C_P)) +
+    geom_point(size = 2) +
+    labs(x = expression(paste(
+      "Intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
+        -1
+      }, " ", day ^ {
+        -1
+      }, ")",
+    )), y = "Egestion C/P") +
+    geom_smooth(color = "steelblue3",
+                method = "loess",
+                span = 1)
+  
+  ggsave(
+    filename = "cpegestion_&_msir.pdf",
+    plot = cp_egestion,
     device = cairo_pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
@@ -921,6 +961,39 @@ plot_irn <- function(data_i, data_g, data_model) {
     )
   }
   
+  ##### Make a complete plot with larvae and egestions stoichiometric ratio  #####
+  
+  complete_stoichiometry = ggpubr::ggarrange(
+    cn_larvae,
+    np_larvae,
+    cp_larvae,
+    cn_egestion,
+    np_egestion,
+    cp_egestion,
+    ncol = 2,
+    nrow = 3,
+    labels = c("a.",
+               "b.",
+               "c.",
+               "d.",
+               "e.",
+               "f."),
+    label.y = 1,
+    label.x = 0,
+    heights = c(1, 1),
+    widths = c(1, 1, 1, 1)
+  )
+  
+  ggsave(
+    filename = paste("egestion_larvae_", "stoichiometry", ".pdf", sep = ""),
+    plot = complete_stoichiometry,
+    device = cairo_pdf,
+    path = here::here("4_outputs", "2_figures"),
+    scale = 1,
+    width = 13,
+    height = 7,
+    units = "in"
+  )
   
   ##### Make a layered plot with all curves on top of each other for absorption efficiency  #####
   ggplot2::theme_set(
@@ -969,7 +1042,7 @@ plot_irn <- function(data_i, data_g, data_model) {
         },
         ")",
       )),
-      y = "Absorption (%)" ,
+      y = "Absorption efficiency (%)" ,
       fill = "Element",
       color = "Element"
     ) +
@@ -1055,9 +1128,9 @@ plot_irn <- function(data_i, data_g, data_model) {
     x = 1.2,
     y = 0.8,
     legend = c(
-      "Low intake rate (=0.4)",
-      "Intermediate intake rate (=0.8)",
-      "High intake rate (=1.2)"
+      "Low predicted intake rate (=0.4)",
+      "Intermediate predicted intake rate (=0.8)",
+      "High predicted intake rate (=1.2)"
     ),
     bty = "n",
     pch = 20 ,
