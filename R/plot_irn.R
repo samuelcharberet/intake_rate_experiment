@@ -485,7 +485,8 @@ plot_irn <- function(data_i, data_g, data_model) {
       ) +
       labs(x = "",
            y = paste(elements[i], " (", units[i], ")", sep = "")) +
-      scale_x_discrete(limits = c("Food", "Larvae", "Frass"))
+      scale_x_discrete(limits = c("Food", "Larvae", "Frass")) +
+      theme(axis.text.x = element_text(angle = 45, hjust=1))
     
     plots_matrices[[i]] = p
     
@@ -536,8 +537,7 @@ plot_irn <- function(data_i, data_g, data_model) {
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 7,
-    height = 4,
-    units = "in"
+    height = 6,
   )
   
   ##### Growth rate hypothesis #####
