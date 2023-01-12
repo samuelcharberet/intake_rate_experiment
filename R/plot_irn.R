@@ -35,7 +35,7 @@ plot_irn <- function(data_i, data_g, data_model) {
     device = cairo_pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
-    width = 6,
+    width = 7,
     height = 4,
     units = "in"
   )
@@ -44,7 +44,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   p <- ggplot2::ggplot(data_i,
                        aes(x = food_consumed_collection_days_dw, y = bodymass_7th_instar_j3_dw)) +
-    geom_point(size = 2) +
+    geom_point() +
     labs(x = "Total amount of food consumed (mg dw)", y = "Bodymass at the end of the 7th instar (mg dw)") +
     geom_smooth(formula = y ~ x,
                 color = "steelblue3",
@@ -64,7 +64,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   p <- ggplot2::ggplot(data_i,
                        aes(x = food_consumed_collection_days_dw, y = bodymass_imago_dw)) +
-    geom_point(size = 2) +
+    geom_point() +
     labs(x = "Total amount of food consumed (mg dw)", y = "Bodymass of the imago (mg dw)") +
     geom_smooth(formula = y ~ x,
                 color = "steelblue3",
@@ -535,8 +535,8 @@ plot_irn <- function(data_i, data_g, data_model) {
     device = cairo_pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
-    width = 13,
-    height = 7,
+    width = 7,
+    height = 4,
     units = "in"
   )
   
@@ -639,7 +639,7 @@ plot_irn <- function(data_i, data_g, data_model) {
           fill =  element
         )
       ) +
-        geom_point(size = 2) +
+        geom_point() +
         geom_smooth(method = "loess", span = 1) +
         scale_color_manual(values = colours[i],
                            aesthetics = c("colour", "fill")) +
@@ -671,7 +671,7 @@ plot_irn <- function(data_i, data_g, data_model) {
         device = cairo_pdf,
         path = here::here("4_outputs", "2_figures"),
         scale = 1,
-        width = 6,
+        width = 7,
         height = 4,
         units = "in"
       )
@@ -688,7 +688,7 @@ plot_irn <- function(data_i, data_g, data_model) {
             fill =  element
           )
         ) +
-          geom_point(size = 2) +
+          geom_point() +
           geom_smooth(method = "loess", span = 0.75) +
           scale_color_manual(values = colours[i],
                              aesthetics = c("colour", "fill")) +
@@ -725,7 +725,7 @@ plot_irn <- function(data_i, data_g, data_model) {
           device = cairo_pdf,
           path = here::here("4_outputs", "2_figures"),
           scale = 1,
-          width = 6,
+          width = 7,
           height = 4,
           units = "in"
         )
@@ -791,7 +791,6 @@ plot_irn <- function(data_i, data_g, data_model) {
               },
               ")",)
       )),
-      left = ggpubr::text_grob(y_axes[i], rot = 90),
       top = ""
     )
     
@@ -803,8 +802,8 @@ plot_irn <- function(data_i, data_g, data_model) {
       device = cairo_pdf,
       path = here::here("4_outputs", "2_figures"),
       scale = 1,
-      width = 13,
-      height = 5,
+      width = 7,
+      height = 4,
       units = "in"
     )
   }
