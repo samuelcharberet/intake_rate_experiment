@@ -1098,25 +1098,13 @@ plot_irn <- function(data_i, data_g, data_model) {
     scale_color_manual(values = legend_colours,
                        aesthetics = c("colour", "fill")) +
     labs(
-      x = expression(paste(
-        "Intake rate",
-        " (",
-        mg[food(fw)],
-        " ",
-        mg[body (fw)] ^ {
-          -1
-        },
-        " ",
-        day ^ {
-          -1
-        },
-        ")",
-      )),
+      x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)",
       y = "Absorption efficiency (%)" ,
       fill = "Element",
       color = "Element"
     ) +
-    theme(legend.position = "right")
+    theme(legend.position = "right",
+          axis.title.x = element_markdown())
   
   # Save each plot
   ggsave(
@@ -1130,8 +1118,8 @@ plot_irn <- function(data_i, data_g, data_model) {
     device = cairo_pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
-    width = 7,
-    height = 4,
+    width = 3.5,
+    height = 3,
     units = "in"
   )
   
