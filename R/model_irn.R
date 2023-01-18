@@ -75,13 +75,22 @@ model_irn <- function(data_i, data_g) {
   ###### 1. Total mass balance ######
   
   for (i in 1:nb_variable_tm) {
-    formula_gam = as.formula(paste(variable_list_tm[i], "~ s(ingestion_rate_fw)"))
-    formula_spearman = as.formula(paste("~", "ingestion_rate_fw", "+", variable_list_tm[i]))
+    formula_gam = as.formula(paste(
+      variable_list_tm[i],
+      "~ s(mass_specific_ingestion_rate_fw)"
+    ))
+    formula_spearman = as.formula(paste(
+      "~",
+      variable_list_tm[i],
+      "+",
+      "mass_specific_ingestion_rate_fw"
+    ))
     sp = cor.test(
       formula_spearman,
       method = "spearman",
       exact = F,
-      data = data_i
+      data = data_i,
+      alternative = "two.sided"
     )
     spearman$cor_coef[i] = sp$estimate
     spearman$p_value[i] = sp$p.value
@@ -107,7 +116,12 @@ model_irn <- function(data_i, data_g) {
     for (j in 1:nb_elements) {
       data_matrix_element = subset(data_matrix, data_matrix$element == elements_list[j]) # selecting only matrix j
       
-      formula_spearman = as.formula(paste("~", "group_mass_specific_intake_rate_fw", "+", "elemental_value"))
+      formula_spearman = as.formula(paste(
+        "~",
+        "group_mass_specific_intake_rate_fw",
+        "+",
+        "elemental_value"
+      ))
       formula_gam = as.formula(paste(
         "elemental_value",
         "~ s(group_mass_specific_intake_rate_fw,sp=20)"
@@ -120,7 +134,7 @@ model_irn <- function(data_i, data_g) {
       lm_mod = lm(formula_lm, data = data_matrix_element) # creates a LMfor this element i in matrix j according to IR
       summary_gam = summary(gam_mod)
       summary_lm = summary(lm_mod)
-      k = nb_variable_tm+(i-1)*(nb_elements)+j #The row number in the final result tables 
+      k = nb_variable_tm + (i - 1) * (nb_elements) + j #The row number in the final result tables
       
       sp = cor.test(
         formula_spearman,

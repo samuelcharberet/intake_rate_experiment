@@ -1,8 +1,8 @@
 "","variable","n","r_squared","edf","p_value","difference"
-"1","absorption_rate_dw ",396,"0.959","7.96","<2e-16",NA
-"2","absorption_efficiency_dw ",396,"0.471","6.64","<2e-16",NA
-"3","growth_rate ",396,"0.969","5.49","<2e-16",NA
-"4","growth_efficiency_fw ",396,"0.357","5.43","<2e-16",NA
+"1","absorption_rate_dw ",396,"0.78","5.8","<2e-16",NA
+"2","absorption_efficiency_dw ",396,"0.523","4.69","<2e-16",NA
+"3","growth_rate ",396,"0.822","5.83","<2e-16",NA
+"4","growth_efficiency_fw ",396,"0.395","6.06","<2e-16",NA
 "5","absorption C",100,"0.581","1.22","<2e-16",0.4139613327148
 "6","absorption N",100,"0.688","1.22","<2e-16",0.619149129278708
 "7","absorption P",100,"0.554","1.22","<2e-16",0.687340711573782

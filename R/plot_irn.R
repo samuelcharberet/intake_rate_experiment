@@ -92,17 +92,26 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   
   ardw_msirfw <- ggplot2::ggplot(data_i,
-                                 aes(x = ingestion_rate_fw / ((bodymass_last_collection_date + bodymass_7th_instar_j0_fw) / 2
-                                 ), y = absorption_rate_dw)) +
+                                 aes(x = mass_specific_ingestion_rate_fw, y = absorption_rate_dw)) +
     geom_point() +
     xlim(0, NA) +
+    ylim(NA,
+         max(data_i$absorption_rate_dw) + 0.1 * (
+           max(data_i$absorption_rate_dw) - min(data_i$absorption_rate_dw)
+         )) +
     labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Absorption rate <br> (mg<sub>(dw)</sub> day<sup>-1</sup>)") +
     geom_smooth(color = "steelblue3",
                 method = "loess",
                 span = 0.75) +
     theme(#axis.title.x = element_markdown(),
       axis.title.y = element_markdown(),
-      axis.title.x = element_blank())
+      axis.title.x = element_blank()) +
+    ggpubr::stat_cor(
+      method = "spearman",
+      cor.coef.name = c("rho"),
+      label.x.npc = 0.2,
+      label.y.npc = 1
+    )
   
   ggsave(
     filename = "ardw_&_msirfw.pdf",
@@ -123,13 +132,23 @@ plot_irn <- function(data_i, data_g, data_model) {
                                  ), y = absorption_efficiency_dw * 100)) +
     geom_point() +
     xlim(0, NA) +
+    ylim(NA,
+         max(data_i$absorption_efficiency_dw * 100) + 0.1 * (
+           max(data_i$absorption_efficiency_dw * 100) - min(data_i$absorption_efficiency_dw * 100)
+         )) +
     labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Absorption efficiency <br> (% dw)") +
     geom_smooth(color = "steelblue3",
                 method = "loess",
                 span = 0.75) +
     theme(#axis.title.x = element_markdown(),
       axis.title.x = element_blank(),
-      axis.title.y = element_markdown())
+      axis.title.y = element_markdown()) +
+    ggpubr::stat_cor(
+      method = "spearman",
+      cor.coef.name = c("rho"),
+      label.x.npc = 0.2,
+      label.y.npc = 1
+    )
   
   ggsave(
     filename = "aedw_&_msirfw.pdf",
@@ -190,6 +209,10 @@ plot_irn <- function(data_i, data_g, data_model) {
                                  aes(x = ingestion_rate_fw / ((bodymass_last_collection_date + bodymass_7th_instar_j0_fw) / 2
                                  ), y = growth_efficiency_fw * 100)) +
     xlim(0, NA) +
+    ylim(NA,
+         max(data_i$growth_efficiency_fw * 100) + 0.1 * (
+           max(data_i$growth_efficiency_fw * 100) - min(data_i$growth_efficiency_fw * 100)
+         )) +
     geom_vline(xintercept = 1, color = "black") +
     geom_hline(yintercept = 50, color = "black") +
     geom_point() +
@@ -199,8 +222,13 @@ plot_irn <- function(data_i, data_g, data_model) {
                 span = 0.75) +
     theme(#axis.title.x = element_markdown(),
       axis.title.y = element_markdown(),
-      axis.title.x = element_blank())
-  
+      axis.title.x = element_blank()) +
+    ggpubr::stat_cor(
+      method = "spearman",
+      cor.coef.name = c("rho"),
+      label.x.npc = 0.2,
+      label.y.npc = 1
+    )
   
   ggsave(
     filename = "gefw_&_msirfw.pdf",
@@ -246,6 +274,8 @@ plot_irn <- function(data_i, data_g, data_model) {
                                  ), y = growth_rate)) +
     geom_point() +
     xlim(0, NA) +
+    ylim(NA,
+         max(data_i$growth_rate) + 0.1 * (max(data_i$growth_rate) - min(data_i$growth_rate))) +
     labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)",
          y = "Growth rate  <br> (mg<sub>body(fw)</sub> day<sup>-1</sup>)") +
     geom_smooth(color = "steelblue3",
@@ -253,7 +283,13 @@ plot_irn <- function(data_i, data_g, data_model) {
                 span = 0.75) +
     theme(#axis.title.x = element_markdown(),
       axis.title.x = element_blank(),
-      axis.title.y = element_markdown())
+      axis.title.y = element_markdown()) +
+    ggpubr::stat_cor(
+      method = "spearman",
+      cor.coef.name = c("rho"),
+      label.x.npc = 0.2,
+      label.y.npc = 1
+    )
   
   ggsave(
     filename = "grfw_&_msirfw.pdf",
@@ -486,7 +522,7 @@ plot_irn <- function(data_i, data_g, data_model) {
       labs(x = "",
            y = paste(elements[i], " (", units[i], ")", sep = "")) +
       scale_x_discrete(limits = c("Food", "Larvae", "Frass")) +
-      theme(axis.text.x = element_text(angle = 45, hjust=1))
+      theme(axis.text.x = element_text(angle = 45, hjust = 1))
     
     plots_matrices[[i]] = p
     
@@ -775,24 +811,22 @@ plot_irn <- function(data_i, data_g, data_model) {
     # Annotating the complete absorption efficiency plot with axes titles
     
     
-    complete_plots[[i]] = ggpubr::annotate_figure(
-      complete_plots[[i]],
-      bottom = ggpubr::text_grob(expression(
-        paste("Intake rate",
-              " (",
-              mg[food(fw)],
-              " ",
-              mg[body (fw)] ^ {
-                -1
-              },
-              " ",
-              day ^ {
-                -1
-              },
-              ")",)
-      )),
-      top = ""
-    )
+    complete_plots[[i]] = ggpubr::annotate_figure(complete_plots[[i]],
+                                                  bottom = ggpubr::text_grob(expression(
+                                                    paste("Intake rate",
+                                                          " (",
+                                                          mg[food(fw)],
+                                                          " ",
+                                                          mg[body (fw)] ^ {
+                                                            -1
+                                                          },
+                                                          " ",
+                                                          day ^ {
+                                                            -1
+                                                          },
+                                                          ")",)
+                                                  )),
+                                                  top = "")
     
     # Saving the the complete plots
     
