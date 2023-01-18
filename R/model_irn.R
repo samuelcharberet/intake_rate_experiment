@@ -5,8 +5,16 @@
 #'
 #' @examples
 model_irn <- function(data_i, data_g) {
-  variables_list = c("absorption", "larvae", "egestion")
-  nb_variables = length(variables_list)
+  variable_list_tm = c(
+    "absorption_rate_dw",
+    "absorption_efficiency_dw",
+    "growth_rate",
+    "growth_efficiency_fw"
+  ) # The variables in the total mass balance study
+  
+  nb_variable_tm = length(variable_list_tm)
+  matrix_list_ch = c("absorption", "larvae", "egestion") # The variables in the chemical study
+  nb_matrix_ch = length(matrix_list_ch)
   elements_list = c("C",
                     "N",
                     "P",
@@ -14,36 +22,38 @@ model_irn <- function(data_i, data_g) {
                     "Mg",
                     "S",
                     "K",
-                    "Ca")
+                    "Ca") # The elements
   nb_elements = length(elements_list)
   
+  # Creating a dataframe containing GAM statistics for both total mass and chemical balances
   
-  # Creating a dataframe containing GAM statistics for the publication
   
-  constituent = c("total mass",
-                  "total mass",
-                  rep(elements_list, nb_variables))
-  variable = c(
-    "growth_efficiency",
-    rep("absorption", nb_elements + 1),
-    rep("larvae", nb_elements),
-    rep("egestion", nb_elements)
-  )
+  variable = paste(c(variable_list_tm,
+                     rep(matrix_list_ch, each = nb_elements)), c(rep("", nb_variable_tm),
+                                                                 rep(elements_list, nb_matrix_ch)))
   
-  n = rep(NA, length(constituent))
-  r_squared = rep(NA, length(constituent))
-  edf = rep(NA, length(constituent))
-  p_value = rep(NA, length(constituent))
-  difference = rep(NA, length(constituent))
   
-  models_nutrients = data.frame(
-    constituent = constituent,
+  nb_row = length(variable)
+  
+  n = rep(NA, nb_row)
+  r_squared = rep(NA, nb_row)
+  edf = rep(NA, nb_row)
+  p_value = rep(NA, nb_row)
+  difference = rep(NA, nb_row)
+  
+  gam_nutrients = data.frame(
     variable = variable,
     n = n,
     r_squared = r_squared,
     edf = edf,
     p_value = p_value,
     difference = difference
+  )
+  
+  spearman = data.frame(
+    variable = variable,
+    cor_coef = rep(NA, nb_row),
+    p_value = rep(NA, nb_row)
   )
   
   # Creating a dataframe containing selected predicted values to generate a radar chart
@@ -62,78 +72,80 @@ model_irn <- function(data_i, data_g) {
   # We have two datasets, one at the level of individuals for total mass balance
   # and another at the level of the group, for chemical data only (elements and isotopes)
   
-  n_mod_data_i = length(which(constituent == "total mass"))
-  n_mod_data_g = length(constituent) - length(which(constituent == "total mass"))
-  
   ###### 1. Total mass balance ######
   
-  formula = as.formula(paste("growth_efficiency_fw", "~ s(ingestion_rate_fw)"))
-  gam_mod = mgcv::gam(formula, data = data_i) # a GEM model for growth efficiency according to IR
-  summary_gam = summary(gam_mod)
-  if (gam_mod$converged == "TRUE") {
-    models_nutrients$n[1] = summary_gam$n
-    models_nutrients$r_squared[1] = format(signif(summary_gam$r.sq, digits = 3), scientific = F)
-    models_nutrients$edf[1] = format(signif(summary_gam$edf, digits = 3), scientific = F)
-    if (summary_gam$s.pv == 0) {
-      models_nutrients$p_value[1] = "<2e-16"
-    }
-    else{
-      models_nutrients$p_value[1] = format(signif(summary_gam$s.pv, digits = 2), scientific = T)
-    }
-  }
-  
-  formula = as.formula(paste("absorption_efficiency_dw", "~ s(ingestion_rate_dw)"))
-  mod = mgcv::gam(formula, data = data_i)
-  summary_gam = summary(mod)
-  if (gam_mod$converged == "TRUE") {
-    models_nutrients$n[2] = summary_gam$n
-    models_nutrients$r_squared[2] = format(signif(summary_gam$r.sq, digits = 3), scientific = F)
-    models_nutrients$edf[2] = format(signif(summary_gam$edf, digits = 3), scientific = F)
-    if (summary_gam$s.pv == 0) {
-      models_nutrients$p_value[2] = "<2e-16"
-    }
-    else{
-      models_nutrients$p_value[2] = format(signif(summary_gam$s.pv, digits = 2), scientific = T)
+  for (i in 1:nb_variable_tm) {
+    formula_gam = as.formula(paste(variable_list_tm[i], "~ s(ingestion_rate_fw)"))
+    formula_spearman = as.formula(paste("~", "ingestion_rate_fw", "+", variable_list_tm[i]))
+    sp = cor.test(
+      formula_spearman,
+      method = "spearman",
+      exact = F,
+      data = data_i
+    )
+    spearman$cor_coef[i] = sp$estimate
+    spearman$p_value[i] = sp$p.value
+    gam_mod = mgcv::gam(formula_gam, data = data_i) # a GAM model
+    summary_gam = summary(gam_mod)
+    if (gam_mod$converged == "TRUE") {
+      gam_nutrients$n[i] = summary_gam$n
+      gam_nutrients$r_squared[i] = format(signif(summary_gam$r.sq, digits = 3), scientific = F)
+      gam_nutrients$edf[i] = format(signif(summary_gam$edf, digits = 3), scientific = F)
+      if (summary_gam$s.pv == 0) {
+        gam_nutrients$p_value[i] = "<2e-16"
+      }
+      else{
+        gam_nutrients$p_value[i] = format(signif(summary_gam$s.pv, digits = 2), scientific = T)
+      }
     }
   }
   
   ###### 2. Chemical balance ######
   
-  for (i in 1:nb_variables) {
-    data_variable = subset(data_g, data_g$matrix == variables_list[i]) # selecting only element i
+  for (i in 1:nb_matrix_ch) {
+    data_matrix = subset(data_g, data_g$matrix == matrix_list_ch[i]) # selecting only element i
     for (j in 1:nb_elements) {
-      data_variable_element = subset(data_variable, data_variable$element == elements_list[j]) # selecting only matrix j
+      data_matrix_element = subset(data_matrix, data_matrix$element == elements_list[j]) # selecting only matrix j
+      
+      formula_spearman = as.formula(paste("~", "group_mass_specific_intake_rate_fw", "+", "elemental_value"))
       formula_gam = as.formula(paste(
         "elemental_value",
         "~ s(group_mass_specific_intake_rate_fw,sp=20)"
       ))
-      gam_mod = mgcv::gam(formula_gam, data = data_variable_element) # creates a GAM for this element i in matrix j according to IR
+      gam_mod = mgcv::gam(formula_gam, data = data_matrix_element) # creates a GAM for this element i in matrix j according to IR
       formula_lm = as.formula(paste(
         "elemental_value",
         "~ group_mass_specific_intake_rate_fw"
       ))
-      lm_mod = lm(formula_lm, data = data_variable_element) # creates a LMfor this element i in matrix j according to IR
+      lm_mod = lm(formula_lm, data = data_matrix_element) # creates a LMfor this element i in matrix j according to IR
       summary_gam = summary(gam_mod)
       summary_lm = summary(lm_mod)
-      k = which(
-        models_nutrients$variable == variables_list[i] &
-          models_nutrients$constituent == elements_list[j]
+      k = nb_variable_tm+(i-1)*(nb_elements)+j #The row number in the final result tables 
+      
+      sp = cor.test(
+        formula_spearman,
+        method = "spearman",
+        exact = F,
+        data = data_matrix_element
       )
+      spearman$cor_coef[k] = sp$estimate
+      spearman$p_value[k] = sp$p.value
+      
       if (gam_mod$converged == "TRUE") {
-        models_nutrients$n[k] = summary_gam$n
-        models_nutrients$r_squared[k] = format(signif(summary_gam$r.sq, digits = 3), scientific = F)
-        models_nutrients$edf[k] = format(signif(summary_gam$edf, digits = 3), scientific = F)
-        models_nutrients$difference[k] = (max(gam_mod$fitted.values) / min(gam_mod$fitted.values)) -
+        gam_nutrients$n[k] = summary_gam$n
+        gam_nutrients$r_squared[k] = format(signif(summary_gam$r.sq, digits = 3), scientific = F)
+        gam_nutrients$edf[k] = format(signif(summary_gam$edf, digits = 3), scientific = F)
+        gam_nutrients$difference[k] = (max(gam_mod$fitted.values) / min(gam_mod$fitted.values)) -
           1
         
         
         if (summary_gam$s.pv == 0) {
-          models_nutrients$p_value[k] = "<2e-16"
+          gam_nutrients$p_value[k] = "<2e-16"
         }
         else{
-          models_nutrients$p_value[k] = format(signif(summary_gam$s.pv, digits = 2), scientific = T)
+          gam_nutrients$p_value[k] = format(signif(summary_gam$s.pv, digits = 2), scientific = T)
         }
-        if (variables_list[i] == "larvae") {
+        if (matrix_list_ch[i] == "larvae") {
           # We want to estimate the fitted GAM values of larvae content for GMSIR of 0.4, 0.8, and 1.2
           new_data = as.data.frame(c(0.4, 0.8, 1.2))
           colnames(new_data) = "group_mass_specific_intake_rate_fw"
@@ -143,7 +155,7 @@ model_irn <- function(data_i, data_g) {
           gam_larvae_values_radar[3:5, j] = predict(gam_mod, new_data)
           
         }
-        if (variables_list[i] == "egestion") {
+        if (matrix_list_ch[i] == "egestion") {
           # We want to estimate the fitted GAM values of larvae content for GMSIR of 0.4, 0.8, and 1.2
           new_data = as.data.frame(c(0.4, 0.8, 1.2))
           colnames(new_data) = "group_mass_specific_intake_rate_fw"
@@ -157,13 +169,18 @@ model_irn <- function(data_i, data_g) {
     }
   }
   
+  
+  write.csv(spearman,
+            file = here::here("4_outputs",
+                              "1_statistical_results",
+                              "spearman.csv"))
+  
+  
   write.csv(
-    models_nutrients,
-    file = here::here(
-      "4_outputs",
-      "1_statistical_results",
-      "models_nutrients.csv"
-    )
+    gam_nutrients,
+    file = here::here("4_outputs",
+                      "1_statistical_results",
+                      "gam_nutrients.csv")
   )
   
   write.csv(
