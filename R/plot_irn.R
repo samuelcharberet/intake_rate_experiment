@@ -443,7 +443,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   # Options for the plots
   
-  matrices = c("larvae", "egestion", "absorption")
+  matrices = c("larvae", "frass", "absorption")
   elements = c("C", "N", "P", "Na", "Mg", "S", "K", "Ca", "15N", "13C")
   nb_matrices = length(matrices)
   nb_elements = length(elements)
@@ -483,20 +483,20 @@ plot_irn <- function(data_i, data_g, data_model) {
     sd_food = sd(data_element[, food_col])
     
     # Larvae elemental content
-    average_larvae = mean(data_element[which(data_element$matrix == "larvae"), ]$elemental_value, na.rm =
+    average_larvae = mean(data_element[which(data_element$matrix == "larvae"),]$elemental_value, na.rm =
                             T)
-    sd_larvae = sd(data_element[which(data_element$matrix == "larvae"), ]$elemental_value, na.rm =
+    sd_larvae = sd(data_element[which(data_element$matrix == "larvae"),]$elemental_value, na.rm =
                      T)
     
-    # Egestion (frass) elemental content
-    average_egestion = mean(data_element[which(data_element$matrix == "egestion"), ]$elemental_value, na.rm =
-                              T)
-    sd_egestion = sd(data_element[which(data_element$matrix == "egestion"), ]$elemental_value, na.rm =
-                       T)
+    # Frass elemental content
+    average_frass = mean(data_element[which(data_element$matrix == "frass"),]$elemental_value, na.rm =
+                           T)
+    sd_frass = sd(data_element[which(data_element$matrix == "frass"),]$elemental_value, na.rm =
+                    T)
     data <- data.frame(
       name = c("Food", "Larvae", "Frass"),
-      value = c(average_food, average_larvae, average_egestion),
-      sd = c(sd_food, sd_larvae, sd_egestion)
+      value = c(average_food, average_larvae, average_frass),
+      sd = c(sd_food, sd_larvae, sd_frass)
     )
     
     # Bar plot + error bar
@@ -603,7 +603,7 @@ plot_irn <- function(data_i, data_g, data_model) {
     units = "in"
   )
   
-  ###### Elements absorption efficiency, larval content, egestion content according to total mass-specific intake rate  ######
+  ###### Elements absorption efficiency, larval content, frass content according to total mass-specific intake rate  ######
   
   # Set a new theme to produce the complete figures
   
@@ -648,7 +648,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   y_axes = c("Larvae", "Frass", "Absorbed")
   units = cbind(units, units, "%")
   
-  y_plot_names = c("larvae_content", "egestion_content", "elemental_abs_eff")
+  y_plot_names = c("larvae_content", "frass_content", "elemental_abs_eff")
   
   # Creating the list of plots for the other elements
   
@@ -658,7 +658,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   }
   
   
-  # A for loop to create the plots of absorption efficiency, larvae content and egestion content
+  # A for loop to create the plots of absorption efficiency, larvae content and frass content
   # according to mass-specific intake rate for all elements
   
   
@@ -824,7 +824,7 @@ plot_irn <- function(data_i, data_g, data_model) {
                                                           day ^ {
                                                             -1
                                                           },
-                                                          ")",)
+                                                          ")", )
                                                   )),
                                                   top = "")
     
@@ -845,7 +845,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   ######  CNP stoichiometry ######
   
-  # Making C:N, N:P, and C:P plots for larvae and egestion as a function of
+  # Making C:N, N:P, and C:P plots for larvae and frass as a function of
   # the mass-specific intake rate
   
   #Set a theme for these stoichiometry figures
@@ -871,6 +871,10 @@ plot_irn <- function(data_i, data_g, data_model) {
   cn_larvae <- ggplot2::ggplot(data_larvae,
                                aes(x = group_mass_specific_intake_rate_fw, y = C_N)) +
     geom_point() +
+    ylim(NA,
+         max(data_larvae$C_N, na.rm = T) + 0.1 * (
+           max(data_larvae$C_N, na.rm = T) - min(data_larvae$C_N, na.rm = T)
+         )) +
     labs(x = expression(paste(
       "Intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
         -1
@@ -878,7 +882,13 @@ plot_irn <- function(data_i, data_g, data_model) {
         -1
       }, ")",
     )), y = "Larvae C/N") +
-    geom_smooth(color = "steelblue3")
+    geom_smooth(color = "steelblue3") +
+    ggpubr::stat_cor(
+      method = "spearman",
+      cor.coef.name = c("rho"),
+      label.x.npc = 0,
+      label.y.npc = 1
+    )
   
   ggsave(
     filename = "cnlarvae_&_gmsir.pdf",
@@ -906,7 +916,17 @@ plot_irn <- function(data_i, data_g, data_model) {
     geom_smooth(color = "steelblue3") +
     scale_y_continuous(
       labels = function(x)
-        format(x, scientific = TRUE)
+        format(x, scientific = TRUE),
+      limits = c(NA,
+                 max(data_larvae$N_P, na.rm = T) + 0.1 * (
+                   max(data_larvae$N_P, na.rm = T) - min(data_larvae$N_P, na.rm = T)
+                 ))
+    ) +
+    ggpubr::stat_cor(
+      method = "spearman",
+      cor.coef.name = c("rho"),
+      label.x.npc = 0,
+      label.y.npc = 1
     )
   
   ggsave(
@@ -936,7 +956,17 @@ plot_irn <- function(data_i, data_g, data_model) {
     geom_smooth(color = "steelblue3") +
     scale_y_continuous(
       labels = function(x)
-        format(x, scientific = TRUE)
+        format(x, scientific = TRUE),
+      limits = c(NA,
+                 max(data_larvae$C_P, na.rm = T) + 0.1 * (
+                   max(data_larvae$C_P, na.rm = T) - min(data_larvae$C_P, na.rm = T)
+                 ))
+    ) +
+    ggpubr::stat_cor(
+      method = "spearman",
+      cor.coef.name = c("rho"),
+      label.x.npc = 0,
+      label.y.npc = 1
     )
   
   ggsave(
@@ -950,34 +980,42 @@ plot_irn <- function(data_i, data_g, data_model) {
     units = "in"
   )
   
-  # For egestions
+  # For frass
   
-  data_egestion = subset(data_g, data_g$matrix == "egestion")
-  data_egestion = pivot_wider(data_egestion,
-                              names_from = element,
-                              values_from = elemental_value)
-  data_egestion$C_N = data_egestion$C / data_egestion$N
-  data_egestion$N_P = data_egestion$N / data_egestion$P
-  data_egestion$C_P = data_egestion$C / data_egestion$P
+  data_frass = subset(data_g, data_g$matrix == "frass")
+  data_frass = pivot_wider(data_frass,
+                           names_from = element,
+                           values_from = elemental_value)
+  data_frass$C_N = data_frass$C / data_frass$N
+  data_frass$N_P = data_frass$N / data_frass$P
+  data_frass$C_P = data_frass$C / data_frass$P
   
   
-  # CN_egestion = f(msir)
+  # CN_frass = f(msir)
   
-  cn_egestion <- ggplot2::ggplot(data_egestion,
-                                 aes(x = group_mass_specific_intake_rate_fw, y = C_N)) +
+  cn_frass <- ggplot2::ggplot(data_frass,
+                              aes(x = group_mass_specific_intake_rate_fw, y = C_N)) +
     geom_point() +
+    ylim(NA,
+         max(data_frass$C_N, na.rm = T) + 0.1 * (max(data_frass$C_N, na.rm = T) - min(data_frass$C_N, na.rm = T))) +
     labs(x = expression(paste(
       "Intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
         -1
       }, " ", day ^ {
         -1
       }, ")",
-    )), y = "Egestion C/N") +
-    geom_smooth(color = "steelblue3")
+    )), y = "Frass C/N") +
+    geom_smooth(color = "steelblue3") +
+    ggpubr::stat_cor(
+      method = "spearman",
+      cor.coef.name = c("rho"),
+      label.x.npc = 0,
+      label.y.npc = 1
+    )
   
   ggsave(
-    filename = "cnegestion_&_msir.pdf",
-    plot = cn_egestion,
+    filename = "cnfrass_&_msir.pdf",
+    plot = cn_frass,
     device = cairo_pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
@@ -986,10 +1024,10 @@ plot_irn <- function(data_i, data_g, data_model) {
     units = "in"
   )
   
-  # NP_egestion = f(msir)
+  # NP_frass = f(msir)
   
-  np_egestion <- ggplot2::ggplot(data_egestion,
-                                 aes(x = group_mass_specific_intake_rate_fw, y = N_P)) +
+  np_frass <- ggplot2::ggplot(data_frass,
+                              aes(x = group_mass_specific_intake_rate_fw, y = N_P)) +
     geom_point() +
     labs(x = expression(paste(
       "Intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
@@ -997,16 +1035,26 @@ plot_irn <- function(data_i, data_g, data_model) {
       }, " ", day ^ {
         -1
       }, ")",
-    )), y = "Egestion N/P") +
+    )), y = "Frass N/P") +
     geom_smooth(color = "steelblue3") +
     scale_y_continuous(
       labels = function(x)
-        format(x, scientific = TRUE)
+        format(x, scientific = TRUE),
+      limits = c(NA,
+                 max(data_frass$N_P, na.rm = T) + 0.1 * (
+                   max(data_frass$N_P, na.rm = T) - min(data_frass$N_P, na.rm = T)
+                 ))
+    ) +
+    ggpubr::stat_cor(
+      method = "spearman",
+      cor.coef.name = c("rho"),
+      label.x.npc = 0,
+      label.y.npc = 1
     )
   
   ggsave(
-    filename = "npegestion_&_msir.pdf",
-    plot = np_egestion,
+    filename = "npfrass_&_msir.pdf",
+    plot = np_frass,
     device = cairo_pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
@@ -1015,10 +1063,10 @@ plot_irn <- function(data_i, data_g, data_model) {
     units = "in"
   )
   
-  # CP_egestion = f(msir)
+  # CP_frass = f(msir)
   
-  cp_egestion <- ggplot2::ggplot(data_egestion,
-                                 aes(x = group_mass_specific_intake_rate_fw, y = C_P)) +
+  cp_frass <- ggplot2::ggplot(data_frass,
+                              aes(x = group_mass_specific_intake_rate_fw, y = C_P)) +
     geom_point() +
     labs(x = expression(paste(
       "Intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
@@ -1026,16 +1074,26 @@ plot_irn <- function(data_i, data_g, data_model) {
       }, " ", day ^ {
         -1
       }, ")",
-    )), y = "Egestion C/P") +
+    )), y = "Frass C/P") +
     geom_smooth(color = "steelblue3") +
     scale_y_continuous(
       labels = function(x)
-        format(x, scientific = TRUE)
+        format(x, scientific = TRUE),
+      limits = c(NA,
+                 max(data_frass$C_P, na.rm = T) + 0.1 * (
+                   max(data_frass$C_P, na.rm = T) - min(data_frass$C_P, na.rm = T)
+                 ))
+    ) +
+    ggpubr::stat_cor(
+      method = "spearman",
+      cor.coef.name = c("rho"),
+      label.x.npc = 0,
+      label.y.npc = 1
     )
   
   ggsave(
-    filename = "cpegestion_&_msir.pdf",
-    plot = cp_egestion,
+    filename = "cpfrass_&_msir.pdf",
+    plot = cp_frass,
     device = cairo_pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
@@ -1052,9 +1110,9 @@ plot_irn <- function(data_i, data_g, data_model) {
     cn_larvae,
     cp_larvae,
     np_larvae,
-    cn_egestion,
-    cp_egestion,
-    np_egestion,
+    cn_frass,
+    cp_frass,
+    np_frass,
     ncol = 3,
     nrow = 2,
     labels = c("a.",
@@ -1086,7 +1144,7 @@ plot_irn <- function(data_i, data_g, data_model) {
                                                    )))
   
   ggsave(
-    filename = paste("egestion_larvae_", "stoichiometry", ".pdf", sep = ""),
+    filename = paste("frass_larvae_", "stoichiometry", ".pdf", sep = ""),
     plot = complete_stoichiometry,
     device = cairo_pdf,
     path = here::here("4_outputs", "2_figures"),
@@ -1112,7 +1170,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   data_abs = subset(data_g, data_g$matrix == "absorption")
   # Removing 15N and 13C
-  data_abs = data_abs[!(data_abs$element %in% c("15N", "14N", "13C", "12C")),]
+  data_abs = data_abs[!(data_abs$element %in% c("15N", "14N", "13C", "12C")), ]
   
   p = ggplot2::ggplot(
     data_abs ,
@@ -1156,10 +1214,10 @@ plot_irn <- function(data_i, data_g, data_model) {
     units = "in"
   )
   
-  ##### Nutrient co variations in larvae and egestions #####
+  ##### Nutrient co variations in larvae and frass #####
   data_larvae = subset(data_g, data_g$matrix == "larvae")
   # Removing 15N and 13C
-  data_larvae = data_larvae[!(data_larvae$element %in% c("d15N", "d13C")),]
+  data_larvae = data_larvae[!(data_larvae$element %in% c("d15N", "d13C")), ]
   test = pivot_wider(data_larvae, names_from = element, values_from = elemental_value)
   pdf(here::here(
     "4_outputs",
@@ -1169,9 +1227,9 @@ plot_irn <- function(data_i, data_g, data_model) {
   plot(test[, 55:62])
   dev.off()
   
-  data_larvae = subset(data_g, data_g$matrix == "egestion")
+  data_larvae = subset(data_g, data_g$matrix == "frass")
   # Removing 15N and 13C
-  data_larvae = data_larvae[!(data_larvae$element %in% c("d15N", "d13C")),]
+  data_larvae = data_larvae[!(data_larvae$element %in% c("d15N", "d13C")), ]
   test = pivot_wider(data_larvae, names_from = element, values_from = elemental_value)
   pdf(here::here(
     "4_outputs",
@@ -1181,7 +1239,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   p = plot(test[, 55:62])
   dev.off()
   
-  ##### Radar chart of larvae and egestion nutritional content #####
+  ##### Radar chart of larvae and frass nutritional content #####
   # Using predicted values from the GAM
   
   ### For larvae
@@ -1231,7 +1289,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   )
   dev.off()
   
-  ### For egestions
+  ### For frass
   
   pdf(
     here::here("4_outputs", "2_figures", "frass_radar_chart.pdf"),
@@ -1355,7 +1413,7 @@ plot_irn <- function(data_i, data_g, data_model) {
                               " ", day ^ {
                                 -1
                               },
-                              ")",)), y = expression(paste(Delta, "13C"))) +
+                              ")", )), y = expression(paste(Delta, "13C"))) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
@@ -1379,7 +1437,7 @@ plot_irn <- function(data_i, data_g, data_model) {
                               " ", day ^ {
                                 -1
                               },
-                              ")",)), y = expression(paste(Delta, "15N"))) +
+                              ")", )), y = expression(paste(Delta, "15N"))) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(

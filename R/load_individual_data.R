@@ -14,8 +14,8 @@ load_individual_data = function(path) {
   character_columns = c(
     "food_provided_unit",
     "bodymass_unit",
-    "tube_egestion_mass_unit",
-    "egestion_mass_dw_unit",
+    "tube_frass_mass_unit",
+    "frass_mass_dw_unit",
     "tube_food_mass_unit",
     "remaining_food_mass_dw_unit",
     "reason"
@@ -33,7 +33,7 @@ load_individual_data = function(path) {
     "group_ID",
     "treatment_ID",
     "sex",
-    "tube_egestion_ID",
+    "tube_frass_ID",
     "tube_food_ID",
     "body_analysis",
     "emergence",
@@ -49,9 +49,9 @@ load_individual_data = function(path) {
     "bodymass_7th_instar_j16_fw",
     "bodymass_imago_fw",
     "bodymass_imago_dw",
-    "empty_tube_egestion_mass",
-    "filled_tube_egestion_mass",
-    "egestion_mass_dw",
+    "empty_tube_frass_mass",
+    "filled_tube_frass_mass",
+    "frass_mass_dw",
     "empty_tube_food_mass",
     "filled_tube_food_mass",
     "remaining_food_mass_dw",
@@ -143,7 +143,7 @@ load_individual_data = function(path) {
   
   ##### Egested mass complete period #####
   
-  data_irn_individuals$egestion_mass_dw = data_irn_individuals$filled_tube_egestion_mass - data_irn_individuals$empty_tube_egestion_mass
+  data_irn_individuals$frass_mass_dw = data_irn_individuals$filled_tube_frass_mass - data_irn_individuals$empty_tube_frass_mass
 
     return(data_irn_individuals)
 }

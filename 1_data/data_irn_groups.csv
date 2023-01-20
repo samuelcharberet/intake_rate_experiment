@@ -1,4 +1,4 @@
-group_ID,treatment_ID,food_intake ,food_intake_unit,tube_egestion_ID,egestion_group_mass_dw,egestion_group_mass_dw_unit,nb_days_collection,C_egestion,N_egestion,P_egestion,S_egestion,Na_egestion,Mg_egestion,K_egestion,Ca_egestion,d13C_egestion,d15N_egestion,C_larvae,N_larvae,P_larvae,S_larvae,Na_larvae,Mg_larvae,K_larvae,Ca_larvae,d13C_larvae,d15N_larvae
+group_ID,treatment_ID,food_intake ,food_intake_unit,tube_frass_ID,frass_group_mass_dw,frass_group_mass_dw_unit,nb_days_collection,C_frass,N_frass,P_frass,S_frass,Na_frass,Mg_frass,K_frass,Ca_frass,d13C_frass,d15N_frass,C_larvae,N_larvae,P_larvae,S_larvae,Na_larvae,Mg_larvae,K_larvae,Ca_larvae,d13C_larvae,d15N_larvae
 1,1,120,mg_fw/day/individual,E-T1-G1,,mg_dw,3,42,3.4,5278,2119,138,801,705,1153,-19.8,2.1,50.8,7.8,8591,3315,865,2175,29042,931,-23,1.6
 2,1,120,mg_fw/day/individual,E-T1-G2,,mg_dw,3,40.6,3.8,6088,2299,562,555,1284,883,-19.4,2,48.69,7.62,9180,3258,860,2351,25992,1119,-22.7,1.6
 3,2,240,mg_fw/day/individual,E-T2-G3,,mg_dw,3,42.5,3.6,4911,2028,375,818,1058,1192,-19.2,1.5,53,7.5,7785,3152,580,2306,21739,853,-23.4,2

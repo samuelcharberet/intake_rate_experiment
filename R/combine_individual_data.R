@@ -115,29 +115,29 @@ combine_individual_data <- function(data_fc, data_ic, data_i) {
   # The egestion rate is equal to the total amount of frass produced over the collection days divided by the number of days
   
   # In dry weight
-  data_i$egestion_rate_dw = data_i$egestion_mass_dw /
+  data_i$egestion_rate_dw = data_i$frass_mass_dw /
     data_i$number_collection_days
   data_i$egestion_rate_dw_unit = "mg dw / day"
   
   ##### Absorbed mass of food #####
   
   # In dry weight only, because we don't have the water content of frass.
-  data_i$absorbed_mass_dw = data_i$food_consumed_collection_days_dw - data_i$egestion_mass_dw
+  data_i$absorbed_mass_dw = data_i$food_consumed_collection_days_dw - data_i$frass_mass_dw
   
   ##### Absorption rate of food #####
   
-  data_i$absorption_rate_dw = (data_i$food_consumed_collection_days_dw - data_i$egestion_mass_dw) / data_i$number_collection_days
+  data_i$absorption_rate_dw = (data_i$food_consumed_collection_days_dw - data_i$frass_mass_dw) / data_i$number_collection_days
   
   ##### Absorption efficiency of food #####
   
-  data_i$absorption_efficiency_dw = 1 - (data_i$egestion_mass_dw / data_i$food_consumed_collection_days_dw)
+  data_i$absorption_efficiency_dw = 1 - (data_i$frass_mass_dw / data_i$food_consumed_collection_days_dw)
   
   
   ##### Egestion - ingestion ratio #####
-  # The egestion - ingestion ratio in equal to the total mass of egestion produced
+  # The egestion - ingestion ratio in equal to the total mass of frass produced
   # divided by the total amount of food consumed over the collection days
   
-  data_i$egestion_ingestion_ratio_dw = data_i$egestion_mass_dw / data_i$food_consumed_collection_days_dw
+  data_i$egestion_ingestion_ratio_dw = data_i$frass_mass_dw / data_i$food_consumed_collection_days_dw
   
   ##### Day 0 larvae water content #####
   

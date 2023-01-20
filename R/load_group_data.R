@@ -14,29 +14,29 @@ load_group_data = function(path){
   
   character_columns = c(
     "food_intake_unit",
-    "egestion_group_mass_dw_unit"
+    "frass_group_mass_dw_unit"
   )
   
   factor_columns = c(
     "group_ID",
     "treatment_ID",
-    "tube_egestion_ID"
+    "tube_frass_ID"
   )
   
   numeric_columns = c(
     "food_intake ",
-    "egestion_group_mass_dw",
+    "frass_group_mass_dw",
     "nb_days_collection",
-    "C_egestion",
-    "N_egestion",
-    "P_egestion",
-    "S_egestion",
-    "Na_egestion",
-    "Mg_egestion",
-    "K_egestion",
-    "Ca_egestion",
-    "d13C_egestion",
-    "d15N_egestion",
+    "C_frass",
+    "N_frass",
+    "P_frass",
+    "S_frass",
+    "Na_frass",
+    "Mg_frass",
+    "K_frass",
+    "Ca_frass",
+    "d13C_frass",
+    "d15N_frass",
     "C_larvae",
     "N_larvae",
     "P_larvae",

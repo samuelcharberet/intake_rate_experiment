@@ -13,7 +13,7 @@ model_irn <- function(data_i, data_g) {
   ) # The variables in the total mass balance study
   
   nb_variable_tm = length(variable_list_tm)
-  matrix_list_ch = c("absorption", "larvae", "egestion") # The variables in the chemical study
+  matrix_list_ch = c("absorption", "larvae", "frass") # The variables in the chemical study
   nb_matrix_ch = length(matrix_list_ch)
   elements_list = c("C",
                     "N",
@@ -169,7 +169,7 @@ model_irn <- function(data_i, data_g) {
           gam_larvae_values_radar[3:5, j] = predict(gam_mod, new_data)
           
         }
-        if (matrix_list_ch[i] == "egestion") {
+        if (matrix_list_ch[i] == "frass") {
           # We want to estimate the fitted GAM values of larvae content for GMSIR of 0.4, 0.8, and 1.2
           new_data = as.data.frame(c(0.4, 0.8, 1.2))
           colnames(new_data) = "group_mass_specific_intake_rate_fw"

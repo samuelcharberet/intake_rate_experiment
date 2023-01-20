@@ -24,7 +24,7 @@ combine_group_data <- function(data_i, data_g, data_fc) {
     individual_group_rows = which(data_i$group_ID == group_IDs[i])
     group_row = which(data_g$group_ID == group_IDs[i])
     
-    data_g$egestion_group_mass_dw[group_row] = sum(data_i$egestion_mass_dw[individual_group_rows])
+    data_g$frass_group_mass_dw[group_row] = sum(data_i$frass_mass_dw[individual_group_rows])
     data_g$food_consumed_collection_days_dw[group_row] = sum(data_i$food_consumed_collection_days_dw[individual_group_rows])
     data_g$food_consumed_collection_days_fw[group_row] = sum(data_i$food_consumed_collection_days_fw[individual_group_rows])
     data_g$groupmass_7th_instar_j0_fw[group_row] = sum(data_i$bodymass_7th_instar_j0_fw[individual_group_rows])
@@ -34,7 +34,7 @@ combine_group_data <- function(data_i, data_g, data_fc) {
     data_g$number_collection_days[group_row] = mean(data_i$number_collection_days[individual_group_rows])
     data_g$growth_rate[group_row] = mean(data_i$growth_rate[individual_group_rows])
     data_g$growth_efficiency_fw[group_row] = mean(data_i$growth_efficiency_fw[individual_group_rows])
-    data_g$absorption_efficiency_dw[group_row] = 1 - (sum(data_i$egestion_mass_dw[individual_group_rows]) / sum(data_i$food_consumed_collection_days_dw[individual_group_rows]))
+    data_g$absorption_efficiency_dw[group_row] = 1 - (sum(data_i$frass_mass_dw[individual_group_rows]) / sum(data_i$food_consumed_collection_days_dw[individual_group_rows]))
     }
   
 
@@ -82,15 +82,15 @@ combine_group_data <- function(data_i, data_g, data_fc) {
     
   }
   
-  # Computing the isotopic contents of egestions
+  # Computing the isotopic contents of frasss
   # Using PDB and air delta 13C and delta 15N 
   # of 0.0112372 and 0.003663 respectively
   
-  data_g$`12C_egestion` = data_g$C_egestion/(1+(((data_g$`d13C_egestion`/1000)+1)*0.0112372))
-  data_g$`13C_egestion` = data_g$C_egestion-data_g$`12C_egestion`
+  data_g$`12C_frass` = data_g$C_frass/(1+(((data_g$`d13C_frass`/1000)+1)*0.0112372))
+  data_g$`13C_frass` = data_g$C_frass-data_g$`12C_frass`
   
-  data_g$`14N_egestion` = data_g$N_egestion/(1+(((data_g$`d15N_egestion`/1000)+1)*0.003663))
-  data_g$`15N_egestion` = data_g$N_egestion-data_g$`14N_egestion`
+  data_g$`14N_frass` = data_g$N_frass/(1+(((data_g$`d15N_frass`/1000)+1)*0.003663))
+  data_g$`15N_frass` = data_g$N_frass-data_g$`14N_frass`
   
   # Computing the isotopic contents of the larvae
   
@@ -115,37 +115,37 @@ combine_group_data <- function(data_i, data_g, data_fc) {
   
   # We compute the group egestion rate
   
-  data_g$group_egestion_rate_dw = data_g$egestion_group_mass_dw/data_g$number_collection_days
+  data_g$group_egestion_rate_dw = data_g$frass_group_mass_dw/data_g$number_collection_days
   
   # Computes the element absorption efficiency
   
-  data_g$C_absorption_efficiency_dw = 1-((data_g$C_egestion*data_g$egestion_group_mass_dw)/(data_g$food_C*data_g$food_consumed_collection_days_dw))
-  data_g$N_absorption_efficiency_dw = 1-((data_g$N_egestion*data_g$egestion_group_mass_dw)/(data_g$food_N*data_g$food_consumed_collection_days_dw))
-  data_g$P_absorption_efficiency_dw = 1-((data_g$P_egestion*data_g$egestion_group_mass_dw)/(data_g$food_P*data_g$food_consumed_collection_days_dw))
-  data_g$S_absorption_efficiency_dw = 1-((data_g$S_egestion*data_g$egestion_group_mass_dw)/(data_g$food_S*data_g$food_consumed_collection_days_dw))
-  data_g$Na_absorption_efficiency_dw = 1-((data_g$Na_egestion*data_g$egestion_group_mass_dw)/(data_g$food_Na*data_g$food_consumed_collection_days_dw))
-  data_g$Mg_absorption_efficiency_dw = 1-((data_g$Mg_egestion*data_g$egestion_group_mass_dw)/(data_g$food_Mg*data_g$food_consumed_collection_days_dw))
-  data_g$K_absorption_efficiency_dw = 1-((data_g$K_egestion*data_g$egestion_group_mass_dw)/(data_g$food_K*data_g$food_consumed_collection_days_dw))
-  data_g$Ca_absorption_efficiency_dw = 1-((data_g$Ca_egestion*data_g$egestion_group_mass_dw)/(data_g$food_Ca*data_g$food_consumed_collection_days_dw))
-  data_g$`12C_absorption_efficiency_dw` = 1-((data_g$`12C_egestion`*data_g$egestion_group_mass_dw)/(data_g$`12C_food`*data_g$food_consumed_collection_days_dw))
-  data_g$`13C_absorption_efficiency_dw` = 1-((data_g$`13C_egestion`*data_g$egestion_group_mass_dw)/(data_g$`13C_food`*data_g$food_consumed_collection_days_dw))
-  data_g$`14N_absorption_efficiency_dw` = 1-((data_g$`14N_egestion`*data_g$egestion_group_mass_dw)/(data_g$`14N_food`*data_g$food_consumed_collection_days_dw))
-  data_g$`15N_absorption_efficiency_dw` = 1-((data_g$`15N_egestion`*data_g$egestion_group_mass_dw)/(data_g$`15N_food`*data_g$food_consumed_collection_days_dw))
+  data_g$C_absorption_efficiency_dw = 1-((data_g$C_frass*data_g$frass_group_mass_dw)/(data_g$food_C*data_g$food_consumed_collection_days_dw))
+  data_g$N_absorption_efficiency_dw = 1-((data_g$N_frass*data_g$frass_group_mass_dw)/(data_g$food_N*data_g$food_consumed_collection_days_dw))
+  data_g$P_absorption_efficiency_dw = 1-((data_g$P_frass*data_g$frass_group_mass_dw)/(data_g$food_P*data_g$food_consumed_collection_days_dw))
+  data_g$S_absorption_efficiency_dw = 1-((data_g$S_frass*data_g$frass_group_mass_dw)/(data_g$food_S*data_g$food_consumed_collection_days_dw))
+  data_g$Na_absorption_efficiency_dw = 1-((data_g$Na_frass*data_g$frass_group_mass_dw)/(data_g$food_Na*data_g$food_consumed_collection_days_dw))
+  data_g$Mg_absorption_efficiency_dw = 1-((data_g$Mg_frass*data_g$frass_group_mass_dw)/(data_g$food_Mg*data_g$food_consumed_collection_days_dw))
+  data_g$K_absorption_efficiency_dw = 1-((data_g$K_frass*data_g$frass_group_mass_dw)/(data_g$food_K*data_g$food_consumed_collection_days_dw))
+  data_g$Ca_absorption_efficiency_dw = 1-((data_g$Ca_frass*data_g$frass_group_mass_dw)/(data_g$food_Ca*data_g$food_consumed_collection_days_dw))
+  data_g$`12C_absorption_efficiency_dw` = 1-((data_g$`12C_frass`*data_g$frass_group_mass_dw)/(data_g$`12C_food`*data_g$food_consumed_collection_days_dw))
+  data_g$`13C_absorption_efficiency_dw` = 1-((data_g$`13C_frass`*data_g$frass_group_mass_dw)/(data_g$`13C_food`*data_g$food_consumed_collection_days_dw))
+  data_g$`14N_absorption_efficiency_dw` = 1-((data_g$`14N_frass`*data_g$frass_group_mass_dw)/(data_g$`14N_food`*data_g$food_consumed_collection_days_dw))
+  data_g$`15N_absorption_efficiency_dw` = 1-((data_g$`15N_frass`*data_g$frass_group_mass_dw)/(data_g$`15N_food`*data_g$food_consumed_collection_days_dw))
   
   # Computes the element egestion rate
   
-  data_g$C_egestion_rate_dw = data_g$C_egestion*data_g$group_egestion_rate_dw
-  data_g$N_egestion_rate_dw = data_g$N_egestion*data_g$group_egestion_rate_dw
-  data_g$P_egestion_rate_dw = data_g$P_egestion*data_g$group_egestion_rate_dw
-  data_g$S_egestion_rate_dw = data_g$S_egestion*data_g$group_egestion_rate_dw
-  data_g$Na_egestion_rate_dw = data_g$Na_egestion*data_g$group_egestion_rate_dw
-  data_g$Mg_egestion_rate_dw = data_g$Mg_egestion*data_g$group_egestion_rate_dw
-  data_g$K_egestion_rate_dw = data_g$K_egestion*data_g$group_egestion_rate_dw
-  data_g$Ca_egestion_rate_dw = data_g$Ca_egestion*data_g$group_egestion_rate_dw
-  data_g$`12C_egestion_rate_dw` = data_g$`12C_egestion`*data_g$group_egestion_rate_dw
-  data_g$`13C_egestion_rate_dw` = data_g$`13C_egestion`*data_g$group_egestion_rate_dw
-  data_g$`14N_egestion_rate_dw` = data_g$`14N_egestion`*data_g$group_egestion_rate_dw
-  data_g$`15N_egestion_rate_dw` = data_g$`15N_egestion`*data_g$group_egestion_rate_dw
+  data_g$C_egestion_rate_dw = data_g$C_frass*data_g$group_egestion_rate_dw
+  data_g$N_egestion_rate_dw = data_g$N_frass*data_g$group_egestion_rate_dw
+  data_g$P_egestion_rate_dw = data_g$P_frass*data_g$group_egestion_rate_dw
+  data_g$S_egestion_rate_dw = data_g$S_frass*data_g$group_egestion_rate_dw
+  data_g$Na_egestion_rate_dw = data_g$Na_frass*data_g$group_egestion_rate_dw
+  data_g$Mg_egestion_rate_dw = data_g$Mg_frass*data_g$group_egestion_rate_dw
+  data_g$K_egestion_rate_dw = data_g$K_frass*data_g$group_egestion_rate_dw
+  data_g$Ca_egestion_rate_dw = data_g$Ca_frass*data_g$group_egestion_rate_dw
+  data_g$`12C_egestion_rate_dw` = data_g$`12C_frass`*data_g$group_egestion_rate_dw
+  data_g$`13C_egestion_rate_dw` = data_g$`13C_frass`*data_g$group_egestion_rate_dw
+  data_g$`14N_egestion_rate_dw` = data_g$`14N_frass`*data_g$group_egestion_rate_dw
+  data_g$`15N_egestion_rate_dw` = data_g$`15N_frass`*data_g$group_egestion_rate_dw
   
   # Isotopic absorption efficiency ratios
 
@@ -159,12 +159,12 @@ combine_group_data <- function(data_i, data_g, data_fc) {
   data_g$`15N_tf` = data_g$`d15N_larvae`-data_g$food_d15N
   
   # Isotopic frass-food discrimination factor
-  data_g$`13C_ffdf` = data_g$`d13C_egestion`-data_g$food_d13C
-  data_g$`15N_ffdf` = data_g$`d15N_egestion`-data_g$food_d15N
+  data_g$`13C_ffdf` = data_g$`d13C_frass`-data_g$food_d13C
+  data_g$`15N_ffdf` = data_g$`d15N_frass`-data_g$food_d15N
   
   # Isotopic frass-larvae discrimination factor
-  data_g$`13C_fldf` = data_g$`d13C_egestion`-data_g$`d13C_larvae`
-  data_g$`15N_fldf` = data_g$`d15N_egestion`-data_g$`d15N_larvae`
+  data_g$`13C_fldf` = data_g$`d13C_frass`-data_g$`d13C_larvae`
+  data_g$`15N_fldf` = data_g$`d15N_frass`-data_g$`d15N_larvae`
   
   data_g = tidyr::pivot_longer(
     data_g,
@@ -189,16 +189,16 @@ combine_group_data <- function(data_i, data_g, data_fc) {
       "15N_ffdf",
       "13C_fldf",
       "15N_fldf",
-      "C_egestion",
-      "N_egestion",
-      "P_egestion",
-      "S_egestion",
-      "Na_egestion",
-      "Mg_egestion",
-      "K_egestion",
-      "Ca_egestion",
-      "d13C_egestion",
-      "d15N_egestion",
+      "C_frass",
+      "N_frass",
+      "P_frass",
+      "S_frass",
+      "Na_frass",
+      "Mg_frass",
+      "K_frass",
+      "Ca_frass",
+      "d13C_frass",
+      "d15N_frass",
       "C_larvae",
       "N_larvae",
       "P_larvae",
