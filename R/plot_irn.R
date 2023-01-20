@@ -666,8 +666,9 @@ plot_irn <- function(data_i, data_g, data_model) {
   for (j in 1:nb_matrices) {
     data_matrix = subset(data_g, data_g$matrix == matrices[j])
     for (i in 1:nb_elements) {
+      data_matrix_element = subset(data_matrix, data_matrix$element == elements[i])
       plots[[j]][[i]] = ggplot2::ggplot(
-        subset(data_matrix, data_matrix$element == elements[i]) ,
+        data_matrix_element ,
         aes(
           x = group_mass_specific_intake_rate_fw,
           y = elemental_value,
@@ -675,7 +676,10 @@ plot_irn <- function(data_i, data_g, data_model) {
           fill =  element
         )
       ) +
-        geom_point() +
+        geom_point() + ylim(NA,
+                            max(data_matrix_element$elemental_value, na.rm = T) + 0.2 * (
+                              max(data_matrix_element$elemental_value, na.rm = T) - min(data_matrix_element$elemental_value, na.rm = T)
+                            )) +
         geom_smooth(method = "loess", span = 1) +
         scale_color_manual(values = colours[i],
                            aesthetics = c("colour", "fill")) +
@@ -698,6 +702,13 @@ plot_irn <- function(data_i, data_g, data_model) {
                                                     ""), sep = " ") ,
           fill = "Element",
           color = "Element"
+        ) +
+        ggpubr::stat_cor(
+          aes(label = ..r.label..),
+          method = "spearman",
+          cor.coef.name = c("rho"),
+          label.x.npc = 0,
+          label.y.npc = 1
         )
       
       # Save each plot
@@ -716,7 +727,7 @@ plot_irn <- function(data_i, data_g, data_model) {
       
       if (y_axes[j] == "Absorbed") {
         plot = ggplot2::ggplot(
-          subset(data_matrix, data_matrix$element == elements[i]) ,
+          data_matrix_element ,
           aes(
             x = group_mass_specific_intake_rate_fw,
             y = elemental_value / absorption_efficiency_dw,
