@@ -14,6 +14,9 @@ plot_irn <- function(data_i, data_g, data_model) {
     )
   )
   
+  # The food provided daily is a factor rather than a numeric variable
+  data_i$food_provided_fw = as.factor(data_i$food_provided_fw)
+  
   ########## 0. Preliminary figures ##########
   
   
@@ -82,8 +85,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   )
   
   
-  # The food provided daily is a factor rather than a numeric variable
-  data_i$food_provided_fw = as.factor(data_i$food_provided_fw)
+  
   
   ########## 1. Mass balance figures ##########
   
@@ -444,10 +446,10 @@ plot_irn <- function(data_i, data_g, data_model) {
   # Options for the plots
   
   matrices = c("larvae", "frass", "absorption")
-  elements = c("C", "N", "P", "Na", "Mg", "S", "K", "Ca", "15N", "13C")
   nb_matrices = length(matrices)
-  nb_elements = length(elements)
-  colours = c(
+  elements_isotopes = c("C", "N", "P", "Na", "Mg", "S", "K", "Ca", "15N", "13C")
+  nb_elements_isotopes = length(elements_isotopes)
+  colours_elements_isotopes = c(
     "C" = "#808080",
     "N" = "#5A5ACA",
     "P" = "#EC9200",
@@ -458,7 +460,12 @@ plot_irn <- function(data_i, data_g, data_model) {
     "Ca" = "#DF4F4F",
     "15N" = "black",
     "13C" = "black"
-  ) # The colors used for elements, modified after Jmol
+  ) # The colors used for elements and isotopes, modified after Jmol
+  
+  elements = elements_isotopes[1:8]
+  nb_elements = length(elements)
+  colours_elements = colours_elements_isotopes[1:8]
+  units = c("%", "%", "ppm", "ppm", "ppm", "ppm", "ppm", "ppm")
   
   plots = vector("list", nb_matrices)
   names(plots) = matrices
@@ -467,9 +474,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   ###### Differences in elemental content between the matrices: food, larva, frass ######
   
-  elements = c("C", "N", "P", "Na", "Mg", "S", "K", "Ca")
-  nb_elements = length(elements)
-  units = c("%", "%", "ppm", "ppm", "ppm", "ppm", "ppm", "ppm")
+  
   
   plots_matrices = vector("list", nb_elements)
   
@@ -483,15 +488,15 @@ plot_irn <- function(data_i, data_g, data_model) {
     sd_food = sd(data_element[, food_col])
     
     # Larvae elemental content
-    average_larvae = mean(data_element[which(data_element$matrix == "larvae"),]$elemental_value, na.rm =
+    average_larvae = mean(data_element[which(data_element$matrix == "larvae"), ]$elemental_value, na.rm =
                             T)
-    sd_larvae = sd(data_element[which(data_element$matrix == "larvae"),]$elemental_value, na.rm =
+    sd_larvae = sd(data_element[which(data_element$matrix == "larvae"), ]$elemental_value, na.rm =
                      T)
     
     # Frass elemental content
-    average_frass = mean(data_element[which(data_element$matrix == "frass"),]$elemental_value, na.rm =
+    average_frass = mean(data_element[which(data_element$matrix == "frass"), ]$elemental_value, na.rm =
                            T)
-    sd_frass = sd(data_element[which(data_element$matrix == "frass"),]$elemental_value, na.rm =
+    sd_frass = sd(data_element[which(data_element$matrix == "frass"), ]$elemental_value, na.rm =
                     T)
     data <- data.frame(
       name = c("Food", "Larvae", "Frass"),
@@ -607,7 +612,6 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   # Set a new theme to produce the complete figures
   
-  
   ggplot2::theme_set(
     theme_classic() + theme(
       panel.grid.major = element_line(color = "gray95", linetype = 1),
@@ -618,16 +622,6 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   # Create the legend plot
   
-  legend_colours = c(
-    "C" = "#808080",
-    "N" = "#5A5ACA",
-    "P" = "#EC9200",
-    "Na" = "#403EFF",
-    "Mg" = "#5CC55C",
-    "S" = "#D69F09",
-    "K" = "#9B4BE1",
-    "Ca" = "#DF4F4F"
-  )
   legend = ggplot(
     data_g,
     aes(
@@ -641,7 +635,7 @@ plot_irn <- function(data_i, data_g, data_model) {
     lims(x = c(0, 0), y = c(0, 0)) +
     theme_void() +
     theme(legend.position = c(0.5, 0.5)) +
-    scale_color_manual(values = legend_colours,
+    scale_color_manual(values = colours_elements,
                        aesthetics = c("colour", "fill")) +
     guides(colour = guide_legend(override.aes = list(size = 8), ncol = 2))
   
@@ -681,7 +675,7 @@ plot_irn <- function(data_i, data_g, data_model) {
                               max(data_matrix_element$elemental_value, na.rm = T) - min(data_matrix_element$elemental_value, na.rm = T)
                             )) +
         geom_smooth(method = "loess", span = 1) +
-        scale_color_manual(values = colours[i],
+        scale_color_manual(values = colours_elements[i],
                            aesthetics = c("colour", "fill")) +
         labs(
           x = expression(paste(
@@ -737,7 +731,7 @@ plot_irn <- function(data_i, data_g, data_model) {
         ) +
           geom_point() +
           geom_smooth(method = "loess", span = 0.75) +
-          scale_color_manual(values = colours[i],
+          scale_color_manual(values = colours_elements[i],
                              aesthetics = c("colour", "fill")) +
           labs(
             x = expression(paste(
@@ -835,7 +829,7 @@ plot_irn <- function(data_i, data_g, data_model) {
                                                           day ^ {
                                                             -1
                                                           },
-                                                          ")", )
+                                                          ")",)
                                                   )),
                                                   top = "")
     
@@ -1165,12 +1159,6 @@ plot_irn <- function(data_i, data_g, data_model) {
     units = "in"
   )
   
-  
-  
-  
-  
-  
-  
   ##### Absorption efficiencies on a single plot  #####
   ggplot2::theme_set(
     theme_classic() + theme(
@@ -1181,7 +1169,10 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   data_abs = subset(data_g, data_g$matrix == "absorption")
   # Removing 15N and 13C
-  data_abs = data_abs[!(data_abs$element %in% c("15N", "14N", "13C", "12C")), ]
+  data_abs = data_abs[!(data_abs$element %in% c("15N", "14N", "13C", "12C")),]
+  
+  spearman_absorption = data_model$spearman[grep("absorption", data_model$spearman$variable), ]
+  
   
   p = ggplot2::ggplot(
     data_abs ,
@@ -1189,7 +1180,7 @@ plot_irn <- function(data_i, data_g, data_model) {
       x = group_mass_specific_intake_rate_fw,
       y = elemental_value * 100,
       colour = element,
-      group = element,
+      group = element ,
       fill =  element
     )
   ) +
@@ -1197,8 +1188,11 @@ plot_irn <- function(data_i, data_g, data_model) {
     geom_smooth(method = "loess",
                 se = FALSE,
                 span = 1) +
-    scale_color_manual(values = legend_colours,
-                       aesthetics = c("colour", "fill")) +
+    scale_color_manual(
+      values = colours_elements,
+      aesthetics = c("colour", "fill"),
+      labels = paste(sep = "", elements, ",   ", "\u03C1", "=", round(spearman_absorption$cor_coef, 2), ", p=", scales::scientific(spearman_absorption$p_value, digits=2))
+    ) +
     labs(
       x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)",
       y = "Absorption efficiency (%)" ,
@@ -1220,7 +1214,7 @@ plot_irn <- function(data_i, data_g, data_model) {
     device = cairo_pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
-    width = 3.5,
+    width = 7,
     height = 3,
     units = "in"
   )
@@ -1228,7 +1222,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   ##### Nutrient co variations in larvae and frass #####
   data_larvae = subset(data_g, data_g$matrix == "larvae")
   # Removing 15N and 13C
-  data_larvae = data_larvae[!(data_larvae$element %in% c("d15N", "d13C")), ]
+  data_larvae = data_larvae[!(data_larvae$element %in% c("d15N", "d13C")),]
   test = pivot_wider(data_larvae, names_from = element, values_from = elemental_value)
   pdf(here::here(
     "4_outputs",
@@ -1240,7 +1234,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   data_larvae = subset(data_g, data_g$matrix == "frass")
   # Removing 15N and 13C
-  data_larvae = data_larvae[!(data_larvae$element %in% c("d15N", "d13C")), ]
+  data_larvae = data_larvae[!(data_larvae$element %in% c("d15N", "d13C")),]
   test = pivot_wider(data_larvae, names_from = element, values_from = elemental_value)
   pdf(here::here(
     "4_outputs",
@@ -1267,7 +1261,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   # plot with default options:
   radarchart(
-    data_model[[1]],
+    data_model$radar[[1]],
     axistype = 1 ,
     #custom polygon
     pcol = colors_border[c(3, 1, 2)],
@@ -1314,7 +1308,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   # plot with default options:
   radarchart(
-    data_model[[2]],
+    data_model$radar[[2]],
     axistype = 1 ,
     #custom polygon
     pcol = colors_border[c(3, 1, 2)],
@@ -1424,7 +1418,7 @@ plot_irn <- function(data_i, data_g, data_model) {
                               " ", day ^ {
                                 -1
                               },
-                              ")", )), y = expression(paste(Delta, "13C"))) +
+                              ")",)), y = expression(paste(Delta, "13C"))) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
@@ -1448,7 +1442,7 @@ plot_irn <- function(data_i, data_g, data_model) {
                               " ", day ^ {
                                 -1
                               },
-                              ")", )), y = expression(paste(Delta, "15N"))) +
+                              ")",)), y = expression(paste(Delta, "15N"))) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(

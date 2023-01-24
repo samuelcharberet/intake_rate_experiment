@@ -373,6 +373,8 @@ model_irn <- function(data_i, data_g) {
   )
   
   list_radar = list(gam_larvae_values_radar, gam_frass_values_radar)
-  return(list_radar)
+  list_model = list(list_radar, spearman)
+  names(list_model) = c("radar", "spearman")
+  return(list_model)
   
 }
