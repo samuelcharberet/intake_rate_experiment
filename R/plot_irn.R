@@ -1171,7 +1171,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   # Removing 15N and 13C
   data_abs = data_abs[!(data_abs$element %in% c("15N", "14N", "13C", "12C")),]
   
-  spearman_absorption = data_model$spearman[grep("absorption", data_model$spearman$variable), ]
+  lm_absorption = data_model$lm_nutrient[grep("absorption .", data_model$lm_nutrient$variable), ]
   
   
   p = ggplot2::ggplot(
@@ -1191,7 +1191,7 @@ plot_irn <- function(data_i, data_g, data_model) {
     scale_color_manual(
       values = colours_elements,
       aesthetics = c("colour", "fill"),
-      labels = paste(sep = "", elements, ",   ", "\u03C1", "=", round(spearman_absorption$cor_coef, 2), ", p=", scales::scientific(spearman_absorption$p_value, digits=2))
+      labels = paste(sep = "", elements, ",   ", round(lm_absorption$slope,2), "x+",  round(lm_absorption$oao, 2), ", R²=", round(lm_absorption$r_squared, 2))
     ) +
     labs(
       x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)",

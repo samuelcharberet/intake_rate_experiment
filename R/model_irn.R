@@ -50,10 +50,13 @@ model_irn <- function(data_i, data_g) {
     difference = difference
   )
   
-  spearman = data.frame(
+  lm_nutrients = data.frame(
     variable = variable,
     cor_coef = rep(NA, nb_row),
-    p_value = rep(NA, nb_row)
+    p_value_cor = rep(NA, nb_row),
+    oao = rep(NA, nb_row),
+    slope = rep(NA, nb_row),
+    r_squared = rep(NA, nb_row)
   )
   
   # Creating a dataframe containing selected predicted values to generate a radar chart
@@ -92,8 +95,8 @@ model_irn <- function(data_i, data_g) {
       data = data_i,
       alternative = "two.sided"
     )
-    spearman$cor_coef[i] = sp$estimate
-    spearman$p_value[i] = sp$p.value
+    lm_nutrients$cor_coef[i] = sp$estimate
+    lm_nutrients$p_value_cor[i] = sp$p.value
     gam_mod = mgcv::gam(formula_gam, data = data_i) # a GAM model
     summary_gam = summary(gam_mod)
     if (gam_mod$converged == "TRUE") {
@@ -142,8 +145,12 @@ model_irn <- function(data_i, data_g) {
         exact = F,
         data = data_matrix_element
       )
-      spearman$cor_coef[k] = sp$estimate
-      spearman$p_value[k] = sp$p.value
+      lm_nutrients$cor_coef[k] = sp$estimate
+      lm_nutrients$p_value_cor[k] = sp$p.value
+      lm_nutrients$oao[k] = summary_lm$coefficients[1,1]
+      lm_nutrients$slope[k] = summary_lm$coefficients[2,1]
+      lm_nutrients$r_squared[k] = summary_lm$adj.r.squared
+      
       
       if (gam_mod$converged == "TRUE") {
         gam_nutrients$n[k] = summary_gam$n
@@ -184,10 +191,10 @@ model_irn <- function(data_i, data_g) {
   }
   
   
-  write.csv(spearman,
+  write.csv(lm_nutrients,
             file = here::here("4_outputs",
                               "1_statistical_results",
-                              "spearman.csv"))
+                              "lm_nutrients.csv"))
   
   
   write.csv(
@@ -373,8 +380,8 @@ model_irn <- function(data_i, data_g) {
   )
   
   list_radar = list(gam_larvae_values_radar, gam_frass_values_radar)
-  list_model = list(list_radar, spearman)
-  names(list_model) = c("radar", "spearman")
+  list_model = list(list_radar, lm_nutrients)
+  names(list_model) = c("radar", "lm_nutrients")
   return(list_model)
   
 }
