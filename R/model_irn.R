@@ -56,7 +56,9 @@ model_irn <- function(data_i, data_g) {
     p_value_cor = rep(NA, nb_row),
     oao = rep(NA, nb_row),
     slope = rep(NA, nb_row),
-    r_squared = rep(NA, nb_row)
+    r_squared = rep(NA, nb_row),
+    p_value_lm = rep(NA, nb_row),
+    signif_level = rep(NA, nb_row)
   )
   
   # Creating a dataframe containing selected predicted values to generate a radar chart
@@ -147,10 +149,24 @@ model_irn <- function(data_i, data_g) {
       )
       lm_nutrients$cor_coef[k] = sp$estimate
       lm_nutrients$p_value_cor[k] = sp$p.value
-      lm_nutrients$oao[k] = summary_lm$coefficients[1,1]
-      lm_nutrients$slope[k] = summary_lm$coefficients[2,1]
+      lm_nutrients$oao[k] = summary_lm$coefficients[1, 1]
+      lm_nutrients$slope[k] = summary_lm$coefficients[2, 1]
       lm_nutrients$r_squared[k] = summary_lm$adj.r.squared
+      lm_nutrients$p_value_lm[k] = summary_lm$coefficients[2, 4]
       
+      #Adding the significance level using the stars symbols
+      
+      if (summary_lm$coefficients[2, 4] < 0.001) {
+        lm_nutrients$signif_level[k] = "***"
+      }
+      else if (0.001 < summary_lm$coefficients[2, 4] &
+               summary_lm$coefficients[2, 4] < 0.01) {
+        lm_nutrients$signif_level[k] = "**"
+      }
+      else if (0.01 < summary_lm$coefficients[2, 4] &
+               summary_lm$coefficients[2, 4] < 0.05) {
+        lm_nutrients$signif_level[k] = "*"
+      }
       
       if (gam_mod$converged == "TRUE") {
         gam_nutrients$n[k] = summary_gam$n
@@ -191,10 +207,12 @@ model_irn <- function(data_i, data_g) {
   }
   
   
-  write.csv(lm_nutrients,
-            file = here::here("4_outputs",
-                              "1_statistical_results",
-                              "lm_nutrients.csv"))
+  write.csv(
+    lm_nutrients,
+    file = here::here("4_outputs",
+                      "1_statistical_results",
+                      "lm_nutrients.csv")
+  )
   
   
   write.csv(
