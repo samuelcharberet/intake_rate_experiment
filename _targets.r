@@ -13,6 +13,9 @@ library(ggtext)
 library(formula.tools)
 library(fmsb)
 library(ggsci)
+library(rms)
+library(tls)
+library(scam)
 
 # We source all functions contained in all files in the R directory
 lapply(list.files(here::here("R"), recursive = TRUE, full.names = T), source)

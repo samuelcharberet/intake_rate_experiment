@@ -10,7 +10,6 @@ combine_group_data <- function(data_i, data_g, data_fc) {
   data_g$food_consumed_collection_days_fw = NA
   data_g$groupmass_7th_instar_j0_fw = NA
   data_g$groupmass_7th_instar_j3_fw = NA
-  data_g$groupmass_7th_instar_j3_fw = NA
   data_g$seventh_instar_date = "2021-10-26 CEST"
   data_g$seventh_instar_date = as.POSIXct(data_g$seventh_instar_date)
   data_g$number_collection_days = NA

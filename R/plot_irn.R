@@ -105,9 +105,8 @@ plot_irn <- function(data_i, data_g, data_model) {
     geom_smooth(color = "steelblue3",
                 method = "loess",
                 span = 0.75) +
-    theme(#axis.title.x = element_markdown(),
-      axis.title.y = element_markdown(),
-      axis.title.x = element_blank()) +
+    theme(axis.title.x = element_markdown(),
+          axis.title.y = element_markdown()) +
     ggpubr::stat_cor(
       method = "spearman",
       cor.coef.name = c("rho"),
@@ -141,10 +140,9 @@ plot_irn <- function(data_i, data_g, data_model) {
     labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Absorption efficiency <br> (% dw)") +
     geom_smooth(color = "steelblue3",
                 method = "loess",
-                span = 0.75) +
-    theme(#axis.title.x = element_markdown(),
-      axis.title.x = element_blank(),
-      axis.title.y = element_markdown()) +
+                span = 1) +
+    theme(axis.title.x = element_markdown(),
+          axis.title.y = element_markdown()) +
     ggpubr::stat_cor(
       method = "spearman",
       cor.coef.name = c("rho"),
@@ -220,11 +218,11 @@ plot_irn <- function(data_i, data_g, data_model) {
     geom_point() +
     labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Growth efficiency <br> (% fw)") +
     geom_smooth(color = "steelblue3",
-                method = "loess",
-                span = 0.75) +
-    theme(#axis.title.x = element_markdown(),
-      axis.title.y = element_markdown(),
-      axis.title.x = element_blank()) +
+                method = "scam", 
+                formula = y ~ s(x, k = 5, bs = "cv"), 
+                se = T) +
+    theme(axis.title.x = element_markdown(),
+          axis.title.y = element_markdown()) +
     ggpubr::stat_cor(
       method = "spearman",
       cor.coef.name = c("rho"),
@@ -282,10 +280,9 @@ plot_irn <- function(data_i, data_g, data_model) {
          y = "Growth rate  <br> (mg<sub>body(fw)</sub> day<sup>-1</sup>)") +
     geom_smooth(color = "steelblue3",
                 method = "loess",
-                span = 0.75) +
-    theme(#axis.title.x = element_markdown(),
-      axis.title.x = element_blank(),
-      axis.title.y = element_markdown()) +
+                span = 1) +
+    theme(axis.title.x = element_markdown(),
+          axis.title.y = element_markdown()) +
     ggpubr::stat_cor(
       method = "spearman",
       cor.coef.name = c("rho"),
@@ -304,19 +301,32 @@ plot_irn <- function(data_i, data_g, data_model) {
     units = "in"
   )
   
-  ###### Growth efficiency in fresh weight according to growth rate  in fresh weight ######
+  ###### Growth efficiency in fresh weight according to specific growth rate in fresh weight ######
   
-  p <- ggplot2::ggplot(data_i,
-                       aes(x = growth_rate, y = growth_efficiency_fw * 100)) +
+  gefw_msgrfw <- ggplot2::ggplot(data_i,
+                                 aes(x = growth_rate / ((bodymass_last_collection_date + bodymass_7th_instar_j0_fw) / 2
+                                 ), y = growth_efficiency_fw * 100)) +
     geom_point() +
-    labs(x = "Growth rate (mg fw / day)", y = "Growth efficiency (% fw)") +
+    xlim(0, NA) +
+    ylim(NA, max(data_i$growth_efficiency_fw * 100) + 0.1 * (
+      max(data_i$growth_efficiency_fw * 100) - min(data_i$growth_efficiency_fw * 100)
+    )) +
     geom_smooth(color = "steelblue3",
-                method = "loess",
-                span = 0.75)
+                method = "scam", 
+                formula = y ~ s(x, k = 5, bs = "cv"), 
+                se = T) +
+    labs(x = "Specific growth rate  <br> (mg<sub>growth(fw)</sub> day<sup>-1</sup> mg<sub>body(fw)</sub><sup>-1</sup>)", y = "Growth efficiency (% fw)") +
+    theme(axis.title.x = element_markdown()) +
+    ggpubr::stat_cor(
+      method = "spearman",
+      cor.coef.name = c("rho"),
+      label.x.npc = 0.2,
+      label.y.npc = 1
+    )
   
   ggsave(
-    filename = "gefw_&_grfw.pdf",
-    plot = p,
+    filename = "gefw_&_msgrfw.pdf",
+    plot = gefw_msgrfw,
     device = cairo_pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
@@ -401,10 +411,10 @@ plot_irn <- function(data_i, data_g, data_model) {
   ###### Mass balance complete plot ######
   
   complete_plot = ggpubr::ggarrange(
-    ardw_msirfw,
-    aedw_msirfw,
     grfw_msirfw,
+    aedw_msirfw,
     gefw_msirfw,
+    gefw_msgrfw,
     ncol = 2,
     nrow = 2,
     labels = c("a.", "b.",
@@ -414,21 +424,21 @@ plot_irn <- function(data_i, data_g, data_model) {
     widths = c(1, 1)
   )
   
-  complete_plot = ggpubr::annotate_figure(complete_plot,
-                                          bottom = ggpubr::text_grob(expression(
-                                            paste("Intake rate",
-                                                  " (",
-                                                  mg[food(fw)],
-                                                  " ",
-                                                  mg[body (fw)] ^ {
-                                                    -1
-                                                  },
-                                                  " ",
-                                                  day ^ {
-                                                    -1
-                                                  },
-                                                  ")")
-                                          )))
+  # complete_plot = ggpubr::annotate_figure(complete_plot,
+  #                                         bottom = ggpubr::text_grob(expression(
+  #                                           paste("Intake rate",
+  #                                                 " (",
+  #                                                 mg[food(fw)],
+  #                                                 " ",
+  #                                                 mg[body (fw)] ^ {
+  #                                                   -1
+  #                                                 },
+  #                                                 " ",
+  #                                                 day ^ {
+  #                                                   -1
+  #                                                 },
+  #                                                 ")")
+  #                                         )))
   
   ggsave(
     filename = paste("total_mass_balance.pdf", sep = ""),
@@ -488,15 +498,15 @@ plot_irn <- function(data_i, data_g, data_model) {
     sd_food = sd(data_element[, food_col])
     
     # Larvae elemental content
-    average_larvae = mean(data_element[which(data_element$matrix == "larvae"),]$elemental_value, na.rm =
+    average_larvae = mean(data_element[which(data_element$matrix == "larvae"), ]$elemental_value, na.rm =
                             T)
-    sd_larvae = sd(data_element[which(data_element$matrix == "larvae"),]$elemental_value, na.rm =
+    sd_larvae = sd(data_element[which(data_element$matrix == "larvae"), ]$elemental_value, na.rm =
                      T)
     
     # Frass elemental content
-    average_frass = mean(data_element[which(data_element$matrix == "frass"),]$elemental_value, na.rm =
+    average_frass = mean(data_element[which(data_element$matrix == "frass"), ]$elemental_value, na.rm =
                            T)
-    sd_frass = sd(data_element[which(data_element$matrix == "frass"),]$elemental_value, na.rm =
+    sd_frass = sd(data_element[which(data_element$matrix == "frass"), ]$elemental_value, na.rm =
                     T)
     data <- data.frame(
       name = c("Food", "Larvae", "Frass"),
@@ -829,7 +839,7 @@ plot_irn <- function(data_i, data_g, data_model) {
                                                           day ^ {
                                                             -1
                                                           },
-                                                          ")", )
+                                                          ")",)
                                                   )),
                                                   top = "")
     
@@ -1169,9 +1179,9 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   data_abs = subset(data_g, data_g$matrix == "absorption")
   # Removing 15N and 13C
-  data_abs = data_abs[!(data_abs$element %in% c("15N", "14N", "13C", "12C")), ]
+  data_abs = data_abs[!(data_abs$element %in% c("15N", "14N", "13C", "12C")),]
   
-  lm_absorption = data_model$lm_nutrient[grep("absorption .", data_model$lm_nutrient$variable),]
+  lm_absorption = data_model$lm_nutrient[grep("absorption .", data_model$lm_nutrient$variable), ]
   
   
   p = ggplot2::ggplot(
@@ -1233,7 +1243,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   ##### Nutrient co variations in larvae and frass #####
   data_larvae = subset(data_g, data_g$matrix == "larvae")
   # Removing 15N and 13C
-  data_larvae = data_larvae[!(data_larvae$element %in% c("d15N", "d13C")), ]
+  data_larvae = data_larvae[!(data_larvae$element %in% c("d15N", "d13C")),]
   test = pivot_wider(data_larvae, names_from = element, values_from = elemental_value)
   pdf(here::here(
     "4_outputs",
@@ -1245,7 +1255,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   data_larvae = subset(data_g, data_g$matrix == "frass")
   # Removing 15N and 13C
-  data_larvae = data_larvae[!(data_larvae$element %in% c("d15N", "d13C")), ]
+  data_larvae = data_larvae[!(data_larvae$element %in% c("d15N", "d13C")),]
   test = pivot_wider(data_larvae, names_from = element, values_from = elemental_value)
   pdf(here::here(
     "4_outputs",
@@ -1429,7 +1439,7 @@ plot_irn <- function(data_i, data_g, data_model) {
                               " ", day ^ {
                                 -1
                               },
-                              ")", )), y = expression(paste(Delta, "13C"))) +
+                              ")",)), y = expression(paste(Delta, "13C"))) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
@@ -1453,7 +1463,7 @@ plot_irn <- function(data_i, data_g, data_model) {
                               " ", day ^ {
                                 -1
                               },
-                              ")", )), y = expression(paste(Delta, "15N"))) +
+                              ")",)), y = expression(paste(Delta, "15N"))) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
