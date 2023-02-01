@@ -315,8 +315,9 @@ plot_irn <- function(data_i, data_g, data_model) {
                 method = "scam", 
                 formula = y ~ s(x, k = 5, bs = "cv"), 
                 se = T) +
-    labs(x = "Specific growth rate  <br> (mg<sub>growth(fw)</sub> day<sup>-1</sup> mg<sub>body(fw)</sub><sup>-1</sup>)", y = "Growth efficiency (% fw)") +
-    theme(axis.title.x = element_markdown()) +
+    labs(x = "Specific growth rate  <br> (mg<sub>growth(fw)</sub> day<sup>-1</sup> mg<sub>body(fw)</sub><sup>-1</sup>)", y = "Growth efficiency <br> (% fw)") +
+    theme(axis.title.x = element_markdown(),
+          axis.title.y = element_markdown()) +
     ggpubr::stat_cor(
       method = "spearman",
       cor.coef.name = c("rho"),
