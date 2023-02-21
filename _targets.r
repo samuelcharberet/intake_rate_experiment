@@ -5,17 +5,25 @@
 #################################################
 # _targets.R file
 
+
 library(targets)
-library(ggplot2)
-library(tidyr)
-library(mgcv)
-library(ggtext)
-library(formula.tools)
-library(fmsb)
-library(ggsci)
-library(rms)
-library(tls)
-library(scam)
+library(here)
+
+tar_option_set(
+  packages = c(
+    "ggplot2",
+    "tidyr",
+    "mgcv",
+    "ggtext",
+    "formula.tools",
+    "fmsb",
+    "ggsci",
+    "rms",
+    "tls",
+    "scam",
+    "here"
+  )
+)
 
 # We source all functions contained in all files in the R directory
 lapply(list.files(here::here("R"), recursive = TRUE, full.names = T), source)
@@ -91,7 +99,11 @@ list(
   # Plot the data
   tar_target(
     plots_irn,
-    plot_irn(data_i = data_irn_indivuals_combined, data_g = data_irn_groups_combined, data_model = models_irn)
+    plot_irn(
+      data_i = data_irn_indivuals_combined,
+      data_g = data_irn_groups_combined,
+      data_model = models_irn
+    )
   ),
   
   # Generate report Rmd

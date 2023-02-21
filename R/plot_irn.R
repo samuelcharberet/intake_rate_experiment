@@ -89,6 +89,40 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   ########## 1. Mass balance figures ##########
   
+  ###### Absorption rate according to intake rate ######
+  
+  
+  ardw_msirfw <- ggplot2::ggplot(data_i,
+                                 aes(x = ingestion_rate_dw, y = absorption_rate_dw)) +
+    geom_point() +
+    xlim(0, NA) +
+    ylim(NA,
+         max(data_i$absorption_rate_dw) + 0.1 * (
+           max(data_i$absorption_rate_dw) - min(data_i$absorption_rate_dw)
+         )) +
+    labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Absorption rate <br> (mg<sub>(dw)</sub> day<sup>-1</sup>)") +
+    geom_smooth(color = "steelblue3",
+                method = "loess",
+                span = 0.75) +
+    theme(axis.title.x = element_markdown(),
+          axis.title.y = element_markdown()) +
+    ggpubr::stat_cor(
+      method = "spearman",
+      cor.coef.name = c("rho"),
+      label.x.npc = 0.2,
+      label.y.npc = 1
+    )
+  
+  ggsave(
+    filename = "ardw_&_msirfw.pdf",
+    plot = ardw_msirfw,
+    device = cairo_pdf,
+    path = here::here("4_outputs", "2_figures"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
   
   ###### Absorption rate according to mass specific intake rate ######
   
@@ -217,10 +251,12 @@ plot_irn <- function(data_i, data_g, data_model) {
     geom_hline(yintercept = 50, color = "black") +
     geom_point() +
     labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Growth efficiency <br> (% fw)") +
-    geom_smooth(color = "steelblue3",
-                method = "scam", 
-                formula = y ~ s(x, k = 5, bs = "cv"), 
-                se = T) +
+    geom_smooth(
+      color = "steelblue3",
+      method = "scam",
+      formula = y ~ s(x, k = 5, bs = "cv"),
+      se = T
+    ) +
     theme(axis.title.x = element_markdown(),
           axis.title.y = element_markdown()) +
     ggpubr::stat_cor(
@@ -311,10 +347,12 @@ plot_irn <- function(data_i, data_g, data_model) {
     ylim(NA, max(data_i$growth_efficiency_fw * 100) + 0.1 * (
       max(data_i$growth_efficiency_fw * 100) - min(data_i$growth_efficiency_fw * 100)
     )) +
-    geom_smooth(color = "steelblue3",
-                method = "scam", 
-                formula = y ~ s(x, k = 5, bs = "cv"), 
-                se = T) +
+    geom_smooth(
+      color = "steelblue3",
+      method = "scam",
+      formula = y ~ s(x, k = 5, bs = "cv"),
+      se = T
+    ) +
     labs(x = "Specific growth rate  <br> (mg<sub>growth(fw)</sub> day<sup>-1</sup> mg<sub>body(fw)</sub><sup>-1</sup>)", y = "Growth efficiency <br> (% fw)") +
     theme(axis.title.x = element_markdown(),
           axis.title.y = element_markdown()) +
@@ -485,8 +523,6 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   ###### Differences in elemental content between the matrices: food, larva, frass ######
   
-  
-  
   plots_matrices = vector("list", nb_elements)
   
   for (i in 1:nb_elements) {
@@ -499,15 +535,15 @@ plot_irn <- function(data_i, data_g, data_model) {
     sd_food = sd(data_element[, food_col])
     
     # Larvae elemental content
-    average_larvae = mean(data_element[which(data_element$matrix == "larvae"), ]$elemental_value, na.rm =
+    average_larvae = mean(data_element[which(data_element$matrix == "larvae"),]$elemental_value, na.rm =
                             T)
-    sd_larvae = sd(data_element[which(data_element$matrix == "larvae"), ]$elemental_value, na.rm =
+    sd_larvae = sd(data_element[which(data_element$matrix == "larvae"),]$elemental_value, na.rm =
                      T)
     
     # Frass elemental content
-    average_frass = mean(data_element[which(data_element$matrix == "frass"), ]$elemental_value, na.rm =
+    average_frass = mean(data_element[which(data_element$matrix == "frass"),]$elemental_value, na.rm =
                            T)
-    sd_frass = sd(data_element[which(data_element$matrix == "frass"), ]$elemental_value, na.rm =
+    sd_frass = sd(data_element[which(data_element$matrix == "frass"),]$elemental_value, na.rm =
                     T)
     data <- data.frame(
       name = c("Food", "Larvae", "Frass"),
@@ -840,7 +876,7 @@ plot_irn <- function(data_i, data_g, data_model) {
                                                           day ^ {
                                                             -1
                                                           },
-                                                          ")",)
+                                                          ")", )
                                                   )),
                                                   top = "")
     
@@ -1180,9 +1216,9 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   data_abs = subset(data_g, data_g$matrix == "absorption")
   # Removing 15N and 13C
-  data_abs = data_abs[!(data_abs$element %in% c("15N", "14N", "13C", "12C")),]
+  data_abs = data_abs[!(data_abs$element %in% c("15N", "14N", "13C", "12C")), ]
   
-  lm_absorption = data_model$lm_nutrient[grep("absorption .", data_model$lm_nutrient$variable), ]
+  lm_absorption = data_model$lm_nutrient[grep("absorption .", data_model$lm_nutrient$variable),]
   
   
   p = ggplot2::ggplot(
@@ -1244,7 +1280,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   ##### Nutrient co variations in larvae and frass #####
   data_larvae = subset(data_g, data_g$matrix == "larvae")
   # Removing 15N and 13C
-  data_larvae = data_larvae[!(data_larvae$element %in% c("d15N", "d13C")),]
+  data_larvae = data_larvae[!(data_larvae$element %in% c("d15N", "d13C")), ]
   test = pivot_wider(data_larvae, names_from = element, values_from = elemental_value)
   pdf(here::here(
     "4_outputs",
@@ -1256,7 +1292,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   data_larvae = subset(data_g, data_g$matrix == "frass")
   # Removing 15N and 13C
-  data_larvae = data_larvae[!(data_larvae$element %in% c("d15N", "d13C")),]
+  data_larvae = data_larvae[!(data_larvae$element %in% c("d15N", "d13C")), ]
   test = pivot_wider(data_larvae, names_from = element, values_from = elemental_value)
   pdf(here::here(
     "4_outputs",
@@ -1440,7 +1476,7 @@ plot_irn <- function(data_i, data_g, data_model) {
                               " ", day ^ {
                                 -1
                               },
-                              ")",)), y = expression(paste(Delta, "13C"))) +
+                              ")", )), y = expression(paste(Delta, "13C"))) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
@@ -1464,7 +1500,7 @@ plot_irn <- function(data_i, data_g, data_model) {
                               " ", day ^ {
                                 -1
                               },
-                              ")",)), y = expression(paste(Delta, "15N"))) +
+                              ")", )), y = expression(paste(Delta, "15N"))) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
