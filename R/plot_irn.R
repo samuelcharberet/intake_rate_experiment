@@ -92,15 +92,15 @@ plot_irn <- function(data_i, data_g, data_model) {
   ###### Absorption rate according to intake rate ######
   
   
-  ardw_msirfw <- ggplot2::ggplot(data_i,
-                                 aes(x = ingestion_rate_dw, y = absorption_rate_dw)) +
+  ardw_irfw <- ggplot2::ggplot(data_i,
+                               aes(x = ingestion_rate_dw, y = absorption_rate_dw)) +
     geom_point() +
     xlim(0, NA) +
     ylim(NA,
          max(data_i$absorption_rate_dw) + 0.1 * (
            max(data_i$absorption_rate_dw) - min(data_i$absorption_rate_dw)
          )) +
-    labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Absorption rate <br> (mg<sub>(dw)</sub> day<sup>-1</sup>)") +
+    labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> day<sup>-1</sup>)", y = "Absorption rate <br> (mg<sub>(dw)</sub> day<sup>-1</sup>)") +
     geom_smooth(color = "steelblue3",
                 method = "loess",
                 span = 0.75) +
@@ -111,11 +111,17 @@ plot_irn <- function(data_i, data_g, data_model) {
       cor.coef.name = c("rho"),
       label.x.npc = 0.2,
       label.y.npc = 1
+    ) +
+    geom_abline(
+      intercept = 0,
+      slope = 1,
+      linetype = "dashed",
+      color = "black"
     )
   
   ggsave(
-    filename = "ardw_&_msirfw.pdf",
-    plot = ardw_msirfw,
+    filename = "ardw_&_irfw.pdf",
+    plot = ardw_irfw,
     device = cairo_pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
