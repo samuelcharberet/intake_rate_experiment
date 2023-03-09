@@ -6,6 +6,47 @@
 #'
 #' @examples
 combine_individual_data <- function(data_fc, data_ic, data_i) {
+  ##### Day 0 larvae water content #####
+  
+  data_i$larvae_day0_wc = NA
+  
+  
+  for (i in 1:nrow(data_i)) {
+    seventh_instar_date = data_i$seventh_instar_date[i]
+    week_dates = c(
+      seventh_instar_date,
+      seventh_instar_date + 24 * 60 * 60,
+      seventh_instar_date + 2 * 24 * 60 * 60
+    )
+    week_indexes = which(data_ic$date == week_dates)
+    
+    # The day 0 larvae water content is equal to 1 - larval dry weight divided by larval fresh weight
+    data_i$larvae_day0_wc[i] =  mean(data_ic$indiv_water_content[week_indexes])
+  }
+  
+  ##### Growth rate #####
+  
+  # We compute the growth rate of the 7th instar before prepupation
+  
+  
+  data_i$growth_rate = (data_i$bodymass_last_collection_date - data_i$bodymass_7th_instar_j0_fw) / data_i$number_collection_days
+  data_i$growth_rate_unit = "mg_fw/day"
+  
+  # We compute the growth rate of the 7th instar before prepupation
+  
+  
+  data_i$specific_growth_rate = 2 * (data_i$bodymass_last_collection_date - data_i$bodymass_7th_instar_j0_fw) / (
+    data_i$number_collection_days * (
+      data_i$bodymass_last_collection_date + data_i$bodymass_7th_instar_j0_fw
+    )
+  )
+  data_i$specific_growth_rate_unit = "mg_fw/day/mg_fw"
+  
+  ##### Egested mass complete period #####
+  
+  data_i$frass_mass_dw = data_i$filled_tube_frass_mass - data_i$empty_tube_frass_mass
+  
+  
   ##### Food provided in dw #####
   
   data_i$food_provided_dw = NA
@@ -100,14 +141,22 @@ combine_individual_data <- function(data_fc, data_ic, data_i) {
     data_i$number_collection_days
   data_i$ingestion_rate_dw_unit = "mg dw / day"
   
+  data_i$mass_specific_ingestion_rate_dw = 2 * data_i$ingestion_rate_dw / (
+    data_i$bodymass_7th_instar_j3_dw
+    + data_i$bodymass_7th_instar_j0_fw * (1 - data_i$larvae_day0_wc)
+  )
+  
+  data_i$mass_specific_ingestion_rate_fw_unit = "mg fw / mg fw / day"
+  
   # In fresh weight
   
   data_i$ingestion_rate_fw = data_i$food_consumed_collection_days_fw /
     data_i$number_collection_days
   data_i$ingestion_rate_fw_unit = "mg fw / day"
   
-  data_i$mass_specific_ingestion_rate_fw = data_i$ingestion_rate_fw / ((data_i$bodymass_last_collection_date + data_i$bodymass_7th_instar_j0_fw) / 2
-  ) 
+  data_i$mass_specific_ingestion_rate_fw = data_i$ingestion_rate_fw / ((
+    data_i$bodymass_last_collection_date + data_i$bodymass_7th_instar_j0_fw
+  ) / 2)
   data_i$mass_specific_ingestion_rate_fw_unit = "mg fw / mg fw / day"
   
   ##### Egestion rate #####
@@ -139,23 +188,9 @@ combine_individual_data <- function(data_fc, data_ic, data_i) {
   
   data_i$egestion_ingestion_ratio_dw = data_i$frass_mass_dw / data_i$food_consumed_collection_days_dw
   
-  ##### Day 0 larvae water content #####
-  
-  data_i$larvae_day0_wc = NA
   
   
-  for (i in 1:nrow(data_i)) {
-    seventh_instar_date = data_i$seventh_instar_date[i]
-    week_dates = c(
-      seventh_instar_date,
-      seventh_instar_date + 24 * 60 * 60,
-      seventh_instar_date + 2 * 24 * 60 * 60
-    )
-    week_indexes = which(data_ic$date == week_dates)
-    
-    # The day 0 larvae water content is equal to 1 - larval dry weight divided by larval fresh weight
-    data_i$larvae_day0_wc[i] =  mean(data_ic$indiv_water_content[week_indexes])
-  }
+  
   
   ##### Food conversion efficiency #####
   # We compute the food conversion efficiency for the 7th instar period without the prepupation

@@ -78,7 +78,7 @@ load_individual_data = function(path) {
   # Individual 94 was a L6 instead of a L7 on the first day of the experiment
   data_irn_individuals = data_irn_individuals[-which(data_irn_individuals$individual_ID == "94"),]
   
-  # Individual 313 ate and grew very little
+  # Individual 313 seemed ill 
   data_irn_individuals = data_irn_individuals[-which(data_irn_individuals$individual_ID == "313"),]
   
   # During week 6, individuals faced dry conditions in the climate chamber and as a results lose weight
@@ -131,19 +131,6 @@ load_individual_data = function(path) {
     }
   }
   
-  ##### Growth rate #####
-  
-  # We compute the growth rate of the 7th instar before prepupation
-  
-  
-  data_irn_individuals$growth_rate = (
-    data_irn_individuals$bodymass_last_collection_date - data_irn_individuals$bodymass_7th_instar_j0_fw
-  ) / data_irn_individuals$number_collection_days
-  data_irn_individuals$growth_rate_unit = "mg_fw/day"
-  
-  ##### Egested mass complete period #####
-  
-  data_irn_individuals$frass_mass_dw = data_irn_individuals$filled_tube_frass_mass - data_irn_individuals$empty_tube_frass_mass
 
     return(data_irn_individuals)
 }

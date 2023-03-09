@@ -6,7 +6,7 @@ library(mgcv)
 library(ggtext)
 library(formula.tools)
 library(fmsb)
-
+library(scam)
 
 lapply(list.files(here::here("R"), recursive = TRUE, full.names = T), source)
 

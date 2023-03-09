@@ -169,8 +169,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   
   aedw_msirfw <- ggplot2::ggplot(data_i,
-                                 aes(x = ingestion_rate_fw / ((bodymass_last_collection_date + bodymass_7th_instar_j0_fw) / 2
-                                 ), y = absorption_efficiency_dw * 100)) +
+                                 aes(x = mass_specific_ingestion_rate_fw, y = absorption_efficiency_dw * 100)) +
     geom_point() +
     xlim(0, NA) +
     ylim(NA,
@@ -204,8 +203,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   ###### Growth efficiency in fresh weight according to the mass specific intake rate in fresh weight  ######
   
   p <- ggplot2::ggplot(data_i,
-                       aes(x = ingestion_rate_fw / ((bodymass_last_collection_date + bodymass_7th_instar_j0_fw) / 2
-                       ), y = growth_efficiency_fw * 100)) +
+                       aes(x = mass_specific_ingestion_rate_fw, y = growth_efficiency_fw * 100)) +
     xlim(0, NA) +
     labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Growth efficiency (% fw)") +
     geom_point(size = -1, color = "white") +
@@ -287,10 +285,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   
   p <- ggplot2::ggplot(data_i,
-                       aes(x = ingestion_rate_dw / ((
-                         bodymass_7th_instar_j3_dw + bodymass_7th_instar_j0_fw * (1 - larvae_day0_wc)
-                       ) / 2
-                       ), y = growth_efficiency_dw)) +
+                       aes(x = mass_specific_ingestion_rate_dw, y = growth_efficiency_dw)) +
     geom_point() +
     labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Growth efficiency (% dw)") +
     geom_smooth(color = "steelblue3",
@@ -312,8 +307,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   ###### Growth rate in fresh weight according to the mass specific intake rate  ######
   
   grfw_msirfw <- ggplot2::ggplot(data_i,
-                                 aes(x = ingestion_rate_fw / ((bodymass_last_collection_date + bodymass_7th_instar_j0_fw) / 2
-                                 ), y = growth_rate)) +
+                                 aes(x = mass_specific_ingestion_rate_fw, y = growth_rate)) +
     geom_point() +
     xlim(0, NA) +
     ylim(NA,
@@ -343,11 +337,44 @@ plot_irn <- function(data_i, data_g, data_model) {
     units = "in"
   )
   
+  ###### Mass-specific growth rate in fresh weight according to the mass specific intake rate  ######
+  
+  msgrfw_msirfw <- ggplot2::ggplot(data_i,
+                                 aes(x = mass_specific_ingestion_rate_fw, y = specific_growth_rate)) +
+    geom_point() +
+    xlim(0, NA) +
+    ylim(NA,
+         max(data_i$specific_growth_rate) + 0.1 * (max(data_i$specific_growth_rate) - min(data_i$specific_growth_rate))) +
+    labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)",
+         y = "Specific growth rate  <br> (mg<sub>growth(fw)</sub> day<sup>-1</sup> mg<sub>body(fw)</sub><sup>-1</sup>)") +
+    geom_smooth(color = "steelblue3",
+                method = "loess",
+                span = 1) +
+    theme(axis.title.x = element_markdown(),
+          axis.title.y = element_markdown()) +
+    ggpubr::stat_cor(
+      method = "spearman",
+      cor.coef.name = c("rho"),
+      label.x.npc = 0.2,
+      label.y.npc = 1
+    )
+  
+  ggsave(
+    filename = "msgrfw_&_msirfw.pdf",
+    plot = msgrfw_msirfw,
+    device = cairo_pdf,
+    path = here::here("4_outputs", "2_figures"),
+    scale = 1,
+    width = 3,
+    height = 2,
+    units = "in"
+  )
+  
+  
   ###### Growth efficiency in fresh weight according to specific growth rate in fresh weight ######
   
   gefw_msgrfw <- ggplot2::ggplot(data_i,
-                                 aes(x = growth_rate / ((bodymass_last_collection_date + bodymass_7th_instar_j0_fw) / 2
-                                 ), y = growth_efficiency_fw * 100)) +
+                                 aes(x = specific_growth_rate, y = growth_efficiency_fw * 100)) +
     geom_point() +
     xlim(0, NA) +
     ylim(NA, max(data_i$growth_efficiency_fw * 100) + 0.1 * (
@@ -431,8 +458,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   ###### Mass-specific egestion rate according to mass-specific ingestion rate  ######
   
   p <- ggplot2::ggplot(data_i,
-                       aes(x = ingestion_rate_fw / ((bodymass_7th_instar_j3_fw + bodymass_7th_instar_j0_fw) / 2
-                       ), y = egestion_rate_dw / ((bodymass_7th_instar_j3_fw + bodymass_7th_instar_j0_fw) / 2
+                       aes(x = mass_specific_ingestion_rate_fw, y = egestion_rate_dw / ((bodymass_7th_instar_j3_fw + bodymass_7th_instar_j0_fw) / 2
                        ))) +
     geom_point() +
     labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Egestion rate <br> (mg<sub>frass(dw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)") +
@@ -456,7 +482,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   ###### Mass balance complete plot ######
   
   complete_plot = ggpubr::ggarrange(
-    grfw_msirfw,
+    msgrfw_msirfw,
     aedw_msirfw,
     gefw_msirfw,
     gefw_msgrfw,
@@ -492,7 +518,7 @@ plot_irn <- function(data_i, data_g, data_model) {
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 7,
-    height = 5
+    height = 6.5
   )
   
   ########## 2. Chemical balance figures ##########
