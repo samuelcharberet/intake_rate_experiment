@@ -810,7 +810,7 @@ plot_irn <- function(data_i, data_g, data_model) {
         )
       ) +
         geom_point() + ylim(ylim_min, ylim_max) +
-        geom_smooth(method = "loess", span = 1) +
+        geom_smooth(method = "lm") +
         scale_color_manual(values = colours_elements[i],
                            aesthetics = c("colour", "fill")) +
         labs(
