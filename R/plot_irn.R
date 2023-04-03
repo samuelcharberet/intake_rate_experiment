@@ -790,6 +790,16 @@ plot_irn <- function(data_i, data_g, data_model) {
     data_matrix = subset(data_g, data_g$matrix == matrices[j])
     for (i in 1:nb_elements) {
       data_matrix_element = subset(data_matrix, data_matrix$element == elements[i])
+      if (matrices[j] == "absorption") {
+        ylim_min = 0
+        ylim_max = 120
+        data_matrix_element$elemental_value = 100 * data_matrix_element$elemental_value
+      } else {
+        ylim_min = NA
+        ylim_max = max(data_matrix_element$elemental_value, na.rm = T) + 0.2 * (
+          max(data_matrix_element$elemental_value, na.rm = T) - min(data_matrix_element$elemental_value, na.rm = T)
+        )
+      }
       plots[[j]][[i]] = ggplot2::ggplot(
         data_matrix_element ,
         aes(
@@ -799,10 +809,7 @@ plot_irn <- function(data_i, data_g, data_model) {
           fill =  element
         )
       ) +
-        geom_point() + ylim(NA,
-                            max(data_matrix_element$elemental_value, na.rm = T) + 0.2 * (
-                              max(data_matrix_element$elemental_value, na.rm = T) - min(data_matrix_element$elemental_value, na.rm = T)
-                            )) +
+        geom_point() + ylim(ylim_min, ylim_max) +
         geom_smooth(method = "loess", span = 1) +
         scale_color_manual(values = colours_elements[i],
                            aesthetics = c("colour", "fill")) +
@@ -1315,31 +1322,23 @@ plot_irn <- function(data_i, data_g, data_model) {
   ) +
     geom_point(alpha = 0.1) +
     geom_smooth(method = "lm",
-                se = FALSE,
-                span = 1) +
-    geom_smooth(
-      data = subset(data_abs, element == "C" | element == "N" | element == "P"),
-      method = "lm",
-      se = FALSE,
-      span = 1,
-      size = 2
-    )+
-  scale_color_manual(
-    values = colours_elements,
-    aesthetics = c("colour", "fill"),
-    labels = paste(
-      sep = "",
-      elements,
-      ",   ",
-      round(lm_absorption$slope, 2),
-      "x+",
-      round(lm_absorption$oao, 2),
-      ", R²=",
-      round(lm_absorption$r_squared, 2),
-      ", ",
-      lm_absorption$signif_level
-    )
-  ) +
+                se = FALSE) +
+    scale_color_manual(
+      values = c(colours_elements[1:3], scales::alpha(colours_elements[4:8], 0.5)),
+      aesthetics = c("colour", "fill"),
+      labels = paste(
+        sep = "",
+        elements,
+        ",   ",
+        round(lm_absorption$slope, 2),
+        "x+",
+        round(lm_absorption$oao, 2),
+        ", R²=",
+        round(lm_absorption$r_squared, 2),
+        ", ",
+        lm_absorption$signif_level
+      )
+    ) +
     labs(
       x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)",
       y = "Absorption efficiency (%)" ,
@@ -1369,7 +1368,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   ##### Nutrient co variations in larvae and frass #####
   data_larvae = subset(data_g, data_g$matrix == "larvae")
   # Removing 15N and 13C
-  data_larvae = data_larvae[!(data_larvae$element %in% c("d15N", "d13C")),]
+  data_larvae = data_larvae[!(data_larvae$element %in% c("d15N", "d13C")), ]
   test = pivot_wider(data_larvae, names_from = element, values_from = elemental_value)
   pdf(here::here(
     "4_outputs",
@@ -1381,7 +1380,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   data_larvae = subset(data_g, data_g$matrix == "frass")
   # Removing 15N and 13C
-  data_larvae = data_larvae[!(data_larvae$element %in% c("d15N", "d13C")),]
+  data_larvae = data_larvae[!(data_larvae$element %in% c("d15N", "d13C")), ]
   test = pivot_wider(data_larvae, names_from = element, values_from = elemental_value)
   pdf(here::here(
     "4_outputs",
@@ -1565,7 +1564,7 @@ plot_irn <- function(data_i, data_g, data_model) {
                               " ", day ^ {
                                 -1
                               },
-                              ")",)), y = expression(paste(Delta, "13C"))) +
+                              ")", )), y = expression(paste(Delta, "13C"))) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
@@ -1589,7 +1588,7 @@ plot_irn <- function(data_i, data_g, data_model) {
                               " ", day ^ {
                                 -1
                               },
-                              ")",)), y = expression(paste(Delta, "15N"))) +
+                              ")", )), y = expression(paste(Delta, "15N"))) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
