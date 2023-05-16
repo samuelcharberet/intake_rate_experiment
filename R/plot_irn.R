@@ -1004,8 +1004,8 @@ plot_irn <- function(data_i, data_g, data_model) {
   data_larvae = subset(data_g, data_g$matrix == "larvae")
   data_larvae = pivot_wider(data_larvae, names_from = element, values_from = elemental_value)
   data_larvae$C_N = data_larvae$C / data_larvae$N
-  data_larvae$N_P = data_larvae$N / data_larvae$P
-  data_larvae$C_P = data_larvae$C / data_larvae$P
+  data_larvae$N_P = data_larvae$N / (data_larvae$P / (10 ^ 4))
+  data_larvae$C_P = data_larvae$C / (data_larvae$P / (10 ^ 4))
   
   # Larvae CN
   
@@ -1055,14 +1055,10 @@ plot_irn <- function(data_i, data_g, data_model) {
       }, ")",
     )), y = "Larvae N/P") +
     geom_smooth(color = "steelblue3", method = lm) +
-    scale_y_continuous(
-      labels = function(x)
-        format(x, scientific = TRUE),
-      limits = c(NA,
-                 max(data_larvae$N_P, na.rm = T) + 0.1 * (
-                   max(data_larvae$N_P, na.rm = T) - min(data_larvae$N_P, na.rm = T)
-                 ))
-    ) +
+    scale_y_continuous(limits = c(NA,
+                                  max(data_larvae$N_P, na.rm = T) + 0.1 * (
+                                    max(data_larvae$N_P, na.rm = T) - min(data_larvae$N_P, na.rm = T)
+                                  ))) +
     ggpubr::stat_cor(
       method = "spearman",
       cor.coef.name = c("rho"),
@@ -1095,14 +1091,10 @@ plot_irn <- function(data_i, data_g, data_model) {
       }, ")",
     )), y = "Larvae C/P") +
     geom_smooth(color = "steelblue3", method = lm) +
-    scale_y_continuous(
-      labels = function(x)
-        format(x, scientific = TRUE),
-      limits = c(NA,
-                 max(data_larvae$C_P, na.rm = T) + 0.1 * (
-                   max(data_larvae$C_P, na.rm = T) - min(data_larvae$C_P, na.rm = T)
-                 ))
-    ) +
+    scale_y_continuous(limits = c(NA,
+                                  max(data_larvae$C_P, na.rm = T) + 0.1 * (
+                                    max(data_larvae$C_P, na.rm = T) - min(data_larvae$C_P, na.rm = T)
+                                  ))) +
     ggpubr::stat_cor(
       method = "spearman",
       cor.coef.name = c("rho"),
@@ -1128,8 +1120,8 @@ plot_irn <- function(data_i, data_g, data_model) {
                            names_from = element,
                            values_from = elemental_value)
   data_frass$C_N = data_frass$C / data_frass$N
-  data_frass$N_P = data_frass$N / data_frass$P
-  data_frass$C_P = data_frass$C / data_frass$P
+  data_frass$N_P = data_frass$N / (data_frass$P / (10 ^ 4))
+  data_frass$C_P = data_frass$C / (data_frass$P / (10 ^ 4))
   
   
   # CN_frass = f(msir)
@@ -1178,14 +1170,10 @@ plot_irn <- function(data_i, data_g, data_model) {
       }, ")",
     )), y = "Frass N/P") +
     geom_smooth(color = "steelblue3", method = lm) +
-    scale_y_continuous(
-      labels = function(x)
-        format(x, scientific = TRUE),
-      limits = c(NA,
-                 max(data_frass$N_P, na.rm = T) + 0.1 * (
-                   max(data_frass$N_P, na.rm = T) - min(data_frass$N_P, na.rm = T)
-                 ))
-    ) +
+    scale_y_continuous(limits = c(NA,
+                                  max(data_frass$N_P, na.rm = T) + 0.1 * (
+                                    max(data_frass$N_P, na.rm = T) - min(data_frass$N_P, na.rm = T)
+                                  ))) +
     ggpubr::stat_cor(
       method = "spearman",
       cor.coef.name = c("rho"),
@@ -1217,14 +1205,10 @@ plot_irn <- function(data_i, data_g, data_model) {
       }, ")",
     )), y = "Frass C/P") +
     geom_smooth(color = "steelblue3", method = lm) +
-    scale_y_continuous(
-      labels = function(x)
-        format(x, scientific = TRUE),
-      limits = c(NA,
-                 max(data_frass$C_P, na.rm = T) + 0.1 * (
-                   max(data_frass$C_P, na.rm = T) - min(data_frass$C_P, na.rm = T)
-                 ))
-    ) +
+    scale_y_continuous(limits = c(NA,
+                                  max(data_frass$C_P, na.rm = T) + 0.1 * (
+                                    max(data_frass$C_P, na.rm = T) - min(data_frass$C_P, na.rm = T)
+                                  ))) +
     ggpubr::stat_cor(
       method = "spearman",
       cor.coef.name = c("rho"),
