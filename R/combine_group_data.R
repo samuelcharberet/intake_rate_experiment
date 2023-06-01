@@ -146,6 +146,21 @@ combine_group_data <- function(data_i, data_g, data_fc) {
   data_g$`14N_egestion_rate_dw` = data_g$`14N_frass`*data_g$group_egestion_rate_dw
   data_g$`15N_egestion_rate_dw` = data_g$`15N_frass`*data_g$group_egestion_rate_dw
   
+  # Computes the element retention time 
+  
+  data_g$C_retention_time = data_g$C_larvae/data_g$C_egestion_rate_dw
+  data_g$N_retention_time = data_g$N_larvae/data_g$N_egestion_rate_dw
+  data_g$P_retention_time = data_g$P_larvae/data_g$P_egestion_rate_dw
+  data_g$S_retention_time = data_g$S_larvae/data_g$S_egestion_rate_dw
+  data_g$Na_retention_time = data_g$Na_larvae/data_g$Na_egestion_rate_dw
+  data_g$Mg_retention_time = data_g$Mg_larvae/data_g$Mg_egestion_rate_dw
+  data_g$K_retention_time = data_g$K_larvae/data_g$K_egestion_rate_dw
+  data_g$Ca_retention_time = data_g$Ca_larvae/data_g$Ca_egestion_rate_dw
+  data_g$`12C_retention_time` = data_g$`12C_larvae`/data_g$`12C_egestion_rate_dw`
+  data_g$`13C_retention_time` = data_g$`13C_larvae`/data_g$`13C_egestion_rate_dw`
+  data_g$`14N_retention_time` = data_g$`14N_larvae`/data_g$`14N_egestion_rate_dw`
+  data_g$`15N_retention_time` = data_g$`15N_larvae`/data_g$`15N_egestion_rate_dw`
+  
   # Isotopic absorption efficiency ratios
 
   

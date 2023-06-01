@@ -1332,7 +1332,74 @@ plot_irn <- function(data_i, data_g, data_model) {
     theme(legend.position = "right",
           axis.title.x = element_markdown())
   
-  # Save each plot
+  # Save the plot
+  ggsave(
+    filename = paste(
+      "absorption_efficiencies",
+      "layered",
+      "dw_&_msirfw.pdf",
+      sep = ""
+    ),
+    plot = p,
+    device = cairo_pdf,
+    path = here::here("4_outputs", "2_figures"),
+    scale = 1,
+    width = 7,
+    height = 3,
+    units = "in"
+  )
+  ##### Retention time  #####
+  
+  ggplot2::theme_set(
+    theme_classic() + theme(
+      legend.position = 'right',
+      panel.grid.major = element_line(color = "gray95", linetype = 1)
+    )
+  )
+  
+  # Removing 15N and 13C
+  
+  data_g = data_g[!(data_g$element %in% c("15N", "14N", "13C", "12C")), ]
+  
+  p = ggplot2::ggplot(
+    data_g ,
+    aes(
+      x = group_mass_specific_intake_rate_fw,
+      y = retention_time,
+      colour = element,
+      group = element ,
+      fill =  element
+    )
+  ) +
+    geom_point(alpha = 0.1) +
+    geom_smooth(method = "lm",
+                se = FALSE) +
+    scale_color_manual(
+      values = c(colours_elements[1:3], scales::alpha(colours_elements[4:8], 0.5)),
+      aesthetics = c("colour", "fill"),
+      labels = paste(
+        sep = "",
+        elements,
+        ",   ",
+        round(lm_absorption$slope, 2),
+        "x+",
+        round(lm_absorption$oao, 2),
+        ", R²=",
+        round(lm_absorption$r_squared, 2),
+        ", ",
+        lm_absorption$signif_level
+      )
+    ) +
+    labs(
+      x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)",
+      y = "Absorption efficiency (%)" ,
+      fill = "Element",
+      color = "Element"
+    ) +
+    theme(legend.position = "right",
+          axis.title.x = element_markdown())
+  
+  # Save the plot
   ggsave(
     filename = paste(
       "absorption_efficiencies",
