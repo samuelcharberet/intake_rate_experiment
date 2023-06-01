@@ -117,7 +117,7 @@ model_irn <- function(data_i, data_g) {
   ###### 2. Chemical balance ######
   
   for (i in 1:nb_matrix_ch) {
-    data_matrix = subset(data_g, data_g$matrix == matrix_list_ch[i]) # selecting only element i
+    data_matrix = subset(data_g, data_g$variable == matrix_list_ch[i]) # selecting only element i
     for (j in 1:nb_elements) {
       data_matrix_element = subset(data_matrix, data_matrix$element == elements_list[j]) # selecting only matrix j
       
@@ -295,7 +295,7 @@ model_irn <- function(data_i, data_g) {
   k = 0
   
   for (i in 1:nb_dependant_variables) {
-    data_variable = subset(data_g, data_g$matrix == dependant_variables_list[i])
+    data_variable = subset(data_g, data_g$variable == dependant_variables_list[i])
     for (j in 1:nb_isotopes) {
       data_variable_isotope = subset(
         data_variable,

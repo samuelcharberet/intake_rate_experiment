@@ -576,8 +576,8 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   # Options for the plots
   
-  matrices = c("larvae", "frass", "absorption")
-  nb_matrices = length(matrices)
+  variables = c("larvae", "frass", "absorption", "retention_time")
+  nb_variables = length(variables)
   elements_isotopes = c("C", "N", "P", "Na", "Mg", "S", "K", "Ca", "15N", "13C")
   nb_elements_isotopes = length(elements_isotopes)
   colours_elements_isotopes = c(
@@ -598,12 +598,12 @@ plot_irn <- function(data_i, data_g, data_model) {
   colours_elements = colours_elements_isotopes[1:8]
   units = c("%", "%", "ppm", "ppm", "ppm", "ppm", "ppm", "ppm")
   
-  plots = vector("list", nb_matrices)
-  names(plots) = matrices
+  plots = vector("list", nb_variables)
+  names(plots) = variables
   
   
   
-  ###### Differences in elemental content between the matrices: food, larva, frass ######
+  ###### Differences in elemental content between the variables: food, larva, frass ######
   
   plots_matrices = vector("list", nb_elements)
   
@@ -617,15 +617,15 @@ plot_irn <- function(data_i, data_g, data_model) {
     sd_food = sd(data_element[, food_col])
     
     # Larvae elemental content
-    average_larvae = mean(data_element[which(data_element$matrix == "larvae"),]$elemental_value, na.rm =
+    average_larvae = mean(data_element[which(data_element$variable == "larvae"), ]$elemental_value, na.rm =
                             T)
-    sd_larvae = sd(data_element[which(data_element$matrix == "larvae"),]$elemental_value, na.rm =
+    sd_larvae = sd(data_element[which(data_element$variable == "larvae"), ]$elemental_value, na.rm =
                      T)
     
     # Frass elemental content
-    average_frass = mean(data_element[which(data_element$matrix == "frass"),]$elemental_value, na.rm =
+    average_frass = mean(data_element[which(data_element$variable == "frass"), ]$elemental_value, na.rm =
                            T)
-    sd_frass = sd(data_element[which(data_element$matrix == "frass"),]$elemental_value, na.rm =
+    sd_frass = sd(data_element[which(data_element$variable == "frass"), ]$elemental_value, na.rm =
                     T)
     data <- data.frame(
       name = c("Food", "Larvae", "Frass"),
@@ -713,7 +713,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   ##### Growth rate hypothesis #####
   # We check whether the growth rate in positively related to P body content
   # according to the growth rate hypothesis of Elser
-  data_larvae = subset(data_g, data_g$matrix == "larvae")
+  data_larvae = subset(data_g, data_g$variable == "larvae")
   data_larvae = pivot_wider(data_larvae, names_from = element, values_from = elemental_value)
   
   p <- ggplot2::ggplot(data_larvae,
@@ -775,7 +775,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   # Creating the list of plots for the other elements
   
-  for (i in 1:nb_matrices) {
+  for (i in 1:nb_variables) {
     plots[[i]] = vector("list", nb_elements)
     names(plots[[i]]) = elements
   }
@@ -786,11 +786,11 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   
   
-  for (j in 1:nb_matrices) {
-    data_matrix = subset(data_g, data_g$matrix == matrices[j])
+  for (j in 1:nb_variables) {
+    data_matrix = subset(data_g, data_g$variable == variables[j])
     for (i in 1:nb_elements) {
       data_matrix_element = subset(data_matrix, data_matrix$element == elements[i])
-      if (matrices[j] == "absorption") {
+      if (variables[j] == "absorption") {
         ylim_min = 0
         ylim_max = 120
         data_matrix_element$elemental_value = 100 * data_matrix_element$elemental_value
@@ -843,7 +843,7 @@ plot_irn <- function(data_i, data_g, data_model) {
       
       # Save each plot
       ggsave(
-        filename = paste(matrices[j], elements[i], "dw_&_msirfw.pdf", sep = ""),
+        filename = paste(variables[j], elements[i], "dw_&_msirfw.pdf", sep = ""),
         plot = plots[[j]][[i]],
         device = cairo_pdf,
         path = here::here("4_outputs", "2_figures"),
@@ -893,7 +893,7 @@ plot_irn <- function(data_i, data_g, data_model) {
         ggsave(
           filename = paste(
             "relative",
-            matrices[j],
+            variables[j],
             elements[i],
             "dw_&_msirfw.pdf",
             sep = ""
@@ -913,9 +913,9 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   ######  The complete plot  ######
   
-  complete_plots = vector("list", nb_matrices)
+  complete_plots = vector("list", nb_variables)
   
-  for (i in 1:nb_matrices) {
+  for (i in 1:nb_variables) {
     complete_plots[[i]] = ggpubr::ggarrange(
       plots[[i]][[1]],
       plots[[i]][[2]],
@@ -965,7 +965,7 @@ plot_irn <- function(data_i, data_g, data_model) {
                                                           day ^ {
                                                             -1
                                                           },
-                                                          ")", )
+                                                          ")",)
                                                   )),
                                                   top = "")
     
@@ -1001,7 +1001,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   # For the larvae
   
-  data_larvae = subset(data_g, data_g$matrix == "larvae")
+  data_larvae = subset(data_g, data_g$variable == "larvae")
   data_larvae = pivot_wider(data_larvae, names_from = element, values_from = elemental_value)
   data_larvae$C_N = data_larvae$C / data_larvae$N
   data_larvae$N_P = data_larvae$N / (data_larvae$P / (10 ^ 4))
@@ -1115,7 +1115,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   # For frass
   
-  data_frass = subset(data_g, data_g$matrix == "frass")
+  data_frass = subset(data_g, data_g$variable == "frass")
   data_frass = pivot_wider(data_frass,
                            names_from = element,
                            values_from = elemental_value)
@@ -1287,11 +1287,11 @@ plot_irn <- function(data_i, data_g, data_model) {
     )
   )
   
-  data_abs = subset(data_g, data_g$matrix == "absorption")
+  data_abs = subset(data_g, data_g$variable == "absorption")
   # Removing 15N and 13C
-  data_abs = data_abs[!(data_abs$element %in% c("15N", "14N", "13C", "12C")), ]
+  data_abs = data_abs[!(data_abs$element %in% c("15N", "14N", "13C", "12C")),]
   
-  lm_absorption = data_model$lm_nutrient[grep("absorption .", data_model$lm_nutrient$variable),]
+  lm_absorption = data_model$lm_nutrient[grep("absorption .", data_model$lm_nutrient$variable), ]
   
   
   p = ggplot2::ggplot(
@@ -1358,41 +1358,30 @@ plot_irn <- function(data_i, data_g, data_model) {
   )
   
   # Removing 15N and 13C
+  data_rt = subset(data_g, data_g$variable == "retention")
   
-  data_g = data_g[!(data_g$element %in% c("15N", "14N", "13C", "12C")), ]
+  data_rt = data_rt[!(data_rt$element %in% c("15N", "14N", "13C", "12C")),]
   
   p = ggplot2::ggplot(
-    data_g ,
+    data_rt ,
     aes(
       x = group_mass_specific_intake_rate_fw,
-      y = retention_time,
+      y = elemental_value,
       colour = element,
       group = element ,
       fill =  element
     )
   ) +
     geom_point(alpha = 0.1) +
-    geom_smooth(method = "lm",
+    geom_smooth(method = "loess",
                 se = FALSE) +
     scale_color_manual(
       values = c(colours_elements[1:3], scales::alpha(colours_elements[4:8], 0.5)),
-      aesthetics = c("colour", "fill"),
-      labels = paste(
-        sep = "",
-        elements,
-        ",   ",
-        round(lm_absorption$slope, 2),
-        "x+",
-        round(lm_absorption$oao, 2),
-        ", R²=",
-        round(lm_absorption$r_squared, 2),
-        ", ",
-        lm_absorption$signif_level
-      )
+      aesthetics = c("colour", "fill")
     ) +
     labs(
       x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)",
-      y = "Absorption efficiency (%)" ,
+      y = "Retention time (days)" ,
       fill = "Element",
       color = "Element"
     ) +
@@ -1402,7 +1391,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   # Save the plot
   ggsave(
     filename = paste(
-      "absorption_efficiencies",
+      "retention_times",
       "layered",
       "dw_&_msirfw.pdf",
       sep = ""
@@ -1417,9 +1406,9 @@ plot_irn <- function(data_i, data_g, data_model) {
   )
   
   ##### Nutrient co variations in larvae and frass #####
-  data_larvae = subset(data_g, data_g$matrix == "larvae")
+  data_larvae = subset(data_g, data_g$variable == "larvae")
   # Removing 15N and 13C
-  data_larvae = data_larvae[!(data_larvae$element %in% c("d15N", "d13C")),]
+  data_larvae = data_larvae[!(data_larvae$element %in% c("d15N", "d13C")), ]
   test = pivot_wider(data_larvae, names_from = element, values_from = elemental_value)
   pdf(here::here(
     "4_outputs",
@@ -1429,9 +1418,9 @@ plot_irn <- function(data_i, data_g, data_model) {
   plot(test[, 55:62])
   dev.off()
   
-  data_larvae = subset(data_g, data_g$matrix == "frass")
+  data_larvae = subset(data_g, data_g$variable == "frass")
   # Removing 15N and 13C
-  data_larvae = data_larvae[!(data_larvae$element %in% c("d15N", "d13C")),]
+  data_larvae = data_larvae[!(data_larvae$element %in% c("d15N", "d13C")), ]
   test = pivot_wider(data_larvae, names_from = element, values_from = elemental_value)
   pdf(here::here(
     "4_outputs",
@@ -1550,7 +1539,7 @@ plot_irn <- function(data_i, data_g, data_model) {
     )
   )
   
-  data_tf = subset(data_g, data_g$matrix == "tf")
+  data_tf = subset(data_g, data_g$variable == "tf")
   data_tf = pivot_wider(data_tf,
                         names_from = element,
                         values_from = elemental_value)
@@ -1615,7 +1604,7 @@ plot_irn <- function(data_i, data_g, data_model) {
                               " ", day ^ {
                                 -1
                               },
-                              ")",)), y = expression(paste(Delta, "13C"))) +
+                              ")", )), y = expression(paste(Delta, "13C"))) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
@@ -1639,7 +1628,7 @@ plot_irn <- function(data_i, data_g, data_model) {
                               " ", day ^ {
                                 -1
                               },
-                              ")",)), y = expression(paste(Delta, "15N"))) +
+                              ")", )), y = expression(paste(Delta, "15N"))) +
     geom_smooth(color = "steelblue3",  method = "lm")
   
   ggsave(
@@ -1733,7 +1722,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   ######  Isotopic discrimination factor between frass and food (FFDF) according to MSIR ######
   
-  data_ffdf = subset(data_g, data_g$matrix == "ffdf")
+  data_ffdf = subset(data_g, data_g$variable == "ffdf")
   data_ffdf = pivot_wider(data_ffdf,
                           names_from = element,
                           values_from = elemental_value)
@@ -1793,7 +1782,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   ######  Isotopic discrimination factor between frass and food (FFDF) according to absorption efficiency ######
   
-  data_ffdf = subset(data_g, data_g$matrix == "ffdf")
+  data_ffdf = subset(data_g, data_g$variable == "ffdf")
   data_ffdf = pivot_wider(data_ffdf,
                           names_from = element,
                           values_from = elemental_value)
@@ -1837,7 +1826,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   ######  Isotopic discrimination factor between frass and larvae (FLDF) according to MSIR ######
   
-  data_fldf = subset(data_g, data_g$matrix == "fldf")
+  data_fldf = subset(data_g, data_g$variable == "fldf")
   data_fldf = pivot_wider(data_fldf,
                           names_from = element,
                           values_from = elemental_value)
@@ -1897,7 +1886,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   ######  Isotopic absorption efficiency ratio (IAER) according to MSIR ######
   
-  data_aer = subset(data_g, data_g$matrix == "iaer")
+  data_aer = subset(data_g, data_g$variable == "iaer")
   data_aer = pivot_wider(data_aer,
                          names_from = element,
                          values_from = elemental_value)

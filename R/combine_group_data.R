@@ -195,6 +195,18 @@ combine_group_data <- function(data_i, data_g, data_fc) {
       "13C_absorption_efficiency_dw",
       "14N_absorption_efficiency_dw",
       "15N_absorption_efficiency_dw",
+      "C_retention_time",
+      "N_retention_time",
+      "P_retention_time",
+      "S_retention_time",
+      "Na_retention_time",
+      "Mg_retention_time",
+      "K_retention_time",
+      "Ca_retention_time",
+      "12C_retention_time",
+      "13C_retention_time",
+      "14N_retention_time",
+      "15N_retention_time",
       "C_iaer",
       "N_iaer",
       "13C_tf",
@@ -224,11 +236,11 @@ combine_group_data <- function(data_i, data_g, data_fc) {
       "d13C_larvae",
       "d15N_larvae"
     ),
-    names_to = "element_matrix",
+    names_to = "element_variable",
     values_to = "elemental_value"
   )
   
-  data_g = tidyr::separate(data_g, "element_matrix", c("element", "matrix"), sep =
+  data_g = tidyr::separate(data_g, "element_variable", c("element", "variable"), sep =
                              "_")
 
   return(data_g)
