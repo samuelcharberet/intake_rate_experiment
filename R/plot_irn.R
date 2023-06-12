@@ -213,12 +213,12 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   
   aedw_msirfw <- ggplot2::ggplot(data_i,
-                                 aes(x = mass_specific_ingestion_rate_fw, y = absorption_efficiency_dw * 100)) +
+                                 aes(x = mass_specific_ingestion_rate_fw, y = absorption_efficiency_dw)) +
     geom_point() +
     xlim(0, NA) +
     ylim(NA,
-         max(data_i$absorption_efficiency_dw * 100) + 0.1 * (
-           max(data_i$absorption_efficiency_dw * 100) - min(data_i$absorption_efficiency_dw * 100)
+         max(data_i$absorption_efficiency_dw) + 0.1 * (
+           max(data_i$absorption_efficiency_dw) - min(data_i$absorption_efficiency_dw)
          )) +
     labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Absorption efficiency <br> (% dw)") +
     geom_smooth(color = "steelblue3",
@@ -247,7 +247,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   ###### Growth efficiency in fresh weight according to the mass specific intake rate in fresh weight  ######
   
   p <- ggplot2::ggplot(data_i,
-                       aes(x = mass_specific_ingestion_rate_fw, y = growth_efficiency_fw * 100)) +
+                       aes(x = mass_specific_ingestion_rate_fw, y = growth_efficiency_fw)) +
     xlim(0, NA) +
     labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Growth efficiency (% fw)") +
     geom_point(size = -1, color = "white") +
@@ -270,7 +270,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   p <- ggplot2::ggplot(data_i,
                        aes(x = ingestion_rate_fw / ((bodymass_last_collection_date + bodymass_7th_instar_j0_fw) / 2
-                       ), y = growth_efficiency_fw * 100)) +
+                       ), y = growth_efficiency_fw)) +
     labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Growth efficiency (% fw)") +
     geom_point(size = -1, color = "white") +
     geom_hline(yintercept = 50, color = "steelblue3") +
@@ -289,11 +289,11 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   gefw_msirfw <- ggplot2::ggplot(data_i,
                                  aes(x = ingestion_rate_fw / ((bodymass_last_collection_date + bodymass_7th_instar_j0_fw) / 2
-                                 ), y = growth_efficiency_fw * 100)) +
+                                 ), y = growth_efficiency_fw)) +
     xlim(0, NA) +
     ylim(NA,
-         max(data_i$growth_efficiency_fw * 100) + 0.1 * (
-           max(data_i$growth_efficiency_fw * 100) - min(data_i$growth_efficiency_fw * 100)
+         max(data_i$growth_efficiency_fw) + 0.1 * (
+           max(data_i$growth_efficiency_fw) - min(data_i$growth_efficiency_fw)
          )) +
     geom_vline(xintercept = 1,
                color = "black",
@@ -424,11 +424,11 @@ plot_irn <- function(data_i, data_g, data_model) {
   ###### Growth efficiency in fresh weight according to specific growth rate in fresh weight ######
   
   gefw_msgrfw <- ggplot2::ggplot(data_i,
-                                 aes(x = specific_growth_rate, y = growth_efficiency_fw * 100)) +
+                                 aes(x = specific_growth_rate, y = growth_efficiency_fw)) +
     geom_point() +
     xlim(0, NA) +
-    ylim(NA, max(data_i$growth_efficiency_fw * 100) + 0.1 * (
-      max(data_i$growth_efficiency_fw * 100) - min(data_i$growth_efficiency_fw * 100)
+    ylim(NA, max(data_i$growth_efficiency_fw) + 0.1 * (
+      max(data_i$growth_efficiency_fw) - min(data_i$growth_efficiency_fw)
     )) +
     geom_smooth(
       color = "steelblue3",
@@ -487,7 +487,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   ###### Growth efficiency according to absorption efficiency  ######
   
   p <- ggplot2::ggplot(data_i,
-                       aes(x = absorption_efficiency_dw * 100, y = growth_efficiency_dw)) +
+                       aes(x = absorption_efficiency_dw , y = growth_efficiency_dw)) +
     geom_point() +
     labs(x = "Absoprtion efficiency (% dw)", y = "Growth efficiency (% dw)") +
     geom_smooth(color = "steelblue3",
@@ -1269,7 +1269,7 @@ plot_irn <- function(data_i, data_g, data_model) {
     data_abs ,
     aes(
       x = group_mass_specific_intake_rate_fw,
-      y = elemental_value * 100,
+      y = elemental_value ,
       colour = element,
       group = element ,
       fill =  element
@@ -1656,7 +1656,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   
   p <- ggplot2::ggplot(data_tf,
-                       aes(x = growth_efficiency_fw * 100, y = `13C`)) +
+                       aes(x = growth_efficiency_fw , y = `13C`)) +
     geom_point(size = 1.5) +
     labs(x = "Growth efficiency (%fw)", y = expression(paste(Delta, "13C"))) +
     geom_smooth(color = "steelblue3",  method = "lm")
@@ -1673,7 +1673,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   )
   
   p <- ggplot2::ggplot(data_tf,
-                       aes(x = growth_efficiency_fw * 100, y = `15N`)) +
+                       aes(x = growth_efficiency_fw , y = `15N`)) +
     geom_point(size = 1.5) +
     labs(x = "Growth efficiency (%fw)", y = expression(paste(Delta, "15N"))) +
     geom_smooth(color = "steelblue3",  method = "lm")
@@ -1758,7 +1758,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   
   p <- ggplot2::ggplot(data_ffdf,
-                       aes(x = absorption_efficiency_dw * 100, y = `13C`)) +
+                       aes(x = absorption_efficiency_dw , y = `13C`)) +
     geom_point(size = 1.5) +
     labs(x = "Absorption efficiency (%)",
          y = latex2exp::TeX(r'($\delta 13C_{frass}-\delta 13C_{food}$)')) +
@@ -1776,7 +1776,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   )
   
   p <- ggplot2::ggplot(data_ffdf,
-                       aes(x = absorption_efficiency_dw * 100, y = `15N`)) +
+                       aes(x = absorption_efficiency_dw , y = `15N`)) +
     geom_point(size = 1.5) +
     labs(x = "Absorption efficiency (%)",
          y = latex2exp::TeX(r'($\delta 15N_{frass}-\delta 15N_{food}$)')) +
@@ -1918,7 +1918,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   
   p <- ggplot2::ggplot(data_aer,
-                       aes(x = absorption_efficiency_dw * 100, y = `C`)) +
+                       aes(x = absorption_efficiency_dw , y = `C`)) +
     geom_point(size = 1.5) +
     labs(x = "Absorption efficiency (%)", y = "C IAER") +
     geom_smooth(color = "steelblue3",  method = "lm")
@@ -1935,7 +1935,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   )
   
   p <- ggplot2::ggplot(data_aer,
-                       aes(x = absorption_efficiency_dw * 100, y = `N`)) +
+                       aes(x = absorption_efficiency_dw , y = `N`)) +
     geom_point(size = 1.5) +
     labs(x = "Absorption efficiency (%)", y = "N IAER") +
     geom_smooth(color = "steelblue3",  method = "lm")

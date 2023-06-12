@@ -139,50 +139,50 @@ combine_group_data <- function(data_i, data_g, data_fc) {
   
   # Computes the element absorption efficiency
   
-  data_g$C_absorption_efficiency_dw = 1 - ((data_g$C_frass * data_g$frass_group_mass_dw) /
-                                             (data_g$food_C * data_g$food_consumed_collection_days_dw)
-  )
-  data_g$N_absorption_efficiency_dw = 1 - ((data_g$N_frass * data_g$frass_group_mass_dw) /
-                                             (data_g$food_N * data_g$food_consumed_collection_days_dw)
-  )
-  data_g$P_absorption_efficiency_dw = 1 - ((data_g$P_frass * data_g$frass_group_mass_dw) /
-                                             (data_g$food_P * data_g$food_consumed_collection_days_dw)
-  )
-  data_g$S_absorption_efficiency_dw = 1 - ((data_g$S_frass * data_g$frass_group_mass_dw) /
-                                             (data_g$food_S * data_g$food_consumed_collection_days_dw)
-  )
-  data_g$Na_absorption_efficiency_dw = 1 - ((data_g$Na_frass * data_g$frass_group_mass_dw) /
-                                              (data_g$food_Na * data_g$food_consumed_collection_days_dw)
-  )
-  data_g$Mg_absorption_efficiency_dw = 1 - ((data_g$Mg_frass * data_g$frass_group_mass_dw) /
-                                              (data_g$food_Mg * data_g$food_consumed_collection_days_dw)
-  )
-  data_g$K_absorption_efficiency_dw = 1 - ((data_g$K_frass * data_g$frass_group_mass_dw) /
-                                             (data_g$food_K * data_g$food_consumed_collection_days_dw)
-  )
-  data_g$Ca_absorption_efficiency_dw = 1 - ((data_g$Ca_frass * data_g$frass_group_mass_dw) /
-                                              (data_g$food_Ca * data_g$food_consumed_collection_days_dw)
-  )
-  data_g$`12C_absorption_efficiency_dw` = 1 - ((data_g$`12C_frass` * data_g$frass_group_mass_dw) /
-                                                 (
-                                                   data_g$`12C_food` * data_g$food_consumed_collection_days_dw
-                                                 )
-  )
-  data_g$`13C_absorption_efficiency_dw` = 1 - ((data_g$`13C_frass` * data_g$frass_group_mass_dw) /
-                                                 (
-                                                   data_g$`13C_food` * data_g$food_consumed_collection_days_dw
-                                                 )
-  )
-  data_g$`14N_absorption_efficiency_dw` = 1 - ((data_g$`14N_frass` * data_g$frass_group_mass_dw) /
-                                                 (
-                                                   data_g$`14N_food` * data_g$food_consumed_collection_days_dw
-                                                 )
-  )
-  data_g$`15N_absorption_efficiency_dw` = 1 - ((data_g$`15N_frass` * data_g$frass_group_mass_dw) /
-                                                 (
-                                                   data_g$`15N_food` * data_g$food_consumed_collection_days_dw
-                                                 )
-  )
+  data_g$C_absorption_efficiency_dw = 100 * (1 - ((data_g$C_frass * data_g$frass_group_mass_dw) /
+                                                    (data_g$food_C * data_g$food_consumed_collection_days_dw)
+  ))
+  data_g$N_absorption_efficiency_dw = 100 * (1 - ((data_g$N_frass * data_g$frass_group_mass_dw) /
+                                                    (data_g$food_N * data_g$food_consumed_collection_days_dw)
+  ))
+  data_g$P_absorption_efficiency_dw = 100 * (1 - ((data_g$P_frass * data_g$frass_group_mass_dw) /
+                                                    (data_g$food_P * data_g$food_consumed_collection_days_dw)
+  ))
+  data_g$S_absorption_efficiency_dw = 100 * (1 - ((data_g$S_frass * data_g$frass_group_mass_dw) /
+                                                    (data_g$food_S * data_g$food_consumed_collection_days_dw)
+  ))
+  data_g$Na_absorption_efficiency_dw = 100 * (1 - ((data_g$Na_frass * data_g$frass_group_mass_dw) /
+                                                     (data_g$food_Na * data_g$food_consumed_collection_days_dw)
+  ))
+  data_g$Mg_absorption_efficiency_dw = 100 * (1 - ((data_g$Mg_frass * data_g$frass_group_mass_dw) /
+                                                     (data_g$food_Mg * data_g$food_consumed_collection_days_dw)
+  ))
+  data_g$K_absorption_efficiency_dw = 100 * (1 - ((data_g$K_frass * data_g$frass_group_mass_dw) /
+                                                    (data_g$food_K * data_g$food_consumed_collection_days_dw)
+  ))
+  data_g$Ca_absorption_efficiency_dw = 100 * (1 - ((data_g$Ca_frass * data_g$frass_group_mass_dw) /
+                                                     (data_g$food_Ca * data_g$food_consumed_collection_days_dw)
+  ))
+  data_g$`12C_absorption_efficiency_dw` = 100 * (1 - ((data_g$`12C_frass` * data_g$frass_group_mass_dw) /
+                                                        (
+                                                          data_g$`12C_food` * data_g$food_consumed_collection_days_dw
+                                                        )
+  ))
+  data_g$`13C_absorption_efficiency_dw` = 100 * (1 - ((data_g$`13C_frass` * data_g$frass_group_mass_dw) /
+                                                        (
+                                                          data_g$`13C_food` * data_g$food_consumed_collection_days_dw
+                                                        )
+  ))
+  data_g$`14N_absorption_efficiency_dw` = 100 * (1 - ((data_g$`14N_frass` * data_g$frass_group_mass_dw) /
+                                                        (
+                                                          data_g$`14N_food` * data_g$food_consumed_collection_days_dw
+                                                        )
+  ))
+  data_g$`15N_absorption_efficiency_dw` = 100 * (1 - ((data_g$`15N_frass` * data_g$frass_group_mass_dw) /
+                                                        (
+                                                          data_g$`15N_food` * data_g$food_consumed_collection_days_dw
+                                                        )
+  ))
   
   # Computes the element egestion rate
   

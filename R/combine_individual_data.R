@@ -181,13 +181,15 @@ combine_individual_data <- function(data_fc, data_ic, data_i) {
   ##### Mass-specific absorption rate of food #####
   # In dry weight only, because we don't have the water content of frass.
   
-  data_i$mass_specific_absorption_rate_dw = data_i$absorption_rate_dw/ ((
+  data_i$mass_specific_absorption_rate_dw = data_i$absorption_rate_dw / ((
     data_i$bodymass_last_collection_date + data_i$bodymass_7th_instar_j0_fw
   ) / 2)
   
   ##### Absorption efficiency of food #####
   
-  data_i$absorption_efficiency_dw = 1 - (data_i$frass_mass_dw / data_i$food_consumed_collection_days_dw)
+  data_i$absorption_efficiency_dw = 100 * (1 - (
+    data_i$frass_mass_dw / data_i$food_consumed_collection_days_dw
+  ))
   
   
   ##### Egestion - ingestion ratio #####
@@ -217,7 +219,10 @@ combine_individual_data <- function(data_fc, data_ic, data_i) {
     
     # The growth efficiency in fresh weight is equal to fresh weight mass gains divided by fresh weight of food consumed
     
-    data_i$growth_efficiency_fw[i] = (data_i$bodymass_last_collection_date[i] - data_i$bodymass_7th_instar_j0_fw[i]) / data_i$food_consumed_collection_days_fw[i]  # It is in fresh weight of food
+    data_i$growth_efficiency_fw[i] = 100 * ((
+      data_i$bodymass_last_collection_date[i] - data_i$bodymass_7th_instar_j0_fw[i]
+    ) / data_i$food_consumed_collection_days_fw[i]
+    )  # It is in fresh weight of food
   }
   
   # In dry weight
@@ -234,10 +239,11 @@ combine_individual_data <- function(data_fc, data_ic, data_i) {
     week_indexes = which(data_fc$date == week_dates)
     
     # The growth efficiency in dry weight is equal to estimated dry weight mass gains divided by dry weight of food consumed
-    data_i$growth_efficiency_dw[i] = (
+    data_i$growth_efficiency_dw[i] = 100 * ((
       data_i$bodymass_7th_instar_j3_dw[i] - data_i$bodymass_7th_instar_j0_fw[i] *
         (1 - data_i$larvae_day0_wc[i])
-    ) / (data_i$food_consumed_collection_days_dw[i])  # It is in dry weight of food
+    ) / (data_i$food_consumed_collection_days_dw[i])
+    )  # It is in dry weight of food
   }
   
   # The growth investment is the proportion of mass which was absorbed that ended up in growth
