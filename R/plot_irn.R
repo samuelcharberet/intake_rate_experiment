@@ -297,10 +297,10 @@ plot_irn <- function(data_i, data_g, data_model) {
          )) +
     geom_vline(xintercept = 1,
                color = "black",
-               linetype = 2) +
+               linetype = "dashed") +
     geom_hline(yintercept = 50,
                color = "black",
-               linetype = 2) +
+               linetype = "dashed") +
     geom_point() +
     labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Growth efficiency <br> (% fw)") +
     geom_smooth(
@@ -601,8 +601,6 @@ plot_irn <- function(data_i, data_g, data_model) {
   plots = vector("list", nb_variables)
   names(plots) = variables
   
-  
-  
   ###### Differences in elemental content between the variables: food, larva, frass ######
   
   plots_matrices = vector("list", nb_elements)
@@ -737,7 +735,7 @@ plot_irn <- function(data_i, data_g, data_model) {
     units = "in"
   )
   
-  ###### Elements absorption efficiency, larval content, frass content according to total mass-specific intake rate  ######
+  ###### Elements absorption efficiency, larval content, frass content, retention time according to total mass-specific intake rate  ######
   
   # Set a new theme to produce the complete figures
   
@@ -837,7 +835,7 @@ plot_irn <- function(data_i, data_g, data_model) {
             y = elemental_value)
       ) +
         geom_point() + ylim(ylim_mins[i, j], ylim_maxs[i, j]) +
-        geom_smooth(method = methods[j], color = "steelblue3") +
+        geom_smooth(method = methods[j], color = colours_elements[i]) +
         labs(x = expression(paste(
           "Intake rate",
           " (",
@@ -860,7 +858,6 @@ plot_irn <- function(data_i, data_g, data_model) {
           sep = " "
         )) +
         ggpubr::stat_cor(
-          aes(label = ..r.label..),
           method = "spearman",
           cor.coef.name = c("rho"),
           label.x.npc = 0,
@@ -1263,8 +1260,8 @@ plot_irn <- function(data_i, data_g, data_model) {
   data_abs = data_abs[!(data_abs$element %in% c("15N", "14N", "13C", "12C")), ]
   
   lm_absorption = data_model$lm_nutrient[grep("absorption .", data_model$lm_nutrient$variable),]
-  
-  
+  lm_absorption = lm_absorption[c(7, 5, 1, 2, 3, 6, 8, 4),]
+  order_elements_legend = c("K", "Mg", "C", "N", "P", "S", "Ca", "Na")
   p = ggplot2::ggplot(
     data_abs ,
     aes(
@@ -1283,16 +1280,17 @@ plot_irn <- function(data_i, data_g, data_model) {
       aesthetics = c("colour", "fill"),
       labels = paste(
         sep = "",
-        elements,
+        order_elements_legend,
         ",   ",
         round(lm_absorption$slope, 2),
         "x+",
         round(lm_absorption$oao, 2),
-        ", R²=",
+        ", r²=",
         round(lm_absorption$r_squared, 2),
-        ", ",
+        " ",
         lm_absorption$signif_level
-      )
+      ),
+      limits = c("K", "Mg", "C", "N", "P", "S", "Ca", "Na")
     ) +
     labs(
       x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)",
