@@ -179,8 +179,7 @@ combine_individual_data <- function(data_fc, data_ic, data_i) {
   data_i$absorption_rate_dw = (data_i$food_consumed_collection_days_dw - data_i$frass_mass_dw) / data_i$number_collection_days
   
   ##### Mass-specific absorption rate of food #####
-  # In dry weight only, because we don't have the water content of frass.
-  
+
   data_i$mass_specific_absorption_rate_dw = data_i$absorption_rate_dw / ((
     data_i$bodymass_last_collection_date + data_i$bodymass_7th_instar_j0_fw
   ) / 2)
@@ -253,6 +252,22 @@ combine_individual_data <- function(data_fc, data_ic, data_i) {
     data_i$bodymass_7th_instar_j3_dw - data_i$bodymass_7th_instar_j0_fw * (1 -
                                                                              data_i$larvae_day0_wc)
   ) / (data_i$absorbed_mass_dw)
+  
+  # The mass-specific maintenance rate is the amount of mass which was absorbed that did not end up in growth,
+  # divided by time and the average individual weight
+  # In dry weight
+  
+  data_i$mass_specific_maintenance_rate_dw = (
+    data_i$absorbed_mass_dw -
+      (
+        data_i$bodymass_7th_instar_j3_dw - data_i$bodymass_7th_instar_j0_fw * (1 -
+                                                                                 data_i$larvae_day0_wc)
+      )
+  ) / (
+    data_i$number_collection_days * (
+      data_i$bodymass_last_collection_date + data_i$bodymass_7th_instar_j0_fw
+    ) / 2
+  )
   
   
   return(data_i)
