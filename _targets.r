@@ -11,6 +11,7 @@ library(here)
 tar_option_set(
   packages = c(
     "ggplot2",
+    "dplyr",
     "tidyr",
     "mgcv",
     "ggtext" ,
@@ -97,7 +98,11 @@ list(
   # Plot the data
   tar_target(
     plots_irn,
-    plot_irn(data_i = data_irn_indivuals_combined, data_g = data_irn_groups_combined, data_model = models_irn)
+    plot_irn(
+      data_i = data_irn_indivuals_combined,
+      data_g = data_irn_groups_combined,
+      data_model = models_irn
+    )
   ),
   
   # Generate report Rmd

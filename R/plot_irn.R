@@ -20,6 +20,25 @@ plot_irn <- function(data_i, data_g, data_model) {
   ########## 0. Preliminary figures ##########
   
   
+  ###### Total mass difference ######
+  
+  data_i$mass_diff = data_i$food_consumed_collection_days_dw - data_i$frass_mass_dw - data_i$growth_dw
+  
+  p = ggplot(data_i, aes(x = mass_diff)) +
+    geom_histogram(color = "black", fill = "white")
+  
+  
+  ggsave(
+    filename = "mass_diff.pdf",
+    plot = p,
+    device = cairo_pdf,
+    path = here::here("4_outputs", "2_figures"),
+    scale = 1,
+    width = 7,
+    height = 4,
+    units = "in"
+  )
+  
   ###### Effect of week on bodymass at the start ######
   
   p <- ggplot2::ggplot(
@@ -34,6 +53,26 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   ggsave(
     filename = "bm_j0_fw_&_week.pdf",
+    plot = p,
+    device = cairo_pdf,
+    path = here::here("4_outputs", "2_figures"),
+    scale = 1,
+    width = 7,
+    height = 4,
+    units = "in"
+  )
+  
+  ###### Effect of treatment on bodymass at the start ######
+  
+  p <- ggplot2::ggplot(data_i,
+                       aes(x = food_provided_fw ,
+                           y = bodymass_7th_instar_j0_fw)) +
+    geom_boxplot(fill = "steelblue3") +
+    labs(x = "Treatment (mg daily food)", y = "Bodymass at the start of 7th instar (mg fw)")  +
+    theme(legend.position = "none")
+  
+  ggsave(
+    filename = "bm_j0_fw_&_treatment.pdf",
     plot = p,
     device = cairo_pdf,
     path = here::here("4_outputs", "2_figures"),
@@ -729,15 +768,15 @@ plot_irn <- function(data_i, data_g, data_model) {
     sd_food = sd(data_element[, food_col])
     
     # Larvae elemental content
-    average_larvae = mean(data_element[which(data_element$variable == "larvae"), ]$elemental_value, na.rm =
+    average_larvae = mean(data_element[which(data_element$variable == "larvae"),]$elemental_value, na.rm =
                             T)
-    sd_larvae = sd(data_element[which(data_element$variable == "larvae"), ]$elemental_value, na.rm =
+    sd_larvae = sd(data_element[which(data_element$variable == "larvae"),]$elemental_value, na.rm =
                      T)
     
     # Frass elemental content
-    average_frass = mean(data_element[which(data_element$variable == "frass"), ]$elemental_value, na.rm =
+    average_frass = mean(data_element[which(data_element$variable == "frass"),]$elemental_value, na.rm =
                            T)
-    sd_frass = sd(data_element[which(data_element$variable == "frass"), ]$elemental_value, na.rm =
+    sd_frass = sd(data_element[which(data_element$variable == "frass"),]$elemental_value, na.rm =
                     T)
     data <- data.frame(
       name = c("Food", "Larvae", "Frass"),
@@ -849,6 +888,52 @@ plot_irn <- function(data_i, data_g, data_model) {
     units = "in"
   )
   
+  ##### Sterner Elser body - waste relationship #####
+  # We check whether the body N:P is negatively correlated with the waste N:P
+  # according to the Sterner & Elser model of 2002
+  
+  data_larvae_frass = subset(data_g,
+                             data_g$variable == "larvae" |
+                               data_g$variable == "frass")
+  data_larvae_frass = pivot_wider(data_larvae_frass,
+                                  names_from = element,
+                                  values_from = elemental_value)
+  data_larvae_frass$N_P = data_larvae_frass$N / (data_larvae_frass$P / (10 ^ 4))
+  data_lf_np =  select(
+    data_larvae_frass,
+    "N_P",
+    "group_ID",
+    "variable",
+    "group_mass_specific_intake_rate_fw"
+  )
+  data_lf_np = pivot_wider(data_lf_np, names_from = variable, values_from = N_P)
+  
+  p <- ggplot2::ggplot(data_lf_np,
+                       aes(x = larvae, y = frass, color = group_mass_specific_intake_rate_fw)) +
+    geom_point() +
+    labs(x = "Larvae N:P", y = "Frass N:P") +
+    geom_smooth(color = "black", method = lm) +
+    scale_color_gradient(low = "blue",
+                         high = "red",
+                         name = "Intake level") +
+    ggpubr::stat_cor(
+      method = "pearson",
+      cor.coef.name = c("rho"),
+      label.x.npc = 0,
+      label.y.npc = 1
+    )
+  
+  ggsave(
+    filename = "larvae_frass_NP.pdf",
+    plot = p,
+    device = cairo_pdf,
+    path = here::here("4_outputs", "2_figures"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
+  
   ###### Elements absorption efficiency, larval content, frass content, retention time according to total mass-specific intake rate  ######
   
   # Set a new theme to produce the complete figures
@@ -944,7 +1029,7 @@ plot_irn <- function(data_i, data_g, data_model) {
       }
       
       
-      methods = c("lm", "lm", "lm", "gam")
+      methods = c("lm", "lm", "gam", "gam")
       plots[[j]][[i]] = ggplot2::ggplot(
         data_matrix_element ,
         aes(x = group_mass_specific_intake_rate_fw,
@@ -1050,7 +1135,7 @@ plot_irn <- function(data_i, data_g, data_model) {
                                                           day ^ {
                                                             -1
                                                           },
-                                                          ")",)
+                                                          ")", )
                                                   )),
                                                   top = "")
     
@@ -1364,6 +1449,7 @@ plot_irn <- function(data_i, data_g, data_model) {
     units = "in"
   )
   
+  
   ##### Absorption efficiencies on a single plot  #####
   ggplot2::theme_set(
     theme_classic() + theme(
@@ -1374,10 +1460,10 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   data_abs = subset(data_g, data_g$variable == "absorption")
   # Removing 15N and 13C
-  data_abs = data_abs[!(data_abs$element %in% c("15N", "14N", "13C", "12C")),]
+  data_abs = data_abs[!(data_abs$element %in% c("15N", "14N", "13C", "12C")), ]
   
-  lm_absorption = data_model$lm_nutrient[grep("absorption .", data_model$lm_nutrient$variable), ]
-  lm_absorption = lm_absorption[c(7, 5, 1, 2, 3, 6, 8, 4), ]
+  lm_absorption = data_model$lm_nutrient[grep("absorption .", data_model$lm_nutrient$variable),]
+  lm_absorption = lm_absorption[c(7, 5, 1, 2, 3, 6, 8, 4),]
   order_elements_legend = c("K", "Mg", "C", "N", "P", "S", "Ca", "Na")
   p = ggplot2::ggplot(
     data_abs ,
@@ -1399,10 +1485,10 @@ plot_irn <- function(data_i, data_g, data_model) {
         sep = "",
         order_elements_legend,
         ",   ",
-        round(lm_absorption$slope, 2),
+        round(lm_absorption$slope, 1),
         "x+",
-        round(lm_absorption$oao, 2),
-        ", r²=",
+        round(lm_absorption$oao, 1),
+        ", R²=",
         round(lm_absorption$r_squared, 2),
         " ",
         lm_absorption$signif_level
@@ -1431,7 +1517,7 @@ plot_irn <- function(data_i, data_g, data_model) {
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 7,
-    height = 3,
+    height = 4,
     units = "in"
   )
   ##### Retention time  #####
@@ -1446,7 +1532,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   # Removing 15N and 13C
   data_rt = subset(data_g, data_g$variable == "retention")
   
-  data_rt = data_rt[!(data_rt$element %in% c("15N", "14N", "13C", "12C")),]
+  data_rt = data_rt[!(data_rt$element %in% c("15N", "14N", "13C", "12C")), ]
   
   p = ggplot2::ggplot(
     data_rt ,
@@ -1492,7 +1578,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   ##### Nutrient co variations in larvae and frass #####
   data_larvae = subset(data_g, data_g$variable == "larvae")
   # Removing 15N and 13C
-  data_larvae = data_larvae[!(data_larvae$element %in% c("d15N", "d13C")), ]
+  data_larvae = data_larvae[!(data_larvae$element %in% c("d15N", "d13C")),]
   test = pivot_wider(data_larvae, names_from = element, values_from = elemental_value)
   pdf(here::here(
     "4_outputs",
@@ -1504,7 +1590,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   data_larvae = subset(data_g, data_g$variable == "frass")
   # Removing 15N and 13C
-  data_larvae = data_larvae[!(data_larvae$element %in% c("d15N", "d13C")), ]
+  data_larvae = data_larvae[!(data_larvae$element %in% c("d15N", "d13C")),]
   test = pivot_wider(data_larvae, names_from = element, values_from = elemental_value)
   pdf(here::here(
     "4_outputs",
@@ -1688,7 +1774,7 @@ plot_irn <- function(data_i, data_g, data_model) {
                               " ", day ^ {
                                 -1
                               },
-                              ")", )), y = expression(paste(Delta, "13C"))) +
+                              ")",)), y = expression(paste(Delta, "13C"))) +
     geom_smooth(color = "steelblue3",  method = "lm") +
     ggpubr::stat_cor(
       aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")),
@@ -1724,7 +1810,7 @@ plot_irn <- function(data_i, data_g, data_model) {
                               " ", day ^ {
                                 -1
                               },
-                              ")", )), y = expression(paste(Delta, "15N"))) +
+                              ")",)), y = expression(paste(Delta, "15N"))) +
     geom_smooth(color = "steelblue3",  method = "lm") +
     ggpubr::stat_cor(
       aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")),
