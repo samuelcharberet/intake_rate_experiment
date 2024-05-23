@@ -2274,4 +2274,5 @@ plot_irn <- function(data_i, data_g, data_model) {
     units = "in"
   )
   
+  return(here::here("4_outputs", "2_figures", "isotopy_figure.pdf"))
 }

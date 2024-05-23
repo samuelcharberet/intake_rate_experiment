@@ -1,5 +1,3 @@
-
-
 library(targets)
 library(ggplot2)
 library(tidyr)
@@ -8,6 +6,13 @@ library(ggtext)
 library(formula.tools)
 library(fmsb)
 library(scam)
+library(rmarkdown)
+library(lubridate)
+library(dplyr)
+library(latex2exp)
+library(rms)
+library(tls)
+library(stargazer)
 
 lapply(list.files(here::here("R"), recursive = TRUE, full.names = T), source)
 

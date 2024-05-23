@@ -136,7 +136,7 @@ model_irn <- function(data_i, data_g) {
         "elemental_value",
         "~ group_mass_specific_intake_rate_fw"
       ))
-      lm_mod = lm(formula_lm, data = data_matrix_element) # creates a LMfor this element i in matrix j according to IR
+      lm_mod = lm(formula_lm, data = data_matrix_element) # creates a LM for this element i in matrix j according to IR
       summary_gam = summary(gam_mod)
       summary_lm = summary(lm_mod)
       k = nb_variable_tm + (i - 1) * (nb_elements) + j #The row number in the final result tables

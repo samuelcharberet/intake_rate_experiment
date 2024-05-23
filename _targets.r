@@ -20,7 +20,11 @@ tar_option_set(
     "ggsci",
     "rms",
     "tls",
-    "scam"
+    "scam",
+    "rmarkdown",
+    "lubridate",
+    "latex2exp",
+    "stargazer"
   )
 )
 
@@ -59,8 +63,7 @@ list(
     load_individual_data(path = data_irn_individuals_file)
   ),
   # load group data file
-  tar_target(data_irn_groups,
-             load_group_data(path = data_irn_groups_file)),
+  tar_target(data_irn_groups, load_group_data(path = data_irn_groups_file)),
   # load food control data file
   tar_target(
     data_irn_food_controls,
@@ -102,9 +105,10 @@ list(
       data_i = data_irn_indivuals_combined,
       data_g = data_irn_groups_combined,
       data_model = models_irn
-    )
-  ),
+    ),
+    format = "file"
+  )
   
   # Generate report Rmd
-  tarchetypes::tar_render(rmd_report, "3_manuscript/irn.rmd")
+  # archetypes::tar_render(rmd_report, "3_manuscript/irn.rmd")
 )
