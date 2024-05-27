@@ -204,7 +204,7 @@ plot_irn <- function(data_i, data_g, data_model) {
     units = "in"
   )
   
-  ###### Mass_specific absorption rate according to mass specific intake rate ######
+  ###### Mass specific absorption rate according to mass specific intake rate ######
   
   
   msardw_msirfw <- ggplot2::ggplot(data_i,

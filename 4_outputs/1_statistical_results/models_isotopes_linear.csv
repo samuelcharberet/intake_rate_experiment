@@ -1,0 +1,7 @@
+"","equation","n","R_squared","F_stat","p_value"
+"1","13C tf  =  -0.0032 x growth_rate + -1.7202",92,0.35,48,"p<0.01"
+"2","15N tf  =  0.0054 x growth_rate + 0.32334",92,0.53,100,"p<0.01"
+"3","13C fldf  =  -2.6 x absorption_efficiency_dw + 5.2278",92,0.13,13,"p<0.01"
+"4","15N fldf  =  8.1 x absorption_efficiency_dw + -4.9075",92,0.28,34,"p<0.01"
+"5","13C iaer  =  -0.65 x group_mass_specific_intake_rate_fw + -0.97188",100,0.28,38,"p<0.01"
+"6","15N iaer  =  -1.1 x group_mass_specific_intake_rate_fw + 0.24497",100,0.15,17,"p<0.01"

@@ -24,7 +24,10 @@ tar_option_set(
     "rmarkdown",
     "lubridate",
     "latex2exp",
-    "stargazer"
+    "stargazer",
+    "graphics",
+    "minpack.lm",
+    "onls"
   )
 )
 
@@ -106,6 +109,13 @@ list(
       data_g = data_irn_groups_combined,
       data_model = models_irn
     ),
+    format = "file"
+  ),
+  
+  # Fit a non linear model to the growth efficiency data
+  tar_target(
+    theoretical_model_irn,
+    theoretical_model_irn(data_i = data_irn_indivuals_combined),
     format = "file"
   )
   

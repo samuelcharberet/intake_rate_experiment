@@ -13,6 +13,9 @@ library(latex2exp)
 library(rms)
 library(tls)
 library(stargazer)
+library(graphics)
+library(minpack.lm)
+library(onls)
 
 lapply(list.files(here::here("R"), recursive = TRUE, full.names = T), source)
 
@@ -44,3 +47,7 @@ model <-
 plot_irn(data_i = data_irn_individuals_combined,
          data_g = data_irn_group_combined,
          data_model = model)
+
+theoretical_model_irn(data_i = data_irn_individuals_combined)
+
+

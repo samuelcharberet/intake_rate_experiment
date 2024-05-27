@@ -1,0 +1,7 @@
+"","formula","n","R_squared","edf","p_value","r_squared"
+"1","13C tf  =  a x growth_rate + b",92,NA,"2.03","<2e-16","0.368"
+"2","15N tf  =  a x growth_rate + b",92,NA,"1","<2e-16","0.524"
+"3","13C fldf  =  a x absorption_efficiency_dw + b",92,NA,"1.86","1.3e-03","0.142"
+"4","15N fldf  =  a x absorption_efficiency_dw + b",92,NA,"1","<2e-16","0.268"
+"5","13C iaer  =  a x group_mass_specific_intake_rate_fw + b",100,NA,"1","<2e-16","0.27"
+"6","15N iaer  =  a x group_mass_specific_intake_rate_fw + b",100,NA,"7.34","5.2e-07","0.36"
