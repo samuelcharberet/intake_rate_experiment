@@ -7,10 +7,10 @@
 
 theoretical_model_irn <- function(data_i) {
   #Giving the variables friendly names to work with
-  data_i$abs_eff = data_i$absorption_efficiency_dw / 100
+  data_i$abs_eff = data_i$absorption_efficiency_dw
   data_i$msir = data_i$mass_specific_ingestion_rate_fw
-  data_i$g_eff = data_i$growth_efficiency_fw / 100
-  
+  data_i$g_eff = data_i$growth_efficiency_fw
+  data_i$g_r = data_i$geometric_mean_growth
   # Fixing gut length and gut section to real life values
   L_g = 0.1
   S = 0.002
@@ -195,7 +195,53 @@ theoretical_model_irn <- function(data_i) {
     "theoretical_model_fit_ge_msir.pdf"
   ))
   
+  # Looking at the relationship between growth rate and growth efficiency:
   
+  # Given constants
+  p_0 <- 2.067e+04
+  r_D <- 2.055e-01
+  r_A <- 1.444e+01
+  M <- 1.474e-01
+  
+  # Parametric equations
+  E_G <- function(t) {
+    (1 / (r_D - r_A)) * (r_A * (exp(-L_g * r_D / t) - 1) - r_D * (exp(-L_g * r_A / t) - 1)) - M / (S *
+                                                                                                     t * p_0)
+  }
+  
+  R_G <- function(t) {
+    (S * t * p_0 / (r_D - r_A)) * (r_A * (exp(-L_g * r_D / t) - 1) - r_D * (exp(-L_g * r_A / t) - 1)) - M
+  }
+  
+  # Generate sequence for t
+  t_vals <- seq(0.005, 1, length.out = 1000)  # Adjust the range and length as needed
+  
+  # Compute E_G and R_G for the sequence of t
+  E_G_vals <- sapply(t_vals, E_G)
+  R_G_vals <- sapply(t_vals, R_G)
+  
+  
+  plot(
+    R_G_vals,
+    E_G_vals,
+    type = "l",
+    xlim = c(0, 0.6),
+    ylim = c(0, 0.6)
+  )
+  # Plot the original data
+  plot(
+    data_i$g_r,
+    data_i$g_eff,
+    xlab = "Growth Rate rate",
+    ylab = "Growth efficiency",
+    main = "Overlay of Parametric Curve on Data",
+    xlim = c(0, 0.6),
+    ylim = c(0, 0.6)
+  )
+  
+  # Overlay the parametric curve
+
+  lines(E_G_vals, R_G_vals, col = "blue", lwd = 2)
   
   
 }

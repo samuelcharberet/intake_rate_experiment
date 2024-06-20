@@ -1,7 +1,7 @@
 "","variable","n","r_squared","edf","p_value","difference"
 "1","absorption_rate_dw ",396,"0.78","5.8","<2e-16",NA
 "2","absorption_efficiency_dw ",396,"0.523","4.7","<2e-16",NA
-"3","growth_rate ",396,"0.822","5.83","<2e-16",NA
+"3","geometric_mean_growth ",396,"0.924","6.56","<2e-16",NA
 "4","growth_efficiency_fw ",396,"0.395","6.06","<2e-16",NA
 "5","absorption C",100,"0.581","1.22","<2e-16",0.413961332714827
 "6","absorption N",100,"0.688","1.22","<2e-16",0.619149129278743

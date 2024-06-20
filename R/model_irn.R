@@ -8,7 +8,7 @@ model_irn <- function(data_i, data_g) {
   variable_list_tm = c(
     "absorption_rate_dw",
     "absorption_efficiency_dw",
-    "growth_rate",
+    "geometric_mean_growth",
     "growth_efficiency_fw"
   ) # The variables in the total mass balance study
   
@@ -249,7 +249,7 @@ model_irn <- function(data_i, data_g) {
   
   dependant_variables_list = c("tf", "fldf", "iaer")
   independant_variables_list = c(
-    "growth_rate",
+    "geometric_mean_growth",
     "absorption_efficiency_dw",
     "group_mass_specific_intake_rate_fw"
   )

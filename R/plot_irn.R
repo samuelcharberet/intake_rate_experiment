@@ -43,9 +43,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   p <- ggplot2::ggplot(
     data_i,
-    aes(x = seventh_instar_date ,
-        y = bodymass_7th_instar_j0_fw,
-        group = seventh_instar_date)
+    aes(x = seventh_instar_date , y = bodymass_7th_instar_j0_fw, group = seventh_instar_date)
   ) +
     geom_boxplot(fill = "steelblue3") +
     labs(x = "Date of the experiment", y = "Bodymass at the start of 7th instar (mg fw)")  +
@@ -65,8 +63,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   ###### Effect of treatment on bodymass at the start ######
   
   p <- ggplot2::ggplot(data_i,
-                       aes(x = food_provided_fw ,
-                           y = bodymass_7th_instar_j0_fw)) +
+                       aes(x = food_provided_fw , y = bodymass_7th_instar_j0_fw)) +
     geom_boxplot(fill = "steelblue3") +
     labs(x = "Treatment (mg daily food)", y = "Bodymass at the start of 7th instar (mg fw)")  +
     theme(legend.position = "none")
@@ -131,20 +128,17 @@ plot_irn <- function(data_i, data_g, data_model) {
   ###### Absorption rate according to intake rate ######
   
   
-  ardw_irfw <- ggplot2::ggplot(data_i,
-                               aes(x = ingestion_rate_dw, y = absorption_rate_dw)) +
+  ardw_irfw <- ggplot2::ggplot(data_i, aes(x = ingestion_rate_dw, y = absorption_rate_dw)) +
     geom_point() +
     xlim(0, NA) +
-    ylim(NA,
-         max(data_i$absorption_rate_dw) + 0.1 * (
-           max(data_i$absorption_rate_dw) - min(data_i$absorption_rate_dw)
-         )) +
+    ylim(NA, max(data_i$absorption_rate_dw) + 0.1 * (
+      max(data_i$absorption_rate_dw) - min(data_i$absorption_rate_dw)
+    )) +
     labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> day<sup>-1</sup>)", y = "Absorption rate <br> (mg<sub>(dw)</sub> day<sup>-1</sup>)") +
     geom_smooth(color = "steelblue3",
                 method = "loess",
                 span = 0.75) +
-    theme(axis.title.x = element_markdown(),
-          axis.title.y = element_markdown()) +
+    theme(axis.title.x = element_markdown(), axis.title.y = element_markdown()) +
     ggpubr::stat_cor(
       method = "pearson",
       cor.coef.name = c("rho"),
@@ -176,16 +170,14 @@ plot_irn <- function(data_i, data_g, data_model) {
                                  aes(x = mass_specific_ingestion_rate_fw, y = absorption_rate_dw)) +
     geom_point() +
     xlim(0, NA) +
-    ylim(NA,
-         max(data_i$absorption_rate_dw) + 0.1 * (
-           max(data_i$absorption_rate_dw) - min(data_i$absorption_rate_dw)
-         )) +
+    ylim(NA, max(data_i$absorption_rate_dw) + 0.1 * (
+      max(data_i$absorption_rate_dw) - min(data_i$absorption_rate_dw)
+    )) +
     labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Absorption rate <br> (mg<sub>(dw)</sub> day<sup>-1</sup>)") +
     geom_smooth(color = "steelblue3",
                 method = "loess",
                 span = 0.75) +
-    theme(axis.title.x = element_markdown(),
-          axis.title.y = element_markdown()) +
+    theme(axis.title.x = element_markdown(), axis.title.y = element_markdown()) +
     ggpubr::stat_cor(
       method = "pearson",
       cor.coef.name = c("rho"),
@@ -222,8 +214,7 @@ plot_irn <- function(data_i, data_g, data_model) {
     geom_smooth(color = "steelblue3",
                 method = "loess",
                 span = 0.75) +
-    theme(axis.title.x = element_markdown(),
-          axis.title.y = element_markdown()) +
+    theme(axis.title.x = element_markdown(), axis.title.y = element_markdown()) +
     ggpubr::stat_cor(
       method = "pearson",
       cor.coef.name = c("rho"),
@@ -255,16 +246,14 @@ plot_irn <- function(data_i, data_g, data_model) {
                                  aes(x = mass_specific_ingestion_rate_fw, y = absorption_efficiency_dw)) +
     geom_point() +
     xlim(0, NA) +
-    ylim(NA,
-         max(data_i$absorption_efficiency_dw) + 0.1 * (
-           max(data_i$absorption_efficiency_dw) - min(data_i$absorption_efficiency_dw)
-         )) +
+    ylim(NA, max(data_i$absorption_efficiency_dw) + 0.1 * (
+      max(data_i$absorption_efficiency_dw) - min(data_i$absorption_efficiency_dw)
+    )) +
     labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Absorption efficiency <br> (% dw)") +
     geom_smooth(color = "steelblue3",
                 method = "loess",
                 span = 1) +
-    theme(axis.title.x = element_markdown(),
-          axis.title.y = element_markdown()) +
+    theme(axis.title.x = element_markdown(), axis.title.y = element_markdown()) +
     ggpubr::stat_cor(
       method = "pearson",
       cor.coef.name = c("rho"),
@@ -288,7 +277,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   p <- ggplot2::ggplot(data_i,
                        aes(x = mass_specific_ingestion_rate_fw, y = growth_efficiency_fw)) +
     xlim(0, NA) +
-    labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Growth efficiency (% fw)") +
+    labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Growth efficiency") +
     geom_point(size = -1, color = "white") +
     geom_vline(xintercept = 1, color = "steelblue3") +
     theme(axis.title.x = element_markdown())
@@ -307,10 +296,9 @@ plot_irn <- function(data_i, data_g, data_model) {
     units = "in"
   )
   
-  p <- ggplot2::ggplot(data_i,
-                       aes(x = ingestion_rate_fw / ((bodymass_last_collection_date + bodymass_7th_instar_j0_fw) / 2
-                       ), y = growth_efficiency_fw)) +
-    labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Growth efficiency (% fw)") +
+  p <- ggplot2::ggplot(data_i, aes(x = ingestion_rate_fw / ((bodymass_last_collection_date + bodymass_7th_instar_j0_fw) / 2
+  ), y = growth_efficiency_fw)) +
+    labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Growth efficiency") +
     geom_point(size = -1, color = "white") +
     geom_hline(yintercept = 50, color = "steelblue3") +
     theme(axis.title.x = element_markdown())
@@ -326,14 +314,12 @@ plot_irn <- function(data_i, data_g, data_model) {
     units = "in"
   )
   
-  gefw_msirfw <- ggplot2::ggplot(data_i,
-                                 aes(x = ingestion_rate_fw / ((bodymass_last_collection_date + bodymass_7th_instar_j0_fw) / 2
-                                 ), y = growth_efficiency_fw)) +
+  gefw_msirfw <- ggplot2::ggplot(data_i, aes(x = ingestion_rate_fw / ((bodymass_last_collection_date + bodymass_7th_instar_j0_fw) / 2
+  ), y = growth_efficiency_fw)) +
     xlim(0, NA) +
-    ylim(NA,
-         max(data_i$growth_efficiency_fw) + 0.1 * (
-           max(data_i$growth_efficiency_fw) - min(data_i$growth_efficiency_fw)
-         )) +
+    ylim(NA, max(data_i$growth_efficiency_fw) + 0.1 * (
+      max(data_i$growth_efficiency_fw) - min(data_i$growth_efficiency_fw)
+    )) +
     geom_vline(xintercept = 1,
                color = "black",
                linetype = "dashed") +
@@ -341,15 +327,14 @@ plot_irn <- function(data_i, data_g, data_model) {
                color = "black",
                linetype = "dashed") +
     geom_point() +
-    labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Growth efficiency <br> (% fw)") +
+    labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Growth efficiency") +
     geom_smooth(
       color = "steelblue3",
       method = "scam",
       formula = y ~ s(x, k = 5, bs = "cv"),
       se = T
     ) +
-    theme(axis.title.x = element_markdown(),
-          axis.title.y = element_markdown()) +
+    theme(axis.title.x = element_markdown(), axis.title.y = element_markdown()) +
     ggpubr::stat_cor(
       method = "pearson",
       cor.coef.name = c("rho"),
@@ -374,7 +359,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   p <- ggplot2::ggplot(data_i,
                        aes(x = mass_specific_ingestion_rate_dw, y = growth_efficiency_dw)) +
     geom_point() +
-    labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Growth efficiency (% dw)") +
+    labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Growth efficiency") +
     geom_smooth(color = "steelblue3",
                 method = "loess",
                 span = 0.75) +
@@ -394,20 +379,17 @@ plot_irn <- function(data_i, data_g, data_model) {
   ###### Growth rate in fresh weight according to the mass specific intake rate  ######
   
   grfw_msirfw <- ggplot2::ggplot(data_i,
-                                 aes(x = mass_specific_ingestion_rate_fw, y = growth_rate)) +
+                                 aes(x = mass_specific_ingestion_rate_fw, y = geometric_mean_growth)) +
     geom_point() +
     xlim(0, NA) +
-    ylim(NA,
-         max(data_i$growth_rate) + 0.2 * abs((
-           max(data_i$growth_rate) - min(data_i$growth_rate)
-         ))) +
-    labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)",
-         y = "Growth rate  <br> (mg<sub>body(fw)</sub> day<sup>-1</sup>)") +
+    ylim(NA, max(data_i$geometric_mean_growth) + 0.2 * abs((
+      max(data_i$geometric_mean_growth) - min(data_i$geometric_mean_growth)
+    ))) +
+    labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Growth rate") +
     geom_smooth(color = "steelblue3",
                 method = "lm",
                 span = 1) +
-    theme(axis.title.x = element_markdown(),
-          axis.title.y = element_markdown()) +
+    theme(axis.title.x = element_markdown(), axis.title.y = element_markdown()) +
     ggpubr::stat_cor(
       aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")),
       method = "pearson",
@@ -430,20 +412,17 @@ plot_irn <- function(data_i, data_g, data_model) {
   ###### Mass-specific growth rate in fresh weight according to the mass specific intake rate  ######
   
   msgrfw_msirfw <- ggplot2::ggplot(data_i,
-                                   aes(x = mass_specific_ingestion_rate_fw, y = specific_growth_rate)) +
+                                   aes(x = mass_specific_ingestion_rate_fw, y = geometric_mean_growth)) +
     geom_point() +
     xlim(0, NA) +
-    ylim(NA,
-         max(data_i$specific_growth_rate) + 0.1 * (
-           max(data_i$specific_growth_rate) - min(data_i$specific_growth_rate)
-         )) +
-    labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)",
-         y = "Specific growth rate  <br> (mg<sub>growth(fw)</sub> day<sup>-1</sup> mg<sub>body(fw)</sub><sup>-1</sup>)") +
+    ylim(NA, max(data_i$geometric_mean_growth) + 0.1 * (
+      max(data_i$geometric_mean_growth) - min(data_i$geometric_mean_growth)
+    )) +
+    labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Growth rate") +
     geom_smooth(color = "steelblue3",
                 method = "loess",
                 span = 1) +
-    theme(axis.title.x = element_markdown(),
-          axis.title.y = element_markdown()) +
+    theme(axis.title.x = element_markdown(), axis.title.y = element_markdown()) +
     ggpubr::stat_cor(
       method = "pearson",
       cor.coef.name = c("rho"),
@@ -466,7 +445,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   ###### Growth efficiency in fresh weight according to specific growth rate in fresh weight ######
   
   gefw_msgrfw <- ggplot2::ggplot(data_i,
-                                 aes(x = specific_growth_rate, y = growth_efficiency_fw)) +
+                                 aes(x = geometric_mean_growth, y = growth_efficiency_fw)) +
     geom_point() +
     xlim(0, NA) +
     ylim(NA, max(data_i$growth_efficiency_fw) + 0.1 * (
@@ -478,9 +457,8 @@ plot_irn <- function(data_i, data_g, data_model) {
       formula = y ~ s(x, k = 5, bs = "cv"),
       se = T
     ) +
-    labs(x = "Specific growth rate  <br> (mg<sub>growth(fw)</sub> day<sup>-1</sup> mg<sub>body(fw)</sub><sup>-1</sup>)", y = "Growth efficiency <br> (% fw)") +
-    theme(axis.title.x = element_markdown(),
-          axis.title.y = element_markdown()) +
+    labs(x = "Growth rate", y = "Growth efficiency") +
+    theme(axis.title.x = element_markdown(), axis.title.y = element_markdown()) +
     ggpubr::stat_cor(
       method = "pearson",
       cor.coef.name = c("rho"),
@@ -503,11 +481,10 @@ plot_irn <- function(data_i, data_g, data_model) {
   ###### Growth investment according to mass specific amount absorbed  ######
   
   
-  p <- ggplot2::ggplot(data_i,
-                       aes(x = absorbed_mass_dw / ((
-                         bodymass_7th_instar_j3_dw + bodymass_7th_instar_j0_fw * (1 - larvae_day0_wc)
-                       ) / 2
-                       ), y = growth_investment_dw)) +
+  p <- ggplot2::ggplot(data_i, aes(x = absorbed_mass_dw / ((
+    bodymass_7th_instar_j3_dw + bodymass_7th_instar_j0_fw * (1 - larvae_day0_wc)
+  ) / 2
+  ), y = growth_investment_dw)) +
     geom_point() +
     labs(x = "Mass-specific absorbed mass (% dw)", y = " Growth investment (% dw)") +
     geom_smooth(color = "steelblue3",
@@ -531,17 +508,14 @@ plot_irn <- function(data_i, data_g, data_model) {
                                  aes(x = mass_specific_ingestion_rate_fw, y = growth_investment_dw)) +
     geom_point() +
     xlim(0, NA) +
-    ylim(NA,
-         max(data_i$growth_investment_dw) + 0.2 * abs((
-           max(data_i$growth_investment_dw) - min(data_i$growth_investment_dw)
-         ))) +
-    labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)",
-         y = "Growth investment (% dw)") +
+    ylim(NA, max(data_i$growth_investment_dw) + 0.2 * abs((
+      max(data_i$growth_investment_dw) - min(data_i$growth_investment_dw)
+    ))) +
+    labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Growth investment (% dw)") +
     geom_smooth(color = "steelblue3",
                 method = "loess",
                 span = 1) +
-    theme(axis.title.x = element_markdown(),
-          axis.title.y = element_markdown()) +
+    theme(axis.title.x = element_markdown(), axis.title.y = element_markdown()) +
     ggpubr::stat_cor(
       aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")),
       method = "pearson",
@@ -568,17 +542,14 @@ plot_irn <- function(data_i, data_g, data_model) {
                                        growth_investment_dw)) +
     geom_point() +
     xlim(0, NA) +
-    ylim(NA,
-         max(1 - data_i$growth_investment_dw) + 0.2 * abs((
-           max(1 - data_i$growth_investment_dw) - min(1 - data_i$growth_investment_dw)
-         ))) +
-    labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)",
-         y = "Maintenance investment (% dw)") +
+    ylim(NA, max(1 - data_i$growth_investment_dw) + 0.2 * abs((
+      max(1 - data_i$growth_investment_dw) - min(1 - data_i$growth_investment_dw)
+    ))) +
+    labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Maintenance investment (% dw)") +
     geom_smooth(color = "steelblue3",
                 method = "loess",
                 span = 1) +
-    theme(axis.title.x = element_markdown(),
-          axis.title.y = element_markdown()) +
+    theme(axis.title.x = element_markdown(), axis.title.y = element_markdown()) +
     ggpubr::stat_cor(
       aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")),
       method = "pearson",
@@ -610,13 +581,11 @@ plot_irn <- function(data_i, data_g, data_model) {
          max(data_i$mass_specific_maintenance_rate_dw) + 0.2 * abs((
            max(data_i$mass_specific_maintenance_rate_dw) - min(data_i$mass_specific_maintenance_rate_dw)
          ))) +
-    labs(x = "Intake rate <br> (mg<sub>food(dw)</sub> mg<sub>body(dw)</sub><sup>-1</sup> day<sup>-1</sup>)",
-         y = "Mass-specific maintenance rate <br> (mg<sub>food(dw)</sub> mg<sub>body(dw)</sub><sup>-1</sup> day<sup>-1</sup>)") +
+    labs(x = "Intake rate <br> (mg<sub>food(dw)</sub> mg<sub>body(dw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Mass-specific maintenance rate <br> (mg<sub>food(dw)</sub> mg<sub>body(dw)</sub><sup>-1</sup> day<sup>-1</sup>)") +
     geom_smooth(color = "steelblue3",
                 method = "loess",
                 span = 1) +
-    theme(axis.title.x = element_markdown(),
-          axis.title.y = element_markdown()) +
+    theme(axis.title.x = element_markdown(), axis.title.y = element_markdown()) +
     ggpubr::stat_cor(
       aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")),
       method = "pearson",
@@ -640,7 +609,8 @@ plot_irn <- function(data_i, data_g, data_model) {
   ###### Growth efficiency according to absorption efficiency  ######
   
   p <- ggplot2::ggplot(data_i,
-                       aes(x = absorption_efficiency_dw , y = growth_efficiency_dw)) +
+                       aes(x = absorption_efficiency_dw , y = growth_efficiency_dw *
+                             100)) +
     geom_point() +
     labs(x = "Absoprtion efficiency (% dw)", y = "Growth efficiency (% dw)") +
     geom_smooth(color = "steelblue3",
@@ -668,8 +638,7 @@ plot_irn <- function(data_i, data_g, data_model) {
     geom_smooth(color = "steelblue3",
                 method = "loess",
                 span = 0.75) +
-    theme(axis.title.x = element_markdown(),
-          axis.title.y = element_markdown())
+    theme(axis.title.x = element_markdown(), axis.title.y = element_markdown())
   
   ggsave(
     filename = "mser_&_msir.pdf",
@@ -691,8 +660,7 @@ plot_irn <- function(data_i, data_g, data_model) {
     gefw_msgrfw,
     ncol = 2,
     nrow = 2,
-    labels = c("a.", "b.",
-               "c.", "d."),
+    labels = c("a.", "b.", "c.", "d."),
     label.y = 1,
     label.x = 0,
     widths = c(1, 1)
@@ -768,15 +736,15 @@ plot_irn <- function(data_i, data_g, data_model) {
     sd_food = sd(data_element[, food_col])
     
     # Larvae elemental content
-    average_larvae = mean(data_element[which(data_element$variable == "larvae"),]$elemental_value, na.rm =
+    average_larvae = mean(data_element[which(data_element$variable == "larvae"), ]$elemental_value, na.rm =
                             T)
-    sd_larvae = sd(data_element[which(data_element$variable == "larvae"),]$elemental_value, na.rm =
+    sd_larvae = sd(data_element[which(data_element$variable == "larvae"), ]$elemental_value, na.rm =
                      T)
     
     # Frass elemental content
-    average_frass = mean(data_element[which(data_element$variable == "frass"),]$elemental_value, na.rm =
+    average_frass = mean(data_element[which(data_element$variable == "frass"), ]$elemental_value, na.rm =
                            T)
-    sd_frass = sd(data_element[which(data_element$variable == "frass"),]$elemental_value, na.rm =
+    sd_frass = sd(data_element[which(data_element$variable == "frass"), ]$elemental_value, na.rm =
                     T)
     data <- data.frame(
       name = c("Food", "Larvae", "Frass"),
@@ -836,14 +804,7 @@ plot_irn <- function(data_i, data_g, data_model) {
     plots_matrices[[8]],
     ncol = 4,
     nrow = 3,
-    labels = c("a.",
-               "b.",
-               "c.",
-               "d.",
-               "e.",
-               "f.",
-               "g.",
-               "h."),
+    labels = c("a.", "b.", "c.", "d.", "e.", "f.", "g.", "h."),
     label.y = 1,
     label.x = 0,
     heights = c(1, 1),
@@ -867,12 +828,9 @@ plot_irn <- function(data_i, data_g, data_model) {
   data_larvae = subset(data_g, data_g$variable == "larvae")
   data_larvae = pivot_wider(data_larvae, names_from = element, values_from = elemental_value)
   
-  p <- ggplot2::ggplot(data_larvae,
-                       aes(x = growth_rate, y = P)) +
+  p <- ggplot2::ggplot(data_larvae, aes(x = geometric_mean_growth, y = P)) +
     geom_point() +
-    labs(x = expression(paste("Growth rate", " (", mg[body (fw)], " ", day ^ {
-      -1
-    }, ")")), y = "Larvae P (ppm)") +
+    labs(x = expression(paste("Growth rate")), y = "Larvae P (ppm)") +
     geom_smooth(color = "steelblue3",
                 method = "loess",
                 span = 0.75)
@@ -961,8 +919,7 @@ plot_irn <- function(data_i, data_g, data_model) {
     lims(x = c(0, 0), y = c(0, 0)) +
     theme_void() +
     theme(legend.position = c(0.5, 0.5)) +
-    scale_color_manual(values = colours_elements,
-                       aesthetics = c("colour", "fill")) +
+    scale_color_manual(values = colours_elements, aesthetics = c("colour", "fill")) +
     guides(colour = guide_legend(override.aes = list(size = 8), ncol = 2))
   
   y_axes = c("Larvae", "Frass", "Absorbed", "RT of")
@@ -976,7 +933,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   # ylim min and ymax tables
   
   ylim_mins = matrix(
-    c(rep(NA, nb_elements * 2),  rep(0, nb_elements * 2)),
+    c(rep(NA, nb_elements * 2), rep(0, nb_elements * 2)),
     ncol = length(y_axes),
     nrow = nb_elements,
     byrow = F
@@ -1032,24 +989,16 @@ plot_irn <- function(data_i, data_g, data_model) {
       methods = c("lm", "lm", "gam", "gam")
       plots[[j]][[i]] = ggplot2::ggplot(
         data_matrix_element ,
-        aes(x = group_mass_specific_intake_rate_fw,
-            y = elemental_value)
+        aes(x = group_mass_specific_intake_rate_fw, y = elemental_value)
       ) +
         geom_point() + ylim(ylim_min, ylim_max) +
         geom_smooth(method = methods[j], color = colours_elements[i]) +
         labs(x = expression(paste(
-          "Intake rate",
-          " (",
-          mg[food(fw)],
-          " ",
-          mg[body (fw)] ^ {
+          "Intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
             -1
-          },
-          " ",
-          day ^ {
+          }, " ", day ^ {
             -1
-          },
-          ")",
+          }, ")",
         )),
         y = paste(
           y_axes[j],
@@ -1101,18 +1050,7 @@ plot_irn <- function(data_i, data_g, data_model) {
       plots[[i]][[8]],
       ncol = 4,
       nrow = 3,
-      labels = c("a.",
-                 "b.",
-                 "c.",
-                 "d.",
-                 "",
-                 "",
-                 "",
-                 "",
-                 "d.",
-                 "e.",
-                 "f.",
-                 "g."),
+      labels = c("a.", "b.", "c.", "d.", "", "", "", "", "d.", "e.", "f.", "g."),
       label.y = 1.1,
       label.x = 0,
       heights = c(1, 0.05, 1),
@@ -1124,18 +1062,11 @@ plot_irn <- function(data_i, data_g, data_model) {
     
     complete_plots[[i]] = ggpubr::annotate_figure(complete_plots[[i]],
                                                   bottom = ggpubr::text_grob(expression(
-                                                    paste("Intake rate",
-                                                          " (",
-                                                          mg[food(fw)],
-                                                          " ",
-                                                          mg[body (fw)] ^ {
-                                                            -1
-                                                          },
-                                                          " ",
-                                                          day ^ {
-                                                            -1
-                                                          },
-                                                          ")", )
+                                                    paste("Intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
+                                                      -1
+                                                    }, " ", day ^ {
+                                                      -1
+                                                    }, ")", )
                                                   )),
                                                   top = "")
     
@@ -1182,10 +1113,9 @@ plot_irn <- function(data_i, data_g, data_model) {
   cn_larvae <- ggplot2::ggplot(data_larvae,
                                aes(x = group_mass_specific_intake_rate_fw, y = C_N)) +
     geom_point() +
-    ylim(NA,
-         max(data_larvae$C_N, na.rm = T) + 0.1 * (
-           max(data_larvae$C_N, na.rm = T) - min(data_larvae$C_N, na.rm = T)
-         )) +
+    ylim(NA, max(data_larvae$C_N, na.rm = T) + 0.1 * (
+      max(data_larvae$C_N, na.rm = T) - min(data_larvae$C_N, na.rm = T)
+    )) +
     labs(x = expression(paste(
       "Intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
         -1
@@ -1225,10 +1155,9 @@ plot_irn <- function(data_i, data_g, data_model) {
       }, ")",
     )), y = "Larvae N/P") +
     geom_smooth(color = "steelblue3", method = lm) +
-    scale_y_continuous(limits = c(NA,
-                                  max(data_larvae$N_P, na.rm = T) + 0.1 * (
-                                    max(data_larvae$N_P, na.rm = T) - min(data_larvae$N_P, na.rm = T)
-                                  ))) +
+    scale_y_continuous(limits = c(NA, max(data_larvae$N_P, na.rm = T) + 0.1 * (
+      max(data_larvae$N_P, na.rm = T) - min(data_larvae$N_P, na.rm = T)
+    ))) +
     ggpubr::stat_cor(
       method = "pearson",
       cor.coef.name = c("rho"),
@@ -1261,10 +1190,9 @@ plot_irn <- function(data_i, data_g, data_model) {
       }, ")",
     )), y = "Larvae C/P") +
     geom_smooth(color = "steelblue3", method = lm) +
-    scale_y_continuous(limits = c(NA,
-                                  max(data_larvae$C_P, na.rm = T) + 0.1 * (
-                                    max(data_larvae$C_P, na.rm = T) - min(data_larvae$C_P, na.rm = T)
-                                  ))) +
+    scale_y_continuous(limits = c(NA, max(data_larvae$C_P, na.rm = T) + 0.1 * (
+      max(data_larvae$C_P, na.rm = T) - min(data_larvae$C_P, na.rm = T)
+    ))) +
     ggpubr::stat_cor(
       method = "pearson",
       cor.coef.name = c("rho"),
@@ -1286,9 +1214,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   # For frass
   
   data_frass = subset(data_g, data_g$variable == "frass")
-  data_frass = pivot_wider(data_frass,
-                           names_from = element,
-                           values_from = elemental_value)
+  data_frass = pivot_wider(data_frass, names_from = element, values_from = elemental_value)
   data_frass$C_N = data_frass$C / data_frass$N
   data_frass$N_P = data_frass$N / (data_frass$P / (10 ^ 4))
   data_frass$C_P = data_frass$C / (data_frass$P / (10 ^ 4))
@@ -1299,8 +1225,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   cn_frass <- ggplot2::ggplot(data_frass,
                               aes(x = group_mass_specific_intake_rate_fw, y = C_N)) +
     geom_point() +
-    ylim(NA,
-         max(data_frass$C_N, na.rm = T) + 0.1 * (max(data_frass$C_N, na.rm = T) - min(data_frass$C_N, na.rm = T))) +
+    ylim(NA, max(data_frass$C_N, na.rm = T) + 0.1 * (max(data_frass$C_N, na.rm = T) - min(data_frass$C_N, na.rm = T))) +
     labs(x = expression(paste(
       "Intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
         -1
@@ -1340,10 +1265,9 @@ plot_irn <- function(data_i, data_g, data_model) {
       }, ")",
     )), y = "Frass N/P") +
     geom_smooth(color = "steelblue3", method = lm) +
-    scale_y_continuous(limits = c(NA,
-                                  max(data_frass$N_P, na.rm = T) + 0.1 * (
-                                    max(data_frass$N_P, na.rm = T) - min(data_frass$N_P, na.rm = T)
-                                  ))) +
+    scale_y_continuous(limits = c(NA, max(data_frass$N_P, na.rm = T) + 0.1 * (
+      max(data_frass$N_P, na.rm = T) - min(data_frass$N_P, na.rm = T)
+    ))) +
     ggpubr::stat_cor(
       method = "pearson",
       cor.coef.name = c("rho"),
@@ -1375,10 +1299,9 @@ plot_irn <- function(data_i, data_g, data_model) {
       }, ")",
     )), y = "Frass C/P") +
     geom_smooth(color = "steelblue3", method = lm) +
-    scale_y_continuous(limits = c(NA,
-                                  max(data_frass$C_P, na.rm = T) + 0.1 * (
-                                    max(data_frass$C_P, na.rm = T) - min(data_frass$C_P, na.rm = T)
-                                  ))) +
+    scale_y_continuous(limits = c(NA, max(data_frass$C_P, na.rm = T) + 0.1 * (
+      max(data_frass$C_P, na.rm = T) - min(data_frass$C_P, na.rm = T)
+    ))) +
     ggpubr::stat_cor(
       method = "pearson",
       cor.coef.name = c("rho"),
@@ -1410,33 +1333,20 @@ plot_irn <- function(data_i, data_g, data_model) {
     np_frass,
     ncol = 3,
     nrow = 2,
-    labels = c("a.",
-               "b.",
-               "c.",
-               "d.",
-               "e.",
-               "f."),
+    labels = c("a.", "b.", "c.", "d.", "e.", "f."),
     label.y = 1,
     label.x = 0,
     heights = c(1, 1, 1),
     widths = c(1, 1)
   )
   
-  complete_stoichiometry = ggpubr::annotate_figure(complete_stoichiometry,
-                                                   bottom = ggpubr::text_grob(expression(
-                                                     paste("Intake rate",
-                                                           " (",
-                                                           mg[food(fw)],
-                                                           " ",
-                                                           mg[body (fw)] ^ {
-                                                             -1
-                                                           },
-                                                           " ",
-                                                           day ^ {
-                                                             -1
-                                                           },
-                                                           ")")
-                                                   )))
+  complete_stoichiometry = ggpubr::annotate_figure(complete_stoichiometry, bottom = ggpubr::text_grob(expression(
+    paste("Intake rate", " (", mg[food(fw)], " ", mg[body (fw)] ^ {
+      -1
+    }, " ", day ^ {
+      -1
+    }, ")")
+  )))
   
   ggsave(
     filename = paste("frass_larvae_", "stoichiometry", ".pdf", sep = ""),
@@ -1462,8 +1372,8 @@ plot_irn <- function(data_i, data_g, data_model) {
   # Removing 15N and 13C
   data_abs = data_abs[!(data_abs$element %in% c("15N", "14N", "13C", "12C")), ]
   
-  lm_absorption = data_model$lm_nutrient[grep("absorption .", data_model$lm_nutrient$variable),]
-  lm_absorption = lm_absorption[c(7, 5, 1, 2, 3, 6, 8, 4),]
+  lm_absorption = data_model$lm_nutrient[grep("absorption .", data_model$lm_nutrient$variable), ]
+  lm_absorption = lm_absorption[c(7, 5, 1, 2, 3, 6, 8, 4), ]
   order_elements_legend = c("K", "Mg", "C", "N", "P", "S", "Ca", "Na")
   p = ggplot2::ggplot(
     data_abs ,
@@ -1476,8 +1386,7 @@ plot_irn <- function(data_i, data_g, data_model) {
     )
   ) +
     geom_point(alpha = 0.1, shape = 16) +
-    geom_smooth(method = "lm",
-                se = FALSE) +
+    geom_smooth(method = "lm", se = FALSE) +
     scale_color_manual(
       values = c(colours_elements[1:3], scales::alpha(colours_elements[4:8], 0.5)),
       aesthetics = c("colour", "fill"),
@@ -1501,8 +1410,7 @@ plot_irn <- function(data_i, data_g, data_model) {
       fill = "Element",
       color = "Element"
     ) +
-    theme(legend.position = "right",
-          axis.title.x = element_markdown())
+    theme(legend.position = "right", axis.title.x = element_markdown())
   
   # Save the plot
   ggsave(
@@ -1545,8 +1453,7 @@ plot_irn <- function(data_i, data_g, data_model) {
     )
   ) +
     geom_point(alpha = 0.1) +
-    geom_smooth(method = "gam",
-                se = FALSE) +
+    geom_smooth(method = "gam", se = FALSE) +
     scale_color_manual(
       values = c(colours_elements[1:3], scales::alpha(colours_elements[4:8], 0.5)),
       aesthetics = c("colour", "fill")
@@ -1557,15 +1464,11 @@ plot_irn <- function(data_i, data_g, data_model) {
       fill = "Element",
       color = "Element"
     ) +
-    theme(legend.position = "right",
-          axis.title.x = element_markdown())
+    theme(legend.position = "right", axis.title.x = element_markdown())
   
   # Save the plot
   ggsave(
-    filename = paste("retention_times",
-                     "layered",
-                     "dw_&_msirfw.pdf",
-                     sep = ""),
+    filename = paste("retention_times", "layered", "dw_&_msirfw.pdf", sep = ""),
     plot = p,
     device = cairo_pdf,
     path = here::here("4_outputs", "2_figures"),
@@ -1578,7 +1481,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   ##### Nutrient co variations in larvae and frass #####
   data_larvae = subset(data_g, data_g$variable == "larvae")
   # Removing 15N and 13C
-  data_larvae = data_larvae[!(data_larvae$element %in% c("d15N", "d13C")),]
+  data_larvae = data_larvae[!(data_larvae$element %in% c("d15N", "d13C")), ]
   test = pivot_wider(data_larvae, names_from = element, values_from = elemental_value)
   pdf(here::here(
     "4_outputs",
@@ -1590,7 +1493,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   
   data_larvae = subset(data_g, data_g$variable == "frass")
   # Removing 15N and 13C
-  data_larvae = data_larvae[!(data_larvae$element %in% c("d15N", "d13C")),]
+  data_larvae = data_larvae[!(data_larvae$element %in% c("d15N", "d13C")), ]
   test = pivot_wider(data_larvae, names_from = element, values_from = elemental_value)
   pdf(here::here(
     "4_outputs",
@@ -1710,9 +1613,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   )
   
   data_tf = subset(data_g, data_g$variable == "tf")
-  data_tf = pivot_wider(data_tf,
-                        names_from = element,
-                        values_from = elemental_value)
+  data_tf = pivot_wider(data_tf, names_from = element, values_from = elemental_value)
   
   
   p <- ggplot2::ggplot(data_tf,
@@ -1725,7 +1626,7 @@ plot_irn <- function(data_i, data_g, data_model) {
         -1
       }, ")",
     )), y = expression(paste(Delta, "13C"))) +
-    geom_smooth(color = "steelblue3",  method = "lm")
+    geom_smooth(color = "steelblue3", method = "lm")
   
   ggsave(
     filename = "13ctf_&_msir.pdf",
@@ -1748,7 +1649,7 @@ plot_irn <- function(data_i, data_g, data_model) {
         -1
       }, ")",
     )), y = expression(paste(Delta, "15N"))) +
-    geom_smooth(color = "steelblue3",  method = "lm")
+    geom_smooth(color = "steelblue3", method = "lm")
   
   ggsave(
     filename = "15ntf_&_msir.pdf",
@@ -1764,18 +1665,11 @@ plot_irn <- function(data_i, data_g, data_model) {
   ######  Isotopic fractionation between the larvae and food (trophic fractionation) as a function of growth rate ######
   
   
-  ctf_gr <- ggplot2::ggplot(data_tf,
-                            aes(x = growth_rate, y = `13C`)) +
+  ctf_gr <- ggplot2::ggplot(data_tf, aes(x = geometric_mean_growth, y = `13C`)) +
     geom_point(size = 1.5) +
     xlim(0, NA) +
-    labs(x = expression(paste("Growth rate",
-                              " (",
-                              mg[body (fw)],
-                              " ", day ^ {
-                                -1
-                              },
-                              ")",)), y = expression(paste(Delta, "13C"))) +
-    geom_smooth(color = "steelblue3",  method = "lm") +
+    labs(x = expression(paste("Growth rate")), y = expression(paste(Delta, "13C"))) +
+    geom_smooth(color = "steelblue3", method = "lm") +
     ggpubr::stat_cor(
       aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")),
       method = "pearson",
@@ -1783,10 +1677,9 @@ plot_irn <- function(data_i, data_g, data_model) {
       label.x.npc = 0.2,
       label.y.npc = 1
     ) +
-    ylim(NA,
-         max(data_tf$`13C`, na.rm = T) + 0.2 * (abs(
-           max(data_tf$`13C`, na.rm = T) - min(data_tf$`13C`, na.rm = T)
-         )))
+    ylim(NA, max(data_tf$`13C`, na.rm = T) + 0.2 * (abs(
+      max(data_tf$`13C`, na.rm = T) - min(data_tf$`13C`, na.rm = T)
+    )))
   
   
   ggsave(
@@ -1800,18 +1693,11 @@ plot_irn <- function(data_i, data_g, data_model) {
     units = "in"
   )
   
-  ntf_gr <- ggplot2::ggplot(data_tf,
-                            aes(x = growth_rate, y = `15N`)) +
+  ntf_gr <- ggplot2::ggplot(data_tf, aes(x = geometric_mean_growth, y = `15N`)) +
     geom_point(size = 1.5) +
     xlim(0, NA) +
-    labs(x = expression(paste("Growth rate",
-                              " (",
-                              mg[body (fw)],
-                              " ", day ^ {
-                                -1
-                              },
-                              ")",)), y = expression(paste(Delta, "15N"))) +
-    geom_smooth(color = "steelblue3",  method = "lm") +
+    labs(x = expression(paste("Growth rate")), y = expression(paste(Delta, "15N"))) +
+    geom_smooth(color = "steelblue3", method = "lm") +
     ggpubr::stat_cor(
       aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")),
       method = "pearson",
@@ -1819,10 +1705,9 @@ plot_irn <- function(data_i, data_g, data_model) {
       label.x.npc = 0.2,
       label.y.npc = 1
     ) +
-    ylim(NA,
-         max(data_tf$`15N`, na.rm = T) + 0.2 * (abs(
-           max(data_tf$`15N`, na.rm = T) - min(data_tf$`15N`, na.rm = T)
-         )))
+    ylim(NA, max(data_tf$`15N`, na.rm = T) + 0.2 * (abs(
+      max(data_tf$`15N`, na.rm = T) - min(data_tf$`15N`, na.rm = T)
+    )))
   
   ggsave(
     filename = "15ntf_&_gr.pdf",
@@ -1838,13 +1723,10 @@ plot_irn <- function(data_i, data_g, data_model) {
   ######  Isotopic fractionation between the larvae and food (trophic fractionation) as a function of mass-specific growth rate ######
   
   
-  p <- ggplot2::ggplot(data_tf,
-                       aes(x = growth_rate / ((groupmass_7th_instar_j3_fw +
-                                                 groupmass_7th_instar_j0_fw) / 2
-                       ), y = `13C`)) +
+  p <- ggplot2::ggplot(data_tf, aes(x = geometric_mean_growth, y = `13C`)) +
     geom_point(size = 1.5) +
     labs(x = "Mass-specific growth rate (mg fw/ day)", y = expression(paste(Delta, "13C"))) +
-    geom_smooth(color = "steelblue3",  method = "lm")
+    geom_smooth(color = "steelblue3", method = "lm")
   
   ggsave(
     filename = "13ctf_&_msgr.pdf",
@@ -1857,13 +1739,10 @@ plot_irn <- function(data_i, data_g, data_model) {
     units = "in"
   )
   
-  p <- ggplot2::ggplot(data_tf,
-                       aes(x = growth_rate / ((groupmass_7th_instar_j3_fw +
-                                                 groupmass_7th_instar_j0_fw) / 2
-                       ), y = `15N`)) +
+  p <- ggplot2::ggplot(data_tf, aes(x = geometric_mean_growth, y = `15N`)) +
     geom_point(size = 1.5) +
     labs(x = "Mass-specific growth rate (mg fw/ day)", y = expression(paste(Delta, "15N"))) +
-    geom_smooth(color = "steelblue3",  method = "lm")
+    geom_smooth(color = "steelblue3", method = "lm")
   
   ggsave(
     filename = "15ntf_&_msgr.pdf",
@@ -1879,11 +1758,10 @@ plot_irn <- function(data_i, data_g, data_model) {
   ######  Isotopic fractionation between the larvae and food (trophic fractionation) as a function of growth efficiency ######
   
   
-  p <- ggplot2::ggplot(data_tf,
-                       aes(x = growth_efficiency_fw , y = `13C`)) +
+  p <- ggplot2::ggplot(data_tf, aes(x = growth_efficiency_fw , y = `13C`)) +
     geom_point(size = 1.5) +
-    labs(x = "Growth efficiency (%fw)", y = expression(paste(Delta, "13C"))) +
-    geom_smooth(color = "steelblue3",  method = "lm")
+    labs(x = "Growth efficiency", y = expression(paste(Delta, "13C"))) +
+    geom_smooth(color = "steelblue3", method = "lm")
   
   ggsave(
     filename = "13ctf_&_gefw.pdf",
@@ -1896,11 +1774,10 @@ plot_irn <- function(data_i, data_g, data_model) {
     units = "in"
   )
   
-  p <- ggplot2::ggplot(data_tf,
-                       aes(x = growth_efficiency_fw , y = `15N`)) +
+  p <- ggplot2::ggplot(data_tf, aes(x = growth_efficiency_fw , y = `15N`)) +
     geom_point(size = 1.5) +
-    labs(x = "Growth efficiency (%fw)", y = expression(paste(Delta, "15N"))) +
-    geom_smooth(color = "steelblue3",  method = "lm")
+    labs(x = "Growth efficiency", y = expression(paste(Delta, "15N"))) +
+    geom_smooth(color = "steelblue3", method = "lm")
   
   ggsave(
     filename = "15ntf_&_gefw.pdf",
@@ -1916,9 +1793,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   ######  Isotopic discrimination factor between frass and food (FFDF) according to MSIR ######
   
   data_ffdf = subset(data_g, data_g$variable == "ffdf")
-  data_ffdf = pivot_wider(data_ffdf,
-                          names_from = element,
-                          values_from = elemental_value)
+  data_ffdf = pivot_wider(data_ffdf, names_from = element, values_from = elemental_value)
   
   
   p <- ggplot2::ggplot(data_ffdf,
@@ -1934,7 +1809,7 @@ plot_irn <- function(data_i, data_g, data_model) {
       )),
       y = latex2exp::TeX(r'($\delta 13C_{frass}-\delta 13C_{food}$)')
     ) +
-    geom_smooth(color = "steelblue3",  method = "lm")
+    geom_smooth(color = "steelblue3", method = "lm")
   
   ggsave(
     filename = "13cffdf_&_msir.pdf",
@@ -1960,7 +1835,7 @@ plot_irn <- function(data_i, data_g, data_model) {
       )),
       y = latex2exp::TeX(r'($\delta 15N_{frass}-\delta 15N_{food}$)')
     ) +
-    geom_smooth(color = "steelblue3",  method = "lm")
+    geom_smooth(color = "steelblue3", method = "lm")
   
   ggsave(
     filename = "15nffdf_&_msir.pdf",
@@ -1976,17 +1851,14 @@ plot_irn <- function(data_i, data_g, data_model) {
   ######  Isotopic discrimination factor between frass and food (FFDF) according to absorption efficiency ######
   
   data_ffdf = subset(data_g, data_g$variable == "ffdf")
-  data_ffdf = pivot_wider(data_ffdf,
-                          names_from = element,
-                          values_from = elemental_value)
+  data_ffdf = pivot_wider(data_ffdf, names_from = element, values_from = elemental_value)
   
   
-  p <- ggplot2::ggplot(data_ffdf,
-                       aes(x = absorption_efficiency_dw , y = `13C`)) +
+  p <- ggplot2::ggplot(data_ffdf, aes(x = absorption_efficiency_dw , y = `13C`)) +
     geom_point(size = 1.5) +
     labs(x = "Absorption efficiency (%)",
          y = latex2exp::TeX(r'($\delta 13C_{frass}-\delta 13C_{food}$)')) +
-    geom_smooth(color = "steelblue3",  method = "lm")
+    geom_smooth(color = "steelblue3", method = "lm")
   
   ggsave(
     filename = "13cffdf_&_aedw.pdf",
@@ -1999,12 +1871,11 @@ plot_irn <- function(data_i, data_g, data_model) {
     units = "in"
   )
   
-  p <- ggplot2::ggplot(data_ffdf,
-                       aes(x = absorption_efficiency_dw , y = `15N`)) +
+  p <- ggplot2::ggplot(data_ffdf, aes(x = absorption_efficiency_dw , y = `15N`)) +
     geom_point(size = 1.5) +
     labs(x = "Absorption efficiency (%)",
          y = latex2exp::TeX(r'($\delta 15N_{frass}-\delta 15N_{food}$)')) +
-    geom_smooth(color = "steelblue3",  method = "lm")
+    geom_smooth(color = "steelblue3", method = "lm")
   
   ggsave(
     filename = "15nffdf_&_aedw.pdf",
@@ -2020,9 +1891,7 @@ plot_irn <- function(data_i, data_g, data_model) {
   ######  Isotopic discrimination factor between frass and larvae (FLDF) according to MSIR ######
   
   data_fldf = subset(data_g, data_g$variable == "fldf")
-  data_fldf = pivot_wider(data_fldf,
-                          names_from = element,
-                          values_from = elemental_value)
+  data_fldf = pivot_wider(data_fldf, names_from = element, values_from = elemental_value)
   
   
   p <- ggplot2::ggplot(data_fldf,
@@ -2038,7 +1907,7 @@ plot_irn <- function(data_i, data_g, data_model) {
       )),
       y = latex2exp::TeX(r'($\delta 13C_{frass}-\delta 13C_{larvae}$)')
     ) +
-    geom_smooth(color = "steelblue3",  method = "lm")
+    geom_smooth(color = "steelblue3", method = "lm")
   
   ggsave(
     filename = "13cfldf_&_msir.pdf",
@@ -2064,7 +1933,7 @@ plot_irn <- function(data_i, data_g, data_model) {
       )),
       y = latex2exp::TeX(r'($\delta 15N_{frass}-\delta 15N_{larvae}$)')
     ) +
-    geom_smooth(color = "steelblue3",  method = "lm")
+    geom_smooth(color = "steelblue3", method = "lm")
   
   ggsave(
     filename = "15nfldf_&_msir.pdf",
@@ -2080,17 +1949,13 @@ plot_irn <- function(data_i, data_g, data_model) {
   ######  Isotopic absorption efficiency ratio (IAER) according to MSIR ######
   
   data_aer = subset(data_g, data_g$variable == "iaer")
-  data_aer = pivot_wider(data_aer,
-                         names_from = element,
-                         values_from = elemental_value)
+  data_aer = pivot_wider(data_aer, names_from = element, values_from = elemental_value)
   
   
-  ciaer_msir <- ggplot2::ggplot(data_aer,
-                                aes(x = group_mass_specific_intake_rate_fw, y = `C`)) +
+  ciaer_msir <- ggplot2::ggplot(data_aer, aes(x = group_mass_specific_intake_rate_fw, y = `C`)) +
     geom_point(size = 1.5) +
     xlim(0, NA) +
-    labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)",
-         y = "C IAER") +
+    labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "C IAER") +
     geom_smooth(color = "steelblue3",
                 method = "lm",
                 span = 0.75) +
@@ -2102,8 +1967,7 @@ plot_irn <- function(data_i, data_g, data_model) {
       label.x.npc = 0.2,
       label.y.npc = 1
     ) +
-    ylim(NA,
-         max(data_aer$`C`, na.rm = T) + 0.2 * abs(max(data_aer$`C`, na.rm = T) - min(data_aer$`C`, na.rm = T)))
+    ylim(NA, max(data_aer$`C`, na.rm = T) + 0.2 * abs(max(data_aer$`C`, na.rm = T) - min(data_aer$`C`, na.rm = T)))
   
   ggsave(
     filename = "ciaer_&_msir.pdf",
@@ -2116,24 +1980,16 @@ plot_irn <- function(data_i, data_g, data_model) {
     units = "in"
   )
   
-  niaer_msir <- ggplot2::ggplot(data_aer,
-                                aes(x = group_mass_specific_intake_rate_fw, y = `N`)) +
+  niaer_msir <- ggplot2::ggplot(data_aer, aes(x = group_mass_specific_intake_rate_fw, y = `N`)) +
     geom_point(size = 1.5) +
     labs(x = expression(paste(
-      "Intake rate",
-      " (",
-      mg[food (fw)],
-      " ",
-      mg[body (fw)] ^ {
+      "Intake rate", " (", mg[food (fw)], " ", mg[body (fw)] ^ {
         -1
-      },
-      " ",
-      day ^ {
+      }, " ", day ^ {
         -1
-      },
-      ")",
+      }, ")",
     )), y = "N IAER") +
-    geom_smooth(color = "steelblue3",  method = "lm") +
+    geom_smooth(color = "steelblue3", method = "lm") +
     ggpubr::stat_cor(
       aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")),
       method = "pearson",
@@ -2141,8 +1997,7 @@ plot_irn <- function(data_i, data_g, data_model) {
       label.x.npc = 0.2,
       label.y.npc = 1
     ) +
-    ylim(NA,
-         max(data_aer$`N`, na.rm = T) + 0.2 * abs(max(data_aer$`N`, na.rm = T) - min(data_aer$`N`, na.rm = T)))
+    ylim(NA, max(data_aer$`N`, na.rm = T) + 0.2 * abs(max(data_aer$`N`, na.rm = T) - min(data_aer$`N`, na.rm = T)))
   
   
   ggsave(
@@ -2160,11 +2015,10 @@ plot_irn <- function(data_i, data_g, data_model) {
   ######  Isotopic absorption efficiency ratio (IAER) according to AE ######
   
   
-  p <- ggplot2::ggplot(data_aer,
-                       aes(x = absorption_efficiency_dw , y = `C`)) +
+  p <- ggplot2::ggplot(data_aer, aes(x = absorption_efficiency_dw , y = `C`)) +
     geom_point(size = 1.5) +
     labs(x = "Absorption efficiency (%)", y = "C IAER") +
-    geom_smooth(color = "steelblue3",  method = "lm")
+    geom_smooth(color = "steelblue3", method = "lm")
   
   ggsave(
     filename = "ciaer_&_ae.pdf",
@@ -2177,11 +2031,10 @@ plot_irn <- function(data_i, data_g, data_model) {
     units = "in"
   )
   
-  p <- ggplot2::ggplot(data_aer,
-                       aes(x = absorption_efficiency_dw , y = `N`)) +
+  p <- ggplot2::ggplot(data_aer, aes(x = absorption_efficiency_dw , y = `N`)) +
     geom_point(size = 1.5) +
     labs(x = "Absorption efficiency (%)", y = "N IAER") +
-    geom_smooth(color = "steelblue3",  method = "lm")
+    geom_smooth(color = "steelblue3", method = "lm")
   
   ggsave(
     filename = "niaer_&_ae.pdf",
@@ -2243,15 +2096,7 @@ plot_irn <- function(data_i, data_g, data_model) {
       widths = c(1, 1)
     ),
     top = "",
-    bottom = ggpubr::text_grob(expression(
-      paste("Growth rate",
-            " (",
-            mg[body (fw)],
-            " ", day ^ {
-              -1
-            },
-            ")")
-    ), size = 12)
+    bottom = ggpubr::text_grob(expression(paste("Growth rate")), size = 12)
   )
   
   

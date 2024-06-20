@@ -24,7 +24,6 @@ combine_individual_data <- function(data_fc, data_ic, data_i) {
     data_i$larvae_day0_wc[i] =  mean(data_ic$indiv_water_content[week_indexes])
   }
   
-  ##### Growth rate #####
   
   # We compute the growth rate of the 7th instar before prepupation
   
@@ -32,10 +31,27 @@ combine_individual_data <- function(data_fc, data_ic, data_i) {
   data_i$growth_rate = (data_i$bodymass_last_collection_date - data_i$bodymass_7th_instar_j0_fw) / data_i$number_collection_days
   data_i$growth_rate_unit = "mg_fw/day"
   
+  # Calculate daily growth rates
+  data_i <- data_i %>%
+    mutate(
+      growth_day1 = (bodymass_7th_instar_j1_fw - bodymass_7th_instar_j0_fw) / bodymass_7th_instar_j0_fw,
+      growth_day2 = (bodymass_7th_instar_j2_fw - bodymass_7th_instar_j1_fw) / bodymass_7th_instar_j1_fw,
+      growth_day3 = (bodymass_7th_instar_j3_fw - bodymass_7th_instar_j2_fw) / bodymass_7th_instar_j2_fw
+    )
+  
+  # Compute geometric mean growth rate for each individual
+  data_i <- data_i %>%
+    rowwise() %>%
+    mutate(
+      growth_rates = list(c(growth_day1, growth_day2, growth_day3)[1:number_collection_days]),
+      geometric_mean_growth = exp(mean(log(1 + growth_rates), na.rm = TRUE)) - 1
+    ) %>%
+    ungroup()
+  
   # We compute the growth rate of the 7th instar before prepupation
   
   
-  data_i$specific_growth_rate = 2 * (data_i$bodymass_last_collection_date - data_i$bodymass_7th_instar_j0_fw) / (
+  data_i$specific_growth_rate = (data_i$bodymass_last_collection_date - data_i$bodymass_7th_instar_j0_fw) / (
     data_i$number_collection_days * (
       data_i$bodymass_last_collection_date + data_i$bodymass_7th_instar_j0_fw
     )
@@ -218,7 +234,7 @@ combine_individual_data <- function(data_fc, data_ic, data_i) {
     
     # The growth efficiency in fresh weight is equal to fresh weight mass gains divided by fresh weight of food consumed
     
-    data_i$growth_efficiency_fw[i] = 100 * ((
+    data_i$growth_efficiency_fw[i] = ((
       data_i$bodymass_last_collection_date[i] - data_i$bodymass_7th_instar_j0_fw[i]
     ) / data_i$food_consumed_collection_days_fw[i]
     )  # It is in fresh weight of food
@@ -238,7 +254,7 @@ combine_individual_data <- function(data_fc, data_ic, data_i) {
     week_indexes = which(data_fc$date == week_dates)
     
     # The growth efficiency in dry weight is equal to estimated dry weight mass gains divided by dry weight of food consumed
-    data_i$growth_efficiency_dw[i] = 100 * ((
+    data_i$growth_efficiency_dw[i] = ((
       data_i$bodymass_7th_instar_j3_dw[i] - data_i$bodymass_7th_instar_j0_fw[i] *
         (1 - data_i$larvae_day0_wc[i])
     ) / (data_i$food_consumed_collection_days_dw[i])

@@ -10,10 +10,11 @@ combine_group_data <- function(data_i, data_g, data_fc) {
   data_g$food_consumed_collection_days_fw = NA
   data_g$groupmass_7th_instar_j0_fw = NA
   data_g$groupmass_7th_instar_j3_fw = NA
+  data_g$groupmass_7th_instar_j3_dw = NA
   data_g$seventh_instar_date = "2021-10-26 CEST"
   data_g$seventh_instar_date = as.POSIXct(data_g$seventh_instar_date)
   data_g$number_collection_days = NA
-  data_g$growth_rate = NA
+  data_g$geometric_mean_growth = NA
   data_g$growth_efficiency_fw = NA
   data_g$absorption_efficiency_dw = NA
   
@@ -36,7 +37,7 @@ combine_group_data <- function(data_i, data_g, data_fc) {
     data_g$seventh_instar_date[group_row] = data_i$seventh_instar_date[individual_group_rows[1]]
     data_g$seventh_instar_date[group_row] = data_i$seventh_instar_date[individual_group_rows[1]]
     data_g$number_collection_days[group_row] = mean(data_i$number_collection_days[individual_group_rows])
-    data_g$growth_rate[group_row] = mean(data_i$growth_rate[individual_group_rows])
+    data_g$geometric_mean_growth[group_row] = mean(data_i$geometric_mean_growth[individual_group_rows])
     data_g$growth_efficiency_fw[group_row] = mean(data_i$growth_efficiency_fw[individual_group_rows])
     data_g$absorption_efficiency_dw[group_row] = 1 - (sum(data_i$frass_mass_dw[individual_group_rows]) / sum(data_i$food_consumed_collection_days_dw[individual_group_rows]))
   }
