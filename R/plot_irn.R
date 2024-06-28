@@ -846,6 +846,29 @@ plot_irn <- function(data_i, data_g, data_model) {
     units = "in"
   )
   
+  # We check whether the growth rate in positively related to P/N body content
+  # according to nobody
+  data_larvae = subset(data_g, data_g$variable == "larvae")
+  data_larvae = pivot_wider(data_larvae, names_from = element, values_from = elemental_value)
+  
+  p <- ggplot2::ggplot(data_larvae, aes(x = geometric_mean_growth, y = P/(10000*N))) +
+    geom_point() +
+    labs(x = expression(paste("Growth rate")), y = "Larvae P/N") +
+    geom_smooth(color = "steelblue3",
+                method = "lm",
+                span = 0.75)
+  
+  ggsave(
+    filename = "larvaePNdw_&_gr.pdf",
+    plot = p,
+    device = cairo_pdf,
+    path = here::here("4_outputs", "2_figures"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
+  
   ##### Sterner Elser body - waste relationship #####
   # We check whether the body N:P is negatively correlated with the waste N:P
   # according to the Sterner & Elser model of 2002
