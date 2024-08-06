@@ -8,29 +8,20 @@ model_irn <- function(data_i, data_g) {
   variable_list_tm = c(
     "absorption_rate_dw",
     "absorption_efficiency_dw",
-    "geometric_mean_growth",
+    "geometric_mean_growth_dw",
     "growth_efficiency_fw"
   ) # The variables in the total mass balance study
   
   nb_variable_tm = length(variable_list_tm)
-  matrix_list_ch = c("absorption", "larvae", "frass") # The variables in the chemical study
+  matrix_list_ch = c("absorption_efficiency_dw", "larvae", "frass") # The variables in the chemical study
   nb_matrix_ch = length(matrix_list_ch)
-  elements_list = c("C",
-                    "N",
-                    "P",
-                    "Na",
-                    "Mg",
-                    "S",
-                    "K",
-                    "Ca") # The elements
+  elements_list = c("C", "N", "P", "Na", "Mg", "S", "K", "Ca") # The elements
   nb_elements = length(elements_list)
   
   # Creating a dataframe containing GAM statistics for both total mass and chemical balances
   
   
-  variable = paste(c(variable_list_tm,
-                     rep(matrix_list_ch, each = nb_elements)), c(rep("", nb_variable_tm),
-                                                                 rep(elements_list, nb_matrix_ch)))
+  variable = paste(c(variable_list_tm, rep(matrix_list_ch, each = nb_elements)), c(rep("", nb_variable_tm), rep(elements_list, nb_matrix_ch)))
   
   
   nb_row = length(variable)
@@ -123,18 +114,18 @@ model_irn <- function(data_i, data_g) {
       
       formula_spearman = as.formula(paste(
         "~",
-        "group_mass_specific_intake_rate_fw",
+        "mean_mass_specific_intake_rate_fw",
         "+",
         "elemental_value"
       ))
       formula_gam = as.formula(paste(
         "elemental_value",
-        "~ s(group_mass_specific_intake_rate_fw,sp=20)"
+        "~ s(mean_mass_specific_intake_rate_fw,sp=20)"
       ))
       gam_mod = mgcv::gam(formula_gam, data = data_matrix_element) # creates a GAM for this element i in matrix j according to IR
       formula_lm = as.formula(paste(
         "elemental_value",
-        "~ group_mass_specific_intake_rate_fw"
+        "~ mean_mass_specific_intake_rate_fw"
       ))
       lm_mod = lm(formula_lm, data = data_matrix_element) # creates a LM for this element i in matrix j according to IR
       summary_gam = summary(gam_mod)
@@ -158,13 +149,11 @@ model_irn <- function(data_i, data_g) {
       
       if (summary_lm$coefficients[2, 4] < 0.001) {
         lm_nutrients$signif_level[k] = "***"
-      }
-      else if (0.001 < summary_lm$coefficients[2, 4] &
-               summary_lm$coefficients[2, 4] < 0.01) {
+      } else if (0.001 < summary_lm$coefficients[2, 4] &
+                 summary_lm$coefficients[2, 4] < 0.01) {
         lm_nutrients$signif_level[k] = "**"
-      }
-      else if (0.01 < summary_lm$coefficients[2, 4] &
-               summary_lm$coefficients[2, 4] < 0.05) {
+      } else if (0.01 < summary_lm$coefficients[2, 4] &
+                 summary_lm$coefficients[2, 4] < 0.05) {
         lm_nutrients$signif_level[k] = "*"
       }
       
@@ -178,24 +167,25 @@ model_irn <- function(data_i, data_g) {
         
         if (summary_gam$s.pv == 0) {
           gam_nutrients$p_value[k] = "<2e-16"
-        }
-        else{
+        } else {
           gam_nutrients$p_value[k] = format(signif(summary_gam$s.pv, digits = 2), scientific = T)
         }
+        
         if (matrix_list_ch[i] == "larvae") {
           # We want to estimate the fitted GAM values of larvae content for GMSIR of 0.4, 0.8, and 1.2
           new_data = as.data.frame(c(0.4, 0.8, 1.2))
-          colnames(new_data) = "group_mass_specific_intake_rate_fw"
+          colnames(new_data) = "mean_mass_specific_intake_rate_fw"
           
           gam_larvae_values_radar["max" , j] = max(gam_mod$fitted.values)
           gam_larvae_values_radar["min", j] = min(gam_mod$fitted.values)
           gam_larvae_values_radar[3:5, j] = predict(gam_mod, new_data)
           
         }
+        
         if (matrix_list_ch[i] == "frass") {
           # We want to estimate the fitted GAM values of larvae content for GMSIR of 0.4, 0.8, and 1.2
           new_data = as.data.frame(c(0.4, 0.8, 1.2))
-          colnames(new_data) = "group_mass_specific_intake_rate_fw"
+          colnames(new_data) = "mean_mass_specific_intake_rate_fw"
           
           gam_frass_values_radar["max" , j] = max(gam_mod$fitted.values)
           gam_frass_values_radar["min", j] = min(gam_mod$fitted.values)
@@ -209,17 +199,13 @@ model_irn <- function(data_i, data_g) {
   
   write.csv(
     lm_nutrients,
-    file = here::here("4_outputs",
-                      "1_statistical_results",
-                      "lm_nutrients.csv")
+    file = here::here("4_outputs", "1_statistical_results", "lm_nutrients.csv")
   )
   
   
   write.csv(
     gam_nutrients,
-    file = here::here("4_outputs",
-                      "1_statistical_results",
-                      "gam_nutrients.csv")
+    file = here::here("4_outputs", "1_statistical_results", "gam_nutrients.csv")
   )
   
   write.csv(
@@ -249,15 +235,14 @@ model_irn <- function(data_i, data_g) {
   
   dependant_variables_list = c("tf", "fldf", "iaer")
   independant_variables_list = c(
-    "geometric_mean_growth",
+    "geometric_mean_growth_dw",
     "absorption_efficiency_dw",
-    "group_mass_specific_intake_rate_fw"
+    "mean_mass_specific_intake_rate_fw"
   )
   
   nb_dependant_variables = length(dependant_variables_list)
   
-  isotopes_list = c("13C",
-                    "15N")
+  isotopes_list = c("13C", "15N")
   nb_isotopes = length(isotopes_list)
   
   
@@ -310,9 +295,7 @@ model_irn <- function(data_i, data_g) {
         )
       )
       
-      formula_lm = as.formula(paste("elemental_value",
-                                    "~ ",
-                                    independant_variables_list[i]))
+      formula_lm = as.formula(paste("elemental_value", "~ ", independant_variables_list[i]))
       
       formula_gam = as.formula(paste(
         "elemental_value",
@@ -392,9 +375,7 @@ model_irn <- function(data_i, data_g) {
   
   write.csv(
     gam_isotopes,
-    file = here::here("4_outputs",
-                      "1_statistical_results",
-                      "gam_isotopes.csv")
+    file = here::here("4_outputs", "1_statistical_results", "gam_isotopes.csv")
   )
   
   list_radar = list(gam_larvae_values_radar, gam_frass_values_radar)

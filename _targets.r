@@ -27,7 +27,11 @@ tar_option_set(
     "stargazer",
     "graphics",
     "minpack.lm",
-    "onls"
+    "onls",
+    "scales",
+    "patchwork",
+    "viridis",
+    "splines"
   )
 )
 
@@ -107,7 +111,8 @@ list(
     plot_irn(
       data_i = data_irn_indivuals_combined,
       data_g = data_irn_groups_combined,
-      data_model = models_irn
+      data_model = models_irn,
+      data_ic = data_irn_individuals_controls
     ),
     format = "file"
   ),

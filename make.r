@@ -16,6 +16,10 @@ library(stargazer)
 library(graphics)
 library(minpack.lm)
 library(onls)
+library(scales)
+library(patchwork)
+library(splines)
+library(viridis)
 
 lapply(list.files(here::here("R"), recursive = TRUE, full.names = T), source)
 
@@ -46,7 +50,8 @@ model <-
 
 plot_irn(data_i = data_irn_individuals_combined,
          data_g = data_irn_group_combined,
-         data_model = model)
+         data_model = model,
+         data_ic = data_irn_individuals_controls)
 
 theoretical_model_irn(data_i = data_irn_individuals_combined)
 
