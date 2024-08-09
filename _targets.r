@@ -5,34 +5,41 @@
 #################################################
 # _targets.R file
 
+
 library(targets)
 library(here)
 
+packages = c(
+  "ggplot2",
+  "dplyr",
+  "tidyr",
+  "mgcv",
+  "ggtext" ,
+  "formula.tools",
+  "fmsb",
+  "ggsci",
+  "rms",
+  "tls",
+  "scam",
+  "rmarkdown",
+  "lubridate",
+  "latex2exp",
+  "stargazer",
+  "graphics",
+  "minpack.lm",
+  "onls",
+  "scales",
+  "patchwork",
+  "viridis",
+  "splines",
+  "readr"
+)
+
+install.packages(packages[!(packages %in% installed.packages())])
+update.packages()
+
 tar_option_set(
-  packages = c(
-    "ggplot2",
-    "dplyr",
-    "tidyr",
-    "mgcv",
-    "ggtext" ,
-    "formula.tools",
-    "fmsb",
-    "ggsci",
-    "rms",
-    "tls",
-    "scam",
-    "rmarkdown",
-    "lubridate",
-    "latex2exp",
-    "stargazer",
-    "graphics",
-    "minpack.lm",
-    "onls",
-    "scales",
-    "patchwork",
-    "viridis",
-    "splines"
-  )
+  packages = packages
 )
 
 # We source all functions contained in all files in the R directory
