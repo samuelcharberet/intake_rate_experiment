@@ -37,23 +37,27 @@ data_irn_individuals_controls <-
   load_individual_control_data(path = here::here("1_data", "data_irn_individuals_controls.csv"))
 
 data_irn_individuals_combined <-
-  combine_individual_data(data_fc = data_irn_food_control,
-                          data_ic = data_irn_individuals_controls,
-                          data_i = data_irn_individuals)
+  combine_individual_data(
+    data_fc = data_irn_food_control,
+    data_ic = data_irn_individuals_controls,
+    data_i = data_irn_individuals
+  )
 
 data_irn_group_combined <-
-  combine_group_data(data_i = data_irn_individuals_combined,
-                     data_g = data_irn_groups,
-                     data_fc = data_irn_food_control)
+  combine_group_data(
+    data_i = data_irn_individuals_combined,
+    data_g = data_irn_groups,
+    data_fc = data_irn_food_control
+  )
 
 model <-
   model_irn(data_i = data_irn_individuals_combined, data_g = data_irn_group_combined)
 
-plot_irn(data_i = data_irn_individuals_combined,
-         data_g = data_irn_group_combined,
-         data_model = model,
-         data_ic = data_irn_individuals_controls)
+plot_irn(
+  data_i = data_irn_individuals_combined,
+  data_g = data_irn_group_combined,
+  data_model = model,
+  data_ic = data_irn_individuals_controls
+)
 
 theoretical_model_irn(data_i = data_irn_individuals_combined)
-
-

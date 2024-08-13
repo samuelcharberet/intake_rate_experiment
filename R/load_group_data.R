@@ -1,29 +1,28 @@
 #' load_group_data
-#' 
+#'
 #' @return a clean data tibble containing information on group chemical analysis from the intake rate experiment
 #'
-load_group_data = function(path){
-  
+load_group_data <- function(path) {
   ##########  0. Load data  ##########
-  
+
   data_irn_groups <- readr::read_delim(path)
-  
+
   ##########  1. Structuration  ##########
-  
+
   # Decide column classes
-  
-  character_columns = c(
+
+  character_columns <- c(
     "food_intake_unit",
     "frass_group_mass_dw_unit"
   )
-  
-  factor_columns = c(
+
+  factor_columns <- c(
     "group_ID",
     "treatment_ID",
     "tube_frass_ID"
   )
-  
-  numeric_columns = c(
+
+  numeric_columns <- c(
     "food_intake ",
     "frass_group_mass_dw",
     "nb_days_collection",
@@ -48,14 +47,13 @@ load_group_data = function(path){
     "d13C_larvae",
     "d15N_larvae"
   )
-  
+
   # We define the type of each column
-  
+
   data_irn_groups <- data_irn_groups |>
     dplyr::mutate(across(tidyselect::all_of(character_columns), as.character)) |>
     dplyr::mutate(across(tidyselect::all_of(factor_columns), as.factor)) |>
     dplyr::mutate(across(tidyselect::all_of(numeric_columns), as.numeric))
-  
+
   return(data_irn_groups)
-  
-  }
+}

@@ -15,7 +15,7 @@ toc: FALSE
 
 ```{r setup, include=FALSE}
 # chunk option defaults
-knitr::opts_chunk$set(echo=FALSE, message=FALSE)
+knitr::opts_chunk$set(echo = FALSE, message = FALSE)
 # packages
 library(dplyr)
 library(ggplot2)
@@ -68,14 +68,11 @@ From the weight and elemental content of food and frass, and individual body mas
 # Results
 
 ```{r, scatterplot}
-
 #| fig.height=6
 #| fig.width=9
 #| fig.align="center"
 #| fig.caption="A Scatter Plot \\label{Scatter_plot}"
 #| dpi=300
-
-
 ```
 
 # Discussion

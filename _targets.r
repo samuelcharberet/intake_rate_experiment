@@ -9,12 +9,12 @@
 library(targets)
 library(here)
 
-packages = c(
+packages <- c(
   "ggplot2",
   "dplyr",
   "tidyr",
   "mgcv",
-  "ggtext" ,
+  "ggtext",
   "formula.tools",
   "fmsb",
   "ggsci",
@@ -36,7 +36,7 @@ packages = c(
   "ggsci",
   "gratia"
 )
-packages_to_install = packages[!(packages %in% installed.packages())]
+packages_to_install <- packages[!(packages %in% installed.packages())]
 
 if (length(packages_to_install) > 0) {
   install.packages(packages_to_install)
@@ -118,7 +118,7 @@ list(
     models_irn,
     model_irn(data_i = data_irn_indivuals_combined, data_g = data_irn_groups_combined)
   ),
-  
+
   # Plot the data
   tar_target(
     plots_irn,
@@ -130,14 +130,14 @@ list(
     ),
     format = "file"
   ),
-  
+
   # Fit a non linear model to the growth efficiency data
   tar_target(
     theoretical_models_irn,
     theoretical_model_irn(data_i = data_irn_indivuals_combined),
     format = "file"
   )
-  
+
   # Generate report Rmd
   # archetypes::tar_render(rmd_report, "3_manuscript/irn.rmd")
 )
