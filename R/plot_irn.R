@@ -85,7 +85,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     filename = "wc_&_treatment.pdf",
     plot = p,
     device = cairo_pdf,
-    path = here::here("4_outputs", "2_figures"),
+    path = here::here("4_outputs", "3_figures_paper"),
     scale = 1,
     width = 7,
     height = 4,
@@ -106,7 +106,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     filename = "bm_j0_fw_&_week.pdf",
     plot = p,
     device = cairo_pdf,
-    path = here::here("4_outputs", "2_figures"),
+    path = here::here("4_outputs", "3_figures_paper"),
     scale = 1,
     width = 7,
     height = 4,
@@ -125,26 +125,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     filename = "bm_j0_fw_&_treatment.pdf",
     plot = p,
     device = cairo_pdf,
-    path = here::here("4_outputs", "2_figures"),
-    scale = 1,
-    width = 7,
-    height = 4,
-    units = "in"
-  )
-  
-  ###### Growth curve for each treatment ######
-  
-  p <- ggplot2::ggplot(data_i,
-                       aes(x = food_provided_fw , y = bodymass_7th_instar_j0_fw)) +
-    geom_boxplot(fill = "steelblue3") +
-    labs(x = "Treatment (mg daily food)", y = "Bodymass at the start of 7th instar (mg fw)")  +
-    theme(legend.position = "none")
-  
-  ggsave(
-    filename = "bm_j0_fw_&_treatment.pdf",
-    plot = p,
-    device = cairo_pdf,
-    path = here::here("4_outputs", "2_figures"),
+    path = here::here("4_outputs", "3_figures_paper"),
     scale = 1,
     width = 7,
     height = 4,
@@ -174,6 +155,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     units = "in"
   )
   
+  ###### Dry weight bodymass at the end of the experiment according to food consumed  ######
   
   p <- ggplot2::ggplot(data_i,
                        aes(x = food_consumed_collection_days_dw, y = bodymass_imago_dw)) +
@@ -189,7 +171,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     filename = "bm_imago_dw_&_food_consumed_dw.pdf",
     plot = p,
     device = cairo_pdf,
-    path = here::here("4_outputs", "2_figures"),
+    path = here::here("4_outputs", "3_figures_paper"),
     scale = 1,
     width = 6,
     height = 4,
@@ -201,61 +183,23 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   
   ########## 1. Mass balance figures ##########
   
-  ###### Growth rate according to intake ######
   
-  mod = mgcv::gam(geometric_mean_growth_dw ~ s(ingestion_rate_fw, bs = "cs", k =
-                                                 3),
-                  data = data_i)
-  hlt = 10 * sum(mgcv::influence.gam(mod) / length(mgcv::influence.gam(mod)))
-  data_i_f = filter(data_i, mgcv::influence.gam(mod) < hlt)
-  
-  grfw_irfw <- ggplot2::ggplot(data_i_f,
-                               aes(x = ingestion_rate_fw, y = geometric_mean_growth_dw)) +
-    geom_point() +
-    xlim(0, NA) +
-    ylim(NA, max(data_i$geometric_mean_growth_dw) + 0.1 * (
-      max(data_i$geometric_mean_growth_dw) - min(data_i$geometric_mean_growth)
-    )) +
-    labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> day<sup>-1</sup>)", y = "Growth rate") +
-    geom_smooth(
-      color = "steelblue3",
-      method = mgcv::gam,
-      formula = y ~ s(x, bs = "cs", k = 3)
-    ) +
-    theme(axis.title.x = element_markdown(), axis.title.y = element_markdown()) +
-    geom_abline(
-      intercept = 0,
-      slope = 1,
-      linetype = "dashed",
-      color = "black"
-    )
-  
-  ggsave(
-    filename = "grfw_&_irfw.pdf",
-    plot = grfw_irfw,
-    device = cairo_pdf,
-    path = here::here("4_outputs", "2_figures"),
-    scale = 1,
-    width = 6,
-    height = 4,
-    units = "in"
-  )
   
   
   
   ###### Assimilation rate according to intake rate ######
   
-  mod = mgcv::gam(absorption_rate_dw ~ s(ingestion_rate_dw, bs = "cs", k =
-                                           3),
+  mod = mgcv::gam(assimilation_rate_dw ~ s(ingestion_rate_dw, bs = "cs", k =
+                                             3),
                   data = data_i)
   hlt = 10 * sum(mgcv::influence.gam(mod) / length(mgcv::influence.gam(mod)))
   data_i_f = filter(data_i, mgcv::influence.gam(mod) < hlt)
   
-  ardw_irfw <- ggplot2::ggplot(data_i_f, aes(x = ingestion_rate_dw, y = absorption_rate_dw)) +
+  ardw_irfw <- ggplot2::ggplot(data_i_f, aes(x = ingestion_rate_dw, y = assimilation_rate_dw)) +
     geom_point() +
     xlim(0, NA) +
-    ylim(NA, max(data_i$absorption_rate_dw) + 0.1 * (
-      max(data_i$absorption_rate_dw) - min(data_i$absorption_rate_dw)
+    ylim(NA, max(data_i$assimilation_rate_dw) + 0.1 * (
+      max(data_i$assimilation_rate_dw) - min(data_i$assimilation_rate_dw)
     )) +
     labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> day<sup>-1</sup>)", y = "Assimilation rate <br> (mg<sub>(dw)</sub> day<sup>-1</sup>)") +
     geom_smooth(
@@ -283,7 +227,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   )
   
   ###### Assimilation rate according to mass specific intake rate ######
-  mod = mgcv::gam(absorption_rate_dw ~ s(
+  mod = mgcv::gam(assimilation_rate_dw ~ s(
     mass_specific_ingestion_rate_fw,
     bs = "cs",
     k = 3
@@ -293,11 +237,11 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   data_i_f = filter(data_i, mgcv::influence.gam(mod) < hlt)
   
   ardw_msirfw <- ggplot2::ggplot(data_i_f,
-                                 aes(x = mass_specific_ingestion_rate_fw, y = absorption_rate_dw)) +
+                                 aes(x = mass_specific_ingestion_rate_fw, y = assimilation_rate_dw)) +
     geom_point() +
     xlim(0, NA) +
-    ylim(NA, max(data_i$absorption_rate_dw) + 0.1 * (
-      max(data_i$absorption_rate_dw) - min(data_i$absorption_rate_dw)
+    ylim(NA, max(data_i$assimilation_rate_dw) + 0.1 * (
+      max(data_i$assimilation_rate_dw) - min(data_i$assimilation_rate_dw)
     )) +
     labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Assimilation rate <br> (mg<sub>(dw)</sub> day<sup>-1</sup>)") +
     geom_smooth(
@@ -321,20 +265,22 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ###### Mass specific Assimilation rate according to mass specific intake rate ######
   
   
-  msardw_msirfw <- ggplot2::ggplot(data_i,
-                                   aes(x = ingestion_rate_dw / ((bodymass_last_collection_date + bodymass_7th_instar_j0_fw) / 2
-                                   ), y = mass_specific_absorption_rate_dw)) +
+  msardw_msirfw <- ggplot2::ggplot(
+    data_i,
+    aes(x = mass_specific_ingestion_rate_dw, y = mass_specific_assimilation_rate_dw)
+  ) +
     geom_point() +
     xlim(0, NA) +
-    ylim(NA,
-         max(data_i$mass_specific_absorption_rate_dw) + 0.1 * (
-           max(data_i$mass_specific_absorption_rate_dw) - min(data_i$mass_specific_absorption_rate_dw)
+    ylim(0,
+         max(data_i$mass_specific_assimilation_rate_dw) + 0.1 * (
+           max(data_i$mass_specific_assimilation_rate_dw) - min(data_i$mass_specific_assimilation_rate_dw)
          )) +
-    labs(x = "Intake rate <br> (mg<sub>food(dw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Mass-specific assimilation rate <br> (mg<sub>(dw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)") +
+    labs(x = "Intake rate <br> (mg<sub>food(dw)</sub> mg<sub>body(dw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Assimilation rate <br> (mg<sub>(dw)</sub> mg<sub>body(dw)</sub><sup>-1</sup> day<sup>-1</sup>)") +
     geom_smooth(
       color = "steelblue3",
       method = mgcv::gam,
-      formula = y ~ s(x, bs = "cs", k = 4)
+      formula = y ~ s(x),
+      method.args = list(method = "REML")
     ) +
     theme(axis.title.x = element_markdown(), axis.title.y = element_markdown()) +
     geom_abline(
@@ -356,29 +302,30 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   )
   
   ###### Assimilation efficiency in dw according to mass specific intake rate in fw ######
+  
   mod = mgcv::gam(
-    absorption_efficiency_dw ~ s(
-      mass_specific_ingestion_rate_fw,
-      bs = "cs",
-      k = 3
-    ),
+    assimilation_efficiency_dw ~ s(mass_specific_ingestion_rate_fw),
+    family = scat(),
+    method = "REML",
     data = data_i
   )
   hlt = 10 * sum(mgcv::influence.gam(mod) / length(mgcv::influence.gam(mod)))
   data_i_f = filter(data_i, mgcv::influence.gam(mod) < hlt)
   
   aedw_msirfw <- ggplot2::ggplot(data_i_f,
-                                 aes(x = mass_specific_ingestion_rate_fw, y = absorption_efficiency_dw)) +
+                                 aes(x = mass_specific_ingestion_rate_fw, y = assimilation_efficiency_dw)) +
     geom_point() +
     xlim(0, NA) +
-    ylim(NA, max(data_i$absorption_efficiency_dw) + 0.1 * (
-      max(data_i$absorption_efficiency_dw) - min(data_i$absorption_efficiency_dw)
-    )) +
+    ylim(NA,
+         max(data_i$assimilation_efficiency_dw) + 0.1 * (
+           max(data_i$assimilation_efficiency_dw) - min(data_i$assimilation_efficiency_dw)
+         )) +
     labs(x = "Intake rate <br> (mg<sub>food</sub> mg<sub>body</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Assimilation efficiency") +
     geom_smooth(
       color = "steelblue3",
       method = mgcv::gam,
-      formula = y ~ s(x, bs = "cs", k = 4)
+      formula = y ~ s(x),
+      method.args = list(method = "REML", family = scat())
     ) +
     theme(axis.title.x = element_markdown(), axis.title.y = element_markdown())
   
@@ -394,41 +341,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     units = "in"
   )
   
-  ###### Assimilation efficiency in dw according to mass specific intake rate in fw ######
-  mod = mgcv::gam(
-    absorption_efficiency_dw ~ s(
-      mass_specific_ingestion_rate_dw,
-      bs = "cs",
-      k = 3
-    ),
-    data = data_i
-  )
-  hlt = 10 * sum(mgcv::influence.gam(mod) / length(mgcv::influence.gam(mod)))
-  data_i_f = filter(data_i, mgcv::influence.gam(mod) < hlt)
   
-  aedw_msirdw <- ggplot2::ggplot(data_i_f,
-                                 aes(x = mass_specific_ingestion_rate_dw, y = absorption_efficiency_dw)) +
-    geom_point() +
-    xlim(0, NA) +
-    labs(x = "Intake rate <br> (mg<sub>food</sub> mg<sub>body</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Assimilation efficiency") +
-    geom_smooth(
-      color = "steelblue3",
-      method = mgcv::gam,
-      formula = y ~ s(x, bs = "cs", k = 4)
-    ) +
-    theme(axis.title.x = element_markdown(), axis.title.y = element_markdown())
-  
-  
-  ggsave(
-    filename = "aedw_&_msirdw.pdf",
-    plot = aedw_msirdw,
-    device = cairo_pdf,
-    path = here::here("4_outputs", "2_figures"),
-    scale = 1,
-    width = 6,
-    height = 4,
-    units = "in"
-  )
   
   
   ###### Growth efficiency in fresh weight according to the mass specific intake rate in fresh weight  ######
@@ -473,32 +386,32 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     units = "in"
   )
   
-  ###### Growth efficiency in dry weight according to the mass specific intake rate in dry weight  ######
+  ###### Growth efficiency in fresh weight according to specific growth rate in fresh weight ######
   
-  mod = mgcv::gam(growth_efficiency_dw ~ s(
-    mass_specific_ingestion_rate_dw,
-    bs = "cs",
-    k = 3
-  ),
-  data = data_i)
+  mod = mgcv::gam(
+    growth_efficiency_fw ~ s(geometric_mean_growth_fw, bs = "cs", k = 3) + s(ingestion_rate_fw, bs = "cs", k = 3),
+    data = data_i
+  )
   hlt = 10 * sum(mgcv::influence.gam(mod) / length(mgcv::influence.gam(mod)))
   data_i_f = filter(data_i, mgcv::influence.gam(mod) < hlt)
-  
-  gedw_msirdw <- ggplot2::ggplot(data_i_f,
-                                 aes(x = mass_specific_ingestion_rate_dw, y = growth_efficiency_dw)) +
-    xlim(0, NA) +
+  gefw_msgrfw <- ggplot2::ggplot(data_i_f,
+                                 aes(x = geometric_mean_growth_fw, y = growth_efficiency_fw)) +
     geom_point() +
-    labs(x = "Intake rate <br> (mg<sub>food</sub> mg<sub>body</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Growth efficiency") +
+    xlim(0, NA) +
+    ylim(NA, max(data_i_f$growth_efficiency_fw) + 0.1 * (
+      max(data_i_f$growth_efficiency_fw) - min(data_i_f$growth_efficiency_fw)
+    )) +
     geom_smooth(
       color = "steelblue3",
       method = mgcv::gam,
       formula = y ~ s(x, bs = "cs", k = 4)
     ) +
-    theme(axis.title.x = element_markdown())
+    labs(x = "Growth rate", y = "Growth efficiency") +
+    theme(axis.title.x = element_markdown(), axis.title.y = element_markdown())
   
   ggsave(
-    filename = "gedw_&_msirdw.pdf",
-    plot = gedw_msirdw,
+    filename = "gefw_&_msgrfw.pdf",
+    plot = gefw_msgrfw,
     device = cairo_pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
@@ -506,6 +419,71 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     height = 4,
     units = "in"
   )
+  
+  ###### Growth efficiency according to assimilation efficiency  ######
+  
+  p <- ggplot2::ggplot(data_i,
+                       aes(x = assimilation_efficiency_dw , y = growth_efficiency_dw *
+                             100)) +
+    geom_point() +
+    labs(x = "Assimilation efficiency (% dw)", y = "Growth efficiency (dw)") +
+    geom_smooth(
+      color = "steelblue3",
+      method = mgcv::gam,
+      formula = y ~ s(x, bs = "cs", k = 3)
+    )
+  
+  ggsave(
+    filename = "gedw_&_aedw.pdf",
+    plot = p,
+    device = cairo_pdf,
+    path = here::here("4_outputs", "2_figures"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
+  
+  ###### Growth rate according to intake ######
+  
+  mod = mgcv::gam(geometric_mean_growth_dw ~ s(ingestion_rate_fw, bs = "cs", k =
+                                                 3),
+                  data = data_i)
+  hlt = 10 * sum(mgcv::influence.gam(mod) / length(mgcv::influence.gam(mod)))
+  data_i_f = filter(data_i, mgcv::influence.gam(mod) < hlt)
+  
+  grfw_irfw <- ggplot2::ggplot(data_i_f,
+                               aes(x = ingestion_rate_fw, y = geometric_mean_growth_dw)) +
+    geom_point() +
+    xlim(0, NA) +
+    ylim(NA, max(data_i$geometric_mean_growth_dw) + 0.1 * (
+      max(data_i$geometric_mean_growth_dw) - min(data_i$geometric_mean_growth_dw)
+    )) +
+    labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> day<sup>-1</sup>)", y = "Growth rate") +
+    geom_smooth(
+      color = "steelblue3",
+      method = mgcv::gam,
+      formula = y ~ s(x, bs = "cs", k = 3)
+    ) +
+    theme(axis.title.x = element_markdown(), axis.title.y = element_markdown()) +
+    geom_abline(
+      intercept = 0,
+      slope = 1,
+      linetype = "dashed",
+      color = "black"
+    )
+  
+  ggsave(
+    filename = "grfw_&_irfw.pdf",
+    plot = grfw_irfw,
+    device = cairo_pdf,
+    path = here::here("4_outputs", "2_figures"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
+  
   
   ###### Mass-specific growth rate in fresh weight according to the mass specific intake rate in fresh weight  ######
   mod = mgcv::gam(
@@ -546,114 +524,20 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   )
   
   
-  ###### Mass-specific growth rate in dry weight according to the mass specific intake rate in dry weight  ######
-  mod = mgcv::gam(
-    geometric_mean_growth_dw ~ s(
-      mass_specific_ingestion_rate_dw,
-      bs = "cs",
-      k = 3
-    ),
-    data = data_i
-  )
-  hlt = 10 * sum(mgcv::influence.gam(mod) / length(mgcv::influence.gam(mod)))
-  data_i_f = filter(data_i, mgcv::influence.gam(mod) < hlt)
   
-  msgrdw_msirdw <- ggplot2::ggplot(data_i_f,
-                                   aes(x = mass_specific_ingestion_rate_dw, y = geometric_mean_growth_dw)) +
+  
+  
+  
+  ###### Growth investment according to mass specific amount assimilated  ######
+  
+  
+  p <- ggplot2::ggplot(data_i,
+                       aes(x = assimilated_mass_dw / ((
+                         bodymass_7th_instar_j3_dw + bodymass_7th_instar_j0_fw * (1 - larvae_day0_wc)
+                       ) / 2
+                       ), y = growth_investment_dw)) +
     geom_point() +
-    xlim(0, NA) +
-    labs(x = "Intake rate <br> (mg<sub>food</sub> mg<sub>body</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Growth rate") +
-    geom_smooth(
-      color = "steelblue3",
-      method = mgcv::gam,
-      formula = y ~ s(x, bs = "cs", k = 4)
-    ) +
-    theme(axis.title.x = element_markdown(), axis.title.y = element_markdown())
-  
-  ggsave(
-    filename = "msgrdw_&_msirdw.pdf",
-    plot = msgrdw_msirdw,
-    device = cairo_pdf,
-    path = here::here("4_outputs", "2_figures"),
-    scale = 1,
-    width = 3,
-    height = 2,
-    units = "in"
-  )
-  
-  
-  ###### Growth efficiency in fresh weight according to specific growth rate in fresh weight ######
-  
-  mod = mgcv::gam(
-    growth_efficiency_fw ~ s(geometric_mean_growth_fw, bs = "cs", k = 3) + s(ingestion_rate_fw, bs = "cs", k = 3),
-    data = data_i
-  )
-  hlt = 10 * sum(mgcv::influence.gam(mod) / length(mgcv::influence.gam(mod)))
-  data_i_f = filter(data_i, mgcv::influence.gam(mod) < hlt)
-  gefw_msgrfw <- ggplot2::ggplot(data_i_f,
-                                 aes(x = geometric_mean_growth_fw, y = growth_efficiency_fw)) +
-    geom_point() +
-    xlim(0, NA) +
-    ylim(NA, max(data_i_f$growth_efficiency_fw) + 0.1 * (
-      max(data_i_f$growth_efficiency_fw) - min(data_i_f$growth_efficiency_fw)
-    )) +
-    geom_smooth(
-      color = "steelblue3",
-      method = mgcv::gam,
-      formula = y ~ s(x, bs = "cs", k = 4)
-    ) +
-    labs(x = "Growth rate", y = "Growth efficiency") +
-    theme(axis.title.x = element_markdown(), axis.title.y = element_markdown())
-  
-  ggsave(
-    filename = "gefw_&_msgrfw.pdf",
-    plot = gefw_msgrfw,
-    device = cairo_pdf,
-    path = here::here("4_outputs", "2_figures"),
-    scale = 1,
-    width = 6,
-    height = 4,
-    units = "in"
-  )
-  
-  ###### Growth efficiency in dry weight according to specific growth rate in dry weight ######
-  
-  mod = mgcv::gam(growth_efficiency_dw ~ s(geometric_mean_growth_dw, bs = "cs", k = 3),
-                  data = data_i)
-  hlt = 10 * sum(mgcv::influence.gam(mod) / length(mgcv::influence.gam(mod)))
-  data_i_f = filter(data_i, mgcv::influence.gam(mod) < hlt)
-  gedw_msgrdw <- ggplot2::ggplot(data_i_f,
-                                 aes(x = geometric_mean_growth_dw, y = growth_efficiency_dw)) +
-    geom_point() +
-    xlim(0, NA) +
-    geom_smooth(
-      color = "steelblue3",
-      method = mgcv::gam,
-      formula = y ~ s(x, bs = "cs", k = 4)
-    ) +
-    labs(x = "Growth rate", y = "Growth efficiency") +
-    theme(axis.title.x = element_markdown(), axis.title.y = element_markdown())
-  
-  ggsave(
-    filename = "gefw_&_msgrfw.pdf",
-    plot = gefw_msgrfw,
-    device = cairo_pdf,
-    path = here::here("4_outputs", "2_figures"),
-    scale = 1,
-    width = 6,
-    height = 4,
-    units = "in"
-  )
-  
-  ###### Growth investment according to mass specific amount absorbed  ######
-  
-  
-  p <- ggplot2::ggplot(data_i, aes(x = absorbed_mass_dw / ((
-    bodymass_7th_instar_j3_dw + bodymass_7th_instar_j0_fw * (1 - larvae_day0_wc)
-  ) / 2
-  ), y = growth_investment_dw)) +
-    geom_point() +
-    labs(x = "Mass-specific absorbed mass (% dw)", y = " Growth investment (% dw)") +
+    labs(x = "Mass-specific assimilated mass (% dw)", y = " Growth investment (% dw)") +
     geom_smooth(
       color = "steelblue3",
       method = mgcv::gam,
@@ -752,7 +636,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     filename = "msmrdw_msirdw.pdf",
     plot = msmrdw_msirdw,
     device = cairo_pdf,
-    path = here::here("4_outputs", "2_figures"),
+    path = here::here("4_outputs", "3_figures_paper"),
     scale = 1,
     width = 6,
     height = 4,
@@ -760,29 +644,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   )
   
   
-  ###### Growth efficiency according to assimilation efficiency  ######
   
-  p <- ggplot2::ggplot(data_i,
-                       aes(x = absorption_efficiency_dw , y = growth_efficiency_dw *
-                             100)) +
-    geom_point() +
-    labs(x = "Assimilation efficiency (% dw)", y = "Growth efficiency (dw)") +
-    geom_smooth(
-      color = "steelblue3",
-      method = mgcv::gam,
-      formula = y ~ s(x, bs = "cs", k = 3)
-    )
-  
-  ggsave(
-    filename = "gedw_&_aedw.pdf",
-    plot = p,
-    device = cairo_pdf,
-    path = here::here("4_outputs", "2_figures"),
-    scale = 1,
-    width = 6,
-    height = 4,
-    units = "in"
-  )
   
   ###### Mass-specific egestion rate according to mass-specific ingestion rate  ######
   
@@ -809,6 +671,151 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     units = "in"
   )
   
+  
+  ###### Mass-specific growth rate in dry weight according to the mass specific intake rate in dry weight  ######
+  mod_msgrdw_msirdw = mgcv::gam(
+    geometric_mean_growth_dw ~ s(mass_specific_ingestion_rate_fw),
+    family = scat(),
+    method = "REML",
+    data = data_i
+  )
+  hlt = 10 * sum(mgcv::influence.gam(mod_msgrdw_msirdw) / length(mgcv::influence.gam(mod_msgrdw_msirdw)))
+  data_i_f = filter(data_i, mgcv::influence.gam(mod_msgrdw_msirdw) < hlt)
+  
+  msgrdw_msirdw <- ggplot2::ggplot(data_i_f,
+                                   aes(x = mass_specific_ingestion_rate_dw, y = geometric_mean_growth_dw)) +
+    geom_point() +
+    xlim(0, NA) +
+    labs(x = "Intake rate <br> (mg<sub>food</sub> mg<sub>body</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Growth rate") +
+    geom_smooth(
+      color = "steelblue3",
+      method = mgcv::gam,
+      formula = y ~ s(x),
+      method.args = list(method = "REML", family = scat())
+    ) +
+    theme(axis.title.x = element_markdown(), axis.title.y = element_markdown())
+  
+  ggsave(
+    filename = "msgrdw_&_msirdw.pdf",
+    plot = msgrdw_msirdw,
+    device = cairo_pdf,
+    path = here::here("4_outputs", "2_figures"),
+    scale = 1,
+    width = 3,
+    height = 2,
+    units = "in"
+  )
+  
+  ###### Assimilation efficiency in dw according to mass specific intake rate in dw ######
+  mod_aedw_msirdw = mgcv::gam(
+    assimilation_efficiency_dw ~ s(mass_specific_ingestion_rate_dw),
+    family = scat(),
+    method = "REML",
+    data = data_i
+  )
+  hlt = 10 * sum(mgcv::influence.gam(mod_aedw_msirdw) / length(mgcv::influence.gam(mod_aedw_msirdw)))
+  data_i_f = filter(data_i, mgcv::influence.gam(mod_aedw_msirdw) < hlt)
+  
+  aedw_msirdw <- ggplot2::ggplot(data_i_f,
+                                 aes(x = mass_specific_ingestion_rate_dw, y = assimilation_efficiency_dw)) +
+    geom_point() +
+    xlim(0, NA) +
+    labs(x = "Intake rate <br> (mg<sub>food</sub> mg<sub>body</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Assimilation efficiency") +
+    geom_smooth(
+      color = "steelblue3",
+      method = mgcv::gam,
+      formula = y ~ s(x),
+      method.args = list(family = scat(), method = "REML")
+    ) +
+    theme(axis.title.x = element_markdown(), axis.title.y = element_markdown())
+  
+  
+  ggsave(
+    filename = "aedw_&_msirdw.pdf",
+    plot = aedw_msirdw,
+    device = cairo_pdf,
+    path = here::here("4_outputs", "2_figures"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
+  
+  ###### Growth efficiency in dry weight according to the mass specific intake rate in dry weight  ######
+  
+  mod_gedw_msirdw = mgcv::gam(
+    growth_efficiency_dw ~ s(
+      mass_specific_ingestion_rate_dw,
+      bs = "ad",
+      k = 10
+    ),
+    data = data_i,
+    method = "REML",
+    family = scat()
+  )
+  hlt = 10 * sum(mgcv::influence.gam(mod_gedw_msirdw) / length(mgcv::influence.gam(mod_gedw_msirdw)))
+  data_i_f = filter(data_i, mgcv::influence.gam(mod_gedw_msirdw) < hlt)
+  
+  gedw_msirdw <- ggplot2::ggplot(data_i_f,
+                                 aes(x = mass_specific_ingestion_rate_dw, y = growth_efficiency_dw)) +
+    xlim(0, NA) +
+    geom_point() +
+    labs(x = "Intake rate <br> (mg<sub>food</sub> mg<sub>body</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Growth efficiency") +
+    geom_smooth(
+      color = "steelblue3",
+      method = mgcv::gam,
+      formula = y ~ s(x, bs = "ad", k = 10),
+      method.args = list(family = scat(), method = "REML")
+    ) +
+    theme(axis.title.x = element_markdown())
+  
+  ggsave(
+    filename = "gedw_&_msirdw.pdf",
+    plot = gedw_msirdw,
+    device = cairo_pdf,
+    path = here::here("4_outputs", "2_figures"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
+  
+  ###### Growth efficiency in dry weight according to specific growth rate in dry weight ######
+  
+  mod_gedw_msgrdw = mgcv::gam(
+    growth_efficiency_dw ~ s(geometric_mean_growth_dw, bs = "ad", k = 10),
+    data = data_i,
+    method = "REML",
+    family = scat()
+  )
+  
+  hlt = 10 * sum(mgcv::influence.gam(mod_gedw_msgrdw) / length(mgcv::influence.gam(mod_gedw_msgrdw)))
+  data_i_f = filter(data_i, mgcv::influence.gam(mod_gedw_msgrdw) < hlt)
+  gedw_msgrdw <- ggplot2::ggplot(data_i_f,
+                                 aes(x = geometric_mean_growth_dw, y = growth_efficiency_dw)) +
+    geom_point() +
+    xlim(0, NA) +
+    geom_smooth(
+      color = "steelblue3",
+      method = mgcv::gam,
+      formula = y ~ s(x, bs = "ad", k = 10),
+      method.args = list(family = scat(), method = "REML")
+    ) +
+    labs(x = "Growth rate", y = "Growth efficiency") +
+    theme(axis.title.x = element_markdown(), axis.title.y = element_markdown())
+  
+  ggsave(
+    filename = "gedw_&_msgrdw.pdf",
+    plot = gedw_msgrdw,
+    device = cairo_pdf,
+    path = here::here("4_outputs", "2_figures"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
+  
+  
   ###### Mass balance complete plot ######
   
   complete_plot = (msgrdw_msirdw | aedw_msirdw) /
@@ -819,7 +826,103 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     filename = paste("total_mass_balance.pdf", sep = ""),
     plot = complete_plot,
     device = cairo_pdf,
-    path = here::here("4_outputs", "2_figures"),
+    path = here::here("4_outputs", "3_figures_paper"),
+    scale = 1,
+    width = 7,
+    height = 6.5
+  )
+  
+  
+  
+  #### Mass balance derivatives #####
+  
+  
+  # Derivative of mass specific growth rate dw according to mass specific intake rate dw
+  deriv = gratia::derivatives(mod_msgrdw_msirdw)
+  deriv_msgrdw_msirdw =  draw(
+    deriv,
+    add_change = T,
+    change_type = "sizer",
+    decrease_col = "#F4DF4EFF",
+    increase_col = "#00A4CCFF",
+    alpha = 0.2,
+    guides = "auto"
+  ) +
+    geom_hline(yintercept = 0, linetype = 'dotted') +
+    labs(x = "Intake rate <br> (mg<sub>food</sub> mg<sub>body</sub><sup>-1</sup> day<sup>-1</sup>)", y = expression(paste(frac(
+      italic(d), italic(dx)
+    ), "  Growth rate"))) +
+    theme(axis.title.x = element_markdown(), axis.title.y = element_text()) +
+    ggtitle("")
+  
+  # Derivative of assimilation efficiency dw according to mass specific intake rate dw
+  
+  deriv = gratia::derivatives(mod_aedw_msirdw)
+  deriv_aedw_msirdw =  draw(
+    deriv,
+    add_change = T,
+    change_type = "sizer",
+    decrease_col = "#F4DF4EFF",
+    increase_col = "#00A4CCFF",
+    alpha = 0.2,
+    guides = "auto"
+  ) +
+    geom_hline(yintercept = 0, linetype = 'dotted') +
+    labs(x = "Intake rate <br> (mg<sub>food</sub> mg<sub>body</sub><sup>-1</sup> day<sup>-1</sup>)", y = expression(paste(
+      frac(italic(d), italic(dx)), "  Assimilation efficiency"
+    ))) +
+    theme(axis.title.x = element_markdown(), axis.title.y = element_text()) +
+    ggtitle("")
+  
+  # Derivative of growth efficiency dw according to mass specific intake rate dw
+  
+  deriv = gratia::derivatives(mod_gedw_msirdw)
+  deriv_gedw_msirdw =  draw(
+    deriv,
+    add_change = T,
+    change_type = "sizer",
+    decrease_col = "#F4DF4EFF",
+    increase_col = "#00A4CCFF",
+    alpha = 0.2,
+    guides = "auto"
+  ) +
+    geom_hline(yintercept = 0, linetype = 'dotted') +
+    labs(x = "Intake rate <br> (mg<sub>food</sub> mg<sub>body</sub><sup>-1</sup> day<sup>-1</sup>)", y = expression(paste(
+      frac(italic(d), italic(dx)), "  Growth efficiency"
+    ))) +
+    theme(axis.title.x = element_markdown(), axis.title.y = element_text()) +
+    ggtitle("")
+  
+  # Derivative of growth efficiency dw according to mass specific growth rate dw
+  broom::tidy(mod_gedw_msgrdw)
+
+  deriv = gratia::derivatives(mod_gedw_msgrdw)
+  deriv_gedw_msgrdw =  draw(
+    deriv,
+    add_change = T,
+    change_type = "sizer",
+    decrease_col = "#F4DF4EFF",
+    increase_col = "#00A4CCFF",
+    alpha = 0.2,
+    guides = "auto"
+  ) +
+    geom_hline(yintercept = 0, linetype = 'dotted') +
+    labs(x = "Gowth rate", y = expression(paste(
+      frac(italic(d), italic(dx)), "  Growth efficiency"
+    ))) +
+    theme(axis.title.x = element_markdown(), axis.title.y = element_text()) +
+    ggtitle("")
+  
+  derivative_complete_plot = (deriv_msgrdw_msirdw[[1]] | deriv_aedw_msirdw[[1]]) /
+    (deriv_gedw_msirdw[[1]] | deriv_gedw_msgrdw[[1]]) + 
+    plot_annotation(tag_levels = 'a')
+  
+  
+  ggsave(
+    filename = paste("derivative_complete_plot.pdf", sep = ""),
+    plot = derivative_complete_plot,
+    device = cairo_pdf,
+    path = here::here("4_outputs", "3_figures_paper"),
     scale = 1,
     width = 7,
     height = 6.5
@@ -832,7 +935,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   
   variables = c("larvae",
                 "frass",
-                "absorption_efficiency_dw",
+                "assimilation_efficiency_dw",
                 "retention_time")
   nb_variables = length(variables)
   elements_isotopes = c("C", "N", "P", "Na", "Mg", "S", "K", "Ca", "15N", "13C")
@@ -943,7 +1046,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     labels = c("a.", "b.", "c.", "d.", "e.", "f.", "g.", "h."),
     label.y = 1,
     label.x = 0,
-    heights = c(1, 1),
+    heights = c(0.5, 0.5),
     widths = c(1, 1, 1, 1)
   )
   
@@ -952,10 +1055,10 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     filename = paste("matrices_", "all_elements", ".pdf", sep = ""),
     plot = complete_matrices,
     device = cairo_pdf,
-    path = here::here("4_outputs", "2_figures"),
+    path = here::here("4_outputs", "3_figures_paper"),
     scale = 1,
     width = 7,
-    height = 6,
+    height = 4,
   )
   
   ##### Growth rate hypothesis #####
@@ -1069,7 +1172,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     filename = "larvae_frass_NP.pdf",
     plot = p,
     device = cairo_pdf,
-    path = here::here("4_outputs", "2_figures"),
+    path = here::here("4_outputs", "3_figures_paper"),
     scale = 1,
     width = 6,
     height = 4,
@@ -1106,10 +1209,17 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     scale_color_manual(values = colours_elements, aesthetics = c("colour", "fill")) +
     guides(colour = guide_legend(override.aes = list(size = 8), ncol = 2))
   
-  formulas = list(as.formula(y ~ s(x, bs = "cs", k = 3)),
-                  as.formula(y ~ s(x, bs = "cs", k = 3)),
-                  as.formula(y ~ s(x, bs = "cs", k = 4)),
-                  as.formula(y ~ s(x, bs = "cs", k = 4)))
+  formulas = list(as.formula(y ~ s(x)),
+                  as.formula(y ~ s(x)),
+                  as.formula(y ~ s(x)),
+                  as.formula(y ~ s(x)))
+  
+  methods.a = list(
+    list(method = "REML"),
+    list(method = "REML"),
+    list(family = scat(), method = "REML"),
+    list(family = Gamma(), method = "REML")
+  )
   methods = c("gam", "gam", "gam", "gam")
   y_axes = c("Larvae", "Frass", "AE of", "RT of")
   units_loop = cbind(units_content, units_content, "%", "days")
@@ -1149,7 +1259,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   }
   
   
-  # A for loop to create the plots of absorption efficiency, larvae content, frass content and retention time
+  # A for loop to create the plots of assimilation efficiency, larvae content, frass content and retention time
   # according to mass-specific intake rate for all elements
   
   
@@ -1165,33 +1275,25 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
         !is.na(data_matrix$elemental_value)
       )
       
-      
-      mod = mgcv::gam(elemental_value ~ s(
-        mean_mass_specific_intake_rate_fw,
-        bs = "cs",
-        k = 3
-      ),
-      data = data_matrix_element)
-      hlt = 10 * sum(mgcv::influence.gam(mod) / length(mgcv::influence.gam(mod)))
-      data_matrix_element_f = filter(data_matrix_element, mgcv::influence.gam(mod) < hlt)
-      
-      
       if (is.na(ylim_maxs[i, j])) {
-        ylim_max = max(data_matrix_element_f$elemental_value, na.rm = T) + 0.2 * (
-          max(data_matrix_element_f$elemental_value, na.rm = T) - min(data_matrix_element_f$elemental_value, na.rm = T)
+        ylim_max = max(data_matrix_element$elemental_value, na.rm = T) + 0.2 * (
+          max(data_matrix_element$elemental_value, na.rm = T) - min(data_matrix_element$elemental_value, na.rm = T)
         )
       } else {
         ylim_max = ylim_maxs[i, j]
       }
       
       plots[[j]][[i]] = ggplot2::ggplot(
-        data_matrix_element_f ,
+        data_matrix_element ,
         aes(x = mean_mass_specific_intake_rate_fw, y = elemental_value)
       ) +
         geom_point() + ylim(ylim_min, ylim_max) +
-        geom_smooth(formula = formulas[[j]],
-                    method = methods[j],
-                    color = colours_elements[i]) +
+        geom_smooth(
+          formula = formulas[[j]],
+          method = methods[j],
+          color = colours_elements[i],
+          methods.args = methods.a[j]
+        ) +
         labs(x = expression(paste(
           "Intake rate", " (", mg[food], " ", mg[body] ^ {
             -1
@@ -1269,7 +1371,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
       filename = paste(y_plot_names[i], "alldw_&_msirfw.pdf", sep = ""),
       plot = complete_plots[[i]],
       device = cairo_pdf,
-      path = here::here("4_outputs", "2_figures"),
+      path = here::here("4_outputs", "3_figures_paper"),
       scale = 1,
       width = 7,
       height = 4,
@@ -1545,7 +1647,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     filename = paste("frass_larvae_", "stoichiometry", ".pdf", sep = ""),
     plot = complete_stoichiometry,
     device = cairo_pdf,
-    path = here::here("4_outputs", "2_figures"),
+    path = here::here("4_outputs", "3_figures_paper"),
     scale = 1,
     width = 7,
     height = 5,
@@ -1561,7 +1663,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     )
   )
   
-  data_abs = subset(data_g, data_g$variable == "absorption_efficiency_dw")
+  data_abs = subset(data_g, data_g$variable == "assimilation_efficiency_dw")
   # Removing 15N and 13C
   data_abs = data_abs[!(data_abs$element %in% c("15N", "14N", "13C", "12C")), ]
   
@@ -1580,7 +1682,8 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     geom_smooth(
       method = "gam",
       formula = y ~ s(x, bs = "cs", k = 4),
-      se = FALSE
+      se = FALSE,
+      method.args = list(family = betar())
     ) +
     scale_color_manual(
       values = colours_elements,
@@ -1704,7 +1807,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     ),
     plot = complete_plot,
     device = cairo_pdf,
-    path = here::here("4_outputs", "2_figures"),
+    path = here::here("4_outputs", "3_figures_paper"),
     scale = 1,
     width = 7,
     height = 3,
@@ -2079,13 +2182,13 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     units = "in"
   )
   
-  ######  Isotopic discrimination factor between frass and food (FFDF) according to absorption efficiency ######
+  ######  Isotopic discrimination factor between frass and food (FFDF) according to assimilation efficiency ######
   
   data_ffdf = subset(data_g, data_g$variable == "ffdf")
   data_ffdf = pivot_wider(data_ffdf, names_from = element, values_from = elemental_value)
   
   
-  p <- ggplot2::ggplot(data_ffdf, aes(x = absorption_efficiency_dw , y = `13C`)) +
+  p <- ggplot2::ggplot(data_ffdf, aes(x = assimilation_efficiency_dw , y = `13C`)) +
     geom_point(size = 1.5) +
     labs(x = "Assimilation efficiency (%)",
          y = latex2exp::TeX(r'($\delta 13C_{frass}-\delta 13C_{food}$)')) +
@@ -2102,7 +2205,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     units = "in"
   )
   
-  p <- ggplot2::ggplot(data_ffdf, aes(x = absorption_efficiency_dw , y = `15N`)) +
+  p <- ggplot2::ggplot(data_ffdf, aes(x = assimilation_efficiency_dw , y = `15N`)) +
     geom_point(size = 1.5) +
     labs(x = "Assimilation efficiency (%)",
          y = latex2exp::TeX(r'($\delta 15N_{frass}-\delta 15N_{food}$)')) +
@@ -2177,7 +2280,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     units = "in"
   )
   
-  ######  Isotopic absorption efficiency ratio (IAER) according to MSIR ######
+  ######  Isotopic assimilation efficiency ratio (IAER) according to MSIR ######
   
   data_aer = subset(data_g, data_g$variable == "iaer")
   data_aer = pivot_wider(data_aer, names_from = element, values_from = elemental_value)
@@ -2243,12 +2346,12 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   )
   
   
-  ######  Isotopic absorption efficiency ratio (IAER) according to AE ######
+  ######  Isotopic assimilation efficiency ratio (IAER) according to AE ######
   
   
-  p <- ggplot2::ggplot(data_aer, aes(x = absorption_efficiency_dw , y = `C`)) +
+  p <- ggplot2::ggplot(data_aer, aes(x = assimilation_efficiency_dw , y = `C`)) +
     geom_point(size = 1.5) +
-    labs(x = "Absorption efficiency (%)", y = "C IAER") +
+    labs(x = "Assimilation efficiency (%)", y = "C IAER") +
     geom_smooth(color = "steelblue3", method = "lm")
   
   ggsave(
@@ -2262,9 +2365,9 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     units = "in"
   )
   
-  p <- ggplot2::ggplot(data_aer, aes(x = absorption_efficiency_dw , y = `N`)) +
+  p <- ggplot2::ggplot(data_aer, aes(x = assimilation_efficiency_dw , y = `N`)) +
     geom_point(size = 1.5) +
-    labs(x = "Absorption efficiency (%)", y = "N IAER") +
+    labs(x = "Assimilation efficiency (%)", y = "N IAER") +
     geom_smooth(color = "steelblue3", method = "lm")
   
   ggsave(

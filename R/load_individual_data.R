@@ -15,17 +15,14 @@ load_individual_data = function(path) {
     "food_provided_unit",
     "bodymass_unit",
     "tube_frass_mass_unit",
-    "frass_mass_dw_unit",
     "tube_food_mass_unit",
-    "remaining_food_mass_dw_unit",
     "reason"
   )
   date_columns = c(
     "seventh_instar_date",
     "pre_pupa_date",
     "pupa_date",
-    "first_collection_date",
-    "last_collection_date"
+    "first_collection_date"
   )
   
   factor_columns = c(
@@ -51,11 +48,8 @@ load_individual_data = function(path) {
     "bodymass_imago_dw",
     "empty_tube_frass_mass",
     "filled_tube_frass_mass",
-    "frass_mass_dw",
     "empty_tube_food_mass",
-    "filled_tube_food_mass",
-    "remaining_food_mass_dw",
-    "number_collection_days"
+    "filled_tube_food_mass"
   )
   
   # We define the type of each column
@@ -91,6 +85,7 @@ load_individual_data = function(path) {
   ##### Last collection day #####
   
   # We automatically define the last collection day based on whether or not the pre pupation occurred during the week
+  data_irn_individuals$last_collection_date = as.POSIXct(NA)
   
   for (i in 1:nrow(data_irn_individuals)) {
     # If no last collection date is specified, meaning that the individual was the object of three collection

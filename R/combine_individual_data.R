@@ -6,6 +6,9 @@
 #'
 #' @examples
 combine_individual_data <- function(data_fc, data_ic, data_i) {
+  
+  
+  
   ##### Day 0 larvae water content #####
   
   data_i$larvae_day0_wc = NA
@@ -26,11 +29,13 @@ combine_individual_data <- function(data_fc, data_ic, data_i) {
   
   ##### Overall water content #####
   
-  data_f = filter(data_i, number_collection_days==3)
-  data_f$wc3 = (data_f$bodymass_7th_instar_j3_fw - data_f$bodymass_7th_instar_j3_dw)/data_f$bodymass_7th_instar_j3_fw
-  wc3 = mean(data_f$wc3, na.rm = T)
+  data_i$wc3 <- ifelse(data_i$number_collection_days == 3, 
+                       (data_i$bodymass_7th_instar_j3_fw - data_i$bodymass_7th_instar_j3_dw) / data_i$bodymass_7th_instar_j3_fw, 
+                       NA)
+  wc3 = mean(data_i$wc3, na.rm = T)
   wc1 = mean(data_ic$indiv_water_content, na.rm = T)
   wc = mean(c(wc3, wc1))
+
   
   # We compute the growth rate of the 7th instar before prepupation
   
@@ -61,9 +66,18 @@ combine_individual_data <- function(data_fc, data_ic, data_i) {
   # Calculate daily growth rates
   data_i <- data_i %>%
     mutate(
-      growth_day1 = (bodymass_7th_instar_j1_fw*(1-wc) - bodymass_7th_instar_j0_fw*(1-wc)) / (bodymass_7th_instar_j0_fw*(1-wc)),
-      growth_day2 = (bodymass_7th_instar_j2_fw*(1-wc) - bodymass_7th_instar_j1_fw*(1-wc)) / (bodymass_7th_instar_j1_fw*(1-wc)),
-      growth_day3 = (bodymass_7th_instar_j3_fw*(1-wc) - bodymass_7th_instar_j2_fw*(1-wc)) / (bodymass_7th_instar_j2_fw*(1-wc))
+      growth_day1 = (
+        bodymass_7th_instar_j1_fw * (1 - wc) - bodymass_7th_instar_j0_fw * (1 -
+                                                                              wc)
+      ) / (bodymass_7th_instar_j0_fw * (1 - wc)),
+      growth_day2 = (
+        bodymass_7th_instar_j2_fw * (1 - wc) - bodymass_7th_instar_j1_fw * (1 -
+                                                                              wc)
+      ) / (bodymass_7th_instar_j1_fw * (1 - wc)),
+      growth_day3 = (
+        bodymass_7th_instar_j3_fw * (1 - wc) - bodymass_7th_instar_j2_fw * (1 -
+                                                                              wc)
+      ) / (bodymass_7th_instar_j2_fw * (1 - wc))
     )
   
   # Compute geometric mean growth rate for each individual and only for collection days
@@ -77,22 +91,21 @@ combine_individual_data <- function(data_fc, data_ic, data_i) {
   
   # Calculate the average value of the spline function over the range of the x values
   
-  
   data_i <- data_i %>%
     rowwise() %>%
     mutate(mean_bodymass = average_value(
       splinefun(
-        1:number_collection_days+1,
+        1:(number_collection_days + 1),
         c(
           bodymass_7th_instar_j0_fw,
           bodymass_7th_instar_j1_fw,
           bodymass_7th_instar_j2_fw,
           bodymass_7th_instar_j3_fw
-        )[1:number_collection_days+1],
+        )[1:(number_collection_days + 1)],
         method = "natural"
       ),
       1,
-      number_collection_days+1
+      (number_collection_days + 1)
     )) %>%
     ungroup()
   
@@ -102,30 +115,31 @@ combine_individual_data <- function(data_fc, data_ic, data_i) {
     rowwise() %>%
     mutate(mean_bodymass_dw = average_value(
       splinefun(
-        1:number_collection_days+1,
+        1:(number_collection_days + 1),
         c(
-          bodymass_7th_instar_j0_fw*(1-wc),
-          bodymass_7th_instar_j1_fw*(1-wc),
-          bodymass_7th_instar_j2_fw*(1-wc),
-          bodymass_7th_instar_j3_fw*(1-wc)
-        )[1:number_collection_days+1],
+          bodymass_7th_instar_j0_fw * (1 - wc),
+          bodymass_7th_instar_j1_fw * (1 - wc),
+          bodymass_7th_instar_j2_fw * (1 - wc),
+          bodymass_7th_instar_j3_fw * (1 - wc)
+        )[1:(number_collection_days + 1)],
         method = "natural"
       ),
       1,
-      number_collection_days+1
+      (number_collection_days + 1)
     )) %>%
     ungroup()
   
-
   
-  ##### Egested mass complete period #####
+  
+  ##### Egested mass complete period in mg dw #####
   
   data_i$frass_mass_dw = data_i$filled_tube_frass_mass - data_i$empty_tube_frass_mass
-  
+  data_i$frass_mass_dw_unit = "mg_dw"
   
   ##### Food provided in dw #####
   
   data_i$food_provided_dw = NA
+
   
   for (i in 1:nrow(data_i)) {
     # Define the date of seventh instar
@@ -170,6 +184,7 @@ combine_individual_data <- function(data_fc, data_ic, data_i) {
   # The remaining food mass corresponds to the weight of the filled tube minus the weight of the empty tube
   # In dry weight
   data_i$remaining_food_mass_dw = data_i$filled_tube_food_mass - data_i$empty_tube_food_mass
+  data_i$remaining_food_mass_dw_unit = "mg_dw"
   
   # In dry weight
   
@@ -258,25 +273,22 @@ combine_individual_data <- function(data_fc, data_ic, data_i) {
     data_i$number_collection_days
   data_i$egestion_rate_dw_unit = "mg dw / day"
   
-  ##### Absorbed mass of food #####
+  ##### Assimilated mass of food #####
   
   # In dry weight only, because we don't have the water content of frass.
-  data_i$absorbed_mass_dw = data_i$food_consumed_collection_days_dw - data_i$frass_mass_dw
+  data_i$assimilated_mass_dw = data_i$food_consumed_collection_days_dw - data_i$frass_mass_dw
   
-  ##### Absorption rate of food #####
+  ##### Assimilation rate of food #####
   # In dry weight only, because we don't have the water content of frass.
   
-  data_i$absorption_rate_dw = (data_i$food_consumed_collection_days_dw - data_i$frass_mass_dw) / data_i$number_collection_days
+  data_i$assimilation_rate_dw = (data_i$food_consumed_collection_days_dw - data_i$frass_mass_dw) / data_i$number_collection_days
   
-  ##### Mass-specific absorption rate of food #####
+  ##### Mass-specific assimilation rate of food #####
   
-  data_i$mass_specific_absorption_rate_dw = data_i$absorption_rate_dw / ((
-    data_i$bodymass_last_collection_date + data_i$bodymass_7th_instar_j0_fw
-  ) / 2)
+  data_i$mass_specific_assimilation_rate_dw = data_i$assimilation_rate_dw / data_i$mean_bodymass_dw
+  ##### assimilation efficiency of food #####
   
-  ##### Absorption efficiency of food #####
-  
-  data_i$absorption_efficiency_dw = (1 - (
+  data_i$assimilation_efficiency_dw = (1 - (
     data_i$frass_mass_dw / data_i$food_consumed_collection_days_dw
   ))
   
@@ -317,6 +329,8 @@ combine_individual_data <- function(data_fc, data_ic, data_i) {
   # In dry weight
   data_i$growth_efficiency_dw = NA
   data_i$growth_dw = NA
+  data_i$growth_investment_dw = NA
+  data_i$mass_specific_maintenance_rate_dw = NA
   
   
   for (i in 1:nrow(data_i)) {
@@ -331,41 +345,42 @@ combine_individual_data <- function(data_fc, data_ic, data_i) {
     # The growth efficiency in dry weight is equal to estimated dry weight mass gains divided by dry weight of food consumed
     
     data_i$growth_efficiency_dw[i] = ((
-      data_i$bodymass_last_collection_date[i]*(1-wc) - data_i$bodymass_7th_instar_j0_fw[i]*(1-wc)
+      data_i$bodymass_last_collection_date[i] * (1 - wc) - data_i$bodymass_7th_instar_j0_fw[i] *
+        (1 - wc)
     ) / data_i$food_consumed_collection_days_dw[i]
-    )
-     # It is in dry weight of food
-    
-    # The growth in dry weight is equal to estimated dry weight mass gains
-    data_i$growth_dw[i] = (
-      data_i$bodymass_last_collection_date[i]*(1-wc) - data_i$bodymass_7th_instar_j0_fw[i]*(1-wc)
     )
     # It is in dry weight of food
     
-    # The growth investment is the proportion of mass which was absorbed that ended up in growth
+    # The growth in dry weight is equal to estimated dry weight mass gains
+    data_i$growth_dw[i] = (
+      data_i$bodymass_last_collection_date[i] * (1 - wc) - data_i$bodymass_7th_instar_j0_fw[i] *
+        (1 - wc)
+    )
+    # It is in dry weight of food
+    
+    # The growth investment is the proportion of mass which was assimilated that ended up in growth
     # In dry weight
-    
     data_i$growth_investment_dw[i] = (
-      data_i$bodymass_last_collection_date[i]*(1-wc) - data_i$bodymass_7th_instar_j0_fw[i]*(1-wc)
-    ) / (data_i$absorbed_mass_dw)
+      data_i$bodymass_last_collection_date[i] * (1 - wc) - data_i$bodymass_7th_instar_j0_fw[i] *
+        (1 - wc)
+    ) / (data_i$assimilated_mass_dw[i])
     
-    # The mass-specific maintenance rate is the amount of mass which was absorbed that did not end up in growth,
+    # The mass-specific maintenance rate is the amount of mass which was assimilated that did not end up in growth,
     # divided by time and the average individual weight
     # In dry weight
     
     data_i$mass_specific_maintenance_rate_dw[i] = (
-      data_i$absorbed_mass_dw[i] -
+      data_i$assimilated_mass_dw[i] -
         (
-          data_i$bodymass_last_collection_date[i]*(1-wc) - data_i$bodymass_7th_instar_j0_fw[i]*(1-wc)
+          data_i$bodymass_last_collection_date[i] * (1 - wc) - data_i$bodymass_7th_instar_j0_fw[i] *
+            (1 - wc)
         )
-    ) / (
-      data_i$number_collection_days[i] * data_i$mean_bodymass_dw
-    )
+    ) / (data_i$number_collection_days[i] * data_i$mean_bodymass_dw[i])
     
     
   }
   
-
+  
   
   
   return(data_i)

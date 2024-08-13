@@ -8,31 +8,43 @@
 library(targets)
 library(here)
 
+packages = c(
+  "ggplot2",
+  "dplyr",
+  "tidyr",
+  "mgcv",
+  "ggtext" ,
+  "formula.tools",
+  "fmsb",
+  "ggsci",
+  "tls",
+  "scam",
+  "rmarkdown",
+  "lubridate",
+  "latex2exp",
+  "stargazer",
+  "graphics",
+  "minpack.lm",
+  "onls",
+  "scales",
+  "patchwork",
+  "viridis",
+  "splines",
+  "readr",
+  "ggpubr",
+  "ggsci",
+  "gratia"
+)
+packages_to_install = packages[!(packages %in% installed.packages())]
+
+if (length(packages_to_install) > 0) {
+  install.packages(packages_to_install)
+} else {
+  message("No packages to install.")
+}
+
 tar_option_set(
-  packages = c(
-    "ggplot2",
-    "dplyr",
-    "tidyr",
-    "mgcv",
-    "ggtext" ,
-    "formula.tools",
-    "fmsb",
-    "ggsci",
-    "rms",
-    "tls",
-    "scam",
-    "rmarkdown",
-    "lubridate",
-    "latex2exp",
-    "stargazer",
-    "graphics",
-    "minpack.lm",
-    "onls",
-    "scales",
-    "patchwork",
-    "viridis",
-    "splines"
-  )
+  packages = packages
 )
 
 # We source all functions contained in all files in the R directory
@@ -119,7 +131,7 @@ list(
   
   # Fit a non linear model to the growth efficiency data
   tar_target(
-    theoretical_model_irn,
+    theoretical_models_irn,
     theoretical_model_irn(data_i = data_irn_indivuals_combined),
     format = "file"
   )

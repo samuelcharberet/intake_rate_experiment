@@ -16,12 +16,13 @@ combine_group_data <- function(data_i, data_g, data_fc) {
   data_g$number_collection_days = NA
   data_g$geometric_mean_growth_fw = NA
   data_g$growth_efficiency_fw = NA
-  data_g$absorption_efficiency_dw = NA
+  data_g$assimilation_efficiency_dw = NA
   data_g$mean_mass_specific_intake_rate_fw = NA
   data_g$mean_egestion_rate_dw = NA
   data_g$mean_bodymass = NA
   data_g$mean_bodymass_dw = NA
   data_g$mean_mass_specific_intake_rate_dw = NA
+  data_g$geometric_mean_growth_dw = NA
   
   ####  compute group-level measures based on the sum of the individual data ####
   
@@ -49,7 +50,7 @@ combine_group_data <- function(data_i, data_g, data_fc) {
     data_g$geometric_mean_growth_dw[group_row] = mean(data_i$geometric_mean_growth_dw[individual_group_rows])
     
     data_g$growth_efficiency_fw[group_row] = mean(data_i$growth_efficiency_fw[individual_group_rows])
-    data_g$absorption_efficiency_dw[group_row] = 1 - (sum(data_i$frass_mass_dw[individual_group_rows]) / sum(data_i$food_consumed_collection_days_dw[individual_group_rows]))
+    data_g$assimilation_efficiency_dw[group_row] = 1 - (sum(data_i$frass_mass_dw[individual_group_rows]) / sum(data_i$food_consumed_collection_days_dw[individual_group_rows]))
     data_g$mean_egestion_rate_dw[group_row] = mean(data_i$egestion_rate_dw[individual_group_rows])
     data_g$mean_bodymass[group_row] = mean(data_i$mean_bodymass[individual_group_rows])
     data_g$mean_bodymass_dw[group_row] = mean(data_i$mean_bodymass_dw[individual_group_rows])
@@ -149,48 +150,48 @@ combine_group_data <- function(data_i, data_g, data_fc) {
   
 
   
-  #### Computes the element absorption efficiency ####
+  #### Computes the element assimilation efficiency ####
   
-  data_g$C_absorption_efficiency_dw = 100 * (1 - ((data_g$C_frass * data_g$frass_group_mass_dw) /
+  data_g$C_assimilation_efficiency_dw = 100 * (1 - ((data_g$C_frass * data_g$frass_group_mass_dw) /
                                                     (data_g$food_C * data_g$food_consumed_collection_days_dw)
   ))
-  data_g$N_absorption_efficiency_dw = 100 * (1 - ((data_g$N_frass * data_g$frass_group_mass_dw) /
+  data_g$N_assimilation_efficiency_dw = 100 * (1 - ((data_g$N_frass * data_g$frass_group_mass_dw) /
                                                     (data_g$food_N * data_g$food_consumed_collection_days_dw)
   ))
-  data_g$P_absorption_efficiency_dw = 100 * (1 - ((data_g$P_frass * data_g$frass_group_mass_dw) /
+  data_g$P_assimilation_efficiency_dw = 100 * (1 - ((data_g$P_frass * data_g$frass_group_mass_dw) /
                                                     (data_g$food_P * data_g$food_consumed_collection_days_dw)
   ))
-  data_g$S_absorption_efficiency_dw = 100 * (1 - ((data_g$S_frass * data_g$frass_group_mass_dw) /
+  data_g$S_assimilation_efficiency_dw = 100 * (1 - ((data_g$S_frass * data_g$frass_group_mass_dw) /
                                                     (data_g$food_S * data_g$food_consumed_collection_days_dw)
   ))
-  data_g$Na_absorption_efficiency_dw = 100 * (1 - ((data_g$Na_frass * data_g$frass_group_mass_dw) /
+  data_g$Na_assimilation_efficiency_dw = 100 * (1 - ((data_g$Na_frass * data_g$frass_group_mass_dw) /
                                                      (data_g$food_Na * data_g$food_consumed_collection_days_dw)
   ))
-  data_g$Mg_absorption_efficiency_dw = 100 * (1 - ((data_g$Mg_frass * data_g$frass_group_mass_dw) /
+  data_g$Mg_assimilation_efficiency_dw = 100 * (1 - ((data_g$Mg_frass * data_g$frass_group_mass_dw) /
                                                      (data_g$food_Mg * data_g$food_consumed_collection_days_dw)
   ))
-  data_g$K_absorption_efficiency_dw = 100 * (1 - ((data_g$K_frass * data_g$frass_group_mass_dw) /
+  data_g$K_assimilation_efficiency_dw = 100 * (1 - ((data_g$K_frass * data_g$frass_group_mass_dw) /
                                                     (data_g$food_K * data_g$food_consumed_collection_days_dw)
   ))
-  data_g$Ca_absorption_efficiency_dw = 100 * (1 - ((data_g$Ca_frass * data_g$frass_group_mass_dw) /
+  data_g$Ca_assimilation_efficiency_dw = 100 * (1 - ((data_g$Ca_frass * data_g$frass_group_mass_dw) /
                                                      (data_g$food_Ca * data_g$food_consumed_collection_days_dw)
   ))
-  data_g$`12C_absorption_efficiency_dw` = 100 * (1 - ((data_g$`12C_frass` * data_g$frass_group_mass_dw) /
+  data_g$`12C_assimilation_efficiency_dw` = 100 * (1 - ((data_g$`12C_frass` * data_g$frass_group_mass_dw) /
                                                         (
                                                           data_g$`12C_food` * data_g$food_consumed_collection_days_dw
                                                         )
   ))
-  data_g$`13C_absorption_efficiency_dw` = 100 * (1 - ((data_g$`13C_frass` * data_g$frass_group_mass_dw) /
+  data_g$`13C_assimilation_efficiency_dw` = 100 * (1 - ((data_g$`13C_frass` * data_g$frass_group_mass_dw) /
                                                         (
                                                           data_g$`13C_food` * data_g$food_consumed_collection_days_dw
                                                         )
   ))
-  data_g$`14N_absorption_efficiency_dw` = 100 * (1 - ((data_g$`14N_frass` * data_g$frass_group_mass_dw) /
+  data_g$`14N_assimilation_efficiency_dw` = 100 * (1 - ((data_g$`14N_frass` * data_g$frass_group_mass_dw) /
                                                         (
                                                           data_g$`14N_food` * data_g$food_consumed_collection_days_dw
                                                         )
   ))
-  data_g$`15N_absorption_efficiency_dw` = 100 * (1 - ((data_g$`15N_frass` * data_g$frass_group_mass_dw) /
+  data_g$`15N_assimilation_efficiency_dw` = 100 * (1 - ((data_g$`15N_frass` * data_g$frass_group_mass_dw) /
                                                         (
                                                           data_g$`15N_food` * data_g$food_consumed_collection_days_dw
                                                         )
@@ -238,15 +239,15 @@ combine_group_data <- function(data_i, data_g, data_fc) {
   data_g$`15N_retention_time` = data_g$`15N_larvae` * data_g$mean_bodymass_dw /
     data_g$`15N_egestion_rate_dw`
   
-  #### Isotopic absorption efficiency ratios ####
+  #### Isotopic assimilation efficiency ratios ####
   
   
   data_g$`C_iaer` = 1000 * (
-    data_g$`13C_absorption_efficiency_dw` / data_g$`12C_absorption_efficiency_dw` -
+    data_g$`13C_assimilation_efficiency_dw` / data_g$`12C_assimilation_efficiency_dw` -
       1
   )
   data_g$`N_iaer` = 1000 * (
-    data_g$`15N_absorption_efficiency_dw` / data_g$`14N_absorption_efficiency_dw` -
+    data_g$`15N_assimilation_efficiency_dw` / data_g$`14N_assimilation_efficiency_dw` -
       1
   )
   
@@ -266,18 +267,18 @@ combine_group_data <- function(data_i, data_g, data_fc) {
   data_g = tidyr::pivot_longer(
     data_g,
     cols = c(
-      "C_absorption_efficiency_dw",
-      "N_absorption_efficiency_dw",
-      "P_absorption_efficiency_dw",
-      "S_absorption_efficiency_dw",
-      "Na_absorption_efficiency_dw",
-      "Mg_absorption_efficiency_dw",
-      "K_absorption_efficiency_dw",
-      "Ca_absorption_efficiency_dw",
-      "12C_absorption_efficiency_dw",
-      "13C_absorption_efficiency_dw",
-      "14N_absorption_efficiency_dw",
-      "15N_absorption_efficiency_dw",
+      "C_assimilation_efficiency_dw",
+      "N_assimilation_efficiency_dw",
+      "P_assimilation_efficiency_dw",
+      "S_assimilation_efficiency_dw",
+      "Na_assimilation_efficiency_dw",
+      "Mg_assimilation_efficiency_dw",
+      "K_assimilation_efficiency_dw",
+      "Ca_assimilation_efficiency_dw",
+      "12C_assimilation_efficiency_dw",
+      "13C_assimilation_efficiency_dw",
+      "14N_assimilation_efficiency_dw",
+      "15N_assimilation_efficiency_dw",
       "C_retention_time",
       "N_retention_time",
       "P_retention_time",

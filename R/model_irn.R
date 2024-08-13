@@ -5,25 +5,27 @@
 #'
 #' @examples
 model_irn <- function(data_i, data_g) {
-  variable_list_tm = c(
-    "absorption_rate_dw",
-    "absorption_efficiency_dw",
+  # The variables in the total mass balance study
+  variables_list_tm = c(
+    "assimilation_rate_dw",
+    "assimilation_efficiency_dw",
     "geometric_mean_growth_dw",
     "growth_efficiency_fw"
-  ) # The variables in the total mass balance study
+  )
   
-  nb_variable_tm = length(variable_list_tm)
-  matrix_list_ch = c("absorption_efficiency_dw", "larvae", "frass") # The variables in the chemical study
-  nb_matrix_ch = length(matrix_list_ch)
-  elements_list = c("C", "N", "P", "Na", "Mg", "S", "K", "Ca") # The elements
+  nb_variables_tm = length(variable_list_tm)
+  
+  # The variables in the chemical mass balance study
+  
+  variables_list_ch = c("assimilation_efficiency_dw", "larvae", "frass") # The variables in the chemical study
+  nb_variables_ch = length(variables_list_ch)
+  # The elements
+  elements_list = c("C", "N", "P", "Na", "Mg", "S", "K", "Ca")
   nb_elements = length(elements_list)
   
-  # Creating a dataframe containing GAM statistics for both total mass and chemical balances
-  
+  # Creating a dataframe containing GAM statistics for total mass
   
   variable = paste(c(variable_list_tm, rep(matrix_list_ch, each = nb_elements)), c(rep("", nb_variable_tm), rep(elements_list, nb_matrix_ch)))
-  
-  
   nb_row = length(variable)
   
   n = rep(NA, nb_row)
@@ -230,13 +232,13 @@ model_irn <- function(data_i, data_g) {
   
   # We wish to build models to test
   # The effect of growth rate on trophic fractionations
-  # The effect of absorption efficiency on the FLDF
+  # The effect of assimilation efficiency on the FLDF
   # The effect of mass-specific intake rate on IAER
   
   dependant_variables_list = c("tf", "fldf", "iaer")
   independant_variables_list = c(
     "geometric_mean_growth_dw",
-    "absorption_efficiency_dw",
+    "assimilation_efficiency_dw",
     "mean_mass_specific_intake_rate_fw"
   )
   

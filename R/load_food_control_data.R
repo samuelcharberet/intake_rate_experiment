@@ -33,14 +33,6 @@ load_food_control_data = function(path){
     "food_d15N"
   )
   
-  # We define the type of each column
-  
-  data_irn_food_control <- data_irn_food_control |>
-    dplyr::mutate(across(tidyselect::all_of(character_columns), as.character)) |>
-    dplyr::mutate(across(tidyselect::all_of(date_columns), ~ as.POSIXct(.x, format = "%d/%m/%Y"))) |>
-    dplyr::mutate(across(tidyselect::all_of(factor_columns), as.factor)) |>
-    dplyr::mutate(across(tidyselect::all_of(numeric_columns), as.numeric))
-  
   ##### Food water content #####
   
   data_irn_food_control$food_fw = data_irn_food_control$fw_filled_tube_food_control_mass -
@@ -52,6 +44,14 @@ load_food_control_data = function(path){
   data_irn_food_control$food_water_content = (data_irn_food_control$food_fw - data_irn_food_control$food_dw) /
     data_irn_food_control$food_fw
   
+  
+  # We define the type of each column
+  
+  data_irn_food_control <- data_irn_food_control |>
+    dplyr::mutate(across(tidyselect::all_of(character_columns), as.character)) |>
+    dplyr::mutate(across(tidyselect::all_of(date_columns), ~ as.POSIXct(.x, format = "%d/%m/%Y"))) |>
+    dplyr::mutate(across(tidyselect::all_of(factor_columns), as.factor)) |>
+    dplyr::mutate(across(tidyselect::all_of(numeric_columns), as.numeric))
   
   return(data_irn_food_control)
 }
