@@ -16,12 +16,9 @@ combine_group_data <- function(data_i, data_g, data_fc) {
   data_g$number_collection_days = NA
   data_g$geometric_mean_growth_fw = NA
   data_g$growth_efficiency_fw = NA
-<<<<<<< HEAD
   data_g$assimilation_efficiency_dw = NA
-=======
   data_g$geometric_mean_growth_dw = NA
   data_g$absorption_efficiency_dw = NA
->>>>>>> 34bb8cd35ba26a5af65766edf834dd5030deff50
   data_g$mean_mass_specific_intake_rate_fw = NA
   data_g$mean_egestion_rate_dw = NA
   data_g$mean_bodymass = NA
