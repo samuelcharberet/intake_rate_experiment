@@ -5,6 +5,7 @@
 #################################################
 # _targets.R file
 
+
 library(targets)
 library(here)
 
@@ -17,6 +18,10 @@ packages = c(
   "formula.tools",
   "fmsb",
   "ggsci",
+<<<<<<< HEAD
+=======
+  "rms",
+>>>>>>> 34bb8cd35ba26a5af65766edf834dd5030deff50
   "tls",
   "scam",
   "rmarkdown",
@@ -30,6 +35,7 @@ packages = c(
   "patchwork",
   "viridis",
   "splines",
+<<<<<<< HEAD
   "readr",
   "ggpubr",
   "ggsci",
@@ -42,6 +48,13 @@ if (length(packages_to_install) > 0) {
 } else {
   message("No packages to install.")
 }
+=======
+  "readr"
+)
+
+install.packages(packages[!(packages %in% installed.packages())])
+update.packages()
+>>>>>>> 34bb8cd35ba26a5af65766edf834dd5030deff50
 
 tar_option_set(
   packages = packages
