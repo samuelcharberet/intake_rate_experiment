@@ -45,9 +45,6 @@ if (length(packages_to_install) > 0) {
 }
 
 
-install.packages(packages[!(packages %in% installed.packages())])
-update.packages()
-
 tar_option_set(
   packages = packages
 )

@@ -3,11 +3,11 @@
 #' @return a clean data tibble containing information on individuals from the intake rate experiment
 #'
 load_individual_data = function(path) {
-  ##########  0. Load data  ##########
+  # 0. Load data  ##########
   
   data_irn_individuals <- readr::read_delim(path)
   
-  ##########  1. Structuration  ##########
+  #  1. Structuration  ##########
   
   # Decide column classes
   
@@ -80,9 +80,9 @@ load_individual_data = function(path) {
   week_6 = which(as.numeric(data_irn_individuals$individual_ID) >= 201 & as.numeric(data_irn_individuals$individual_ID) <= 240)
   data_irn_individuals = data_irn_individuals[-week_6,]
   
-  ##########  2. Filling the table  ##########
+  #  2. Filling the table  ##########
   
-  ##### Last collection day #####
+  ## Last collection day #####
   
   # We automatically define the last collection day based on whether or not the pre pupation occurred during the week
   data_irn_individuals$last_collection_date = as.POSIXct(NA)
@@ -101,13 +101,13 @@ load_individual_data = function(path) {
     }
   }
   
-  ##### Number of collection day #####
+  ## Number of collection day #####
   
   data_irn_individuals$number_collection_days = as.numeric(
     data_irn_individuals$last_collection_date - data_irn_individuals$first_collection_date + 1
   )
   
-  ##### Bodymass at the last collection date #####
+  ## Bodymass at the last collection date #####
   
   # We create a column corresponding to the last bodymass measured before pre pupation, that is the bodymass at the last collection date
   data_irn_individuals$bodymass_last_collection_date = NA

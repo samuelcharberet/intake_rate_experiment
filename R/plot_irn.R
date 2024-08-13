@@ -17,7 +17,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   # The food provided daily is a factor rather than a numeric variable
   data_i$food_provided_fw = as.factor(data_i$food_provided_fw)
   
-  ########## 0. Preliminary figures ##########
+  # 0. Preliminary figures ####
   
   # Reshape the data from wide to long format
   
@@ -59,7 +59,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     units = "in"
   )
   
-  ###### Effect of treatment on water content in the larvae at the start ######
+  ## Effect of treatment on water content in the larvae at the start ######
   data_f = filter(data_i, number_collection_days == 3)
   data_f$wc = (data_f$bodymass_7th_instar_j3_fw - data_f$bodymass_7th_instar_j3_dw) /
     data_f$bodymass_7th_instar_j3_fw
@@ -92,7 +92,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     units = "in"
   )
   
-  ###### Effect of week on bodymass at the start ######
+  ## Effect of week on bodymass at the start ######
   
   p <- ggplot2::ggplot(
     data_i,
@@ -113,7 +113,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     units = "in"
   )
   
-  ###### Effect of treatment on bodymass at the start ######
+  ## Effect of treatment on bodymass at the start ######
   
   p <- ggplot2::ggplot(data_i,
                        aes(x = food_provided_fw , y = bodymass_7th_instar_j0_fw)) +
@@ -132,7 +132,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     units = "in"
   )
   
-  ###### Dry weight bodymass at the end of the experiment according to food consumed  ######
+  ## Dry weight bodymass at the end of the experiment according to food consumed  ######
   
   p <- ggplot2::ggplot(data_i,
                        aes(x = food_consumed_collection_days_dw, y = bodymass_7th_instar_j3_dw)) +
@@ -155,7 +155,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     units = "in"
   )
   
-  ###### Dry weight bodymass at the end of the experiment according to food consumed  ######
+  ## Dry weight bodymass at the end of the experiment according to food consumed  ######
   
   p <- ggplot2::ggplot(data_i,
                        aes(x = food_consumed_collection_days_dw, y = bodymass_imago_dw)) +
@@ -181,13 +181,9 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   
   
   
-  ########## 1. Mass balance figures ##########
+  # 1. Mass balance figures ##########
   
-  
-  
-  
-  
-  ###### Assimilation rate according to intake rate ######
+  ### Assimilation rate according to intake rate ######
   
   mod = mgcv::gam(assimilation_rate_dw ~ s(ingestion_rate_dw, bs = "cs", k =
                                              3),
@@ -226,7 +222,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     units = "in"
   )
   
-  ###### Assimilation rate according to mass specific intake rate ######
+  ### Assimilation rate according to mass specific intake rate ######
   mod = mgcv::gam(assimilation_rate_dw ~ s(
     mass_specific_ingestion_rate_fw,
     bs = "cs",
@@ -262,7 +258,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     units = "in"
   )
   
-  ###### Mass specific Assimilation rate according to mass specific intake rate ######
+  ### Mass specific Assimilation rate according to mass specific intake rate ######
   
   
   msardw_msirfw <- ggplot2::ggplot(
@@ -301,7 +297,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     units = "in"
   )
   
-  ###### Assimilation efficiency in dw according to mass specific intake rate in fw ######
+  ### Assimilation efficiency in dw according to mass specific intake rate in fw ######
   
   mod = mgcv::gam(
     assimilation_efficiency_dw ~ s(mass_specific_ingestion_rate_fw),
@@ -344,7 +340,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   
   
   
-  ###### Growth efficiency in fresh weight according to the mass specific intake rate in fresh weight  ######
+  ### Growth efficiency in fresh weight according to the mass specific intake rate in fresh weight  ######
   mod = mgcv::gam(growth_efficiency_fw ~ s(
     mass_specific_ingestion_rate_fw,
     bs = "cs",
@@ -386,7 +382,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     units = "in"
   )
   
-  ###### Growth efficiency in fresh weight according to specific growth rate in fresh weight ######
+  ### Growth efficiency in fresh weight according to specific growth rate in fresh weight ######
   
   mod = mgcv::gam(
     growth_efficiency_fw ~ s(geometric_mean_growth_fw, bs = "cs", k = 3) + s(ingestion_rate_fw, bs = "cs", k = 3),
@@ -420,7 +416,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     units = "in"
   )
   
-  ###### Growth efficiency according to assimilation efficiency  ######
+  ### Growth efficiency according to assimilation efficiency  ######
   
   p <- ggplot2::ggplot(data_i,
                        aes(x = assimilation_efficiency_dw , y = growth_efficiency_dw *
@@ -444,7 +440,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     units = "in"
   )
   
-  ###### Growth rate according to intake ######
+  ### Growth rate according to intake ######
   
   mod = mgcv::gam(geometric_mean_growth_dw ~ s(ingestion_rate_fw, bs = "cs", k =
                                                  3),
@@ -485,7 +481,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   )
   
   
-  ###### Mass-specific growth rate in fresh weight according to the mass specific intake rate in fresh weight  ######
+  ### Mass-specific growth rate in fresh weight according to the mass specific intake rate in fresh weight  ######
   mod = mgcv::gam(
     geometric_mean_growth_fw ~ s(
       mass_specific_ingestion_rate_fw,
@@ -528,7 +524,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   
   
   
-  ###### Growth investment according to mass specific amount assimilated  ######
+  ### Growth investment according to mass specific amount assimilated  ######
   
   
   p <- ggplot2::ggplot(data_i,
@@ -555,7 +551,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     units = "in"
   )
   
-  ###### Growth investment according to mass specific intake rate   ######
+  ### Growth investment according to mass specific intake rate   ######
   
   gidw_msirfw <- ggplot2::ggplot(data_i,
                                  aes(x = mass_specific_ingestion_rate_fw, y = growth_investment_dw)) +
@@ -583,7 +579,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     units = "in"
   )
   
-  ###### Maintenance investment according to mass specific intake rate   ######
+  ### Maintenance investment according to mass specific intake rate   ######
   
   midw_msirfw <- ggplot2::ggplot(data_i,
                                  aes(x = mass_specific_ingestion_rate_fw, y = 1 -
@@ -612,7 +608,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     units = "in"
   )
   
-  ###### Mass-specific maintenance rate according to mass specific intake rate   ######
+  ### Mass-specific maintenance rate according to mass specific intake rate   ######
   
   msmrdw_msirdw <- ggplot2::ggplot(
     data_i,
@@ -646,7 +642,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   
   
   
-  ###### Mass-specific egestion rate according to mass-specific ingestion rate  ######
+  ### Mass-specific egestion rate according to mass-specific ingestion rate  ######
   
   p <- ggplot2::ggplot(data_i,
                        aes(x = mass_specific_ingestion_rate_fw, y = egestion_rate_dw / ((bodymass_7th_instar_j3_fw + bodymass_7th_instar_j0_fw) / 2
@@ -672,7 +668,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   )
   
   
-  ###### Mass-specific growth rate in dry weight according to the mass specific intake rate in dry weight  ######
+  ### Mass-specific growth rate in dry weight according to the mass specific intake rate in dry weight  ######
   mod_msgrdw_msirdw = mgcv::gam(
     geometric_mean_growth_dw ~ s(mass_specific_ingestion_rate_fw),
     family = scat(),
@@ -706,7 +702,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     units = "in"
   )
   
-  ###### Assimilation efficiency in dw according to mass specific intake rate in dw ######
+  ### Assimilation efficiency in dw according to mass specific intake rate in dw ######
   mod_aedw_msirdw = mgcv::gam(
     assimilation_efficiency_dw ~ s(mass_specific_ingestion_rate_dw),
     family = scat(),
@@ -741,7 +737,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     units = "in"
   )
   
-  ###### Growth efficiency in dry weight according to the mass specific intake rate in dry weight  ######
+  ### Growth efficiency in dry weight according to the mass specific intake rate in dry weight  ######
   
   mod_gedw_msirdw = mgcv::gam(
     growth_efficiency_dw ~ s(
@@ -780,7 +776,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     units = "in"
   )
   
-  ###### Growth efficiency in dry weight according to specific growth rate in dry weight ######
+  ### Growth efficiency in dry weight according to specific growth rate in dry weight ######
   
   mod_gedw_msgrdw = mgcv::gam(
     growth_efficiency_dw ~ s(geometric_mean_growth_dw, bs = "ad", k = 10),
@@ -816,8 +812,8 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   )
   
   
-  ###### Mass balance complete plot ######
-  
+  # Mass balance complete plot ######
+
   complete_plot = (msgrdw_msirdw | aedw_msirdw) /
     (gedw_msirdw | gedw_msgrdw) + plot_annotation(tag_levels = 'a')
   
@@ -834,7 +830,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   
   
   
-  #### Mass balance derivatives #####
+  # Mass balance derivatives #####
   
   
   # Derivative of mass specific growth rate dw according to mass specific intake rate dw
@@ -928,7 +924,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     height = 6.5
   )
   
-  ########## 2. Chemical balance figures ##########
+  # 2. Chemical balance figures ##########
   
   
   # Options for the plots
@@ -961,7 +957,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   plots = vector("list", nb_variables)
   names(plots) = variables
   
-  ###### Differences in elemental content between the variables: food, larva, frass ######
+  ## Differences in elemental content between the variables: food, larva, frass ######
   
   plots_matrices = vector("list", nb_elements)
   
@@ -1061,7 +1057,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     height = 4,
   )
   
-  ##### Growth rate hypothesis #####
+  ## Growth rate hypothesis #####
   # We check whether the growth rate in positively related to P body content
   # according to the growth rate hypothesis of Elser
   data_larvae = subset(data_g, data_g$variable == "larvae")
@@ -1133,7 +1129,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     units = "in"
   )
   
-  ##### Sterner Elser body - waste relationship #####
+  ## Sterner Elser body - waste relationship #####
   # We check whether the body N:P is negatively correlated with the waste N:P
   # according to the Sterner & Elser model of 2002
   
@@ -1179,7 +1175,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     units = "in"
   )
   
-  ###### Elements assimilation efficiency, larval content, frass content, retention time according to total mass-specific intake rate  ######
+  ## Elements assimilation efficiency, larval content, frass content, retention time according to total mass-specific intake rate  ######
   
   # Set a new theme to produce the complete figures
   
@@ -1380,7 +1376,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   }
   
   
-  ######  CNP stoichiometry ######
+  ## CNP stoichiometry ######
   
   # Making C:N, N:P, and C:P plots for larvae and frass as a function of
   # the mass-specific intake rate
@@ -1615,7 +1611,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     units = "in"
   )
   
-  ##### CNP stoichiometry complete plot #####
+  ##### The complete plot #####
   
   # Set global options for the ggplot2 plots
   
@@ -1655,7 +1651,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   )
   
   
-  ##### Assimilation efficiencies on a single plot  #####
+  ##  Assimilation efficiencies on a single plot  #####
   ggplot2::theme_set(
     theme_classic() + theme(
       legend.position = 'right',
@@ -1715,7 +1711,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     height = 4,
     units = "in"
   )
-  ##### Retention times on a single plot #####
+  ##  Retention times on a single plot #####
   
   ggplot2::theme_set(
     theme_classic() + theme(
@@ -1770,7 +1766,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     units = "in"
   )
   
-  ##### A figure with both Assimilation efficiency and retention time #####
+  ##  A figure with both Assimilation efficiency and retention time #####
   
   complete_plot = ggpubr::ggarrange(
     rel_dw_msirfw + ggpubr::rremove("xlab"),
@@ -1814,7 +1810,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     units = "in"
   )
   
-  ##### Nutrient co variations in larvae and frass #####
+  ##  Nutrient co variations in larvae and frass #####
   data_larvae = subset(data_g, data_g$variable == "larvae")
   # Removing 15N and 13C
   data_larvae = data_larvae[!(data_larvae$element %in% c("d15N", "d13C")), ]
@@ -1839,7 +1835,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   p = plot(test[, 55:62])
   dev.off()
   
-  ##### Radar chart of larvae and frass nutritional content #####
+  ##  Radar chart of larvae and frass nutritional content #####
   # Using predicted values from the GAM
   
   ### For larvae
@@ -1937,9 +1933,9 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   dev.off()
   
   
-  ########## 3. Isotopy figures ##########
+  # 3. Isotopy figures ##########
   
-  ######  Isotopic fractionation between the larvae and food (trophic fractionation) as a function of MSIR ######
+  ##  Isotopic fractionation between the larvae and food (trophic fractionation) as a function of MSIR ######
   
   ggplot2::theme_set(
     theme_classic() + theme(
@@ -1996,7 +1992,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     units = "in"
   )
   
-  ######  Isotopic fractionation between the larvae and food (trophic fractionation) as a function of growth rate ######
+  ##  Isotopic fractionation between the larvae and food (trophic fractionation) as a function of growth rate ######
   
   
   ctf_gr <- ggplot2::ggplot(data_tf, aes(x = geometric_mean_growth_dw, y = `13C`)) +
@@ -2054,7 +2050,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     units = "in"
   )
   
-  ######  Isotopic fractionation between the larvae and food (trophic fractionation) as a function of mass-specific growth rate ######
+  ##  Isotopic fractionation between the larvae and food (trophic fractionation) as a function of mass-specific growth rate ######
   
   
   p <- ggplot2::ggplot(data_tf, aes(x = geometric_mean_growth_dw, y = `13C`)) +
@@ -2089,7 +2085,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     units = "in"
   )
   
-  ######  Isotopic fractionation between the larvae and food (trophic fractionation) as a function of growth efficiency ######
+  ##  Isotopic fractionation between the larvae and food (trophic fractionation) as a function of growth efficiency ######
   
   
   p <- ggplot2::ggplot(data_tf, aes(x = growth_efficiency_fw , y = `13C`)) +
@@ -2124,7 +2120,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     units = "in"
   )
   
-  ######  Isotopic discrimination factor between frass and food (FFDF) according to MSIR ######
+  ##  Isotopic discrimination factor between frass and food (FFDF) according to MSIR ######
   
   data_ffdf = subset(data_g, data_g$variable == "ffdf")
   data_ffdf = pivot_wider(data_ffdf, names_from = element, values_from = elemental_value)
@@ -2182,7 +2178,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     units = "in"
   )
   
-  ######  Isotopic discrimination factor between frass and food (FFDF) according to assimilation efficiency ######
+  ##  Isotopic discrimination factor between frass and food (FFDF) according to assimilation efficiency ######
   
   data_ffdf = subset(data_g, data_g$variable == "ffdf")
   data_ffdf = pivot_wider(data_ffdf, names_from = element, values_from = elemental_value)
@@ -2222,7 +2218,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     units = "in"
   )
   
-  ######  Isotopic discrimination factor between frass and larvae (FLDF) according to MSIR ######
+  ##  Isotopic discrimination factor between frass and larvae (FLDF) according to MSIR ######
   
   data_fldf = subset(data_g, data_g$variable == "fldf")
   data_fldf = pivot_wider(data_fldf, names_from = element, values_from = elemental_value)
@@ -2280,7 +2276,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     units = "in"
   )
   
-  ######  Isotopic assimilation efficiency ratio (IAER) according to MSIR ######
+  ##  Isotopic assimilation efficiency ratio (IAER) according to MSIR ######
   
   data_aer = subset(data_g, data_g$variable == "iaer")
   data_aer = pivot_wider(data_aer, names_from = element, values_from = elemental_value)
@@ -2346,7 +2342,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   )
   
   
-  ######  Isotopic assimilation efficiency ratio (IAER) according to AE ######
+  ##  Isotopic assimilation efficiency ratio (IAER) according to AE ######
   
   
   p <- ggplot2::ggplot(data_aer, aes(x = assimilation_efficiency_dw , y = `C`)) +
@@ -2381,7 +2377,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     units = "in"
   )
   
-  ######  Complete figure for isotopy  #####
+  #  Complete figure for isotopy  #####
   # A theme specific to this figure
   ggplot2::theme_set(
     theme_classic() + theme(

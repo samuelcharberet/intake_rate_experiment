@@ -26,7 +26,7 @@ combine_group_data <- function(data_i, data_g, data_fc) {
   data_g$mean_mass_specific_intake_rate_dw = NA
   data_g$geometric_mean_growth_dw = NA
   
-  ####  compute group-level measures based on the sum of the individual data ####
+  ####  Compute group-level measures based on the sum of the individual data ####
   
   for (i in 1:length(group_IDs)) {
     individual_group_rows = which(data_i$group_ID == group_IDs[i])
@@ -60,7 +60,7 @@ combine_group_data <- function(data_i, data_g, data_fc) {
   
   
   
-  ####  compute the group-level element-specific intake rate at the level of the group ####
+  ####  Compute the group-level element-specific intake rate at the level of the group ####
   #### by combining food chemical analysis and group-level intake rate
   
   data_g$food_C = NA
@@ -141,7 +141,7 @@ combine_group_data <- function(data_i, data_g, data_fc) {
   ) + 1) * 0.003663))
   data_g$`15N_food` = data_g$food_N - data_g$`14N_food`
   
-  ####  compute the group intake rate ####
+  ####  Compute the group intake rate ####
   
   # data_g$group_mass_specific_intake_rate_fw = data_g$food_consumed_collection_days_fw /
   #   (data_g$number_collection_days * ((

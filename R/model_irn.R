@@ -5,16 +5,118 @@
 #'
 #' @examples
 model_irn <- function(data_i, data_g) {
-  # The variables in the total mass balance study
-  variables_list_tm = c(
-    "assimilation_rate_dw",
-    "assimilation_efficiency_dw",
-    "geometric_mean_growth_dw",
-    "growth_efficiency_fw"
+  
+  # We have two datasets, one at the level of individuals for total mass balance
+  # and another at the level of the group, for chemical data only (elements and isotopes)
+  
+  
+  # I. Total mass balance GAM models #####
+  
+  # The predictor variables in the total mass balance study
+  predictors_list_tm = c(
+    "MSIR",
+    "MSIR",
+    "MSIR",
+    "GR"
+  )
+  # The response variables in the total mass balance study
+  responses_list_tm = c(
+    "GR",
+    "AE",
+    "GE",
+    "GE"
   )
   
-  nb_variables_tm = length(variable_list_tm)
+  nb_models_tm = length(responses_list_tm)
   
+  # Creating a dataframe containing GAM statistics for total mass balance
+  
+  n = rep(NA, nb_models_tm)
+  adj_r_squared = rep(NA, nb_models_tm)
+  n_par = rep(NA, nb_models_tm)
+  edf = rep(NA, nb_models_tm)
+  ref_df = rep(NA, nb_models_tm)
+  p_value = rep(NA, nb_models_tm)
+  family = rep(NA, nb_models_tm)
+  
+  gam_tm = tibble(
+    Predictor = predictors_list_tm,
+    Response = responses_list_tm,
+    n = n,
+    edf = edf,
+    "ref df"  = ref_df,
+    "n parameters" = n_par,
+    p = p_value,
+    "Adjusted R^2" = adj_r_squared,
+    Family = family
+  )
+  
+  
+  ## 1. The models ######
+  
+  mod_msgrdw_msirdw = mgcv::gam(
+    geometric_mean_growth_dw ~ s(mass_specific_ingestion_rate_fw),
+    family = scat(),
+    method = "REML",
+    data = data_i
+  )
+  mod_aedw_msirdw = mgcv::gam(
+    assimilation_efficiency_dw ~ s(mass_specific_ingestion_rate_dw),
+    family = scat(),
+    method = "REML",
+    data = data_i
+  )
+  mod_gedw_msirdw = mgcv::gam(
+    growth_efficiency_dw ~ s(
+      mass_specific_ingestion_rate_dw,
+      bs = "ad",
+      k = 10
+    ),
+    data = data_i,
+    method = "REML",
+    family = scat()
+  )
+  mod_gedw_msgrdw = mgcv::gam(
+    growth_efficiency_dw ~ s(geometric_mean_growth_dw, bs = "ad", k = 10),
+    data = data_i,
+    method = "REML",
+    family = scat()
+  )
+  
+  ##  2. Removing outliers   ###### 
+  
+  
+  
+  models = list(mod_msgrdw_msirdw,
+                mod_aedw_msirdw,
+                mod_gedw_msirdw,
+                mod_gedw_msgrdw)
+  
+  ##  3. Constructing a table  ###### 
+  
+  
+  for (i in 1:nb_models_tm) {
+    if (models[[i]]$converged == "TRUE") {
+      gam_tm$n[i] = broom::glance(models[[i]])$nobs
+      gam_tm$edf[i] = broom::tidy(models[[i]])$edf
+      gam_tm$`ref df`[i] = broom::tidy(models[[i]])$ref.df
+      gam_tm$`n parameters`[i] = broom::glance(models[[i]])$npar
+      gam_tm$p[i] = broom::tidy(models[[i]])$p.value
+      if (gam_tm$p[i] == 0) {
+        gam_tm$p[i] = "<2e-16"
+      }
+      gam_tm$`Adjusted R^2`[i] = broom::glance(models[[i]])$adj.r.squared
+      gam_tm$Family[i] = models[[i]]$family$family
+    }
+  }
+  
+  # Save the table
+  write.csv(
+    gam_tm,
+    file = here::here("4_outputs", "1_statistical_results", "gam_tm.csv")
+  )
+  
+  # II. Chemical mass balance models ######
   # The variables in the chemical mass balance study
   
   variables_list_ch = c("assimilation_efficiency_dw", "larvae", "frass") # The variables in the chemical study
@@ -22,26 +124,6 @@ model_irn <- function(data_i, data_g) {
   # The elements
   elements_list = c("C", "N", "P", "Na", "Mg", "S", "K", "Ca")
   nb_elements = length(elements_list)
-  
-  # Creating a dataframe containing GAM statistics for total mass
-  
-  variable = paste(c(variable_list_tm, rep(matrix_list_ch, each = nb_elements)), c(rep("", nb_variable_tm), rep(elements_list, nb_matrix_ch)))
-  nb_row = length(variable)
-  
-  n = rep(NA, nb_row)
-  r_squared = rep(NA, nb_row)
-  edf = rep(NA, nb_row)
-  p_value = rep(NA, nb_row)
-  difference = rep(NA, nb_row)
-  
-  gam_nutrients = data.frame(
-    variable = variable,
-    n = n,
-    r_squared = r_squared,
-    edf = edf,
-    p_value = p_value,
-    difference = difference
-  )
   
   lm_nutrients = data.frame(
     variable = variable,
@@ -53,61 +135,6 @@ model_irn <- function(data_i, data_g) {
     p_value_lm = rep(NA, nb_row),
     signif_level = rep(NA, nb_row)
   )
-  
-  # Creating a dataframe containing selected predicted values to generate a radar chart
-  
-  n_polygon = 3
-  gam_larvae_values_radar = as.data.frame(matrix(rep(NA , (n_polygon + 2) * nb_elements) , ncol = nb_elements))
-  colnames(gam_larvae_values_radar) <- elements_list
-  rownames(gam_larvae_values_radar) <-
-    c("max", "min", "IR_0.4", "IR_0.8", "IR_1.2")
-  
-  gam_frass_values_radar = as.data.frame(matrix(rep(NA , (n_polygon + 2) * nb_elements) , ncol = nb_elements))
-  colnames(gam_frass_values_radar) <- elements_list
-  rownames(gam_frass_values_radar) <-
-    c("max", "min", "IR_0.4", "IR_0.8", "IR_1.2")
-  
-  # We have two datasets, one at the level of individuals for total mass balance
-  # and another at the level of the group, for chemical data only (elements and isotopes)
-  
-  ###### 1. Total mass balance ######
-  
-  for (i in 1:nb_variable_tm) {
-    formula_gam = as.formula(paste(
-      variable_list_tm[i],
-      "~ s(mass_specific_ingestion_rate_fw)"
-    ))
-    formula_spearman = as.formula(paste(
-      "~",
-      variable_list_tm[i],
-      "+",
-      "mass_specific_ingestion_rate_fw"
-    ))
-    sp = cor.test(
-      formula_spearman,
-      method = "spearman",
-      exact = F,
-      data = data_i,
-      alternative = "two.sided"
-    )
-    lm_nutrients$cor_coef[i] = sp$estimate
-    lm_nutrients$p_value_cor[i] = sp$p.value
-    gam_mod = mgcv::gam(formula_gam, data = data_i) # a GAM model
-    summary_gam = summary(gam_mod)
-    if (gam_mod$converged == "TRUE") {
-      gam_nutrients$n[i] = summary_gam$n
-      gam_nutrients$r_squared[i] = format(signif(summary_gam$r.sq, digits = 3), scientific = F)
-      gam_nutrients$edf[i] = format(signif(summary_gam$edf, digits = 3), scientific = F)
-      if (summary_gam$s.pv == 0) {
-        gam_nutrients$p_value[i] = "<2e-16"
-      }
-      else{
-        gam_nutrients$p_value[i] = format(signif(summary_gam$s.pv, digits = 2), scientific = T)
-      }
-    }
-  }
-  
-  ###### 2. Chemical balance ######
   
   for (i in 1:nb_matrix_ch) {
     data_matrix = subset(data_g, data_g$variable == matrix_list_ch[i]) # selecting only element i
@@ -172,37 +199,12 @@ model_irn <- function(data_i, data_g) {
         } else {
           gam_nutrients$p_value[k] = format(signif(summary_gam$s.pv, digits = 2), scientific = T)
         }
-        
-        if (matrix_list_ch[i] == "larvae") {
-          # We want to estimate the fitted GAM values of larvae content for GMSIR of 0.4, 0.8, and 1.2
-          new_data = as.data.frame(c(0.4, 0.8, 1.2))
-          colnames(new_data) = "mean_mass_specific_intake_rate_fw"
-          
-          gam_larvae_values_radar["max" , j] = max(gam_mod$fitted.values)
-          gam_larvae_values_radar["min", j] = min(gam_mod$fitted.values)
-          gam_larvae_values_radar[3:5, j] = predict(gam_mod, new_data)
-          
-        }
-        
-        if (matrix_list_ch[i] == "frass") {
-          # We want to estimate the fitted GAM values of larvae content for GMSIR of 0.4, 0.8, and 1.2
-          new_data = as.data.frame(c(0.4, 0.8, 1.2))
-          colnames(new_data) = "mean_mass_specific_intake_rate_fw"
-          
-          gam_frass_values_radar["max" , j] = max(gam_mod$fitted.values)
-          gam_frass_values_radar["min", j] = min(gam_mod$fitted.values)
-          gam_frass_values_radar[3:5, j] = predict(gam_mod, new_data)
-          
-        }
       }
     }
   }
   
   
-  write.csv(
-    lm_nutrients,
-    file = here::here("4_outputs", "1_statistical_results", "lm_nutrients.csv")
-  )
+
   
   
   write.csv(
@@ -210,25 +212,8 @@ model_irn <- function(data_i, data_g) {
     file = here::here("4_outputs", "1_statistical_results", "gam_nutrients.csv")
   )
   
-  write.csv(
-    gam_larvae_values_radar,
-    file = here::here(
-      "4_outputs",
-      "1_statistical_results",
-      "gam_larvae_radar.csv"
-    )
-  )
   
-  write.csv(
-    gam_frass_values_radar,
-    file = here::here(
-      "4_outputs",
-      "1_statistical_results",
-      "gam_frass_radar.csv"
-    )
-  )
-  
-  ###### 3. For isotopes #####
+  # III. For isotopes #####
   
   # We wish to build models to test
   # The effect of growth rate on trophic fractionations
@@ -380,9 +365,6 @@ model_irn <- function(data_i, data_g) {
     file = here::here("4_outputs", "1_statistical_results", "gam_isotopes.csv")
   )
   
-  list_radar = list(gam_larvae_values_radar, gam_frass_values_radar)
-  list_model = list(list_radar, lm_nutrients)
-  names(list_model) = c("radar", "lm_nutrients")
   return(list_model)
   
 }

@@ -1,11 +1,11 @@
 name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
 average_value|function|1516ccb9f9018eee|||||||||||||||
-combine_group_data|function|dd3e9cd703f23925|||||||||||||||
+combine_group_data|function|b532adf89e875179|||||||||||||||
 combine_individual_data|function|80128b28b495696c|||||||||||||||
 data_irn_food_controls|stem|dc4fe754cf0e9905|5cea8a86c588d0e5|a497bca4d084ab7e|-193505731||t19947.48982601s|22831549067f5352|1944|rds|local|vector|||0.1||
 data_irn_food_controls_file|stem|4a19e4144887f60a|34b00afe1c37822d|2c530c1562a7fbd1|305886458|C:/Users/scharber/Documents/6_projects/4_intake_rate_experiment/1_data/data_irn_food_controls.csv|t19947.3951387284s|4e6bb1f4dcce6f97|3172|file|local|vector|||1|package mgcv was built under R version 4.4.1. package ggsci was built under R version 4.4.1. package scam was built under R version 4.4.1. package scales was built under R version 4.4.1. package patchwork was built under R version 4.4.1. package viridis was built under R version 4.4.1|
 data_irn_groups|stem|4a97b2f591c37161|db7d696fd9eb27a9|72f011ea03e58291|-389502496||t19866.5019149351s|f7bcb45eed2e8f93|6256|rds|local|vector|||0.31||
-data_irn_groups_combined|stem|b33f19d77cd4abaa|476cea93cc93950b|4c5c7d67000f7e2d|1314723806||t19947.5293016832s|b1468d19235049c5|65453|rds|local|vector|||0.47||
+data_irn_groups_combined|stem|9be8fc853f897685|476cea93cc93950b|d096868c9039a098|1314723806||t19948.4149502512s|b25563fae0bb1a69|65550|rds|local|vector|||0.5||
 data_irn_groups_file|stem|4cfa9b40596feec5|5c36932e173b9a0c|2c530c1562a7fbd1|2022115904|C:/Users/scharber/Documents/6_projects/4_intake_rate_experiment/1_data/data_irn_groups.csv|t19866.4862121361s|f699c825877bb933|15549|file|local|vector|||1.16||
 data_irn_individuals|stem|0c13051f5fc378a8|acf6c07d4cee9ffe|80c30336732c6438|-1584960181||t19947.4898245223s|d7537f03eaee2612|20709|rds|local|vector|||0.62||
 data_irn_individuals_controls|stem|162ca2d36049e6e0|205b57f52393a160|c27426b54d71ee7d|1001651808||t19866.5019208862s|4f60df1183c5a8a6|996|rds|local|vector|||0.07||
@@ -17,11 +17,11 @@ load_food_control_data|function|afc39cf1ad5ac814|||||||||||||||
 load_group_data|function|ac5e326ee49c9e25|||||||||||||||
 load_individual_control_data|function|8b700304a2e9a392|||||||||||||||
 load_individual_data|function|b4ae3a3b8cb2ca19|||||||||||||||
-model_irn|function|7838b1ca604ddd2b|||||||||||||||
-models_irn|stem|6f6ffb9d1e45ddd9|b46e53a4f3480863|01038fc05d2a9326|1662181074||t19947.529307259s|f7945f2b49a2273c|2449|rds|local|vector|||0.45||
+model_irn|function|bbc195cfad525644|||||||||||||||
+models_irn|stem|6f6ffb9d1e45ddd9|b46e53a4f3480863|5324b43b99c945e5|1662181074||t19947.529307259s||2449|rds|local|vector|||0.15||object variable_list_tm not found
 packages|object|00d94a02e194bbb7|||||||||||||||
 packages_to_install|object|2c530c1562a7fbd1|||||||||||||||
-plot_irn|function|1caea4eb2b00f228|||||||||||||||
+plot_irn|function|f66e4c382c69f883|||||||||||||||
 plots_irn|stem|f07bca7362681398|0fc73169aa0ad83d|33645f86d1e6ae87|485447517|C:/Users/scharber/Documents/6_projects/4_intake_rate_experiment/4_outputs/2_figures/isotopy_figure.pdf|t19947.5990222229s|7f227e027e0b1374|69130|file|local|vector|||20.36|There was 1 warning in mutate.ℹ In argument time  as.numerictime.Caused by warning NAs introduced by coercion. Removed 221 rows containing nonfinite outside the scale rangestat_boxplot.. Removed 221 rows containing nonfinite outside the scale rangestat_compare_means.. Removed 221 rows containing missing values or values outside the scale rangegeom_point.. Removed 257 rows containing nonfinite outside the scale rangestat_smooth.. Removed 257 rows containing missing values or values outside the scale rangegeom_point.. Removed 201 rows containing nonfinite outside the scale rangestat_smooth.. Removed 201 rows containing missing values or values outside the scale rangegeom_point.. Removed 297 rows containing nonfinite outside the scale rangestat_smooth.. Removed 297 rows containing missing values or values outside the scale rangegeom_point.. Using size aesthetic for lines was deprecated in ggplot2 3.4.0.ℹ Please use linewidth instead.. Removed 16 rows containing nonfinite outside the scale rangestat_smooth.. Removed 16 rows containing missing values or values outside the scale rangegeom_point.. Removed 18 rows containing nonfinite outside the scale rangestat_smooth.. Removed 18 rows containing missing values or values outside the scale rangegeom_point.. Removed 18 rows containing nonfinite outside the scale rangestat_smooth.. Removed 18 rows containing missing values or values outside the scale rangegeom_point.. Removed 18 rows containing nonfinite outside the scale rangestat_smooth.. Removed 18 rows containing nonfinite outside the scale range stat_cor.. The following aesthetics were dropped during statistical transformationcolour.ℹ This can happen when ggplot fails to infer the correct grouping structure in  the data.ℹ Did you forget to specify a group aesthetic or to convert a numerical  variable into a factor. Removed 18 rows containing missing values or valu|
 rmd_report|stem|bf68bf629f096cad|a30188feeb73bba4|2c530c1562a7fbd1|1503269920|3_manuscript/irn.pdf*3_manuscript/irn.rmd|t19137.6394420649s||140922|file|local|vector|||2.64|pdflatex not found|LaTeX failed to compile irn.tex. See httpsyihui.orgtinytexrdebugging for debugging tips.
 temporal_mean|function|ee1621ca015a4cce|||||||||||||||

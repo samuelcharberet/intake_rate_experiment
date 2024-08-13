@@ -7,8 +7,6 @@
 #' @examples
 combine_individual_data <- function(data_fc, data_ic, data_i) {
   
-  
-  
   ##### Day 0 larvae water content #####
   
   data_i$larvae_day0_wc = NA
@@ -286,7 +284,8 @@ combine_individual_data <- function(data_fc, data_ic, data_i) {
   ##### Mass-specific assimilation rate of food #####
   
   data_i$mass_specific_assimilation_rate_dw = data_i$assimilation_rate_dw / data_i$mean_bodymass_dw
-  ##### assimilation efficiency of food #####
+  
+  ##### Assimilation efficiency of food #####
   
   data_i$assimilation_efficiency_dw = (1 - (
     data_i$frass_mass_dw / data_i$food_consumed_collection_days_dw

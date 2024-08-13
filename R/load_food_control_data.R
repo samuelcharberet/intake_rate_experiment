@@ -4,11 +4,11 @@
 #'
 load_food_control_data = function(path){
   
-  ##########  0. Load data  ##########
+  #  0. Load data  ##########
   
   data_irn_food_control <- readr::read_delim(path)
   
-  ##########  1. Structuration  ##########
+  #  1. Structuration  ##########
   
   # Decide column classes
   
@@ -33,7 +33,8 @@ load_food_control_data = function(path){
     "food_d15N"
   )
   
-  ##### Food water content #####
+  #  2. Filling the table  ##########
+  ## Food water content #####
   
   data_irn_food_control$food_fw = data_irn_food_control$fw_filled_tube_food_control_mass -
     data_irn_food_control$empty_tube_food_control_mass
