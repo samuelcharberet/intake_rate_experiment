@@ -37,6 +37,7 @@ model_irn <- function(data_i, data_g) {
   ref_df <- rep(NA, nb_models_tm)
   p_value <- rep(NA, nb_models_tm)
   family <- rep(NA, nb_models_tm)
+  smoother <- c("TP", "TP", "AD", "AD")
 
   gam_tm <- tibble(
     Predictor = predictors_list_tm,
@@ -47,7 +48,8 @@ model_irn <- function(data_i, data_g) {
     "n parameters" = n_par,
     p = p_value,
     "Adjusted R^2" = adj_r_squared,
-    Family = family
+    Family = family,
+    Smoother = smoother
   )
 
 
@@ -81,17 +83,22 @@ model_irn <- function(data_i, data_g) {
     method = "REML",
     family = scat()
   )
-
   ##  2. Removing outliers   ######
-
-
-
+  
   models <- list(
     mod_msgrdw_msirdw,
     mod_aedw_msirdw,
     mod_gedw_msirdw,
     mod_gedw_msgrdw
   )
+
+  for (i in 1:length(models)){
+    hlt <- 10 * sum(mgcv::influence.gam(models[[i]]) / length(mgcv::influence.gam(models[[i]])))
+    data_i_f <- filter(data_i, mgcv::influence.gam(models[[i]]) < hlt)
+    call = models[[i]]$call
+    call$data <- quote(data_i_f)
+    models[[i]] = eval(call)
+  }
 
   ##  3. Constructing a table  ######
 
@@ -120,98 +127,11 @@ model_irn <- function(data_i, data_g) {
   # II. Chemical mass balance models ######
   # The variables in the chemical mass balance study
 
-  variables_list_ch <- c("assimilation_efficiency_dw", "larvae", "frass") # The variables in the chemical study
+  variables_list_ch <- c("assimilation_efficiency_dw", "retention_time", "larvae", "frass") # The variables in the chemical study
   nb_variables_ch <- length(variables_list_ch)
   # The elements
   elements_list <- c("C", "N", "P", "Na", "Mg", "S", "K", "Ca")
   nb_elements <- length(elements_list)
-
-  lm_nutrients <- data.frame(
-    variable = variable,
-    cor_coef = rep(NA, nb_row),
-    p_value_cor = rep(NA, nb_row),
-    oao = rep(NA, nb_row),
-    slope = rep(NA, nb_row),
-    r_squared = rep(NA, nb_row),
-    p_value_lm = rep(NA, nb_row),
-    signif_level = rep(NA, nb_row)
-  )
-
-  for (i in 1:nb_matrix_ch) {
-    data_matrix <- subset(data_g, data_g$variable == matrix_list_ch[i]) # selecting only element i
-    for (j in 1:nb_elements) {
-      data_matrix_element <- subset(data_matrix, data_matrix$element == elements_list[j]) # selecting only matrix j
-
-      formula_spearman <- as.formula(paste(
-        "~",
-        "mean_mass_specific_intake_rate_fw",
-        "+",
-        "elemental_value"
-      ))
-      formula_gam <- as.formula(paste(
-        "elemental_value",
-        "~ s(mean_mass_specific_intake_rate_fw,sp=20)"
-      ))
-      gam_mod <- mgcv::gam(formula_gam, data = data_matrix_element) # creates a GAM for this element i in matrix j according to IR
-      formula_lm <- as.formula(paste(
-        "elemental_value",
-        "~ mean_mass_specific_intake_rate_fw"
-      ))
-      lm_mod <- lm(formula_lm, data = data_matrix_element) # creates a LM for this element i in matrix j according to IR
-      summary_gam <- summary(gam_mod)
-      summary_lm <- summary(lm_mod)
-      k <- nb_variable_tm + (i - 1) * (nb_elements) + j # The row number in the final result tables
-
-      sp <- cor.test(
-        formula_spearman,
-        method = "spearman",
-        exact = F,
-        data = data_matrix_element
-      )
-      lm_nutrients$cor_coef[k] <- sp$estimate
-      lm_nutrients$p_value_cor[k] <- sp$p.value
-      lm_nutrients$oao[k] <- summary_lm$coefficients[1, 1]
-      lm_nutrients$slope[k] <- summary_lm$coefficients[2, 1]
-      lm_nutrients$r_squared[k] <- summary_lm$adj.r.squared
-      lm_nutrients$p_value_lm[k] <- summary_lm$coefficients[2, 4]
-
-      # Adding the significance level using the stars symbols
-
-      if (summary_lm$coefficients[2, 4] < 0.001) {
-        lm_nutrients$signif_level[k] <- "***"
-      } else if (0.001 < summary_lm$coefficients[2, 4] &
-        summary_lm$coefficients[2, 4] < 0.01) {
-        lm_nutrients$signif_level[k] <- "**"
-      } else if (0.01 < summary_lm$coefficients[2, 4] &
-        summary_lm$coefficients[2, 4] < 0.05) {
-        lm_nutrients$signif_level[k] <- "*"
-      }
-
-      if (gam_mod$converged == "TRUE") {
-        gam_nutrients$n[k] <- summary_gam$n
-        gam_nutrients$r_squared[k] <- format(signif(summary_gam$r.sq, digits = 3), scientific = F)
-        gam_nutrients$edf[k] <- format(signif(summary_gam$edf, digits = 3), scientific = F)
-        gam_nutrients$difference[k] <- (max(gam_mod$fitted.values) / min(gam_mod$fitted.values)) -
-          1
-
-
-        if (summary_gam$s.pv == 0) {
-          gam_nutrients$p_value[k] <- "<2e-16"
-        } else {
-          gam_nutrients$p_value[k] <- format(signif(summary_gam$s.pv, digits = 2), scientific = T)
-        }
-      }
-    }
-  }
-
-
-
-
-
-  write.csv(
-    gam_nutrients,
-    file = here::here("4_outputs", "1_statistical_results", "gam_nutrients.csv")
-  )
 
 
   # III. For isotopes #####
@@ -366,5 +286,4 @@ model_irn <- function(data_i, data_g) {
     file = here::here("4_outputs", "1_statistical_results", "gam_isotopes.csv")
   )
 
-  return(list_model)
 }

@@ -333,6 +333,6 @@ combine_group_data <- function(data_i, data_g, data_fc) {
     sep = "_",
     extra = "merge"
   )
-
+  
   return(data_g)
 }
