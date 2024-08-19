@@ -694,7 +694,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   )
   hlt <- 10 * sum(mgcv::influence.gam(mod_msgrdw_msirdw) / length(mgcv::influence.gam(mod_msgrdw_msirdw)))
   data_i_f <- filter(data_i, mgcv::influence.gam(mod_msgrdw_msirdw) < hlt)
-  
+
   msgrdw_msirdw <- ggplot2::ggplot(data_i_f,
                                    aes(x = mass_specific_ingestion_rate_dw, y = geometric_mean_growth_dw)) +
     geom_point() +
@@ -851,7 +851,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   
   
   # Derivative of mass specific growth rate dw according to mass specific intake rate dw
-  deriv <- gratia::derivatives(mod_msgrdw_msirdw)
+  deriv <- gratia::derivatives(mod_msgrdw_msirdw, interval = "simultaneous")
   deriv_msgrdw_msirdw <- draw(
     deriv,
     add_change = T,
@@ -870,7 +870,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   
   # Derivative of assimilation efficiency dw according to mass specific intake rate dw
   
-  deriv <- gratia::derivatives(mod_aedw_msirdw)
+  deriv <- gratia::derivatives(mod_aedw_msirdw, interval = "simultaneous")
   deriv_aedw_msirdw <- draw(
     deriv,
     add_change = T,
@@ -889,7 +889,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   
   # Derivative of growth efficiency dw according to mass specific intake rate dw
   
-  deriv <- gratia::derivatives(mod_gedw_msirdw)
+  deriv <- gratia::derivatives(mod_gedw_msirdw, interval = "simultaneous")
   deriv_gedw_msirdw <- draw(
     deriv,
     add_change = T,
@@ -909,7 +909,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   # Derivative of growth efficiency dw according to mass specific growth rate dw
   broom::tidy(mod_gedw_msgrdw)
   
-  deriv <- gratia::derivatives(mod_gedw_msgrdw)
+  deriv <- gratia::derivatives(mod_gedw_msgrdw, interval = "simultaneous")
   deriv_gedw_msgrdw <- draw(
     deriv,
     add_change = T,

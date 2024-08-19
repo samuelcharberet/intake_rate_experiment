@@ -34,7 +34,8 @@ packages <- c(
   "readr",
   "ggpubr",
   "ggsci",
-  "gratia"
+  "gratia",
+  "knitr"
 )
 packages_to_install <- packages[!(packages %in% installed.packages())]
 

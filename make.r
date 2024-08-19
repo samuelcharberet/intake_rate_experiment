@@ -21,6 +21,7 @@ library(patchwork)
 library(splines)
 library(viridis)
 library(gratia)
+library(knitr)
 
 lapply(list.files(here::here("R"), recursive = TRUE, full.names = T), source)
 

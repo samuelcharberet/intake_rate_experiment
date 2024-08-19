@@ -25,7 +25,7 @@ combine_group_data <- function(data_i, data_g, data_fc) {
   data_g$mean_bodymass_dw <- NA
   data_g$mean_mass_specific_intake_rate_dw <- NA
   data_g$geometric_mean_growth_dw <- NA
-
+  
   ####  Compute group-level measures based on the sum of the individual data ####
 
   for (i in 1:length(group_IDs)) {
