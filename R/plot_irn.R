@@ -694,7 +694,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   )
   hlt <- 10 * sum(mgcv::influence.gam(mod_msgrdw_msirdw) / length(mgcv::influence.gam(mod_msgrdw_msirdw)))
   data_i_f <- filter(data_i, mgcv::influence.gam(mod_msgrdw_msirdw) < hlt)
-
+  
   msgrdw_msirdw <- ggplot2::ggplot(data_i_f,
                                    aes(x = mass_specific_ingestion_rate_dw, y = geometric_mean_growth_dw)) +
     geom_point() +
@@ -972,9 +972,6 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   colours_elements <- colours_elements_isotopes[1:8]
   units_content <- c("%", "%", "ppm", "ppm", "ppm", "ppm", "ppm", "ppm")
   
-  plots <- vector("list", nb_variables)
-  names(plots) <- variables
-  
   ## Differences in elemental content between the variables: food, larva, frass ######
   
   plots_matrices <- vector("list", nb_elements)
@@ -1232,6 +1229,12 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     list(family = Gamma(link = log), method = "REML")
   )
   
+  
+  plots <- vector("list", nb_variables + 2)
+  names(plots) <- c(variables,
+                    paste("ddx_", variables[3], sep = ""),
+                    paste("ddx_", variables[4], sep = ""))
+  
   y_axes <- c("Larvae", "Frass", "AE of", "RT of")
   units_loop <- cbind(units_content, units_content, "%", "days")
   
@@ -1239,7 +1242,9 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     "larvae_content",
     "frass_content",
     "assimilation_efficiency_dw",
-    "retention_time"
+    "retention_time",
+    "ddx_assimilation_efficiency_dw",
+    "ddx_retention_time"
   )
   
   # ylim min and ymax tables
@@ -1264,7 +1269,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   
   # Creating the list of plots for the other elements
   
-  for (i in 1:nb_variables) {
+  for (i in 1:(nb_variables + 2)) {
     plots[[i]] <- vector("list", nb_elements)
     names(plots[[i]]) <- elements
   }
@@ -1296,6 +1301,12 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
       hlt <- 10 * sum(mgcv::influence.gam(mod) / length(mgcv::influence.gam(mod)))
       data_matrix_element_f <- filter(data_matrix_element, mgcv::influence.gam(mod) < hlt)
       
+      mod <- mgcv::gam(
+        elemental_value ~ s(mean_mass_specific_intake_rate_fw),
+        data = data_matrix_element_f,
+        method = "REML",
+        family = models[[j]]$family
+      )
       
       if (is.na(ylim_maxs[i, j])) {
         ylim_max <- max(data_matrix_element_f$elemental_value, na.rm = T) + 0.2 * (
@@ -1317,14 +1328,8 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
           color = colours_elements[i],
           method.args = models[[j]]
         ) +
-        labs(x = "Intake rate <br> (mg<sub>food</sub> mg<sub>body</sub><sup>-1</sup> day<sup>-1</sup>)",
-             y = paste(
-               y_axes[j],
-               elements[i],
-               paste("(", units_loop[i, j], ")", sep =
-                       ""),
-               sep = " "
-             )) +
+        labs(x = "Intake rate <br> (mg<sub>food</sub> mg<sub>body</sub><sup>-1</sup> day<sup>-1</sup>)", y = paste(y_axes[j], elements[i], paste("(", units_loop[i, j], ")", sep =
+                                                                                                                                                   ""))) +
         theme(axis.title.x = element_markdown())
       
       
@@ -1349,23 +1354,75 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
         height = 4,
         units = "in"
       )
+      
+      # Derivatives
+      
+      if (j == 3 | j == 4) {
+        deriv <- gratia::derivatives(mod, interval = "simultaneous", type = "central")
+        mean_deriv = mean(deriv$.derivative)
+        p = draw(
+          deriv,
+          add_change = T,
+          change_type = "sizer",
+          decrease_col = colours_elements[i],
+          increase_col = "#00A4CCFF",
+          alpha = 0.2
+        )
+        
+        p = p[[1]] +
+          geom_hline(yintercept = 0, linetype = "dashed") +
+          geom_hline(yintercept = mean_deriv, linetype = "solid", color = colours_elements[i]) +
+          labs(
+            x = "Intake rate <br> (mg<sub>food</sub> mg<sub>body</sub><sup>-1</sup> day<sup>-1</sup>)",
+            y = paste(
+              "<span style='font-size: 10pt;'><i><sup>d</sup>&frasl;<sub>dx</sub></i></span> ",
+              y_axes[j],
+              elements[i]
+            )
+          ) +
+          theme(
+            axis.title.x = element_markdown(),
+            axis.title.y = element_markdown(),
+            plot.margin = margin(0, 0, 0, 0)
+          ) +
+          ggtitle("")
+        
+        
+        
+        if (j == 3) {
+          plots[[j + 2]][[i]] = p + coord_cartesian(ylim = c(-100, 50))
+        } else {
+          plots[[j + 2]][[i]] = p + coord_cartesian(ylim = c(-10, 5))
+        }
+        ggsave(
+          filename = paste(y_plot_names[j + 2], elements[i], "dw_&_msirfw.pdf", sep = ""),
+          plot = plots[[j + 2]][[i]],
+          device = cairo_pdf,
+          path = here::here("4_outputs", "2_figures"),
+          scale = 1,
+          width = 7,
+          height = 4,
+          units = "in"
+        )
+      }
     }
   }
   
   
   ######  The complete plot  ######
   
-  complete_plots <- vector("list", nb_variables)
-  
+  complete_plots <- vector("list", nb_variables + 2)
+  complete_plots_widths = c(7, 7, 7, 7, 9, 9)
+  complete_plots_heights = c(4, 4, 4, 4, 4, 4)
   
   # Removing the x axis title
-  for (i in 1:nb_variables) {
+  for (i in 1:(nb_variables + 2)) {
     for (j in 1:nb_elements) {
       plots[[i]][[j]] = plots[[i]][[j]] + ggpubr::rremove("xlab")
     }
   }
-  for (i in 1:nb_variables) {
-    p <-
+  for (i in 1:(nb_variables + 2)) {
+    complete_plot <-
       (plots[[i]][[1]] |
          plots[[i]][[2]] |
          plots[[i]][[3]] |
@@ -1377,7 +1434,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     
     
     
-    complete_plots[[i]] <- wrap_elements(panel = p) +
+    complete_plots[[i]] <- wrap_elements(panel = complete_plot) +
       labs(tag = expression(paste(
         "Intake rate", " (", mg[food], " ", mg[body(fw)] ^ {
           -1
@@ -1396,8 +1453,8 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
       device = cairo_pdf,
       path = here::here("4_outputs", "3_figures_paper"),
       scale = 1,
-      width = 7,
-      height = 4,
+      width = complete_plots_widths[i],
+      height = complete_plots_heights[i],
       units = "in"
     )
   }
@@ -1777,10 +1834,8 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     ) +
     theme(legend.position = "right", axis.title.x = element_markdown()) +
     coord_trans(y = "log10") +
-    scale_y_continuous(
-      breaks = c(1, 2, 5, 10, 20, 50, 100, 200, 500, 1000),
-      transform = "identity"
-    )
+    scale_y_continuous(breaks = c(1, 2, 5, 10, 20, 50, 100, 200, 500, 1000),
+                       transform = "identity")
   # Save the plot
   ggsave(
     filename = paste("retention_times", "layered", "dw_&_msirfw.pdf", sep = ""),
@@ -1861,6 +1916,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ))
   p <- plot(test[, 55:62])
   dev.off()
+  
   
   # 3. Isotopy figures ##########
   

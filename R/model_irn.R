@@ -122,6 +122,13 @@ model_irn <- function(data_i, data_g) {
   
   responses_list_ch_nice <- c("Larvae", "Frass", "AE", "RT")
   nb_responses_ch <- length(responses_list_ch)
+  
+  data = filter(data_g,
+                variable == "assimilation_efficiency_dw",
+                element %in% elements,
+                !is.na(elemental_value))
+  data$element = as.factor(data$element)
+
   # The elements
   elements_list <- c("C", "N", "P", "Na", "Mg", "S", "K", "Ca")
   nb_elements <- length(elements_list)
@@ -141,7 +148,7 @@ model_irn <- function(data_i, data_g) {
   family <- rep(NA, nb_models_ch)
   smoother <- rep("TP", nb_models_ch)
   link_function <- rep(NA, nb_models_ch)
-  gam_ch <- tibble(
+  gam_ch_table <- tibble(
     Response = response_nice,
     Element = elements,
     n = n,
@@ -154,7 +161,7 @@ model_irn <- function(data_i, data_g) {
     Link_function = link_function,
     Smoother = smoother
   )
-  
+  gam_ch_list = vector(mode = "list", length=nb_models_ch)
   models_methods = c(
     replicate(nb_elements, list(family = gaussian()), simplify = FALSE),
     replicate(nb_elements, list(family = gaussian()), simplify = FALSE),
@@ -168,17 +175,17 @@ model_irn <- function(data_i, data_g) {
                   variable == response[i],
                   !is.na(elemental_value))
     
-    mod = mgcv::gam(
+    gam_ch_list[[i]] = mgcv::gam(
       elemental_value ~ s(mean_mass_specific_intake_rate_dw),
       family = models_methods[[i]]$family,
       method = "REML",
       data = data
     )
     
-    hlt <- 10 * sum(mgcv::influence.gam(mod) / length(mgcv::influence.gam(mod)))
-    data_f <- filter(data, mgcv::influence.gam(mod) < hlt)
+    hlt <- 10 * sum(mgcv::influence.gam(gam_ch_list[[i]]) / length(mgcv::influence.gam(gam_ch_list[[i]])))
+    data_f <- filter(data, mgcv::influence.gam(gam_ch_list[[i]]) < hlt)
     
-    mod = mgcv::gam(
+    gam_ch_list[[i]] = mgcv::gam(
       elemental_value ~ s(mean_mass_specific_intake_rate_dw),
       family = models_methods[[i]]$family,
       method = "REML",
@@ -187,26 +194,27 @@ model_irn <- function(data_i, data_g) {
     
     
     
-    if (mod$converged == "TRUE") {
-      gam_ch$n[i] <- broom::glance(mod)$nobs
-      gam_ch$edf[i] <- format(signif(broom::tidy(mod)$edf, digits = 3), scientific = F) 
-      gam_ch$`ref df`[i] <- format(signif(broom::tidy(mod)$ref.df, digits = 3), scientific = F)  
-      gam_ch$`n parameters`[i] <- broom::glance(mod)$npar
-      if (broom::tidy(mod)$p.value == 0) {
-        gam_ch$p[i] <- "<2e-16"
+    if (gam_ch_list[[i]]$converged == "TRUE") {
+      gam_ch_table$n[i] <- broom::glance(gam_ch_list[[i]])$nobs
+      gam_ch_table$edf[i] <- format(signif(broom::tidy(gam_ch_list[[i]])$edf, digits = 3), scientific = F) 
+      gam_ch_table$`ref df`[i] <- format(signif(broom::tidy(gam_ch_list[[i]])$ref.df, digits = 3), scientific = F)  
+      gam_ch_table$`n parameters`[i] <- broom::glance(gam_ch_list[[i]])$npar
+      if (broom::tidy(gam_ch_list[[i]])$p.value == 0) {
+        gam_ch_table$p[i] <- "<2e-16"
       } else {
-        gam_ch$p[i] <- format(signif((broom::tidy(mod)$p.value), digits = 2), scientific = T)
+        gam_ch_table$p[i] <- format(signif((broom::tidy(gam_ch_list[[i]])$p.value), digits = 2), scientific = T)
       }
-      gam_ch$`Adjusted R^2`[i] <- format(signif(broom::glance(mod)$adj.r.squared, digits = 2), scientific = F) 
-      gam_ch$Family[i] <- mod$family$family
-      gam_ch$Link_function[i] <- mod$family$link
+      gam_ch_table$`Adjusted R^2`[i] <- format(signif(broom::glance(gam_ch_list[[i]])$adj.r.squared, digits = 2), scientific = F) 
+      gam_ch_table$Family[i] <- gam_ch_list[[i]]$family$family
+      gam_ch_table$Link_function[i] <- gam_ch_list[[i]]$family$link
     }
     
   }
   
+  
   # Save the table
-  write.csv(gam_ch,
-            file = here::here("4_outputs", "1_statistical_results", "gam_ch.csv"))
+  write.csv(gam_ch_table,
+            file = here::here("4_outputs", "1_statistical_results", "gam_ch_table.csv"))
   
   # III. For isotopes #####
   
