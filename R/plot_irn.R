@@ -50,7 +50,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "growth_curve.pdf",
     plot = growth_curve,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 7,
@@ -83,7 +83,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "wc_&_treatment.pdf",
     plot = p,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "3_figures_paper"),
     scale = 1,
     width = 7,
@@ -104,7 +104,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "bm_j0_fw_&_week.pdf",
     plot = p,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "3_figures_paper"),
     scale = 1,
     width = 7,
@@ -123,7 +123,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "bm_j0_fw_&_treatment.pdf",
     plot = p,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "3_figures_paper"),
     scale = 1,
     width = 7,
@@ -146,7 +146,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "bm_j3_dw_&_food_consumed.pdf",
     plot = p,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 6,
@@ -169,7 +169,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "bm_imago_dw_&_food_consumed_dw.pdf",
     plot = p,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "3_figures_paper"),
     scale = 1,
     width = 6,
@@ -231,7 +231,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "ardw_&_irfw.pdf",
     plot = ardw_irfw,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 6,
@@ -267,7 +267,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "ardw_&_msirfw.pdf",
     plot = ardw_msirfw,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 6,
@@ -306,7 +306,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "msardw_&_msirfw.pdf",
     plot = msardw_msirfw,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 6,
@@ -346,7 +346,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "aedw_&_msirfw.pdf",
     plot = aedw_msirfw,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 6,
@@ -391,7 +391,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "gefw_&_msirfw.pdf",
     plot = gefw_msirfw,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 6,
@@ -425,7 +425,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "gefw_&_msgrfw.pdf",
     plot = gefw_msgrfw,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 6,
@@ -449,7 +449,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "gedw_&_aedw.pdf",
     plot = p,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 6,
@@ -489,7 +489,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "grfw_&_irfw.pdf",
     plot = grfw_irfw,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 6,
@@ -528,7 +528,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "msgrfw_&_msirfw.pdf",
     plot = msgrfw_msirfw,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 3,
@@ -560,7 +560,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "gidw_&_msamdw.pdf",
     plot = p,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 6,
@@ -588,7 +588,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "gidw_msirfw.pdf",
     plot = gidw_msirfw,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 6,
@@ -617,7 +617,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "midw_msirfw.pdf",
     plot = midw_msirfw,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 6,
@@ -648,7 +648,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "msmrdw_msirdw.pdf",
     plot = msmrdw_msirdw,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "3_figures_paper"),
     scale = 1,
     width = 6,
@@ -676,7 +676,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "mser_&_msir.pdf",
     plot = p,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 6,
@@ -711,7 +711,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "msgrdw_&_msirdw.pdf",
     plot = msgrdw_msirdw,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 3,
@@ -746,7 +746,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "aedw_&_msirdw.pdf",
     plot = aedw_msirdw,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 6,
@@ -785,7 +785,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "gedw_&_msirdw.pdf",
     plot = gedw_msirdw,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 6,
@@ -820,7 +820,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "gedw_&_msgrdw.pdf",
     plot = gedw_msgrdw,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 6,
@@ -838,7 +838,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = paste("total_mass_balance.pdf", sep = ""),
     plot = complete_plot,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "3_figures_paper"),
     scale = 1,
     width = 7,
@@ -935,7 +935,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = paste("derivative_complete_plot.pdf", sep = ""),
     plot = derivative_complete_plot,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "3_figures_paper"),
     scale = 1,
     width = 7,
@@ -1033,7 +1033,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     ggsave(
       filename = paste("matrices_", elements[i], ".pdf", sep = ""),
       plot = p,
-      device = cairo_pdf,
+      device = pdf,
       path = here::here("4_outputs", "2_figures"),
       scale = 1,
       width = 3,
@@ -1065,7 +1065,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = paste("matrices_", "all_elements", ".pdf", sep = ""),
     plot = complete_matrices,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "3_figures_paper"),
     scale = 1,
     width = 7,
@@ -1078,19 +1078,25 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   data_larvae <- subset(data_g, data_g$variable == "larvae")
   data_larvae <- pivot_wider(data_larvae, names_from = element, values_from = elemental_value)
   
-  p <- ggplot2::ggplot(data_larvae, aes(x = geometric_mean_growth_dw, y = P)) +
-    geom_point() +
-    labs(x = expression(paste("Growth rate")), y = "Larvae P (ppm)") +
-    geom_smooth(
-      color = "steelblue3",
-      method = mgcv::gam,
-      formula = y ~ s(x, bs = "cs", k = 3)
-    )
+  larvaePdw_gr <- ggplot2::ggplot(data_larvae, aes(x = geometric_mean_growth_dw, y = P /
+                                                     1000)) +
+    ylim(NA, max(data_larvae$P /
+                   1000, na.rm = T) + 0.15 * (
+                     max(data_larvae$P /
+                           1000, na.rm = T) - min(data_larvae$P /
+                                                    1000, na.rm = T)
+                   )) +
+    geom_point(alpha = 0.2, shape = 16) +
+    labs(x = "", y = "Larvae P (g/kg)") +
+    geom_smooth(color = "steelblue3", method = lm) +
+    ggpubr::stat_cor(aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")),
+                     label.x.npc = 0.1,
+                     label.y.npc = 0.85)
   
   ggsave(
     filename = "larvaePdw_&_gr.pdf",
     plot = p,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 6,
@@ -1100,20 +1106,20 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   
   # We check whether the growth rate in positively related to P/N body content
   # according to nobody
-  p <- ggplot2::ggplot(data_larvae, aes(x = geometric_mean_growth_dw, y = P /
-                                          (10000 * N))) +
-    geom_point() +
-    labs(x = expression(paste("Growth rate")), y = "Larvae P/N") +
-    geom_smooth(
-      color = "steelblue3",
-      method = mgcv::gam,
-      formula = y ~ s(x, bs = "cs", k = 3)
-    )
+  data_larvae$PN <- data_larvae$P / (10000 * data_larvae$N)
+  larvaePNdw_gr <- ggplot2::ggplot(data_larvae, aes(x = geometric_mean_growth_dw, y = PN)) +
+    ylim(NA, max(data_larvae$PN, na.rm = T) + 0.1 * (max(data_larvae$PN, na.rm = T) - min(data_larvae$PN, na.rm = T))) +
+    geom_point(alpha = 0.2, shape = 16) +
+    labs(x = "", y = "Larvae P/N") +
+    geom_smooth(color = "steelblue3", method = lm) +
+    ggpubr::stat_cor(aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")),
+                     label.x.npc = 0.1,
+                     label.y.npc = 0.85)
   
   ggsave(
     filename = "larvaePNdw_&_gr.pdf",
     plot = p,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 6,
@@ -1123,23 +1129,51 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   
   # We check whether the growth rate in positively related to P/C body content
   # according to nobody
-  p <- ggplot2::ggplot(data_larvae, aes(x = geometric_mean_growth_dw, y = P /
-                                          (10000 * C))) +
-    geom_point() +
-    labs(x = expression(paste("Growth rate")), y = "Larvae P/C") +
-    geom_smooth(
-      color = "steelblue3",
-      method = mgcv::gam,
-      formula = y ~ s(x, bs = "cs", k = 3)
-    )
+  data_larvae$PC <- data_larvae$P / (10000 * data_larvae$C)
+  larvaePCdw_gr <- ggplot2::ggplot(data_larvae, aes(x = geometric_mean_growth_dw, y = PC)) +
+    ylim(NA, max(data_larvae$PC, na.rm = T) + 0.1 * (max(data_larvae$PC, na.rm = T) - min(data_larvae$PC, na.rm = T))) +
+    geom_point(alpha = 0.2, shape = 16) +
+    labs(x = "", y = "Larvae P/C") +
+    geom_smooth(color = "steelblue3", method = lm) +
+    ggpubr::stat_cor(aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")),
+                     label.x.npc = 0.1,
+                     label.y.npc = 0.85)
+  
   
   ggsave(
     filename = "larvaePCdw_&_gr.pdf",
     plot = p,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 6,
+    height = 4,
+    units = "in"
+  )
+  
+  # GRH complete plot
+  
+  
+  grh_complete_plot <-
+    (larvaePdw_gr |
+       larvaePCdw_gr |
+       larvaePNdw_gr) + patchwork::plot_annotation(tag_levels = "a")
+  
+  
+  
+  grh_complete_plot <- wrap_elements(panel = grh_complete_plot) +
+    labs(tag = "Growth rate") +
+    theme(plot.tag = element_text(size = rel(1)),
+          plot.tag.position = "bottom")
+  
+  # Saving the the complete plots
+  
+  ggsave(
+    filename = "grh.pdf",
+    plot = grh_complete_plot,
+    path = here::here("4_outputs", "3_figures_paper"),
+    scale = 1,
+    width = 8,
     height = 4,
     units = "in"
   )
@@ -1183,7 +1217,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "larvae_frass_NP.pdf",
     plot = p,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "3_figures_paper"),
     scale = 1,
     width = 6,
@@ -1222,10 +1256,10 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     guides(colour = guide_legend(override.aes = list(size = 8), ncol = 2))
   
   
-  models = list(
+  models <- list(
     list(family = gaussian(), method = "REML"),
     list(family = gaussian(), method = "REML"),
-    list(family = scat(), method = "REML"),
+    list(family = betar(), method = "REML"),
     list(family = Gamma(link = log), method = "REML")
   )
   
@@ -1236,7 +1270,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
                     paste("ddx_", variables[4], sep = ""))
   
   y_axes <- c("Larvae", "Frass", "AE of", "RT of")
-  units_loop <- cbind(units_content, units_content, "%", "days")
+  units_loop <- cbind(units_content, units_content, "", "days")
   
   y_plot_names <- c(
     "larvae_content",
@@ -1258,7 +1292,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ylim_maxs <- matrix(
     c(
       rep(NA, nb_elements * 2),
-      rep(120, nb_elements),
+      rep(1.1, nb_elements),
       rep(NA, nb_elements)
     ),
     ncol = length(y_axes),
@@ -1347,7 +1381,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
       ggsave(
         filename = paste(y_plot_names[j], elements[i], "dw_&_msirfw.pdf", sep = ""),
         plot = plots[[j]][[i]],
-        device = cairo_pdf,
+        device = pdf,
         path = here::here("4_outputs", "2_figures"),
         scale = 1,
         width = 7,
@@ -1359,8 +1393,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
       
       if (j == 3 | j == 4) {
         deriv <- gratia::derivatives(mod, interval = "simultaneous", type = "central")
-        mean_deriv = mean(deriv$.derivative)
-        p = draw(
+        p <- draw(
           deriv,
           add_change = T,
           change_type = "sizer",
@@ -1369,9 +1402,8 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
           alpha = 0.2
         )
         
-        p = p[[1]] +
+        p <- p[[1]] +
           geom_hline(yintercept = 0, linetype = "dashed") +
-          geom_hline(yintercept = mean_deriv, linetype = "solid", color = colours_elements[i]) +
           labs(
             x = "Intake rate <br> (mg<sub>food</sub> mg<sub>body</sub><sup>-1</sup> day<sup>-1</sup>)",
             y = paste(
@@ -1390,14 +1422,14 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
         
         
         if (j == 3) {
-          plots[[j + 2]][[i]] = p + coord_cartesian(ylim = c(-100, 50))
+          plots[[j + 2]][[i]] <- p + coord_cartesian(ylim = c(-6, 4))
         } else {
-          plots[[j + 2]][[i]] = p + coord_cartesian(ylim = c(-10, 5))
+          plots[[j + 2]][[i]] <- p + coord_cartesian(ylim = c(-10, 5))
         }
         ggsave(
           filename = paste(y_plot_names[j + 2], elements[i], "dw_&_msirfw.pdf", sep = ""),
           plot = plots[[j + 2]][[i]],
-          device = cairo_pdf,
+          device = pdf,
           path = here::here("4_outputs", "2_figures"),
           scale = 1,
           width = 7,
@@ -1412,13 +1444,13 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ######  The complete plot  ######
   
   complete_plots <- vector("list", nb_variables + 2)
-  complete_plots_widths = c(7, 7, 7, 7, 9, 9)
-  complete_plots_heights = c(4, 4, 4, 4, 4, 4)
+  complete_plots_widths <- c(7, 7, 7, 7, 9, 9)
+  complete_plots_heights <- c(4, 4, 4, 4, 4, 4)
   
   # Removing the x axis title
   for (i in 1:(nb_variables + 2)) {
     for (j in 1:nb_elements) {
-      plots[[i]][[j]] = plots[[i]][[j]] + ggpubr::rremove("xlab")
+      plots[[i]][[j]] <- plots[[i]][[j]] + ggpubr::rremove("xlab")
     }
   }
   for (i in 1:(nb_variables + 2)) {
@@ -1450,7 +1482,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     ggsave(
       filename = paste(y_plot_names[i], "alldw_&_msirfw.pdf", sep = ""),
       plot = complete_plots[[i]],
-      device = cairo_pdf,
+      device = pdf,
       path = here::here("4_outputs", "3_figures_paper"),
       scale = 1,
       width = complete_plots_widths[i],
@@ -1508,7 +1540,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "cnlarvae_&_gmsir.pdf",
     plot = cn_larvae,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 6,
@@ -1542,7 +1574,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "nplarvae_&_gmsir.pdf",
     plot = np_larvae,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 6,
@@ -1577,7 +1609,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "cplarvae_&_gmsir.pdf",
     plot = cp_larvae,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 6,
@@ -1618,7 +1650,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "cnfrass_&_msir.pdf",
     plot = cn_frass,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 6,
@@ -1652,7 +1684,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "npfrass_&_msir.pdf",
     plot = np_frass,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 6,
@@ -1686,7 +1718,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "cpfrass_&_msir.pdf",
     plot = cp_frass,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 6,
@@ -1725,7 +1757,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = paste("frass_larvae_", "stoichiometry", ".pdf", sep = ""),
     plot = complete_stoichiometry,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "3_figures_paper"),
     scale = 1,
     width = 7,
@@ -1747,11 +1779,11 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   data_abs <- data_abs[!(data_abs$element %in% c("15N", "14N", "13C", "12C")), ]
   
   order_elements_legend <- c("K", "Mg", "C", "N", "P", "S", "Ca", "Na")
-  rel_dw_msirfw <- ggplot2::ggplot(
+  ael_dw_msirfw <- ggplot2::ggplot(
     data_abs,
     aes(
       x = mean_mass_specific_intake_rate_dw,
-      y = elemental_value / 100,
+      y = elemental_value,
       colour = element,
       group = element,
       fill = element
@@ -1760,9 +1792,9 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     geom_point(alpha = 0.1, shape = 16) +
     geom_smooth(
       method = "gam",
-      formula = y ~ s(x, bs = "cs", k = 4),
+      formula = y ~ s(x),
       se = FALSE,
-      method.args = list(family = betar())
+      method.args = list(method = "REML")
     ) +
     scale_color_manual(
       values = colours_elements,
@@ -1786,8 +1818,8 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
       "dw_&_msirfw.pdf",
       sep = ""
     ),
-    plot = rel_dw_msirfw,
-    device = cairo_pdf,
+    plot = ael_dw_msirfw,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 7,
@@ -1840,7 +1872,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = paste("retention_times", "layered", "dw_&_msirfw.pdf", sep = ""),
     plot = rtl_dw_msirfw,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 7,
@@ -1851,7 +1883,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ##  A figure with both Assimilation efficiency and retention time #####
   
   complete_plot <- ggpubr::ggarrange(
-    rel_dw_msirfw + ggpubr::rremove("xlab"),
+    ael_dw_msirfw + ggpubr::rremove("xlab"),
     rtl_dw_msirfw + ggpubr::rremove("xlab"),
     ncol = 2,
     nrow = 1,
@@ -1884,7 +1916,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
       sep = ""
     ),
     plot = complete_plot,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "3_figures_paper"),
     scale = 1,
     width = 7,
@@ -1947,7 +1979,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "13ctf_&_msir.pdf",
     plot = p,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 3,
@@ -1969,7 +2001,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "15ntf_&_msir.pdf",
     plot = p,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 3,
@@ -2000,7 +2032,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "13ctf_&_gr.pdf",
     plot = ctf_gr,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 3,
@@ -2027,7 +2059,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "15ntf_&_gr.pdf",
     plot = ntf_gr,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 3,
@@ -2046,7 +2078,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "13ctf_&_msgr.pdf",
     plot = p,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 3,
@@ -2062,7 +2094,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "15ntf_&_msgr.pdf",
     plot = p,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 3,
@@ -2081,7 +2113,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "13ctf_&_gefw.pdf",
     plot = p,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 3,
@@ -2097,7 +2129,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "15ntf_&_gefw.pdf",
     plot = p,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 3,
@@ -2129,7 +2161,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "13cffdf_&_msir.pdf",
     plot = p,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 3,
@@ -2155,7 +2187,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "15nffdf_&_msir.pdf",
     plot = p,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 3,
@@ -2178,7 +2210,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "13cffdf_&_aedw.pdf",
     plot = p,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 3,
@@ -2195,7 +2227,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "15nffdf_&_aedw.pdf",
     plot = p,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 3,
@@ -2227,7 +2259,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "13cfldf_&_msir.pdf",
     plot = p,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 3,
@@ -2253,7 +2285,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "15nfldf_&_msir.pdf",
     plot = p,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 3,
@@ -2287,7 +2319,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "ciaer_&_msir.pdf",
     plot = ciaer_msir,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 3,
@@ -2318,7 +2350,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "niaer_&_msir.pdf",
     plot = niaer_msir,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 3,
@@ -2338,7 +2370,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "ciaer_&_ae.pdf",
     plot = p,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 3,
@@ -2354,7 +2386,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "niaer_&_ae.pdf",
     plot = p,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 3,
@@ -2426,12 +2458,11 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "isotopy_figure.pdf",
     plot = complete_plot,
-    device = cairo_pdf,
+    device = pdf,
     path = here::here("4_outputs", "2_figures"),
     scale = 1,
     width = 8,
     height = 6,
     units = "in"
   )
-  
 }

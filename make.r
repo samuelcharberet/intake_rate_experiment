@@ -22,6 +22,7 @@ library(splines)
 library(viridis)
 library(gratia)
 library(knitr)
+library(emmeans)
 
 lapply(list.files(here::here("R"), recursive = TRUE, full.names = T), source)
 

@@ -48,19 +48,17 @@ theoretical_model_irn <- function(data_i) {
 
 
   growth_model_onls_fp <- onls::onls(
-    g_eff ~ (p_0 / ((p_0 + p_u) * (r_D - r_A))) * (r_A * (exp(
-      -(L_g * r_D * S * (p_0 + p_u)) / msir
+    g_eff ~ (1/ ((r_D - r_A))) * (r_A * (exp(
+      -(L_g * r_D * S) / msir
     ) - 1) - r_D * (exp(
-      -(L_g * r_A * S * (p_0 + p_u)) / msir
+      -(L_g * r_A * S) / msir
     ) - 1)) - M / msir,
     start = list(
-      p_0 = 1500,
-      p_u = 1000,
       r_D = 5,
       r_A = 6,
       M = 0.02
     ),
-    lower = c(0, 0, 0, 0, 0),
+    lower = c(0, 0, 0),
     extend = c(.3, .3),
     window = 100,
     data = data_i
@@ -122,11 +120,11 @@ theoretical_model_irn <- function(data_i) {
 
   # Looking at the relationship between growth rate and growth efficiency:
 
-  # Given constants
-  p_0 <- 2.067e+04
-  r_D <- 2.055e-01
-  r_A <- 1.444e+01
-  M <- 1.474e-01
+  # Parameters given by the onls model
+  p_0 <- growth_model_onls_fp$parONLS$p_0
+  r_D <- growth_model_onls_fp$parONLS$r_D
+  r_A <- growth_model_onls_fp$parONLS$r_A
+  M <- growth_model_onls_fp$parONLS$M
 
   # Parametric equations
   E_G <- function(t) {
@@ -149,9 +147,7 @@ theoretical_model_irn <- function(data_i) {
   plot(
     R_G_vals,
     E_G_vals,
-    type = "l",
-    xlim = c(0, 0.6),
-    ylim = c(0, 0.6)
+    type = "l"
   )
   # Plot the original data
   plot(
