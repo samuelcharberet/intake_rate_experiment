@@ -36,7 +36,11 @@ packages <- c(
   "ggsci",
   "gratia",
   "knitr",
-  "emmeans"
+  "emmeans",
+  "marginaleffects",
+  "modelsummary",
+  "tinytable",
+  "kableExtra"
 )
 packages_to_install <- packages[!(packages %in% installed.packages())]
 
