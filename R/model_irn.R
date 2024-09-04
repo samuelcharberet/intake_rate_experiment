@@ -37,7 +37,7 @@ model_irn <- function(data_i, data_g) {
     "ref df" = ref_df,
     "n parameters" = n_par,
     p = p_value,
-    "Adjusted R^2" = adj_r_squared,
+    "Adjusted R$^2$" = adj_r_squared,
     Family = family,
     Smoother = smoother
   )
@@ -102,16 +102,28 @@ model_irn <- function(data_i, data_g) {
       } else {
         gam_tm$p[i] <- format(signif(broom::tidy(models[[i]])$p.value, digits = 2), scientific = T)
       }
-      gam_tm$`Adjusted R^2`[i] <- format(signif(broom::glance(models[[i]])$adj.r.squared, digits = 2),
+      gam_tm$`Adjusted R$^2$`[i] <- format(signif(broom::glance(models[[i]])$adj.r.squared, digits = 2),
                                          scientific = F)
       gam_tm$Family[i] <- models[[i]]$family$family
     }
   }
   
-  # Save the table
-  write.csv(gam_tm,
-            file = here::here("4_outputs", "1_statistical_results", "gam_tm.csv"))
   
+  
+  # Save the table
+  
+  kbl(
+    gam_tm,
+    format = "latex",
+    booktabs = T,
+    escape = F,
+    linesep = "",
+    caption = "Summaries of the four GAMs plotted in fig. \\ref{fig_massbalance}. MSIR stand for mass-specific intake rate, GR for growth rate, GE for growth efficiency, and AE for assimilation efficiency, edf for effective degrees of freedom. TP refers to thin-plate splines, and AD to adaptive splines. The number after scale t represents the parameter $\\theta_1$ and $\\theta_2$."
+  ) |>
+    row_spec(0, bold = TRUE)  |>
+    kable_styling(position = "center",
+                  latex_options = c("HOLD_position", "scale_down")) |>
+    save_kable(here::here("4_outputs", "1_statistical_results", "gam_tm.tex"))
   
   # II. Chemical mass balance models ######
   
@@ -138,20 +150,30 @@ model_irn <- function(data_i, data_g) {
     family = betar()
   )
   
+  # Predictions
   pairs_i_ae = avg_predictions(gam_ch, by = "element", hypothesis = "pairwise") |>
     print(style = "tinytable") |>
     print(output = "dataframe")
+  p_vals <- pairs_i_ae$`Pr(>|z|)` == "< 0.001" |
+    as.numeric(pairs_i_ae$`Pr(>|z|)`) < 0.05
   
   kbl(
     pairs_i_ae,
     format = "latex",
-    booktabs = T ,
+    booktabs = T,
     escape = T,
     linesep = "",
-    centering = TRUE
+    align = "lrrrrrrr",
+    caption = "Pairwise comparisons of elemental absorption efficiencies predictions outputed by the general GAM model. From left to right: elements being compared, the average difference is their estimate, the standard error associated. The z value for the test followed by the p- and the S- values. Finally, the confidence interval of the difference. "
+    
   ) |>
+    row_spec(0, bold = TRUE)  |>
+    column_spec(c(1, 5), bold = p_vals) |>
+    kable_styling(position = "center",
+                  latex_options = c("HOLD_position")) |>
     save_kable(here::here("4_outputs", "1_statistical_results", "pairs_i_ae.tex"))
   
+  # Derivatives
   pairs_d_ae = avg_slopes(gam_ch,
                           by = "element",
                           variables = "mean_mass_specific_intake_rate_dw",
@@ -159,14 +181,23 @@ model_irn <- function(data_i, data_g) {
     print(style = "tinytable") |>
     print(output = "dataframe")
   
+  p_vals <- pairs_d_ae$`Pr(>|z|)` == "< 0.001" |
+    as.numeric(pairs_d_ae$`Pr(>|z|)`) < 0.05
+  
   kbl(
     pairs_d_ae,
     format = "latex",
-    booktabs = T ,
+    booktabs = T,
     escape = T,
     linesep = "",
-    centering = TRUE
+    align = "lrrrrrrr",
+    caption = "Pairwise comparisons of the effect of intake rate on elemental absorption efficiencies predictions outputed by the general GAM model. From left to right: elements being compared, the average difference is their estimate, the standard error associated. The z value for the test followed by the p- and the S- values. Finally, the confidence interval of the difference. "
+    
   ) |>
+    row_spec(0, bold = TRUE)  |>
+    column_spec(c(1, 5), bold = p_vals) |>
+    kable_styling(position = "center",
+                  latex_options = c("HOLD_position")) |>
     save_kable(here::here("4_outputs", "1_statistical_results", "pairs_d_ae.tex"))
   
   
@@ -181,27 +212,38 @@ model_irn <- function(data_i, data_g) {
   )
   data_rt$element <- as.factor(data_rt$element)
   
+  # Predictions
+  
   gam_ch <- mgcv::gam(
     elemental_value ~ s(mean_mass_specific_intake_rate_dw, by = element) + element,
     method = "REML",
     family = Gamma(link = "log"),
     data = data_rt
   )
-
+  
   pairs_i_rt = avg_predictions(gam_ch, by = "element", hypothesis = "pairwise") |>
     print(style = "tinytable") |>
     print(output = "dataframe")
   
+  p_vals <- pairs_i_rt$`Pr(>|z|)` == "<0.001" |
+    as.numeric(pairs_i_rt$`Pr(>|z|)`) < 0.05
+  
   kbl(
     pairs_i_rt,
     format = "latex",
-    booktabs = T ,
+    booktabs = T,
     escape = T,
     linesep = "",
-    centering = TRUE
+    align = "lrrrrrrr",
+    caption = "Pairwise comparisons of elemental retention times predictions outputed by the general GAM model. From left to right: elements being compared, the average difference is their estimate, the standard error associated. The z value for the test followed by the p- and the S- values. Finally, the confidence interval of the difference. "
   ) |>
+    row_spec(0, bold = TRUE)  |>
+    column_spec(c(1, 5), bold = p_vals) |>
+    kable_styling(position = "center",
+                  latex_options = c("HOLD_position")) |>
     save_kable(here::here("4_outputs", "1_statistical_results", "pairs_i_rt.tex"))
   
+  # Derivatives
   pairs_d_rt = avg_slopes(gam_ch,
                           by = "element",
                           variables = "mean_mass_specific_intake_rate_dw",
@@ -209,14 +251,22 @@ model_irn <- function(data_i, data_g) {
     print(style = "tinytable") |>
     print(output = "dataframe")
   
+  p_vals <- pairs_d_rt$`Pr(>|z|)` == "< 0.001" |
+    as.numeric(pairs_d_rt$`Pr(>|z|)`) < 0.05
+  
   kbl(
     pairs_d_rt,
     format = "latex",
-    booktabs = T ,
+    booktabs = T,
     escape = T,
     linesep = "",
-    centering = TRUE
+    align = "lrrrrrrr",
+    caption = "Pairwise comparisons of the effect of intake rate on elemental retention times predictions outputed by the general GAM model. From left to right: elements being compared, the average difference is their estimate, the standard error associated. The z value for the test followed by the p- and the S- values. Finally, the confidence interval of the difference. "
   ) |>
+    row_spec(0, bold = TRUE)  |>
+    column_spec(c(1, 5), bold = p_vals) |>
+    kable_styling(position = "center",
+                  latex_options = c("HOLD_position")) |>
     save_kable(here::here("4_outputs", "1_statistical_results", "pairs_d_rt.tex"))
   
   
@@ -257,9 +307,9 @@ model_irn <- function(data_i, data_g) {
     "ref df" = ref_df,
     "n parameters" = n_par,
     p = p_value,
-    "Adjusted R^2" = adj_r_squared,
+    "Adjusted R$^2$" = adj_r_squared,
     Family = family,
-    Link_function = link_function,
+    "Link function" = link_function,
     Smoother = smoother
   )
   gam_ch_list <- vector(mode = "list", length = nb_models_ch)
@@ -307,19 +357,32 @@ model_irn <- function(data_i, data_g) {
           broom::tidy(gam_ch_list[[i]])$p.value
         ), digits = 2), scientific = T)
       }
-      gam_ch_table$`Adjusted R^2`[i] <- format(signif(broom::glance(gam_ch_list[[i]])$adj.r.squared, digits = 2),
+      gam_ch_table$`Adjusted R$^2$`[i] <- format(signif(broom::glance(gam_ch_list[[i]])$adj.r.squared, digits = 2),
                                                scientific = F)
       gam_ch_table$Family[i] <- gam_ch_list[[i]]$family$family
-      gam_ch_table$Link_function[i] <- gam_ch_list[[i]]$family$link
+      gam_ch_table$`Link function`[i] <- gam_ch_list[[i]]$family$link
     }
   }
   
   
   # Save the table
-  write.csv(
+  
+  #Remove redundant variables
+  gam_ch_table = select(gam_ch_table, !c("n parameters", "Smoother"))
+  kbl(
     gam_ch_table,
-    file = here::here("4_outputs", "1_statistical_results", "gam_ch_table.csv")
-  )
+    format = "latex",
+    booktabs = T,
+    escape = F,
+    linesep = "",
+    caption = "Summaries of element-wise GAM models used to produce the plots in figs. \\ref{fig_eff_times}, \\ref{fig_asmeffall}, \\ref{fig_rettimesall}, \\ref{fig_larvaecontentall} and \\ref{fig_frasscontentall}. AE stands for assimilation efficiency, and RT for retention time, edf for effective degrees of freedom. All models were fitted using thin-plate splines and with 10 parameters. The number after scale t represents the parameter $\\theta_1$ and $\\theta_2$."
+  ) |>
+    row_spec(0, bold = TRUE)  |>
+    kable_styling(position = "center",
+                  latex_options = c("HOLD_position", "scale_down")) |>
+    collapse_rows(columns = c(1, 8, 9)) |>
+    save_kable(here::here("4_outputs", "1_statistical_results", "gam_ch_table.tex"))
+  
   
   # III. For isotopes #####
   
@@ -420,8 +483,7 @@ model_irn <- function(data_i, data_g) {
           "b"
         )
         gam_isotopes$n[k] <- summary_gam$n
-        gam_isotopes$r_squared[k] <- format(signif(summary_gam$r.sq, digits =
-        ), scientific = F)
+        gam_isotopes$r_squared[k] <- format(signif(summary_gam$r.sq, digits =), scientific = F)
         gam_isotopes$edf[k] <- format(signif(summary_gam$edf, digits = 3), scientific = F)
         if (summary_gam$s.pv == 0) {
           gam_isotopes$p_value[k] <- "<2e-16"

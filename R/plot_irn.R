@@ -1362,8 +1362,10 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
           color = colours_elements[i],
           method.args = models[[j]]
         ) +
-        labs(x = "Intake rate <br> (mg<sub>food</sub> mg<sub>body</sub><sup>-1</sup> day<sup>-1</sup>)", y = paste(y_axes[j], elements[i], paste("(", units_loop[i, j], ")", sep =
-                                                                                                                                                   ""))) +
+        labs(x = "Intake rate <br> (mg<sub>food</sub> mg<sub>body</sub><sup>-1</sup> day<sup>-1</sup>)", y = paste(y_axes[j], elements[i], ifelse(
+          j != 3 , paste("(", units_loop[i, j], ")", sep =
+                                   ""), ""
+        ))) +
         theme(axis.title.x = element_markdown())
       
       

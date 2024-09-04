@@ -1,0 +1,75 @@
+\begin{table}[H]
+\centering
+\caption{Summaries of element-wise GAM models used to produce the plots in figs. \ref{fig_eff_times}, \ref{fig_asmeffall}, \ref{fig_rettimesall}, \ref{fig_larvaecontentall} and \ref{fig_frasscontentall}. AE stands for assimilation efficiency, and RT for retention time, edf for effective degrees of freedom. All models were fitted using thin-plate splines and with 10 parameters. The number after scale t represents the parameter $\theta_1$ and $\theta_2$.}
+\centering
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
+\begin{tabular}[t]{llrllllll}
+\toprule
+\textbf{Response} & \textbf{Element} & \textbf{n} & \textbf{edf} & \textbf{ref df} & \textbf{p} & \textbf{Adjusted R$^2$} & \textbf{Family} & \textbf{Link function}\\
+\midrule
+ & C & 92 & 1.03 & 1.06 & <2e-16 & 0.37 &  & \\
+\cmidrule{2-7}
+ & N & 92 & 2.42 & 3.03 & <2e-16 & 0.37 &  & \\
+\cmidrule{2-7}
+ & P & 94 & 2.8 & 3.49 & <2e-16 & 0.77 &  & \\
+\cmidrule{2-7}
+ & Na & 94 & 4.53 & 5.54 & <2e-16 & 0.71 &  & \\
+\cmidrule{2-7}
+ & Mg & 94 & 2.74 & 3.41 & 5e-03 & 0.14 &  & \\
+\cmidrule{2-7}
+ & S & 94 & 4.63 & 5.65 & <2e-16 & 0.61 &  & \\
+\cmidrule{2-7}
+ & K & 94 & 3.61 & 4.45 & 2.5e-04 & 0.21 &  & \\
+\cmidrule{2-7}
+\multirow{-8}{*}{\raggedright\arraybackslash Larvae} & Ca & 94 & 3.24 & 4.01 & <2e-16 & 0.43 &  & \\
+\cmidrule{1-7}
+ & C & 100 & 1 & 1 & 3.1e-05 & 0.15 &  & \\
+\cmidrule{2-7}
+ & N & 100 & 1.95 & 2.44 & <2e-16 & 0.48 &  & \\
+\cmidrule{2-7}
+ & P & 100 & 5.81 & 6.96 & 3.6e-06 & 0.31 &  & \\
+\cmidrule{2-7}
+ & Na & 98 & 1.52 & 1.88 & 1.2e-03 & 0.13 &  & \\
+\cmidrule{2-7}
+ & Mg & 100 & 1.01 & 1.02 & <2e-16 & 0.41 &  & \\
+\cmidrule{2-7}
+ & S & 100 & 1.45 & 1.77 & 1.4e-03 & 0.12 &  & \\
+\cmidrule{2-7}
+ & K & 100 & 4.2 & 5.15 & <2e-16 & 0.54 &  & \\
+\cmidrule{2-7}
+\multirow{-8}{*}{\raggedright\arraybackslash Frass} & Ca & 100 & 3.35 & 4.15 & 3.8e-04 & 0.19 &  & \\
+\cmidrule{1-7}
+ & C & 100 & 3.59 & 4.43 & <2e-16 & 0.66 &  & \\
+\cmidrule{2-7}
+ & N & 100 & 4.24 & 5.2 & <2e-16 & 0.77 &  & \\
+\cmidrule{2-7}
+ & P & 100 & 4.61 & 5.63 & <2e-16 & 0.66 &  & \\
+\cmidrule{2-7}
+ & Na & 98 & 1 & 1 & <2e-16 & 0.36 &  & \\
+\cmidrule{2-7}
+ & Mg & 100 & 2.94 & 3.65 & <2e-16 & 0.62 &  & \\
+\cmidrule{2-7}
+ & S & 100 & 3.51 & 4.34 & <2e-16 & 0.57 &  & \\
+\cmidrule{2-7}
+ & K & 100 & 4.09 & 5.03 & <2e-16 & 0.59 &  & \\
+\cmidrule{2-7}
+\multirow{-8}{*}{\raggedright\arraybackslash AE} & Ca & 100 & 2.68 & 3.33 & <2e-16 & 0.43 & \multirow{-24}{*}{\raggedright\arraybackslash gaussian} & \multirow{-24}{*}{\raggedright\arraybackslash identity}\\
+\cmidrule{1-9}
+ & C & 92 & 4.16 & 5.1 & <2e-16 & 0.96 &  & \\
+\cmidrule{2-7}
+ & N & 92 & 4.27 & 5.23 & <2e-16 & 0.95 &  & \\
+\cmidrule{2-7}
+ & P & 94 & 4.09 & 5.02 & <2e-16 & 0.94 &  & \\
+\cmidrule{2-7}
+ & Na & 92 & 2.46 & 3.07 & <2e-16 & 0.33 &  & \\
+\cmidrule{2-7}
+ & Mg & 94 & 3.93 & 4.83 & <2e-16 & 0.88 &  & \\
+\cmidrule{2-7}
+ & S & 94 & 4.29 & 5.26 & <2e-16 & 0.97 &  & \\
+\cmidrule{2-7}
+ & K & 94 & 3.58 & 4.42 & <2e-16 & 0.74 &  & \\
+\cmidrule{2-7}
+\multirow{-8}{*}{\raggedright\arraybackslash RT} & Ca & 94 & 4.04 & 4.96 & <2e-16 & 0.88 & \multirow{-8}{*}{\raggedright\arraybackslash Gamma} & \multirow{-8}{*}{\raggedright\arraybackslash log}\\
+\bottomrule
+\end{tabular}}
+\end{table}
