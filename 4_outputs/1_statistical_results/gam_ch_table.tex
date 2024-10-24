@@ -1,6 +1,6 @@
 \begin{table}[H]
 \centering
-\caption{Summaries of element-wise GAM models used to produce the plots in figs. \ref{fig_eff_times}, \ref{fig_asmeffall}, \ref{fig_rettimesall}, \ref{fig_larvaecontentall} and \ref{fig_frasscontentall}. AE stands for assimilation efficiency, and RT for retention time, edf for effective degrees of freedom. All models were fitted using thin-plate splines and with 10 parameters. The number after scale t represents the parameter $\theta_1$ and $\theta_2$.}
+\caption{\label{tab:table_gam_ch}Summaries of element-wise GAM models used to produce the plots in figs. \ref{fig_eff_times}, \ref{fig_asmeffall}, \ref{fig_rettimesall}, \ref{fig_larvaecontentall} and \ref{fig_frasscontentall}. AE stands for assimilation efficiency, and RT for retention time, edf for effective degrees of freedom. All models were fitted using thin-plate splines and with 10 parameters. The parameter $\phi$ for Beta regressions is indicated in parentheses \citep{Wood2016}}
 \centering
 \resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
 \begin{tabular}[t]{llrllllll}
@@ -37,23 +37,23 @@
 \cmidrule{2-7}
  & K & 100 & 4.2 & 5.15 & <2e-16 & 0.54 &  & \\
 \cmidrule{2-7}
-\multirow{-8}{*}{\raggedright\arraybackslash Frass} & Ca & 100 & 3.35 & 4.15 & 3.8e-04 & 0.19 &  & \\
-\cmidrule{1-7}
- & C & 100 & 3.59 & 4.43 & <2e-16 & 0.66 &  & \\
-\cmidrule{2-7}
- & N & 100 & 4.24 & 5.2 & <2e-16 & 0.77 &  & \\
-\cmidrule{2-7}
- & P & 100 & 4.61 & 5.63 & <2e-16 & 0.66 &  & \\
-\cmidrule{2-7}
- & Na & 98 & 1 & 1 & <2e-16 & 0.36 &  & \\
-\cmidrule{2-7}
- & Mg & 100 & 2.94 & 3.65 & <2e-16 & 0.62 &  & \\
-\cmidrule{2-7}
- & S & 100 & 3.51 & 4.34 & <2e-16 & 0.57 &  & \\
-\cmidrule{2-7}
- & K & 100 & 4.09 & 5.03 & <2e-16 & 0.59 &  & \\
-\cmidrule{2-7}
-\multirow{-8}{*}{\raggedright\arraybackslash AE} & Ca & 100 & 2.68 & 3.33 & <2e-16 & 0.43 & \multirow{-24}{*}{\raggedright\arraybackslash gaussian} & \multirow{-24}{*}{\raggedright\arraybackslash identity}\\
+\multirow{-8}{*}{\raggedright\arraybackslash Frass} & Ca & 100 & 3.35 & 4.15 & 3.8e-04 & 0.19 & \multirow{-16}{*}{\raggedright\arraybackslash gaussian} & \multirow{-16}{*}{\raggedright\arraybackslash identity}\\
+\cmidrule{1-9}
+ & C & 100 & 3.55 & 4.39 & <2e-16 & 0.66 & Beta regression(216.21) & \\
+\cmidrule{2-8}
+ & N & 100 & 4.19 & 5.14 & <2e-16 & 0.77 & Beta regression(188.025) & \\
+\cmidrule{2-8}
+ & P & 100 & 4.59 & 5.61 & <2e-16 & 0.66 & Beta regression(119.23) & \\
+\cmidrule{2-8}
+ & Na & 98 & 1 & 1 & <2e-16 & 0.37 & Beta regression(7.454) & \\
+\cmidrule{2-8}
+ & Mg & 100 & 2.71 & 3.38 & <2e-16 & 0.61 & Beta regression(74.326) & \\
+\cmidrule{2-8}
+ & S & 100 & 3.45 & 4.26 & <2e-16 & 0.57 & Beta regression(75.659) & \\
+\cmidrule{2-8}
+ & K & 100 & 4.18 & 5.13 & <2e-16 & 0.59 & Beta regression(76.537) & \\
+\cmidrule{2-8}
+\multirow{-8}{*}[3.5\dimexpr\aboverulesep+\belowrulesep+\cmidrulewidth]{\raggedright\arraybackslash AE} & Ca & 100 & 2.48 & 3.1 & <2e-16 & 0.43 & Beta regression(43.478) & \multirow{-8}{*}{\raggedright\arraybackslash logit}\\
 \cmidrule{1-9}
  & C & 92 & 4.16 & 5.1 & <2e-16 & 0.96 &  & \\
 \cmidrule{2-7}

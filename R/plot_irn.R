@@ -314,6 +314,26 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     units = "in"
   )
   
+  ### Test for active processes to increase absorption efficiency ######
+  
+
+  silly_test <- ggplot2::ggplot(
+    data_i,
+    aes(x = mass_specific_respiration_rate_dw, y = assimilation_efficiency_dw)
+  ) +
+    geom_point(alpha = 0.2) +
+    geom_smooth(
+      color = "steelblue3",
+      method = gam,
+      formula = y ~ s(x, k=5)
+    ) +
+    ggpubr::stat_cor(aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")),
+                     label.x.npc = 0.1,
+                     label.y.npc = 0.85) +
+    theme(axis.title.x = element_markdown(), axis.title.y = element_markdown())
+  
+  
+  
   ### Assimilation efficiency in dw according to mass specific intake rate in fw ######
   
   mod <- mgcv::gam(
@@ -606,7 +626,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     ylim(NA, max(1 - data_i$growth_investment_dw) + 0.2 * abs((
       max(1 - data_i$growth_investment_dw) - min(1 - data_i$growth_investment_dw)
     ))) +
-    labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Maintenance investment (% dw)") +
+    labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Respiration investment (% dw)") +
     geom_smooth(
       color = "steelblue3",
       method = mgcv::gam,
@@ -629,15 +649,15 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   
   msmrdw_msirdw <- ggplot2::ggplot(
     data_i,
-    aes(x = mass_specific_ingestion_rate_dw, y = mass_specific_maintenance_rate_dw)
+    aes(x = mass_specific_ingestion_rate_dw, y = mass_specific_respiration_rate_dw)
   ) +
     geom_point() +
     xlim(0, NA) +
     ylim(NA,
-         max(data_i$mass_specific_maintenance_rate_dw) + 0.2 * abs((
-           max(data_i$mass_specific_maintenance_rate_dw) - min(data_i$mass_specific_maintenance_rate_dw)
+         max(data_i$mass_specific_respiration_rate_dw) + 0.2 * abs((
+           max(data_i$mass_specific_respiration_rate_dw) - min(data_i$mass_specific_respiration_rate_dw)
          ))) +
-    labs(x = "Intake rate <br> (mg<sub>food(dw)</sub> mg<sub>body(dw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Mass-specific maintenance rate <br> (mg<sub>food(dw)</sub> mg<sub>body(dw)</sub><sup>-1</sup> day<sup>-1</sup>)") +
+    labs(x = "Intake rate <br> (mg<sub>food(dw)</sub> mg<sub>body(dw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Mass-specific respiration rate <br> (mg<sub>food(dw)</sub> mg<sub>body(dw)</sub><sup>-1</sup> day<sup>-1</sup>)") +
     geom_smooth(
       color = "steelblue3",
       method = mgcv::gam,
@@ -695,19 +715,25 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   hlt <- 10 * sum(mgcv::influence.gam(mod_msgrdw_msirdw) / length(mgcv::influence.gam(mod_msgrdw_msirdw)))
   data_i_f <- filter(data_i, mgcv::influence.gam(mod_msgrdw_msirdw) < hlt)
   
-  msgrdw_msirdw <- ggplot2::ggplot(data_i_f,
-                                   aes(x = mass_specific_ingestion_rate_dw, y = geometric_mean_growth_dw)) +
+  msgrdw_msirdw <- ggplot2::ggplot(data_i_f, aes(x = mass_specific_ingestion_rate_dw, y = geometric_mean_growth_dw)) +
     geom_point() +
     xlim(0, NA) +
-    labs(x = "Intake rate <br> (mg<sub>food</sub> mg<sub>body</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Growth rate") +
     geom_smooth(
       color = "steelblue3",
       method = mgcv::gam,
       formula = y ~ s(x),
       method.args = list(method = "REML", family = scat())
     ) +
-    theme(axis.title.x = element_markdown(), axis.title.y = element_markdown())
+    labs(
+      x = "Intake rate (<span style='font-size:8pt;'>g<sub>intake</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)",
+      y = "Growth rate (<span style='font-size:8pt;'>g<sub>growth</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)"
+    ) +
+    theme(
+      axis.title.x = element_markdown(),
+      axis.title.y = element_markdown()
+    )
   
+
   ggsave(
     filename = "msgrdw_&_msirdw.pdf",
     plot = msgrdw_msirdw,
@@ -733,15 +759,21 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
                                  aes(x = mass_specific_ingestion_rate_dw, y = assimilation_efficiency_dw)) +
     geom_point() +
     xlim(0, NA) +
-    labs(x = "Intake rate <br> (mg<sub>food</sub> mg<sub>body</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Assimilation efficiency") +
     geom_smooth(
       color = "steelblue3",
       method = mgcv::gam,
       formula = y ~ s(x),
       method.args = list(family = scat(), method = "REML")
+    )+
+    labs(
+      x = "Intake rate (<span style='font-size:8pt;'>g<sub>intake</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)",
+      y = "Assimilation efficiency (<span style='font-size:8pt;'>g<sub>assim</sub> \u22c5 g<sub>intake</sub><sup>-1</sup> </span>)"
     ) +
-    theme(axis.title.x = element_markdown(), axis.title.y = element_markdown())
-  
+    theme(
+      axis.title.x = element_markdown(),
+      axis.title.y = element_markdown()
+    )
+
   
   ggsave(
     filename = "aedw_&_msirdw.pdf",
@@ -773,14 +805,21 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
                                  aes(x = mass_specific_ingestion_rate_dw, y = growth_efficiency_dw)) +
     xlim(0, NA) +
     geom_point() +
-    labs(x = "Intake rate <br> (mg<sub>food</sub> mg<sub>body</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Growth efficiency") +
     geom_smooth(
       color = "steelblue3",
       method = mgcv::gam,
       formula = y ~ s(x, bs = "ad", k = 10),
       method.args = list(family = scat(), method = "REML")
     ) +
-    theme(axis.title.x = element_markdown())
+    labs(
+      x = "Intake rate (<span style='font-size:8pt;'>g<sub>intake</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)",
+      y = "Growth efficiency (<span style='font-size:8pt;'>g<sub>growth</sub> \u22c5 g<sub>intake</sub><sup>-1</sup></span>)"
+    ) +
+    theme(
+      axis.title.x = element_markdown(),
+      axis.title.y = element_markdown()
+    )
+
   
   ggsave(
     filename = "gedw_&_msirdw.pdf",
@@ -813,10 +852,16 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
       method = mgcv::gam,
       formula = y ~ s(x, bs = "ad", k = 10),
       method.args = list(family = scat(), method = "REML")
+    )+
+    labs(
+      x = "Growth rate (<span style='font-size:8pt;'>g<sub>growth</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)",
+      y = "Growth efficiency (<span style='font-size:8pt;'>g<sub>growth</sub> \u22c5 g<sub>intake</sub><sup>-1</sup></span>)"
     ) +
-    labs(x = "Growth rate", y = "Growth efficiency") +
-    theme(axis.title.x = element_markdown(), axis.title.y = element_markdown())
-  
+    theme(
+      axis.title.x = element_markdown(),
+      axis.title.y = element_markdown()
+    )
+
   ggsave(
     filename = "gedw_&_msgrdw.pdf",
     plot = gedw_msgrdw,
@@ -1363,8 +1408,8 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
           method.args = models[[j]]
         ) +
         labs(x = "Intake rate <br> (mg<sub>food</sub> mg<sub>body</sub><sup>-1</sup> day<sup>-1</sup>)", y = paste(y_axes[j], elements[i], ifelse(
-          j != 3 , paste("(", units_loop[i, j], ")", sep =
-                                   ""), ""
+          j != 3, paste("(", units_loop[i, j], ")", sep =
+                          ""), ""
         ))) +
         theme(axis.title.x = element_markdown())
       

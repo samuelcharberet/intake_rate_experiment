@@ -48,7 +48,7 @@ theoretical_model_irn <- function(data_i) {
 
 
   growth_model_onls_fp <- onls::onls(
-    g_eff ~ (1/ ((r_D - r_A))) * (r_A * (exp(
+    g_eff ~ (1 / ((r_D - r_A))) * (r_A * (exp(
       -(L_g * r_D * S) / msir
     ) - 1) - r_D * (exp(
       -(L_g * r_A * S) / msir
