@@ -1,6 +1,6 @@
 "","formula","n","R_squared","edf","p_value","r_squared"
-"1","13C tf  =  a x geometric_mean_growth_dw + b",92,NA,"3.13","<2e-16","0.393931"
-"2","15N tf  =  a x geometric_mean_growth_dw + b",92,NA,"1","<2e-16","0.486535"
+"1","13C tf  =  a x mean_growth_dw + b",92,NA,"6.07","<2e-16","0.431024"
+"2","15N tf  =  a x mean_growth_dw + b",92,NA,"1.21","<2e-16","0.486154"
 "3","13C fldf  =  a x assimilation_efficiency_dw + b",92,NA,"1.86","1.3e-03","0.141779"
 "4","15N fldf  =  a x assimilation_efficiency_dw + b",92,NA,"1","<2e-16","0.267543"
 "5","13C iaer  =  a x mean_mass_specific_intake_rate_fw + b",100,NA,"1","<2e-16","0.247987"

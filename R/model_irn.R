@@ -46,7 +46,7 @@ model_irn <- function(data_i, data_g) {
   ## 1. The models ######
 
   mod_msgrdw_msirdw <- mgcv::gam(
-    geometric_mean_growth_dw ~ s(mass_specific_ingestion_rate_fw),
+    mean_growth_dw ~ s(mass_specific_ingestion_rate_fw),
     family = scat(),
     method = "REML",
     data = data_i
@@ -68,7 +68,7 @@ model_irn <- function(data_i, data_g) {
     family = scat()
   )
   mod_gedw_msgrdw <- mgcv::gam(
-    growth_efficiency_dw ~ s(geometric_mean_growth_dw, bs = "ad", k = 10),
+    growth_efficiency_dw ~ s(mean_growth_dw, bs = "ad", k = 10),
     data = data_i,
     method = "REML",
     family = scat()
@@ -170,7 +170,7 @@ model_irn <- function(data_i, data_g) {
     escape = T,
     linesep = "",
     align = "lrrrrrrr",
-    caption = "Pairwise comparisons of elemental absorption efficiencies predictions outputed by the general GAM model. From left to right: elements being compared, the average difference is their estimate, the standard error associated. The z value for the test followed by the p- and the S- values. Finally, the confidence interval of the difference.",
+    caption = "Pairwise comparisons of elemental absorption efficiencies predicted by the general GAM model. From left to right: elements being compared, the average difference is their estimate, the standard error associated, the z value for the test followed by the p- and the S- values. Finally, the confidence interval of the difference.",
     label = "table_pairs_i_ae"
   ) |>
     row_spec(0, bold = TRUE) |>
@@ -200,7 +200,7 @@ model_irn <- function(data_i, data_g) {
     escape = T,
     linesep = "",
     align = "lrrrrrrr",
-    caption = "Pairwise comparisons of the effect of intake rate on elemental absorption efficiencies predictions outputed by the general GAM model. From left to right: elements being compared, the average difference is their estimate, the standard error associated. The z value for the test followed by the p- and the S- values. Finally, the confidence interval of the difference.",
+    caption = "Pairwise comparisons of the effect of intake rate on elemental absorption efficiencies predicted by the general GAM model. From left to right: elements being compared, the average difference in the slopes (see fig \\ref{fig_deriv_asmeffall}), the standard error associated, the z value for the test followed by the p- and the S- values. Finally, the confidence interval of the difference.",
     label = "table_pairs_d_ae"
   ) |>
     row_spec(0, bold = TRUE) |>
@@ -246,7 +246,7 @@ model_irn <- function(data_i, data_g) {
     escape = T,
     linesep = "",
     align = "lrrrrrrr",
-    caption = "Pairwise comparisons of elemental retention times predictions outputed by the general GAM model. From left to right: elements being compared, the average difference is their estimate, the standard error associated. The z value for the test followed by the p- and the S- values. Finally, the confidence interval of the difference.",
+    caption = "Pairwise comparisons of elemental retention times predicted by the general GAM model. From left to right: elements being compared, the average difference is their estimate, the standard error associated, the z value for the test followed by the p- and the S- values. Finally, the confidence interval of the difference.",
     label = "table_pairs_i_rt"
   ) |>
     row_spec(0, bold = TRUE) |>
@@ -276,7 +276,7 @@ model_irn <- function(data_i, data_g) {
     escape = T,
     linesep = "",
     align = "lrrrrrrr",
-    caption = "Pairwise comparisons of the effect of intake rate on elemental retention times predictions outputed by the general GAM model. From left to right: elements being compared, the average difference is their estimate, the standard error associated. The z value for the test followed by the p- and the S- values. Finally, the confidence interval of the difference.",
+    caption = "Pairwise comparisons of the effect of intake rate on elemental retention times predicted by the general GAM model. From left to right: elements being compared, the average difference in the slopes (see fig \\ref{fig_deriv_rettimesall}), the standard error associated, the z value for the test followed by the p- and the S- values. Finally, the confidence interval of the difference.",
     label = "table_pairs_d_rt"
   ) |>
     row_spec(0, bold = TRUE) |>
@@ -419,7 +419,7 @@ model_irn <- function(data_i, data_g) {
 
   dependant_variables_list <- c("tf", "fldf", "iaer")
   independant_variables_list <- c(
-    "geometric_mean_growth_dw",
+    "mean_growth_dw",
     "assimilation_efficiency_dw",
     "mean_mass_specific_intake_rate_fw"
   )

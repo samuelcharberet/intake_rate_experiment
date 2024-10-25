@@ -144,6 +144,38 @@ combine_individual_data <- function(data_fc, data_ic, data_i) {
            geometric_mean_growth_dw = exp(mean(log(growth_rates), na.rm = TRUE))) %>%
     ungroup()
   
+  ##### Mean growth rate dw with cubic splines ####
+  
+  # Define a function to compute the average value of the derivative
+  average_derivative <- function(spline_func, lower, upper) {
+    # Integrate the derivative of the spline function over the range [lower, upper]
+    integral <- integrate(function(x) spline_func(x, deriv = 1)/spline_func(x, deriv = 0), lower, upper)$value
+    # Compute the average by dividing the integral by the range length
+    avg_derivative <- integral / (upper - lower)
+    return(avg_derivative)
+  }
+  
+  # Apply the spline derivative calculation to each row of your data
+  data_i <- data_i %>%
+    rowwise() %>%
+    mutate(mean_growth_dw = average_derivative(
+      splinefun(
+        1:(number_collection_days + 1),
+        c(
+          bodymass_7th_instar_j0_fw * (1 - wc),
+          bodymass_7th_instar_j1_fw * (1 - wc),
+          bodymass_7th_instar_j2_fw * (1 - wc),
+          bodymass_7th_instar_j3_fw * (1 - wc)
+        )[1:(number_collection_days + 1)],
+        method = "natural"
+      ),
+      1,
+      (number_collection_days + 1)
+    )) %>%
+    ungroup()
+  
+  
+  
   ##### Egested mass complete period in mg dw #####
   
   data_i$frass_mass_dw <- data_i$filled_tube_frass_mass - data_i$empty_tube_frass_mass

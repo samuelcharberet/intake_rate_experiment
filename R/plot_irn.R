@@ -316,16 +316,14 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   
   ### Test for active processes to increase absorption efficiency ######
   
-
-  silly_test <- ggplot2::ggplot(
-    data_i,
-    aes(x = mass_specific_respiration_rate_dw, y = assimilation_efficiency_dw)
-  ) +
+  
+  silly_test <- ggplot2::ggplot(data_i,
+                                aes(x = mass_specific_respiration_rate_dw, y = assimilation_efficiency_dw)) +
     geom_point(alpha = 0.2) +
     geom_smooth(
       color = "steelblue3",
       method = gam,
-      formula = y ~ s(x, k=5)
+      formula = y ~ s(x, k = 5)
     ) +
     ggpubr::stat_cor(aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")),
                      label.x.npc = 0.1,
@@ -479,18 +477,18 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   
   ### Growth rate according to intake ######
   
-  mod <- mgcv::gam(geometric_mean_growth_dw ~ s(ingestion_rate_fw, bs = "cs", k =
+  mod <- mgcv::gam(mean_growth_dw ~ s(ingestion_rate_fw, bs = "cs", k =
                                                   3),
                    data = data_i)
   hlt <- 10 * sum(mgcv::influence.gam(mod) / length(mgcv::influence.gam(mod)))
   data_i_f <- filter(data_i, mgcv::influence.gam(mod) < hlt)
   
   grfw_irfw <- ggplot2::ggplot(data_i_f,
-                               aes(x = ingestion_rate_fw, y = geometric_mean_growth_dw)) +
+                               aes(x = ingestion_rate_fw, y = mean_growth_dw)) +
     geom_point() +
     xlim(0, NA) +
-    ylim(NA, max(data_i$geometric_mean_growth_dw) + 0.1 * (
-      max(data_i$geometric_mean_growth_dw) - min(data_i$geometric_mean_growth_dw)
+    ylim(NA, max(data_i$mean_growth_dw) + 0.1 * (
+      max(data_i$mean_growth_dw) - min(data_i$mean_growth_dw)
     )) +
     labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> day<sup>-1</sup>)", y = "Growth rate") +
     geom_smooth(
@@ -707,7 +705,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   
   ### Mass-specific growth rate in dry weight according to the mass specific intake rate in dry weight  ######
   mod_msgrdw_msirdw <- mgcv::gam(
-    geometric_mean_growth_dw ~ s(mass_specific_ingestion_rate_fw),
+    mean_growth_dw ~ s(mass_specific_ingestion_rate_fw),
     family = scat(),
     method = "REML",
     data = data_i
@@ -715,7 +713,8 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   hlt <- 10 * sum(mgcv::influence.gam(mod_msgrdw_msirdw) / length(mgcv::influence.gam(mod_msgrdw_msirdw)))
   data_i_f <- filter(data_i, mgcv::influence.gam(mod_msgrdw_msirdw) < hlt)
   
-  msgrdw_msirdw <- ggplot2::ggplot(data_i_f, aes(x = mass_specific_ingestion_rate_dw, y = geometric_mean_growth_dw)) +
+  msgrdw_msirdw <- ggplot2::ggplot(data_i_f,
+                                   aes(x = mass_specific_ingestion_rate_dw, y = mean_growth_dw)) +
     geom_point() +
     xlim(0, NA) +
     geom_smooth(
@@ -724,16 +723,10 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
       formula = y ~ s(x),
       method.args = list(method = "REML", family = scat())
     ) +
-    labs(
-      x = "Intake rate (<span style='font-size:8pt;'>g<sub>intake</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)",
-      y = "Growth rate (<span style='font-size:8pt;'>g<sub>growth</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)"
-    ) +
-    theme(
-      axis.title.x = element_markdown(),
-      axis.title.y = element_markdown()
-    )
+    labs(x = "Intake rate <br> (<span style='font-size:8pt;'>g<sub>intake</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)", y = "Growth rate <br> (<span style='font-size:8pt;'>g<sub>growth</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)") +
+    theme(axis.title.x = element_markdown(), axis.title.y = element_markdown())
   
-
+  
   ggsave(
     filename = "msgrdw_&_msirdw.pdf",
     plot = msgrdw_msirdw,
@@ -764,16 +757,10 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
       method = mgcv::gam,
       formula = y ~ s(x),
       method.args = list(family = scat(), method = "REML")
-    )+
-    labs(
-      x = "Intake rate (<span style='font-size:8pt;'>g<sub>intake</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)",
-      y = "Assimilation efficiency (<span style='font-size:8pt;'>g<sub>assim</sub> \u22c5 g<sub>intake</sub><sup>-1</sup> </span>)"
     ) +
-    theme(
-      axis.title.x = element_markdown(),
-      axis.title.y = element_markdown()
-    )
-
+    labs(x = "Intake rate <br> (<span style='font-size:8pt;'>g<sub>intake</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)", y = "Assimilation efficiency <br> (<span style='font-size:8pt;'>g<sub>assim</sub> \u22c5 g<sub>intake</sub><sup>-1</sup> </span>)") +
+    theme(axis.title.x = element_markdown(), axis.title.y = element_markdown())
+  
   
   ggsave(
     filename = "aedw_&_msirdw.pdf",
@@ -811,15 +798,9 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
       formula = y ~ s(x, bs = "ad", k = 10),
       method.args = list(family = scat(), method = "REML")
     ) +
-    labs(
-      x = "Intake rate (<span style='font-size:8pt;'>g<sub>intake</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)",
-      y = "Growth efficiency (<span style='font-size:8pt;'>g<sub>growth</sub> \u22c5 g<sub>intake</sub><sup>-1</sup></span>)"
-    ) +
-    theme(
-      axis.title.x = element_markdown(),
-      axis.title.y = element_markdown()
-    )
-
+    labs(x = "Intake rate <br> (<span style='font-size:8pt;'>g<sub>intake</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)", y = "Growth efficiency <br> (<span style='font-size:8pt;'>g<sub>growth</sub> \u22c5 g<sub>intake</sub><sup>-1</sup></span>)") +
+    theme(axis.title.x = element_markdown(), axis.title.y = element_markdown())
+  
   
   ggsave(
     filename = "gedw_&_msirdw.pdf",
@@ -835,7 +816,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ### Growth efficiency in dry weight according to specific growth rate in dry weight ######
   
   mod_gedw_msgrdw <- mgcv::gam(
-    growth_efficiency_dw ~ s(geometric_mean_growth_dw, bs = "ad", k = 10),
+    growth_efficiency_dw ~ s(mean_growth_dw, bs = "ad", k = 10),
     data = data_i,
     method = "REML",
     family = scat()
@@ -844,7 +825,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   hlt <- 10 * sum(mgcv::influence.gam(mod_gedw_msgrdw) / length(mgcv::influence.gam(mod_gedw_msgrdw)))
   data_i_f <- filter(data_i, mgcv::influence.gam(mod_gedw_msgrdw) < hlt)
   gedw_msgrdw <- ggplot2::ggplot(data_i_f,
-                                 aes(x = geometric_mean_growth_dw, y = growth_efficiency_dw)) +
+                                 aes(x = mean_growth_dw, y = growth_efficiency_dw)) +
     geom_point() +
     xlim(0, NA) +
     geom_smooth(
@@ -852,16 +833,10 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
       method = mgcv::gam,
       formula = y ~ s(x, bs = "ad", k = 10),
       method.args = list(family = scat(), method = "REML")
-    )+
-    labs(
-      x = "Growth rate (<span style='font-size:8pt;'>g<sub>growth</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)",
-      y = "Growth efficiency (<span style='font-size:8pt;'>g<sub>growth</sub> \u22c5 g<sub>intake</sub><sup>-1</sup></span>)"
     ) +
-    theme(
-      axis.title.x = element_markdown(),
-      axis.title.y = element_markdown()
-    )
-
+    labs(x = "Growth rate <br> (<span style='font-size:8pt;'>g<sub>growth</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)", y = "Growth efficiency <br> (<span style='font-size:8pt;'>g<sub>growth</sub> \u22c5 g<sub>intake</sub><sup>-1</sup></span>)") +
+    theme(axis.title.x = element_markdown(), axis.title.y = element_markdown())
+  
   ggsave(
     filename = "gedw_&_msgrdw.pdf",
     plot = gedw_msgrdw,
@@ -907,7 +882,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     guides = "auto"
   ) +
     geom_hline(yintercept = 0, linetype = "dotted") +
-    labs(x = "Intake rate <br> (mg<sub>food</sub> mg<sub>body</sub><sup>-1</sup> day<sup>-1</sup>)", y = expression(paste(frac(
+    labs(x = "Intake rate <br> (<span style='font-size:8pt;'>g<sub>intake</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)", y = expression(paste(frac(
       italic(d), italic(dx)
     ), "  Growth rate"))) +
     theme(axis.title.x = element_markdown(), axis.title.y = element_text()) +
@@ -926,7 +901,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     guides = "auto"
   ) +
     geom_hline(yintercept = 0, linetype = "dotted") +
-    labs(x = "Intake rate <br> (mg<sub>food</sub> mg<sub>body</sub><sup>-1</sup> day<sup>-1</sup>)", y = expression(paste(
+    labs(x = "Intake rate <br> (<span style='font-size:8pt;'>g<sub>intake</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)", y = expression(paste(
       frac(italic(d), italic(dx)), "  Assimilation efficiency"
     ))) +
     theme(axis.title.x = element_markdown(), axis.title.y = element_text()) +
@@ -945,7 +920,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     guides = "auto"
   ) +
     geom_hline(yintercept = 0, linetype = "dotted") +
-    labs(x = "Intake rate <br> (mg<sub>food</sub> mg<sub>body</sub><sup>-1</sup> day<sup>-1</sup>)", y = expression(paste(
+    labs(x = "Intake rate <br> (<span style='font-size:8pt;'>g<sub>intake</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)", y = expression(paste(
       frac(italic(d), italic(dx)), "  Growth efficiency"
     ))) +
     theme(axis.title.x = element_markdown(), axis.title.y = element_text()) +
@@ -965,7 +940,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     guides = "auto"
   ) +
     geom_hline(yintercept = 0, linetype = "dotted") +
-    labs(x = "Gowth rate", y = expression(paste(
+    labs(x = "Growth rate <br> (<span style='font-size:8pt;'>g<sub>growth</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)", y = expression(paste(
       frac(italic(d), italic(dx)), "  Growth efficiency"
     ))) +
     theme(axis.title.x = element_markdown(), axis.title.y = element_text()) +
@@ -1123,7 +1098,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   data_larvae <- subset(data_g, data_g$variable == "larvae")
   data_larvae <- pivot_wider(data_larvae, names_from = element, values_from = elemental_value)
   
-  larvaePdw_gr <- ggplot2::ggplot(data_larvae, aes(x = geometric_mean_growth_dw, y = P /
+  larvaePdw_gr <- ggplot2::ggplot(data_larvae, aes(x = mean_growth_dw, y = P /
                                                      1000)) +
     ylim(NA, max(data_larvae$P /
                    1000, na.rm = T) + 0.15 * (
@@ -1152,7 +1127,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   # We check whether the growth rate in positively related to P/N body content
   # according to nobody
   data_larvae$PN <- data_larvae$P / (10000 * data_larvae$N)
-  larvaePNdw_gr <- ggplot2::ggplot(data_larvae, aes(x = geometric_mean_growth_dw, y = PN)) +
+  larvaePNdw_gr <- ggplot2::ggplot(data_larvae, aes(x = mean_growth_dw, y = PN)) +
     ylim(NA, max(data_larvae$PN, na.rm = T) + 0.1 * (max(data_larvae$PN, na.rm = T) - min(data_larvae$PN, na.rm = T))) +
     geom_point(alpha = 0.2, shape = 16) +
     labs(x = "", y = "Larvae P/N") +
@@ -1175,7 +1150,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   # We check whether the growth rate in positively related to P/C body content
   # according to nobody
   data_larvae$PC <- data_larvae$P / (10000 * data_larvae$C)
-  larvaePCdw_gr <- ggplot2::ggplot(data_larvae, aes(x = geometric_mean_growth_dw, y = PC)) +
+  larvaePCdw_gr <- ggplot2::ggplot(data_larvae, aes(x = mean_growth_dw, y = PC)) +
     ylim(NA, max(data_larvae$PC, na.rm = T) + 0.1 * (max(data_larvae$PC, na.rm = T) - min(data_larvae$PC, na.rm = T))) +
     geom_point(alpha = 0.2, shape = 16) +
     labs(x = "", y = "Larvae P/C") +
@@ -1207,9 +1182,8 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   
   
   grh_complete_plot <- wrap_elements(panel = grh_complete_plot) +
-    labs(tag = "Growth rate") +
-    theme(plot.tag = element_text(size = rel(1)),
-          plot.tag.position = "bottom")
+    labs(tag = "Growth rate <br> (<span style='font-size:8pt;'>g<sub>growth</sub> · g<sub>body</sub><sup>-1</sup> · d<sup>-1</sup></span>)", ) +
+    theme(plot.tag = element_markdown(), plot.tag.position = "bottom")
   
   # Saving the the complete plots
   
@@ -1356,6 +1330,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   
   # A for loop to create the plots of assimilation efficiency, larvae content, frass content and retention time
   # according to mass-specific intake rate for all elements
+  # along with the d/dx derivatives
   
   
   
@@ -1452,7 +1427,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
         p <- p[[1]] +
           geom_hline(yintercept = 0, linetype = "dashed") +
           labs(
-            x = "Intake rate <br> (mg<sub>food</sub> mg<sub>body</sub><sup>-1</sup> day<sup>-1</sup>)",
+            x = "Intake rate <br> (<span style='font-size:8pt;'>g<sub>intake</sub> · g<sub>body</sub><sup>-1</sup> · d<sup>-1</sup></span>)",
             y = paste(
               "<span style='font-size: 10pt;'><i><sup>d</sup>&frasl;<sub>dx</sub></i></span> ",
               y_axes[j],
@@ -1488,7 +1463,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   }
   
   
-  ######  The complete plot  ######
+  ######  The complete plots  ######
   
   complete_plots <- vector("list", nb_variables + 2)
   complete_plots_widths <- c(7, 7, 7, 7, 9, 9)
@@ -1514,15 +1489,8 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     
     
     complete_plots[[i]] <- wrap_elements(panel = complete_plot) +
-      labs(tag = expression(paste(
-        "Intake rate", " (", mg[food], " ", mg[body(fw)] ^ {
-          -1
-        }, " ", day ^ {
-          -1
-        }, ")",
-      ))) +
-      theme(plot.tag = element_text(size = rel(1)),
-            plot.tag.position = "bottom")
+      labs(tag = "Intake rate <br> (<span style='font-size:8pt;'>g<sub>intake</sub> · g<sub>body</sub><sup>-1</sup> · d<sup>-1</sup></span>)", ) +
+      theme(plot.tag = element_markdown(), plot.tag.position = "bottom")
     
     # Saving the the complete plots
     
@@ -1793,13 +1761,16 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     widths = c(1, 1)
   )
   
-  complete_stoichiometry <- ggpubr::annotate_figure(complete_stoichiometry, bottom = ggpubr::text_grob(expression(
-    paste("Intake rate", " (", mg[food], " ", mg[body] ^ {
-      -1
-    }, " ", day ^ {
-      -1
-    }, ")")
-  )))
+  complete_stoichiometry <- ggpubr::annotate_figure(
+    complete_stoichiometry,
+    bottom = gridtext::richtext_grob(
+      "Intake rate <br> (<span style='font-size:8pt;'>g<sub>intake</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)",
+      hjust = 0.5,
+      # Center alignment
+      gp = grid::gpar(col = "black")  # Text color
+    ),
+    top = ""  # Set to an empty string if you don't want a top title
+  )
   
   ggsave(
     filename = paste("frass_larvae_", "stoichiometry", ".pdf", sep = ""),
@@ -1850,12 +1821,16 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
       limits = c("K", "Mg", "C", "N", "P", "S", "Ca", "Na")
     ) +
     labs(
-      x = "Intake rate <br> (mg<sub>food</sub> mg<sub>body</sub><sup>-1</sup> day<sup>-1</sup>)",
-      y = "Assimilation efficiency",
+      x = "Intake rate <br> (<span style='font-size:8pt;'>g<sub>intake</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)",
+      y = "Assimilation efficiency <br> (<span style='font-size:8pt;'>g<sub>assim</sub> \u22c5 g<sub>intake</sub><sup>-1</sup> </span>)",
       fill = "Element",
       color = "Element"
     ) +
-    theme(legend.position = "right", axis.title.x = element_markdown())
+    theme(
+      legend.position = "right",
+      axis.title.x = element_markdown(),
+      axis.title.y = element_markdown()
+    )
   
   # Save the plot
   ggsave(
@@ -1943,15 +1918,16 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     legend = "right"
   )
   
-  complete_plot <- ggpubr::annotate_figure(complete_plot,
-                                           bottom = ggpubr::text_grob(expression(
-                                             paste("Intake rate", " (", mg[food], " ", mg[body] ^ {
-                                               -1
-                                             }, " ", day ^ {
-                                               -1
-                                             }, ")", )
-                                           )),
-                                           top = "")
+  complete_plot <- ggpubr::annotate_figure(
+    complete_plot,
+    bottom = gridtext::richtext_grob(
+      "Intake rate <br> (<span style='font-size:8pt;'>g<sub>intake</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)",
+      hjust = 0.5,
+      # Center alignment
+      gp = grid::gpar(col = "black")  # Text color
+    ),
+    top = ""  # Set to an empty string if you don't want a top title
+  )
   
   # Save the plot
   ggsave(
@@ -2059,7 +2035,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ##  Isotopic fractionation between the larvae and food (trophic fractionation) as a function of growth rate ######
   
   
-  ctf_gr <- ggplot2::ggplot(data_tf, aes(x = geometric_mean_growth_dw, y = `13C`)) +
+  ctf_gr <- ggplot2::ggplot(data_tf, aes(x = mean_growth_dw, y = `13C`)) +
     geom_point(size = 1.5) +
     xlim(0, NA) +
     labs(x = expression(paste("Growth rate")), y = expression(paste(Delta, "13C"))) +
@@ -2087,7 +2063,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     units = "in"
   )
   
-  ntf_gr <- ggplot2::ggplot(data_tf, aes(x = geometric_mean_growth_dw, y = `15N`)) +
+  ntf_gr <- ggplot2::ggplot(data_tf, aes(x = mean_growth_dw, y = `15N`)) +
     geom_point(size = 1.5) +
     xlim(0, NA) +
     labs(x = expression(paste("Growth rate")), y = expression(paste(Delta, "15N"))) +
@@ -2117,7 +2093,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ##  Isotopic fractionation between the larvae and food (trophic fractionation) as a function of mass-specific growth rate ######
   
   
-  p <- ggplot2::ggplot(data_tf, aes(x = geometric_mean_growth_dw, y = `13C`)) +
+  p <- ggplot2::ggplot(data_tf, aes(x = mean_growth_dw, y = `13C`)) +
     geom_point(size = 1.5) +
     labs(x = "Mass-specific growth rate (mg fw/ day)", y = expression(paste(Delta, "13C"))) +
     geom_smooth(color = "steelblue3", method = "lm")
@@ -2133,7 +2109,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     units = "in"
   )
   
-  p <- ggplot2::ggplot(data_tf, aes(x = geometric_mean_growth_dw, y = `15N`)) +
+  p <- ggplot2::ggplot(data_tf, aes(x = mean_growth_dw, y = `15N`)) +
     geom_point(size = 1.5) +
     labs(x = "Mass-specific growth rate (mg fw/ day)", y = expression(paste(Delta, "15N"))) +
     geom_smooth(color = "steelblue3", method = "lm")

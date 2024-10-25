@@ -40,7 +40,8 @@ packages <- c(
   "marginaleffects",
   "modelsummary",
   "tinytable",
-  "kableExtra"
+  "kableExtra",
+  "gridtext"
 )
 packages_to_install <- packages[!(packages %in% installed.packages())]
 

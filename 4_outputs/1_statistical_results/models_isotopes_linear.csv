@@ -1,6 +1,6 @@
 "","equation","n","R_squared","F_stat","p_value"
-"1","13C tf  =  -1.7 x geometric_mean_growth_dw + -1.612",92,0.37,52,"p<0.01"
-"2","15N tf  =  2.7 x geometric_mean_growth_dw + 0.2103",92,0.49,87,"p<0.01"
+"1","13C tf  =  -2.3 x mean_growth_dw + -1.518",92,0.38,55,"p<0.01"
+"2","15N tf  =  3.6 x mean_growth_dw + 0.087223",92,0.49,87,"p<0.01"
 "3","13C fldf  =  -2.6 x assimilation_efficiency_dw + 5.2278",92,0.13,13,"p<0.01"
 "4","15N fldf  =  8.1 x assimilation_efficiency_dw + -4.9075",92,0.28,34,"p<0.01"
 "5","13C iaer  =  -0.67 x mean_mass_specific_intake_rate_fw + -0.96153",100,0.26,34,"p<0.01"
