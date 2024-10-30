@@ -4,14 +4,45 @@
 #' @export
 #'
 #' @examples
-plot_irn <- function(data_i, data_g, data_model, data_ic) {
-  # Set global options for the ggplot2 plots
+plot_irn <- function(data_i,
+                     data_g,
+                     data_model,
+                     data_fc,
+                     data_ic) {
+  
+  # Set global options and variables for the plots ####
+  
   ggplot2::theme_set(
     theme_classic() + theme(
       legend.position = "right",
       panel.grid.major = element_line(color = "gray95", linetype = 1)
     )
   )
+  
+  elements_isotopes <- c("C", "N", "P", "Na", "Mg", "S", "K", "Ca", "15N", "13C")
+  
+  nb_elements_isotopes <- length(elements_isotopes)
+  
+  colours_elements_isotopes <- c(
+    "C" = "#808080",
+    "N" = "#5A5ACA",
+    "P" = "#EC9200",
+    "Na" = "#403EFF",
+    "Mg" = "#5CC55C",
+    "S" = "#D69F09",
+    "K" = "#9B4BE1",
+    "Ca" = "#DF4F4F",
+    "15N" = "black",
+    "13C" = "black"
+  ) # The colors used for elements and isotopes, modified after Jmol
+  
+  elements <- elements_isotopes[1:8]
+  
+  nb_elements <- length(elements)
+  
+  colours_elements <- colours_elements_isotopes[1:8]
+  
+  units_content <- c("%", "%", "ppm", "ppm", "ppm", "ppm", "ppm", "ppm")
   
   # The food provided daily is a factor rather than a numeric variable
   data_i$food_provided_fw <- as.factor(data_i$food_provided_fw)
@@ -104,6 +135,68 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ggsave(
     filename = "bm_j0_fw_&_week.pdf",
     plot = p,
+    device = pdf,
+    path = here::here("4_outputs", "3_figures_paper"),
+    scale = 1,
+    width = 7,
+    height = 4,
+    units = "in"
+  )
+  
+  ## Effect of week on food chemical composition ######
+  data_fc_long = pivot_longer(
+    data_fc,
+    cols = c(
+      "food_C",
+      "food_N",
+      "food_P",
+      "food_S",
+      "food_Na",
+      "food_Mg",
+      "food_K",
+      "food_Ca"
+    ),
+    names_to = "element",
+    values_to = "level"
+  )
+  data_fc_long = data_fc_long[which(grepl("d1", data_fc_long$tube_food_control_ID)),]
+  data_fc_long$element = gsub("food_", "", data_fc_long$element)
+  plots <- vector("list", length(unique(data_fc_long$element)))
+  y_limss = list("C" = c(0, 100), "N" = c(0, 8),"P" = c(0, 10000),"K" = c(0, 20000),
+              "Ca" = c(0, 2000),"Na" = c(0, 600),"S" = c(0, 4000),"Mg" = c(0, 2000))
+  data_fc_long = data_fc_long[-which(is.na(data_fc_long$level)),]
+  data_fc_long$temporal_block = as.numeric(as.factor(data_fc_long$date))
+  
+  for (i in 1:length(elements)) {
+    y_lims = unlist(y_limss[which(attributes(y_limss)$names == elements[i])]) 
+    data_e = data_fc_long[which(data_fc_long$element == elements[i]), ]
+    
+    plots[[i]] = ggplot2::ggplot(data_e, aes(x = as.factor(temporal_block), y = level)) +
+      geom_point(col = colours_elements[i]) +
+      ylim(y_lims) + 
+      labs(x = "", y = paste("Food ", elements[i], " (", units_content[i], ")", sep ="")) +
+      theme(legend.position = "none")
+  } 
+  
+  complete_plot <-
+    (plots[[1]] |
+       plots[[2]] |
+       plots[[3]] |
+       plots[[4]]) /
+    (plots[[5]] |
+       plots[[6]] |
+       plots[[7]] |
+       plots[[8]]) + patchwork::plot_annotation(tag_levels = "a")
+  
+  
+  
+  complete_plots <- wrap_elements(panel = complete_plot) +
+    labs(tag = "Temporal block", ) +
+    theme(plot.tag = element_markdown(), plot.tag.position = "bottom")
+
+  ggsave(
+    filename = "food_compo_&_week.pdf",
+    plot = complete_plots,
     device = pdf,
     path = here::here("4_outputs", "3_figures_paper"),
     scale = 1,
@@ -478,18 +571,14 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   ### Growth rate according to intake ######
   
   mod <- mgcv::gam(mean_growth_dw ~ s(ingestion_rate_fw, bs = "cs", k =
-                                                  3),
-                   data = data_i)
+                                        3), data = data_i)
   hlt <- 10 * sum(mgcv::influence.gam(mod) / length(mgcv::influence.gam(mod)))
   data_i_f <- filter(data_i, mgcv::influence.gam(mod) < hlt)
   
-  grfw_irfw <- ggplot2::ggplot(data_i_f,
-                               aes(x = ingestion_rate_fw, y = mean_growth_dw)) +
+  grfw_irfw <- ggplot2::ggplot(data_i_f, aes(x = ingestion_rate_fw, y = mean_growth_dw)) +
     geom_point() +
     xlim(0, NA) +
-    ylim(NA, max(data_i$mean_growth_dw) + 0.1 * (
-      max(data_i$mean_growth_dw) - min(data_i$mean_growth_dw)
-    )) +
+    ylim(NA, max(data_i$mean_growth_dw) + 0.1 * (max(data_i$mean_growth_dw) - min(data_i$mean_growth_dw))) +
     labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> day<sup>-1</sup>)", y = "Growth rate") +
     geom_smooth(
       color = "steelblue3",
@@ -674,6 +763,34 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
     units = "in"
   )
   
+  ### msae according to mass specific intake rate   ######
+  
+  
+  data_i$msae = data_i$assimilation_efficiency_dw / data_i$mass_specific_respiration_rate_dw
+  msae_msirdw <- ggplot2::ggplot(data_i, aes(x = mass_specific_ingestion_rate_dw, y = msae)) +
+    geom_point() +
+    xlim(0, NA) +
+    ylim(NA, max(data_i$msae) + 0.2 * abs((max(data_i$msae) - min(data_i$msae)))) +
+    labs(x = "Intake rate <br> (mg<sub>food(dw)</sub> mg<sub>body(dw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Maint-specific assimilation eff <br> (mg<sub>food(dw)</sub> mg<sub>body(dw)</sub><sup>-1</sup> day<sup>-1</sup>)") +
+    geom_smooth(
+      color = "steelblue3",
+      method = mgcv::gam,
+      formula = y ~ s(x, bs = "cs", k = 3)
+    ) +
+    theme(axis.title.x = element_markdown(), axis.title.y = element_markdown())
+  
+  ggsave(
+    filename = "msae_msirdw.pdf",
+    plot = msae_msirdw,
+    device = pdf,
+    path = here::here("4_outputs", "3_figures_paper"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
+  
+  
   
   
   
@@ -824,8 +941,7 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
   
   hlt <- 10 * sum(mgcv::influence.gam(mod_gedw_msgrdw) / length(mgcv::influence.gam(mod_gedw_msgrdw)))
   data_i_f <- filter(data_i, mgcv::influence.gam(mod_gedw_msgrdw) < hlt)
-  gedw_msgrdw <- ggplot2::ggplot(data_i_f,
-                                 aes(x = mean_growth_dw, y = growth_efficiency_dw)) +
+  gedw_msgrdw <- ggplot2::ggplot(data_i_f, aes(x = mean_growth_dw, y = growth_efficiency_dw)) +
     geom_point() +
     xlim(0, NA) +
     geom_smooth(
@@ -972,25 +1088,6 @@ plot_irn <- function(data_i, data_g, data_model, data_ic) {
                  "assimilation_efficiency_dw",
                  "retention_time")
   nb_variables <- length(variables)
-  elements_isotopes <- c("C", "N", "P", "Na", "Mg", "S", "K", "Ca", "15N", "13C")
-  nb_elements_isotopes <- length(elements_isotopes)
-  colours_elements_isotopes <- c(
-    "C" = "#808080",
-    "N" = "#5A5ACA",
-    "P" = "#EC9200",
-    "Na" = "#403EFF",
-    "Mg" = "#5CC55C",
-    "S" = "#D69F09",
-    "K" = "#9B4BE1",
-    "Ca" = "#DF4F4F",
-    "15N" = "black",
-    "13C" = "black"
-  ) # The colors used for elements and isotopes, modified after Jmol
-  
-  elements <- elements_isotopes[1:8]
-  nb_elements <- length(elements)
-  colours_elements <- colours_elements_isotopes[1:8]
-  units_content <- c("%", "%", "ppm", "ppm", "ppm", "ppm", "ppm", "ppm")
   
   ## Differences in elemental content between the variables: food, larva, frass ######
   

@@ -28,6 +28,8 @@ library(modelsummary)
 library(kableExtra)
 library(tinytable)
 library(gridtext)
+library(stringr)
+library(ggh4x)
 
 
 lapply(list.files(here::here("R"), recursive = TRUE, full.names = T), source)
@@ -65,6 +67,7 @@ plot_irn(
   data_i = data_irn_individuals_combined,
   data_g = data_irn_group_combined,
   data_model = model,
+  data_fc = data_irn_food_control,
   data_ic = data_irn_individuals_controls
 )
 

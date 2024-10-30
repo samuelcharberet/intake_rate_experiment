@@ -41,7 +41,9 @@ packages <- c(
   "modelsummary",
   "tinytable",
   "kableExtra",
-  "gridtext"
+  "gridtext",
+  "stringr",
+  "ggh4x"
 )
 packages_to_install <- packages[!(packages %in% installed.packages())]
 
@@ -133,7 +135,8 @@ list(
       data_i = data_irn_indivuals_combined,
       data_g = data_irn_groups_combined,
       data_model = models_irn,
-      data_ic = data_irn_individuals_controls
+      data_ic = data_irn_individuals_controls,
+      data_fc = data_irn_food_controls
     ),
     format = "file"
   ),
