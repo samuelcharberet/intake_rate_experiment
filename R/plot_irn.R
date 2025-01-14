@@ -9,7 +9,6 @@ plot_irn <- function(data_i,
                      data_model,
                      data_fc,
                      data_ic) {
-  
   # Set global options and variables for the plots ####
   
   ggplot2::theme_set(
@@ -159,24 +158,33 @@ plot_irn <- function(data_i,
     names_to = "element",
     values_to = "level"
   )
-  data_fc_long = data_fc_long[which(grepl("d1", data_fc_long$tube_food_control_ID)),]
+  data_fc_long = data_fc_long[which(grepl("d1", data_fc_long$tube_food_control_ID)), ]
   data_fc_long$element = gsub("food_", "", data_fc_long$element)
   plots <- vector("list", length(unique(data_fc_long$element)))
-  y_limss = list("C" = c(0, 100), "N" = c(0, 8),"P" = c(0, 10000),"K" = c(0, 20000),
-              "Ca" = c(0, 2000),"Na" = c(0, 600),"S" = c(0, 4000),"Mg" = c(0, 2000))
-  data_fc_long = data_fc_long[-which(is.na(data_fc_long$level)),]
+  y_limss = list(
+    "C" = c(0, 100),
+    "N" = c(0, 8),
+    "P" = c(0, 10000),
+    "K" = c(0, 20000),
+    "Ca" = c(0, 2000),
+    "Na" = c(0, 600),
+    "S" = c(0, 4000),
+    "Mg" = c(0, 2000)
+  )
+  data_fc_long = data_fc_long[-which(is.na(data_fc_long$level)), ]
   data_fc_long$temporal_block = as.numeric(as.factor(data_fc_long$date))
   
   for (i in 1:length(elements)) {
-    y_lims = unlist(y_limss[which(attributes(y_limss)$names == elements[i])]) 
+    y_lims = unlist(y_limss[which(attributes(y_limss)$names == elements[i])])
     data_e = data_fc_long[which(data_fc_long$element == elements[i]), ]
     
     plots[[i]] = ggplot2::ggplot(data_e, aes(x = as.factor(temporal_block), y = level)) +
       geom_point(col = colours_elements[i]) +
-      ylim(y_lims) + 
-      labs(x = "", y = paste("Food ", elements[i], " (", units_content[i], ")", sep ="")) +
+      ylim(y_lims) +
+      labs(x = "",
+           y = paste("Food ", elements[i], " (", units_content[i], ")", sep = "")) +
       theme(legend.position = "none")
-  } 
+  }
   
   complete_plot <-
     (plots[[1]] |
@@ -193,7 +201,7 @@ plot_irn <- function(data_i,
   complete_plots <- wrap_elements(panel = complete_plot) +
     labs(tag = "Temporal block", ) +
     theme(plot.tag = element_markdown(), plot.tag.position = "bottom")
-
+  
   ggsave(
     filename = "food_compo_&_week.pdf",
     plot = complete_plots,
@@ -1603,6 +1611,143 @@ plot_irn <- function(data_i,
     )
   }
   
+  ## Elemental growth efficiencies ######
+  
+  plots <- vector("list", 2)
+  names(plots) <- c("ge_msirdw", "ge_ae")
+  y_plot_names <-  "growth_efficiency_dw"
+  
+  
+  # Creating the list of plots for the other elements
+  
+  for (i in 1:2) {
+    plots[[i]] <- vector("list", nb_elements)
+    names(plots[[i]]) <- elements
+  }
+  
+  
+  
+  # A for loop to create the plots of assimilation efficiency, larvae content, frass content and retention time
+  # according to mass-specific intake rate for all elements
+  # along with the d/dx derivatives
+  
+  
+  data_matrix <- subset(
+    data_g,
+    data_g$variable == "growth_efficiency_dw" |
+      data_g$variable == "assimilation_efficiency_dw_ege"
+  )
+  
+  for (i in 1:2) {
+    data_matrix_element <- filter(
+      data_matrix,
+      data_matrix$element == elements[i],
+      !is.na(data_matrix$elemental_value)
+    )
+    data_matrix_element = pivot_wider(data_matrix_element,
+                                      names_from = "variable",
+                                      values_from = "elemental_value")
+    plots[[1]][[i]] <- ggplot2::ggplot(
+      data_matrix_element,
+      aes(x = mean_mass_specific_intake_rate_fw, y = growth_efficiency_dw)
+    ) +
+      geom_point() +
+      ylim(0, 1) +
+      geom_smooth(formula = y ~ s(x),
+                  method = gam,
+                  color = colours_elements[i]) +
+      labs(x = "Intake rate <br> (mg<sub>food</sub> mg<sub>body</sub><sup>-1</sup> day<sup>-1</sup>)", y = paste("GE of", elements[i])) +
+      theme(axis.title.x = element_markdown())
+    
+    
+    # Save each plot
+    ggsave(
+      filename = paste(y_plot_names, "_", elements[i], "_&_msirfw.pdf", sep = ""),
+      plot = plots[[1]][[i]],
+      device = pdf,
+      path = here::here("4_outputs", "2_figures"),
+      scale = 1,
+      width = 7,
+      height = 4,
+      units = "in"
+    )
+    
+    plots[[2]][[i]] <- ggplot2::ggplot(
+      data_matrix_element,
+      aes(x = assimilation_efficiency_dw_ege, y = growth_efficiency_dw)
+    ) +
+      geom_point() +
+      ylim(0, 1) +
+      geom_smooth(formula = y ~ s(x),
+                  method = gam,
+                  color = colours_elements[i]) +
+      labs(x = "Assimilation efficiency", y = "Growth efficiency") +
+      theme(axis.title.x = element_markdown()) +
+      geom_abline(
+        slope = 1, 
+        intercept = 0, 
+        linetype = "dotted", 
+        color = "black" 
+      )
+    
+    
+    # Save each plot
+    ggsave(
+      filename = paste("ae_", elements[i], "_&_", "ge_", elements[i], ".pdf", sep = ""),
+      plot =  plots[[2]][[i]],
+      device = pdf,
+      path = here::here("4_outputs", "2_figures"),
+      scale = 1,
+      width = 7,
+      height = 4,
+      units = "in"
+    )
+    
+  }
+  
+  
+  ######  The complete plots  ######
+  
+  # complete_plots <- vector("list", 2)
+  # complete_plots_widths <- c(7, 7)
+  # complete_plots_heights <- c(4, 4)
+  # 
+  # # Removing the x axis title
+  # for (i in 1:2) {
+  #   for (j in 1:nb_elements) {
+  #     plots[[i]][[j]] <- plots[[i]][[j]] + ggpubr::rremove("xlab")
+  #   }
+  # }
+  # for (i in 1:2) {
+  #   complete_plot <-
+  #     (plots[[i]][[1]] |
+  #        plots[[i]][[2]] |
+  #        plots[[i]][[3]] |
+  #        plots[[i]][[4]]) /
+  #     (plots[[i]][[5]] |
+  #        plots[[i]][[6]] |
+  #        plots[[i]][[7]] |
+  #        plots[[i]][[8]]) + patchwork::plot_annotation(tag_levels = "a")
+  #   
+  #   
+  #   
+  #   complete_plots[[i]] <- wrap_elements(panel = complete_plot) +
+  #     labs(tag = "Intake rate <br> (<span style='font-size:8pt;'>g<sub>intake</sub> · g<sub>body</sub><sup>-1</sup> · d<sup>-1</sup></span>)", ) +
+  #     theme(plot.tag = element_markdown(), plot.tag.position = "bottom")
+  #   
+  #   # Saving the the complete plots
+  #   
+  #   ggsave(
+  #     filename = paste(y_plot_names, "alldw_&_msirfw.pdf", sep = ""),
+  #     plot = complete_plots[[i]],
+  #     device = pdf,
+  #     path = here::here("4_outputs", "3_figures_paper"),
+  #     scale = 1,
+  #     width = complete_plots_widths[i],
+  #     height = complete_plots_heights[i],
+  #     units = "in"
+  #   )
+  # }
   
   ## CNP stoichiometry ######
   

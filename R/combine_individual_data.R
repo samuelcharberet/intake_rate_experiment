@@ -6,6 +6,8 @@
 #'
 #' @examples
 combine_individual_data <- function(data_fc, data_ic, data_i) {
+  
+  
   ##### Day 0 larvae water content #####
   
   data_i$larvae_day0_wc <- NA
@@ -421,8 +423,18 @@ combine_individual_data <- function(data_fc, data_ic, data_i) {
     data_i$respiration_rate_dw[i] <- (data_i$assimilated_mass_dw[i] - data_i$growth_dw[i]) / data_i$number_collection_days[i]
   }
   
+  ##### Group for body chemical analyses #####
+  # Which groups of caterpillar had only individuals having been fed for 3 days before chemical analysis ?
   
+  data_i$bca_3 = NA
+    for (i in unique(data_i$group_ID)){
+      group_rows = which(data_i$group_ID == i)
+      bca_rows = group_rows[which(data_i$body_analysis[group_rows] == 1)]
+      if (all(data_i$number_collection_days[bca_rows] == 3)){
+        data_i$bca_3[group_rows] = 1
+      } else {data_i$bca_3[group_rows] = 0}
+    }
   
-  
+
   return(data_i)
 }
