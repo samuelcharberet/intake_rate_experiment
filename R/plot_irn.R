@@ -1638,7 +1638,7 @@ plot_irn <- function(data_i,
       data_g$variable == "assimilation_efficiency_dw_ege"
   )
   
-  for (i in 1:2) {
+  for (i in 1:length(elements)) {
     data_matrix_element <- filter(
       data_matrix,
       data_matrix$element == elements[i],
@@ -1681,13 +1681,14 @@ plot_irn <- function(data_i,
       geom_smooth(formula = y ~ s(x),
                   method = gam,
                   color = colours_elements[i]) +
-      labs(x = "Assimilation efficiency", y = "Growth efficiency") +
+      labs(x = paste("AE of", elements[i]),
+           y = paste("GE of", elements[i])) +
       theme(axis.title.x = element_markdown()) +
       geom_abline(
-        slope = 1, 
-        intercept = 0, 
-        linetype = "dotted", 
-        color = "black" 
+        slope = 1,
+        intercept = 0,
+        linetype = "dotted",
+        color = "black"
       )
     
     
@@ -1708,46 +1709,73 @@ plot_irn <- function(data_i,
   
   ######  The complete plots  ######
   
-  # complete_plots <- vector("list", 2)
-  # complete_plots_widths <- c(7, 7)
-  # complete_plots_heights <- c(4, 4)
-  # 
-  # # Removing the x axis title
-  # for (i in 1:2) {
-  #   for (j in 1:nb_elements) {
-  #     plots[[i]][[j]] <- plots[[i]][[j]] + ggpubr::rremove("xlab")
-  #   }
-  # }
-  # for (i in 1:2) {
-  #   complete_plot <-
-  #     (plots[[i]][[1]] |
-  #        plots[[i]][[2]] |
-  #        plots[[i]][[3]] |
-  #        plots[[i]][[4]]) /
-  #     (plots[[i]][[5]] |
-  #        plots[[i]][[6]] |
-  #        plots[[i]][[7]] |
-  #        plots[[i]][[8]]) + patchwork::plot_annotation(tag_levels = "a")
-  #   
-  #   
-  #   
-  #   complete_plots[[i]] <- wrap_elements(panel = complete_plot) +
-  #     labs(tag = "Intake rate <br> (<span style='font-size:8pt;'>g<sub>intake</sub> · g<sub>body</sub><sup>-1</sup> · d<sup>-1</sup></span>)", ) +
-  #     theme(plot.tag = element_markdown(), plot.tag.position = "bottom")
-  #   
-  #   # Saving the the complete plots
-  #   
-  #   ggsave(
-  #     filename = paste(y_plot_names, "alldw_&_msirfw.pdf", sep = ""),
-  #     plot = complete_plots[[i]],
-  #     device = pdf,
-  #     path = here::here("4_outputs", "3_figures_paper"),
-  #     scale = 1,
-  #     width = complete_plots_widths[i],
-  #     height = complete_plots_heights[i],
-  #     units = "in"
-  #   )
-  # }
+  complete_plots <- vector("list", 2)
+  complete_plots_widths <- c(7, 7)
+  complete_plots_heights <- c(4, 4)
+  
+  # Removing the x axis title in the GE IR plot
+  for (j in 1:nb_elements) {
+    plots[[1]][[j]] <- plots[[1]][[j]] + ggpubr::rremove("xlab")
+  }
+  
+  complete_plot <-
+    (plots[[1]][[1]] |
+       plots[[1]][[2]] |
+       plots[[1]][[3]] |
+       plots[[1]][[4]]) /
+    (plots[[1]][[5]] |
+       plots[[1]][[6]] |
+       plots[[1]][[7]] |
+       plots[[1]][[8]]) + patchwork::plot_annotation(tag_levels = "a")
+  
+  
+  
+  complete_plots[[1]] <- wrap_elements(panel = complete_plot) +
+    labs(tag = "Intake rate <br> (<span style='font-size:8pt;'>g<sub>intake</sub> · g<sub>body</sub><sup>-1</sup> · d<sup>-1</sup></span>)") +
+    theme(plot.tag = element_markdown(), plot.tag.position = "bottom")
+  
+  # Saving the the complete plots
+  
+  ggsave(
+    filename = paste(names(plots)[1], "alldw_&_msirfw.pdf", sep = ""),
+    plot = complete_plots[[1]],
+    device = pdf,
+    path = here::here("4_outputs", "3_figures_paper"),
+    scale = 1,
+    width = complete_plots_widths[1],
+    height = complete_plots_heights[1],
+    units = "in"
+  )
+  
+  # Removing the x axis title in the GE IR plot
+  
+  complete_plot <-
+    (plots[[2]][[1]] |
+       plots[[2]][[2]] |
+       plots[[2]][[3]] |
+       plots[[2]][[4]]) /
+    (plots[[2]][[5]] |
+       plots[[2]][[6]] |
+       plots[[2]][[7]] |
+       plots[[2]][[8]]) + patchwork::plot_annotation(tag_levels = "a")
+  
+  
+  
+  complete_plots[[2]] <- wrap_elements(panel = complete_plot) +
+    theme(plot.tag = element_markdown(), plot.tag.position = "bottom")
+  
+  # Saving the the complete plots
+  
+  ggsave(
+    filename = paste(names(plots)[2], "alldw_&_msirfw.pdf", sep = ""),
+    plot = complete_plots[[2]],
+    device = pdf,
+    path = here::here("4_outputs", "3_figures_paper"),
+    scale = 1,
+    width = complete_plots_widths[2],
+    height = complete_plots_heights[2],
+    units = "in"
+  )
   
   ## CNP stoichiometry ######
   

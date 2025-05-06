@@ -37,7 +37,7 @@ combine_group_data <- function(data_i, data_g, data_fc, data_icc) {
   init_K = mean(data_icc$K_larvae, na.rm = T)
   init_Mg = mean(data_icc$Mg_larvae, na.rm = T)
   init_Na = mean(data_icc$Na_larvae, na.rm = T)
-  init_S = mean(data_icc$SN_larvae, na.rm = T)
+  init_S = mean(data_icc$S_larvae, na.rm = T)
   init_Ca = mean(data_icc$Ca_larvae, na.rm = T)
   
   

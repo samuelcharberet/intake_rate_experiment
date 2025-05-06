@@ -11,19 +11,37 @@ load_individual_control_d1_data <- function(path) {
   
   # Decide column classes
   
-  date_columns <- c("date")
-  
   factor_columns <- c("group_ID")
   
-  numeric_columns <- c("C_larvae", "N_larvae")
+  numeric_columns <- c(
+    "C_larvae",
+    "N_larvae",
+    "P_larvae",
+    "Ca_larvae",
+    "K_larvae",
+    "Mg_larvae",
+    "Na_larvae",
+    "S_larvae"
+  )
   
-  # We define the type of each column
-  
-  data_irn_individuals_controls_d1 <- data_irn_individuals_controls_d1 |>
-    dplyr::mutate(across(tidyselect::all_of(date_columns), ~ as.POSIXct(.x, format = "%d/%m/%Y"))) |>
-    dplyr::mutate(across(tidyselect::all_of(factor_columns), as.factor)) |>
-    dplyr::mutate(across(tidyselect::all_of(numeric_columns), as.numeric))
-  
+  text_columns <- c(
+    "C_larvae_unit",
+    "N_larvae_unit",
+    "P_larvae_unit",
+    "Ca_larvae_unit",
+    "K_larvae_unit",
+    "Mg_larvae_unit",
+    "Na_larvae_unit",
+    "S_larvae_unit"
+  )
 
-  return(data_irn_individuals_controls_d1)
+# We define the type of each column
+
+data_irn_individuals_controls_d1 <- data_irn_individuals_controls_d1 |>
+  dplyr::mutate(across(tidyselect::all_of(factor_columns), as.factor)) |>
+  dplyr::mutate(across(tidyselect::all_of(numeric_columns), as.numeric)) |>
+  dplyr::mutate(across(tidyselect::all_of(text_columns), as.character)) 
+
+
+return(data_irn_individuals_controls_d1)
 }
