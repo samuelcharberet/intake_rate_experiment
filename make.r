@@ -30,6 +30,7 @@ library(tinytable)
 library(gridtext)
 library(stringr)
 library(ggh4x)
+library(readxl)
 
 
 lapply(list.files(here::here("R"), recursive = TRUE, full.names = T), source)
@@ -48,6 +49,9 @@ data_irn_individuals_controls <-
 
 data_irn_individuals_controls_d1 <-
   load_individual_control_d1_data(path = here::here("1_data", "data_irn_individuals_controls_d1.csv"))
+
+data_body_literature <-
+  get_body_nutrient_literature_data()
 
 data_irn_individuals_combined <-
   combine_individual_data(
@@ -72,7 +76,8 @@ plot_irn(
   data_g = data_irn_group_combined,
   data_model = model,
   data_fc = data_irn_food_control,
-  data_ic = data_irn_individuals_controls
+  data_ic = data_irn_individuals_controls,
+  data_bl = data_body_literature
 )
 
 theoretical_model_irn(data_i = data_irn_individuals_combined)

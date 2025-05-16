@@ -38,7 +38,8 @@ packages <- c(
   "kableExtra",
   "gridtext",
   "stringr",
-  "ggh4x"
+  "ggh4x",
+  "readxl"
 )
 packages_to_install <- packages[!(packages %in% installed.packages())]
 
@@ -49,9 +50,7 @@ if (length(packages_to_install) > 0) {
 }
 
 
-tar_option_set(
-  packages = packages
-)
+tar_option_set(packages = packages)
 
 # We source all functions contained in all files in the R directory ####
 lapply(list.files(here::here("R"), recursive = TRUE, full.names = T), source)
@@ -112,6 +111,8 @@ list(
     data_irn_individuals_controls_d1,
     load_individual_control_d1_data(path = data_irn_individuals_controls_d1_file)
   ),
+  ## download literature data on body chemical variability ####
+  tar_target(data_body_literature, get_body_nutrient_literature_data()),
   # Combine data ####
   ## Combine individual data ####
   tar_target(
@@ -137,7 +138,7 @@ list(
     models_irn,
     model_irn(data_i = data_irn_indivuals_combined, data_g = data_irn_groups_combined)
   ),
-
+  
   # Plot the data ####
   tar_target(
     plots_irn,
@@ -146,18 +147,19 @@ list(
       data_g = data_irn_groups_combined,
       data_model = models_irn,
       data_ic = data_irn_individuals_controls,
-      data_fc = data_irn_food_controls
+      data_fc = data_irn_food_controls,
+      data_bl = data_body_literature
     ),
     format = "file"
   ),
-
+  
   # Theoretical models ####
   tar_target(
     theoretical_models_irn,
     theoretical_model_irn(data_i = data_irn_indivuals_combined),
     format = "file"
   )
-
+  
   # Generate report Rmd
   # archetypes::tar_render(rmd_report, "3_manuscript/irn.rmd")
 )
