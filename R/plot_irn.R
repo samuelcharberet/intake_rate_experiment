@@ -295,10 +295,6 @@ plot_irn <- function(data_i,
                 formula = y ~ x) +
     theme(axis.title.x = element_markdown())
   
-  
-  
-  
-  
   # 1. Mass balance figures ##########
   
   ### Assimilation rate according to intake rate ######
