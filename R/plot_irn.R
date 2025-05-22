@@ -24,12 +24,12 @@ plot_irn <- function(data_i,
   nb_elements_isotopes <- length(elements_isotopes)
   
   colours_elements_isotopes <- c(
-    "C" = "#808080",
-    "N" = "#5A5ACA",
-    "P" = "#EC9200",
+    "C" = "#5C5C5C",
+    "N" = "#3A6AE0",
+    "P" = "#E07A00",
     "Na" = "#403EFF",
     "Mg" = "#5CC55C",
-    "S" = "#D69F09",
+    "S" = "#C4B800",
     "K" = "#9B4BE1",
     "Ca" = "#DF4F4F",
     "15N" = "black",
@@ -837,7 +837,9 @@ plot_irn <- function(data_i,
   
   msgrdw_msirdw <- ggplot2::ggplot(data_i_f,
                                    aes(x = mass_specific_ingestion_rate_dw, y = mean_growth_dw)) +
-    geom_point() +
+    geom_point(alpha = 0.5,
+               size = 0.7,
+               shape = 16) +
     xlim(0, NA) +
     geom_smooth(
       color = "steelblue3",
@@ -872,7 +874,9 @@ plot_irn <- function(data_i,
   
   aedw_msirdw <- ggplot2::ggplot(data_i_f,
                                  aes(x = mass_specific_ingestion_rate_dw, y = assimilation_efficiency_dw)) +
-    geom_point() +
+    geom_point(shape = 16,
+               size = 0.7,
+               alpha = 0.5) +
     xlim(0, NA) +
     geom_smooth(
       color = "steelblue3",
@@ -913,7 +917,9 @@ plot_irn <- function(data_i,
   gedw_msirdw <- ggplot2::ggplot(data_i_f,
                                  aes(x = mass_specific_ingestion_rate_dw, y = growth_efficiency_dw)) +
     xlim(0, NA) +
-    geom_point() +
+    geom_point(shape = 16,
+               size = 0.7,
+               alpha = 0.5) +
     geom_smooth(
       color = "steelblue3",
       method = mgcv::gam,
@@ -947,7 +953,9 @@ plot_irn <- function(data_i,
   hlt <- 10 * sum(mgcv::influence.gam(mod_gedw_msgrdw) / length(mgcv::influence.gam(mod_gedw_msgrdw)))
   data_i_f <- filter(data_i, mgcv::influence.gam(mod_gedw_msgrdw) < hlt)
   gedw_msgrdw <- ggplot2::ggplot(data_i_f, aes(x = mean_growth_dw, y = growth_efficiency_dw)) +
-    geom_point() +
+    geom_point(shape = 16,
+               alpha = .5,
+               size = .7) +
     xlim(0, NA) +
     geom_smooth(
       color = "steelblue3",
@@ -2073,7 +2081,9 @@ plot_irn <- function(data_i,
       fill = element
     )
   ) +
-    geom_point(alpha = 0.1, shape = 16) +
+    geom_point(alpha = 0.5,
+               shape = 16,
+               size = 0.5) +
     geom_smooth(
       method = "gam",
       formula = y ~ s(x),
@@ -2138,7 +2148,9 @@ plot_irn <- function(data_i,
       fill = element
     )
   ) +
-    geom_point(alpha = 0.1) +
+    geom_point(alpha = 0.5,
+               shape = 16,
+               size = 0.5) +
     geom_smooth(
       method = mgcv::gam,
       formula = y ~ s(x),
@@ -2780,9 +2792,13 @@ plot_irn <- function(data_i,
   }
   
   plot_element <- function(elem, col, title) {
-    ggplot(filter(data_combined, Element == elem),
-           aes(x = Species_binomial, y = Concentration)) +
-      geom_jitter(width = 0.2, alpha = 0.6, color = col) +
+    ggplot(
+      filter(data_combined, Element == elem),
+      aes(x = Species_binomial, y = Concentration)
+    ) +
+      geom_jitter(width = 0.2,
+                  alpha = 0.6,
+                  color = col) +
       scale_x_discrete(labels = bold_labels) +
       theme_minimal(base_size = 12) +
       theme(
@@ -2835,6 +2851,6 @@ plot_irn <- function(data_i,
     units = "in"
   )
   
-  ####Clearly the issue is that it comes only from one paper and some of the "species" seems to be genera ? 
-
+  ####Clearly the issue is that it comes only from one paper and some of the "species" seems to be genera ?
+  
 }
