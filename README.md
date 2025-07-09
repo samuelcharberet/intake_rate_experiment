@@ -1,4 +1,4 @@
-# An intake rate experiment
+# Food restriction controls biomass and nutrient fate during animal growth: evidence from a terrestrial consumer
 
 We tested the hypothesis that resource scarcity should increase absorption efficiency, which may, in turn, increase growth efficiency. We expected the absorption efficiency of certain elements to decrease below a certain threshold of intake rate.  As a result of variations in the effect of starvation on the absorption of chemical elements, the chemical composition of organisms and the wastes it produces should change with resource scarcity. To test these hypotheses at the individual level, Spodoptera littoralis larvae were put in starvation conditions of variable severity. During the starvation period, a complete mass budget was established at the level of individuals and a chemical budget at the level of a few individuals. We were able to derive absorption efficiencies of 8 chemical elements (C, N, P, Na, Mg, S, K, Ca) as well as the overall growth efficiency of individuals and the chemical composition of larvae and of their wastes.
 

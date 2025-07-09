@@ -107,7 +107,7 @@ plot_irn <- function(data_i,
     geom_boxplot(fill = "steelblue3") +
     geom_jitter() +
     ylim(NA, 90) +
-    labs(x = "Food distributed (mg)", y = "Water content (%)") +
+    labs(x = "Food distributed (mg)", y = "Larval water content (%)") +
     theme(legend.position = "none") +
     ggpubr::stat_compare_means(method = "anova")
   
@@ -295,6 +295,36 @@ plot_irn <- function(data_i,
                 method = lm,
                 formula = y ~ x) +
     theme(axis.title.x = element_markdown())
+  
+  ## Number of days spent in 7th instar according to the treatment ######
+  # Summarize the data
+  summary_df <- data_i %>%
+    group_by(food_provided_fw, number_collection_days) %>%
+    summarise(count = n(), .groups = 'drop')
+  
+  # Plot
+  number_collection_days_food_provided_fw = ggplot(summary_df, aes(x = as.factor(food_provided_fw),
+                         y = number_collection_days,
+                         size = count)) +
+    geom_point(alpha = 0.7) +
+    scale_size_continuous(range = c(3, 10)) +
+    ylim(1.9, 3.1)+
+    labs(x = "Food Provided (fw)",
+         y = "Number of days in 7th instar",
+         size = "Count") +
+    theme_minimal()
+  
+  rm(summary_df)
+  ggsave(
+    filename = "number_collection_days_&_food_provided_fww.pdf",
+    plot = number_collection_days_food_provided_fw,
+    device = pdf,
+    path = here::here("4_outputs", "3_figures_paper"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
   
   # 1. Mass balance figures ##########
   
