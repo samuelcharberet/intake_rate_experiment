@@ -39,7 +39,8 @@ packages <- c(
   "gridtext",
   "stringr",
   "ggh4x",
-  "readxl"
+  "readxl",
+  "utils"
 )
 packages_to_install <- packages[!(packages %in% installed.packages())]
 
