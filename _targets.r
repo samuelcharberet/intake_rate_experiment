@@ -112,8 +112,6 @@ list(
     data_irn_individuals_controls_d1,
     load_individual_control_d1_data(path = data_irn_individuals_controls_d1_file)
   ),
-  ## download literature data on body chemical variability ####
-  tar_target(data_body_literature, get_body_nutrient_literature_data()),
   # Combine data ####
   ## Combine individual data ####
   tar_target(
@@ -148,19 +146,10 @@ list(
       data_g = data_irn_groups_combined,
       data_model = models_irn,
       data_ic = data_irn_individuals_controls,
-      data_fc = data_irn_food_controls,
-      data_bl = data_body_literature
+      data_fc = data_irn_food_controls
     ),
     format = "file"
-  ),
-  
-  # Theoretical models ####
-  tar_target(
-    theoretical_models_irn,
-    theoretical_model_irn(data_i = data_irn_indivuals_combined),
-    format = "file"
   )
-  
   # Generate report Rmd
   # archetypes::tar_render(rmd_report, "3_manuscript/irn.rmd")
 )

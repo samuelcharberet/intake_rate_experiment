@@ -123,3 +123,90 @@ get_body_nutrient_literature_data = function() {
 }
 
 
+# 4. Compare body chemical composition variation to published literature ##########
+
+# 1. Clean and prepare experimental data
+filtered_g_clean <- data_g %>%
+  filter(element %in% c("C", "N"), variable == "larvae") %>%
+  mutate(
+    Element = recode(element, "C" = "C_mean", "N" = "N_mean"),
+    Species_binomial = "Our experiment",
+    doi = NA_character_,
+    Concentration = elemental_value
+  ) %>%
+  select(Species_binomial, doi, Element, Concentration)
+
+# 2. Combine with published data and set factor levels
+data_combined <- bind_rows(data_bl, filtered_g_clean) %>%
+  filter(!is.na(Concentration)) %>%
+  mutate(Species_binomial = factor(Species_binomial, levels = c(
+    "Our experiment", setdiff(unique(Species_binomial), "Our experiment")
+  )))
+
+# 3. Define plot styling
+bold_labels <- function(x) {
+  ifelse(x == "Our experiment", paste0("**", x, "**"), x)
+}
+
+plot_element <- function(elem, col, title) {
+  ggplot(
+    filter(data_combined, Element == elem),
+    aes(x = Species_binomial, y = Concentration)
+  ) +
+    geom_jitter(width = 0.2,
+                alpha = 0.6,
+                color = col) +
+    scale_x_discrete(labels = bold_labels) +
+    theme_minimal(base_size = 12) +
+    theme(
+      axis.text.x = element_markdown(angle = 45, hjust = 1),
+      axis.title.x = element_blank(),
+      axis.title.y = element_blank()
+    ) +
+    labs(title = title)
+}
+
+# 4. Generate and combine plots
+plot_C <- plot_element("C_mean", "#808080", "Body C (%)")
+plot_N <- plot_element("N_mean", "#5A5ACA", "Body N (%)")
+
+# 5. Assemble with unified axis labels
+
+complete <- ggpubr::ggarrange(
+  plot_C,
+  plot_N,
+  ncol = 2,
+  nrow = 1,
+  labels = c("a.", "b."),
+  label.y = 1,
+  label.x = 0,
+  heights = c(1, 1),
+  widths = c(1)
+)
+
+complete <- ggpubr::annotate_figure(
+  complete,
+  bottom = gridtext::richtext_grob(
+    "Species",
+    hjust = 0.5,
+    # Center alignment
+    gp = grid::gpar(col = "black")  # Text color
+  ),
+  top = ""  # Set to an empty string if you don't want a top title
+)
+
+# Saving the the complete plots
+
+ggsave(
+  filename = "compare_body_var.pdf",
+  plot = complete,
+  device = pdf,
+  path = here::here("4_outputs", "2_figures"),
+  scale = 1,
+  width = 8,
+  height = 6,
+  units = "in"
+)
+
+####Clearly the issue is that it comes only from one paper and some of the "species" seems to be genera ?
+
