@@ -28,8 +28,8 @@ This repository is structured as follow:
 -   [`1_data/`](https://github.com/samuelcharberet/intake_rate_experiment/tree/master/1_data):
     contains the project data
 
--   [`DESCRIPTION`](https://github.com/samuelcharberet/intake_rate_experiment/tree/master/DESCRIPTION):
-    contains project metadata (authors, date, dependencies, etc.)
+-   [`4_outputs/`](https://github.com/samuelcharberet/intake_rate_experiment/tree/master/4_outputs):
+    contains the project figures and tables
 
 ## Installation
 
