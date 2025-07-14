@@ -22,16 +22,19 @@ This repository is structured as follow:
 -   [`make.R`](https://github.com/samuelcharberet/intake_rate_experiment/tree/master/make.R):
     main R script to run the entire project
 
--   [`R/`](https://github.com/samuelcharberet/intake_rate_experiment/tree/master/_targets.R):
+-   [`_targets.R/`](https://github.com/samuelcharberet/intake_rate_experiment/tree/master/_targets.R):
     contains the pipeline architecture
 
 -   [`1_data/`](https://github.com/samuelcharberet/intake_rate_experiment/tree/master/1_data):
     contains the project data
 
--   [`1_data/`](https://github.com/samuelcharberet/intake_rate_experiment/tree/master/4_output):
-    contains the project figures and tables
 
-    
+    -   [`DESCRIPTION`](https://github.com/samuelcharberet/9_caloradapt/tree/master/DESCRIPTION):
+    contains project metadata (authors, date, dependencies, etc.)
+
+
+-   **{{ LIST ADDITIONAL FILES/FOLDER }}**
+
 ## Installation
 
 To install this compendium:
