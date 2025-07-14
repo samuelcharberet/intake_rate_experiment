@@ -64,6 +64,4 @@ Alternatively, make use of the targets package with:
 
 ## Citation
 
-Please use the following citation:
-
-> **{{ ADD A CITATION }}**
+Please cite our work appropriately. 
