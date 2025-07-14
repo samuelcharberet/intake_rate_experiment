@@ -1,11 +1,11 @@
 # Food restriction controls biomass and nutrient fate during animal growth: evidence from a terrestrial consumer
 
-<p align="left">
+<p align="left"> •
 <a href="#overview">Overview</a><br> •
 <a href="#features">Content</a><br> •
 <a href="#installation">Installation</a><br> •
 <a href="#usage">Usage</a><br> • 
-<a href="#citation">Citation</a><br> •
+<a href="#citation">Citation</a><br> 
 </p>
 
 ## Overview
