@@ -1,10 +1,10 @@
-Package: irn
-Title: Analyse Food Limitation Data
+Package: 
+Title: 
 Version: 0.0.0.9000
 Authors@R: 
     person("Samuel", "Charberet", email = "samuelcharberet@gmail.com",
                   role = c("aut", "cre"))
-Description: We analyze data from the intake rate and nutrient experiment on Spodoptera littoralis
+Description: We analyze data and generate figures and tables contained in the paper
 License: Creative Commons
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
