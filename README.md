@@ -28,12 +28,8 @@ This repository is structured as follow:
 -   [`1_data/`](https://github.com/samuelcharberet/intake_rate_experiment/tree/master/1_data):
     contains the project data
 
-
-    -   [`DESCRIPTION`](https://github.com/samuelcharberet/9_caloradapt/tree/master/DESCRIPTION):
+-   [`DESCRIPTION`](https://github.com/samuelcharberet/intake_rate_experiment/tree/master/DESCRIPTION):
     contains project metadata (authors, date, dependencies, etc.)
-
-
--   **{{ LIST ADDITIONAL FILES/FOLDER }}**
 
 ## Installation
 
