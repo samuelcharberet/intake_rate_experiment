@@ -152,7 +152,7 @@ model_irn <- function(data_i, data_g) {
   )
   
   # Predictions
-  pairs_i_ae <- avg_predictions(gam_ch, by = "element", hypothesis = "pairwise") |>
+  pairs_i_ae <- avg_predictions(gam_ch, by = "element", hypothesis = difference ~ pairwise ) |>
     print(style = "tinytable") |>
     print(output = "dataframe")
   p_vals <- pairs_i_ae$`Pr(>|z|)` == "< 0.001" |
@@ -178,7 +178,7 @@ model_irn <- function(data_i, data_g) {
   pairs_d_ae <- avg_slopes(gam_ch,
                            by = "element",
                            variables = "mean_mass_specific_intake_rate_dw",
-                           hypothesis = "pairwise") |>
+                           hypothesis = difference ~ pairwise) |>
     print(style = "tinytable") |>
     print(output = "dataframe")
   
@@ -222,7 +222,7 @@ model_irn <- function(data_i, data_g) {
     data = data_rt
   )
   
-  pairs_i_rt <- avg_predictions(gam_ch, by = "element", hypothesis = "pairwise") |>
+  pairs_i_rt <- avg_predictions(gam_ch, by = "element", hypothesis = difference ~ pairwise) |>
     print(style = "tinytable") |>
     print(output = "dataframe")
   
@@ -249,7 +249,7 @@ model_irn <- function(data_i, data_g) {
   pairs_d_rt <- avg_slopes(gam_ch,
                            by = "element",
                            variables = "mean_mass_specific_intake_rate_dw",
-                           hypothesis = "pairwise") |>
+                           hypothesis = difference ~ pairwise) |>
     print(style = "tinytable") |>
     print(output = "dataframe")
   
