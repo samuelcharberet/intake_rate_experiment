@@ -60,7 +60,7 @@ Alternatively, make use of the targets package with:
 ## Reproducible environment
 
 This project uses the renv package that creates a reproducible environment. The libraries required to run this project are contained in the [`renv/`](https://github.com/samuelcharberet/intake_rate_experiment/tree/master/renv/)
- directory. The lockfile, [`renv.lock`](https://github.com/samuelcharberet/intake_rate_experiment/tree/master/renv.lock), records enough metadata about every package that it can be re-installed on a new machine. The project's [`.Rprofile`](https://github.com/samuelcharberet/intake_rate_experiment/tree/master/.Rprofile) is run automatically every time you start R (in the project), and renv uses it to configure your R session to use the project library. This ensures that once you turn on renv for a project, it stays on, until you deliberately turn it off.
+ directory. The lockfile, [`renv.lock`](https://github.com/samuelcharberet/intake_rate_experiment/tree/master/renv.lock), records enough metadata about every package that it can be re-installed on a new machine. The project's [`.Rprofile`](https://github.com/samuelcharberet/intake_rate_experiment/tree/master/.Rprofile) is run automatically every time you start R (in the project), and renv uses it to configure your R session to use the project library. This ensures that once you turn on renv for a project, it stays on, until you deliberately turn it off. When opening this project, renv will automatically bootstrap itself, downloading and installing the appropriate version of renv. It will also ask you if you want to download and install all the packages it needs by running `renv::restore()`.
 
 ## Citation
 

@@ -1,10 +1,7 @@
 # _targets.R file
-
-
 library(targets)
-library(here)
 
-packages <- c(
+tar_option_set(packages = c(
   "ggplot2",
   "dplyr",
   "tidyr",
@@ -41,17 +38,7 @@ packages <- c(
   "ggh4x",
   "readxl",
   "utils"
-)
-packages_to_install <- packages[!(packages %in% installed.packages())]
-
-if (length(packages_to_install) > 0) {
-  install.packages(packages_to_install)
-} else {
-  message("No packages to install.")
-}
-
-
-tar_option_set(packages = packages)
+))
 
 # We source all functions contained in all files in the R directory ####
 
@@ -60,9 +47,6 @@ tar_source(
   envir = targets::tar_option_get("envir"),
   change_directory = FALSE
 )
-
-lapply(list.files(here::here("R"), recursive = TRUE, full.names = T), source)
-
 
 list(
   # Define data files ####

@@ -21,9 +21,10 @@ data_body_literature|stem|c03d21d4e8c752a9|c72665660e8f4d2c|30667feb3aee7cf5|182
 get_body_nutrient_literature_data|function|dd33682a31d9902d|||||||||||||||
 theoretical_model_irn|function|eaa149c5c09c105b|||||||||||||||
 plots_irn|stem|82286be1c70162d4|2f746841af72da03|c12b3dcfc4e16d9e|485447517|C:/Users/scharber/Documents/6_projects/4_intake_rate_experiment/4_outputs/2_figures/isotopy_figure.pdf|t20286.3909412052s|s51390b|51390|file|local|vector|||29.88|There was 1 warning in mutate.ℹ In argument time  as.numerictime.Caused by warning NAs introduced by coercion. Removed 221 rows containing nonfinite outside the scale rangestat_boxplot.. Removed 221 rows containing nonfinite outside the scale rangestat_compare_means.. Removed 221 rows containing missing values or values outside the scale rangegeom_point.. Removed 257 rows containing nonfinite outside the scale rangestat_smooth.. Removed 257 rows containing missing values or values outside the scale rangegeom_point.. Removed 201 rows containing nonfinite outside the scale rangestat_smooth.. Removed 201 rows containing missing values or values outside the scale rangegeom_point.. Removed 297 rows containing nonfinite outside the scale rangestat_smooth.. Removed 297 rows containing missing values or values outside the scale rangegeom_point.. Using size aesthetic for lines was deprecated in ggplot2 3.4.0.ℹ Please use linewidth instead.. The dotdot notation ..rr.label.. was deprecated in ggplot2 3.4.0.ℹ Please use after_statrr.label instead.. Removed 16 rows containing nonfinite outside the scale rangestat_smooth.. Removed 16 rows containing nonfinite outside the scale range stat_cor.. Removed 16 rows containing missing values or values outside the scale rangegeom_point.. Removed 18 rows containing nonfinite outside the scale rangestat_smooth.. Removed 18 rows containing nonfinite outside the scale range stat_cor.. Removed 18 rows containing missing values or values outside the scale rangegeom_point.. Removed 18 rows containing nonfinite outside the scale rangestat_smooth.. Removed 18 rows containing nonfinite outside the scale range stat_cor.. Removed 18 rows containing missing values or values outside the scale rangegeom_point.. Removed 18 rows containing nonfinite outside the scale rangestat_smooth.. Removed 18 rows containing nonfinite outside t|
+packages|object|fac14963fdb2a5a3|||||||||||||||
+packages_to_install|object|2c530c1562a7fbd1|||||||||||||||
 load_individual_control_d1_data|function|18920aa74280fba6
 load_individual_control_data|function|e37d44a254b1d2c7
-packages|object|fac14963fdb2a5a3
 load_group_data|function|4591e957bfaf2ac3
 average_value|function|1516ccb9f9018eee
 load_food_control_data|function|df64e8f7a34ba421
@@ -31,6 +32,5 @@ combine_group_data|function|23eaf5689e374f68
 plot_irn|function|1518183e477fef6a
 as.data.frame.pwpm|function|880953ef14c2c33d
 model_irn|function|33aeb450d3e1dc1a
-packages_to_install|object|2c530c1562a7fbd1
 load_individual_data|function|260e510344d88caa
 combine_individual_data|function|87ade68ab75aa8cc
