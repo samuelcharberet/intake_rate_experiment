@@ -5,7 +5,9 @@
 <a href="#features">Content</a><br> •
 <a href="#installation">Installation</a><br> •
 <a href="#usage">Usage</a><br> • 
-<a href="#citation">Citation</a><br> 
+<a href="#citation">Citation</a><br>  • 
+<a href="#reproducible_environment">Reproducible environment</a><br> 
+
 </p>
 
 ## Overview
@@ -55,12 +57,9 @@ Alternatively, make use of the targets package with:
 
     targets::tar_make()
 
-**Notes**
+## Reproducible environment
 
--   All required packages listed in the `DESCRIPTION` file will be
-    installed (if necessary)
--   All required packages and R functions will be loaded
--   Some analyses listed in the `make.R` might take time
+This project uses the renv package that creates a reproducible environment. The libraries required to run this project are contained in the [`renv/`] directory. The lockfile, [`renv.lock`], records enough metadata about every package that it can be re-installed on a new machine. The project's [`.Rprofile`] is run automatically every time you start R (in the project), and renv uses it to configure your R session to use the project library. This ensures that once you turn on renv for a project, it stays on, until you deliberately turn it off.
 
 ## Citation
 
