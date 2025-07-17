@@ -48,7 +48,7 @@ To install this compendium:
 ## Usage
 
 Launch the
-[`make.R`](https://github.com/samuelcharberet/9_caloradapt/tree/master/make.R)
+[`make.R`](https://github.com/samuelcharberet/intake_rate_experiment/tree/master/make.R)
 file with:
 
     source("make.R")
@@ -59,7 +59,8 @@ Alternatively, make use of the targets package with:
 
 ## Reproducible environment
 
-This project uses the renv package that creates a reproducible environment. The libraries required to run this project are contained in the [`renv/`] directory. The lockfile, [`renv.lock`], records enough metadata about every package that it can be re-installed on a new machine. The project's [`.Rprofile`] is run automatically every time you start R (in the project), and renv uses it to configure your R session to use the project library. This ensures that once you turn on renv for a project, it stays on, until you deliberately turn it off.
+This project uses the renv package that creates a reproducible environment. The libraries required to run this project are contained in the [`renv/`](https://github.com/samuelcharberet/intake_rate_experiment/tree/master/renv/)
+ directory. The lockfile, [`renv.lock`](https://github.com/samuelcharberet/intake_rate_experiment/tree/master/renv.lock), records enough metadata about every package that it can be re-installed on a new machine. The project's [`.Rprofile`](https://github.com/samuelcharberet/intake_rate_experiment/tree/master/.Rprofile) is run automatically every time you start R (in the project), and renv uses it to configure your R session to use the project library. This ensures that once you turn on renv for a project, it stays on, until you deliberately turn it off.
 
 ## Citation
 
