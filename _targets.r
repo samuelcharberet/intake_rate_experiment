@@ -54,6 +54,13 @@ if (length(packages_to_install) > 0) {
 tar_option_set(packages = packages)
 
 # We source all functions contained in all files in the R directory ####
+
+tar_source(
+  files = here::here("R"),
+  envir = targets::tar_option_get("envir"),
+  change_directory = FALSE
+)
+
 lapply(list.files(here::here("R"), recursive = TRUE, full.names = T), source)
 
 
