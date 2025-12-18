@@ -155,6 +155,7 @@ model_irn <- function(data_i, data_g) {
   pairs_i_ae <- avg_predictions(gam_ch, by = "element", hypothesis = difference ~ pairwise ) |>
     print(style = "tinytable") |>
     print(output = "dataframe")
+  
   p_vals <- pairs_i_ae$`Pr(>|z|)` == "< 0.001" |
     as.numeric(pairs_i_ae$`Pr(>|z|)`) < 0.05
   

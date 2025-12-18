@@ -603,6 +603,62 @@ plot_irn <- function(data_i,
     units = "in"
   )
   
+  ### Growth efficiency according to growth rate in dw + bodymass  ######
+  
+  gedw_grdw_bm <- ggplot2::ggplot(
+    data_i,
+    aes(x = growth_rate_dw, y = growth_efficiency_dw *
+          100, color = mean_bodymass_raw)
+  ) +
+    geom_point() +
+    labs(x = "Arithmetic growth rate (mg dw)", y = "Growth efficiency (dw)")
+  
+  ggsave(
+    filename = "gedw_grdw_bm.pdf",
+    plot = gedw_grdw_bm,
+    device = pdf,
+    path = here::here("4_outputs", "2_figures"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
+  
+  ### Growth efficiency according to growth rate in dw + msir ######
+  
+  gedw_msgrdw_msir <- ggplot(
+    data_i,
+    aes(
+      x = mean_growth_dw,
+      y = growth_efficiency_dw,
+      color = mass_specific_ingestion_rate_dw
+    )
+  ) +
+    geom_point() +
+    xlim(0, NA) +
+    ylim(0, NA) +
+    labs(
+      x = "Growth rate <br> (<span style='font-size:8pt;'>g<sub>growth</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)",
+      y = "Growth efficiency <br> (<span style='font-size:8pt;'>g<sub>growth</sub> \u22c5 g<sub>intake</sub><sup>-1</sup></span>)",
+      color = "MSIR"
+    ) +
+    theme(
+      axis.title.x = element_markdown(),
+      axis.title.y = element_markdown()
+    ) +
+    scale_color_viridis_c(option = "plasma")
+  
+  ggsave(
+    filename = "gedw_msgrdw_msir.pdf",
+    plot = gedw_msgrdw_msir,
+    device = pdf,
+    path = here::here("4_outputs", "2_figures"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
+  
   ### Growth rate according to intake ######
   
   mod <- mgcv::gam(mean_growth_dw ~ s(ingestion_rate_fw, bs = "cs", k =
@@ -798,7 +854,7 @@ plot_irn <- function(data_i,
     units = "in"
   )
   
-  ### msae according to mass specific intake rate   ######
+  ### Mass specific assimilation efficiency according to mass specific intake rate   ######
   
   
   data_i$msae = data_i$assimilation_efficiency_dw / data_i$mass_specific_respiration_rate_dw

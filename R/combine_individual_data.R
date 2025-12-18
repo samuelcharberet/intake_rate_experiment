@@ -46,6 +46,11 @@ combine_individual_data <- function(data_fc, data_ic, data_i) {
   data_i$growth_rate <- (data_i$bodymass_last_collection_date - data_i$bodymass_7th_instar_j0_fw) / data_i$number_collection_days
   data_i$growth_rate_unit <- "mg_fw/day"
   
+  # We compute the growth rate in dw of the 7th instar before prepupation
+
+  data_i$growth_rate_dw <- (data_i$bodymass_last_collection_date - data_i$bodymass_7th_instar_j0_fw)*(1-wc) / data_i$number_collection_days
+  data_i$growth_rate__dwunit <- "mg_dw/day"
+  
   ##### Mean bodymass raw #####
   
   data_i <- data_i %>%
