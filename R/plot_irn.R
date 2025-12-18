@@ -804,7 +804,7 @@ plot_irn <- function(data_i,
     ylim(NA, max(1 - data_i$growth_investment_dw) + 0.2 * abs((
       max(1 - data_i$growth_investment_dw) - min(1 - data_i$growth_investment_dw)
     ))) +
-    labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Respiration investment (% dw)") +
+    labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Respiration rate (% dw)") +
     geom_smooth(
       color = "steelblue3",
       method = mgcv::gam,
@@ -835,9 +835,10 @@ plot_irn <- function(data_i,
          max(data_i$mass_specific_respiration_rate_dw) + 0.2 * abs((
            max(data_i$mass_specific_respiration_rate_dw) - min(data_i$mass_specific_respiration_rate_dw)
          ))) +
-    labs(x = "Intake rate <br> (mg<sub>food(dw)</sub> mg<sub>body(dw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Mass-specific respiration rate <br> (mg<sub>food(dw)</sub> mg<sub>body(dw)</sub><sup>-1</sup> day<sup>-1</sup>)") +
+    labs(x = "Intake rate <br> (mg<sub>food(dw)</sub> mg<sub>body(dw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Mass-specific maintenance rate <br> (mg<sub>maintenance</sub> mg<sub>body(dw)</sub><sup>-1</sup> day<sup>-1</sup>)") +
     geom_smooth(
       color = "steelblue3",
+      
       method = mgcv::gam,
       formula = y ~ s(x, bs = "cs", k = 3)
     ) +
@@ -846,6 +847,38 @@ plot_irn <- function(data_i,
   ggsave(
     filename = "msmrdw_msirdw.pdf",
     plot = msmrdw_msirdw,
+    device = pdf,
+    path = here::here("4_outputs", "3_figures_paper"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
+  
+  ### Mass-specific maintenance rate according to mass specific growth rate   ######
+  
+  msmrdw_msgrdw <- ggplot2::ggplot(
+    data_i,
+    aes(x = mean_growth_dw, y = mass_specific_respiration_rate_dw)
+  ) +
+    geom_point() +
+    xlim(0, NA) +
+    ylim(NA,
+         max(data_i$mass_specific_respiration_rate_dw) + 0.2 * abs((
+           max(data_i$mass_specific_respiration_rate_dw) - min(data_i$mass_specific_respiration_rate_dw)
+         ))) +
+    labs(x = "Growth rate <br> (mg<sub>growth(dw)</sub> mg<sub>body(dw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Mass-specific maintenance rate <br> (mg<sub>maintenance</sub> mg<sub>body(dw)</sub><sup>-1</sup> day<sup>-1</sup>)") +
+    geom_smooth(
+      color = "steelblue3",
+      
+      method = mgcv::gam,
+      formula = y ~ s(x, bs = "cs", k = 3)
+    ) +
+    theme(axis.title.x = element_markdown(), axis.title.y = element_markdown())
+  
+  ggsave(
+    filename = "msmrdw_msgrdw.pdf",
+    plot = msmrdw_msgrdw,
     device = pdf,
     path = here::here("4_outputs", "3_figures_paper"),
     scale = 1,

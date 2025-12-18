@@ -28,9 +28,9 @@ load_group_data|function|4591e957bfaf2ac3
 average_value|function|1516ccb9f9018eee
 load_food_control_data|function|df64e8f7a34ba421
 combine_group_data|function|23eaf5689e374f68
-plot_irn|function|c11b70097aacf9a9
+plot_irn|function|70012b6434dcf6a6
 as.data.frame.pwpm|function|880953ef14c2c33d
 model_irn|function|4f954fecb87cf33c
 load_individual_data|function|260e510344d88caa
 combine_individual_data|function|af6c6d4e2c55f147
-models_irn|stem|a0e884585e18ee94|b46e53a4f3480863|9128de01e29e9c75|1662181074||t20217.6310398805s||43|rds|local|vector|||6||$ operator not defined for this S4 class
+models_irn|stem|a0e884585e18ee94|b46e53a4f3480863|9128de01e29e9c75|1662181074||t20217.6310398805s||43|rds|local|vector|||5.9||$ operator not defined for this S4 class
