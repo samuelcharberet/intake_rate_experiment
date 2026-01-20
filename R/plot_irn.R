@@ -1734,10 +1734,10 @@ plot_irn <- function(data_i,
     )
   }
   
-  ## Elemental growth efficiencies ######
+  ## Elemental growth efficiencies and growth/assimilation ratios ######
   
   plots <- vector("list", 2)
-  names(plots) <- c("ge_msirdw", "ge_ae")
+  names(plots) <- c("ge", "gi")
   y_plot_names <-  "growth_efficiency_dw"
   
   
@@ -1770,6 +1770,8 @@ plot_irn <- function(data_i,
     data_matrix_element = pivot_wider(data_matrix_element,
                                       names_from = "variable",
                                       values_from = "elemental_value")
+    
+    # Elemental growth efficiency
     plots[[1]][[i]] <- ggplot2::ggplot(
       data_matrix_element,
       aes(x = mean_mass_specific_intake_rate_fw, y = growth_efficiency_dw)
@@ -1795,29 +1797,25 @@ plot_irn <- function(data_i,
       units = "in"
     )
     
+    # Elemental growth efficiency
+    
     plots[[2]][[i]] <- ggplot2::ggplot(
       data_matrix_element,
-      aes(x = assimilation_efficiency_dw_ege, y = growth_efficiency_dw)
+      aes(x = mean_mass_specific_intake_rate_fw , y = growth_efficiency_dw/assimilation_efficiency_dw_ege)
     ) +
       geom_point() +
       ylim(0, 1) +
       geom_smooth(formula = y ~ s(x),
                   method = gam,
                   color = colours_elements[i]) +
-      labs(x = paste("AE of", elements[i]),
-           y = paste("GE of", elements[i])) +
-      theme(axis.title.x = element_markdown()) +
-      geom_abline(
-        slope = 1,
-        intercept = 0,
-        linetype = "dotted",
-        color = "black"
-      )
+      labs(x = paste("Intake rate <br> (mg<sub>food</sub> mg<sub>body</sub><sup>-1</sup> day<sup>-1</sup>)", elements[i]),
+           y = paste("Growth/assimilation ratio of", elements[i])) +
+      theme(axis.title.x = element_markdown())
     
     
     # Save each plot
     ggsave(
-      filename = paste("ae_", elements[i], "_&_", "ge_", elements[i], ".pdf", sep = ""),
+      filename = paste("ge-ae-ratio", elements[i], "_&_msirfw.pdf", sep = ""),
       plot =  plots[[2]][[i]],
       device = pdf,
       path = here::here("4_outputs", "2_figures"),
@@ -1870,7 +1868,7 @@ plot_irn <- function(data_i,
     units = "in"
   )
   
-  # Removing the x axis title in the GE IR plot
+  # Growth assimilation ratio plot
   
   complete_plot <-
     (plots[[2]][[1]] |

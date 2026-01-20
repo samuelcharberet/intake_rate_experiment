@@ -305,6 +305,17 @@ combine_group_data <- function(data_i, data_g, data_fc, data_icc) {
       (1-wc1) * 0.01 * init_S
   ) / (data_g$food_consumed_collection_days_dw_ege * 0.01 * data_g$food_S)
   
+  #### Computes the element growth/assimilation ratio ####
+
+  data_g$C_growth_assimilation_ratio <- data_g$C_assimilation_efficiency_dw_ege/data_g$C_growth_efficiency_dw
+  data_g$N_growth_assimilation_ratio <- data_g$N_assimilation_efficiency_dw_ege/data_g$N_growth_efficiency_dw
+  data_g$P_growth_assimilation_ratio <- data_g$P_assimilation_efficiency_dw_ege/data_g$P_growth_efficiency_dw
+  data_g$S_growth_assimilation_ratio <- data_g$S_assimilation_efficiency_dw_ege/data_g$S_growth_efficiency_dw
+  data_g$K_growth_assimilation_ratio <- data_g$K_assimilation_efficiency_dw_ege/data_g$K_growth_efficiency_dw
+  data_g$Mg_growth_assimilation_ratio <- data_g$Mg_assimilation_efficiency_dw_ege/data_g$Mg_growth_efficiency_dw
+  data_g$Na_growth_assimilation_ratio <- data_g$Na_assimilation_efficiency_dw_ege/data_g$Na_growth_efficiency_dw
+  data_g$Ca_growth_assimilation_ratio <- data_g$Ca_assimilation_efficiency_dw_ege/data_g$Ca_growth_efficiency_dw
+  
   ### Computes the element egestion rate ####
   
   data_g$C_egestion_rate_dw <- data_g$C_frass * data_g$mean_egestion_rate_dw
