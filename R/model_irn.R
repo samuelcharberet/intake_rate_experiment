@@ -8,7 +8,6 @@ model_irn <- function(data_i, data_g) {
   # We have two datasets, one at the level of individuals for total mass balance
   # and another at the level of the group, for chemical data only (elements and isotopes)
   
-  
   # I. Total mass balance GAM models #####
   
   # The predictor variables in the total mass balance study

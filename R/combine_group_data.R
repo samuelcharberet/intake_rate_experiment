@@ -183,7 +183,20 @@ combine_group_data <- function(data_i, data_g, data_fc, data_icc) {
   #   ))
   
   
+  #### Computes the element assimilation fluxes ####
   
+  data_g$C_assimilation_flux_dw <- (data_g$food_C * data_g$food_consumed_collection_days_dw) - (data_g$C_frass * data_g$frass_group_mass_dw)
+  data_g$N_assimilation_flux_dw <- (data_g$food_N * data_g$food_consumed_collection_days_dw) - (data_g$N_frass * data_g$frass_group_mass_dw)
+  data_g$P_assimilation_flux_dw <- (data_g$food_P * data_g$food_consumed_collection_days_dw) - (data_g$P_frass * data_g$frass_group_mass_dw)
+  data_g$S_assimilation_flux_dw <- (data_g$food_S * data_g$food_consumed_collection_days_dw) - (data_g$S_frass * data_g$frass_group_mass_dw)
+  data_g$Na_assimilation_flux_dw <- (data_g$food_Na * data_g$food_consumed_collection_days_dw) - (data_g$Na_frass * data_g$frass_group_mass_dw)
+  data_g$Mg_assimilation_flux_dw <- (data_g$food_Mg * data_g$food_consumed_collection_days_dw) - (data_g$Mg_frass * data_g$frass_group_mass_dw)
+  data_g$K_assimilation_flux_dw <- (data_g$food_K * data_g$food_consumed_collection_days_dw) - (data_g$K_frass * data_g$frass_group_mass_dw)
+  data_g$Ca_assimilation_flux_dw <- (data_g$food_Ca * data_g$food_consumed_collection_days_dw) - (data_g$Ca_frass * data_g$frass_group_mass_dw)
+  data_g$`12C_assimilation_flux_dw` <- (data_g$`12C_food` * data_g$food_consumed_collection_days_dw) - (data_g$`12C_frass` * data_g$frass_group_mass_dw)
+  data_g$`13C_assimilation_flux_dw` <- (data_g$`13C_food` * data_g$food_consumed_collection_days_dw) - (data_g$`13C_frass` * data_g$frass_group_mass_dw)
+  data_g$`14N_assimilation_flux_dw` <- (data_g$`14N_food` * data_g$food_consumed_collection_days_dw) - (data_g$`14N_frass` * data_g$frass_group_mass_dw)
+  data_g$`15N_assimilation_flux_dw` <- (data_g$`15N_food` * data_g$food_consumed_collection_days_dw) - (data_g$`15N_frass` * data_g$frass_group_mass_dw)
   
   #### Computes the element assimilation efficiency ####
   
@@ -398,6 +411,18 @@ combine_group_data <- function(data_i, data_g, data_fc, data_icc) {
       "13C_assimilation_efficiency_dw",
       "14N_assimilation_efficiency_dw",
       "15N_assimilation_efficiency_dw",
+      "C_assimilation_flux_dw",
+      "N_assimilation_flux_dw",
+      "P_assimilation_flux_dw",
+      "S_assimilation_flux_dw",
+      "Na_assimilation_flux_dw",
+      "Mg_assimilation_flux_dw",
+      "K_assimilation_flux_dw",
+      "Ca_assimilation_flux_dw",
+      "12C_assimilation_flux_dw",
+      "13C_assimilation_flux_dw",
+      "14N_assimilation_flux_dw",
+      "15N_assimilation_flux_dw",
       "C_growth_efficiency_dw",
       "N_growth_efficiency_dw",
       "P_growth_efficiency_dw",

@@ -47,13 +47,20 @@ load_group_data <- function(path) {
     "d13C_larvae",
     "d15N_larvae"
   )
-
+  
+  # Only keeping first five blocks
+  first_five_weeks = which(as.numeric(data_irn_groups$group_ID) <= 50)
+  data_irn_groups <- data_irn_groups[first_five_weeks, ]
+  data_irn_groups <- droplevels(data_irn_groups)
   # We define the type of each column
 
   data_irn_groups <- data_irn_groups |>
     dplyr::mutate(across(tidyselect::all_of(character_columns), as.character)) |>
     dplyr::mutate(across(tidyselect::all_of(factor_columns), as.factor)) |>
     dplyr::mutate(across(tidyselect::all_of(numeric_columns), as.numeric))
+  
+  
 
+  
   return(data_irn_groups)
 }

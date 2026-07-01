@@ -80,6 +80,11 @@ load_individual_data <- function(path) {
   week_6 <- which(as.numeric(data_irn_individuals$individual_ID) >= 201 & as.numeric(data_irn_individuals$individual_ID) <= 240)
   data_irn_individuals <- data_irn_individuals[-week_6, ]
 
+  # Only keeping the first five weeks #####
+  # Because of Na issues
+  first_five_weeks = which(as.numeric(data_irn_individuals$individual_ID) <= 200)
+  data_irn_individuals <- data_irn_individuals[first_five_weeks, ]
+  data_irn_individuals <- droplevels(data_irn_individuals)
   #  2. Filling the table  ##########
 
   ## Last collection day #####

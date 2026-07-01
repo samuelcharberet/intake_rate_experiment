@@ -171,7 +171,7 @@ plot_irn <- function(data_i,
     "S" = c(0, 4000),
     "Mg" = c(0, 2000)
   )
-  data_fc_long = data_fc_long[-which(is.na(data_fc_long$level)), ]
+  data_fc_long <- data_fc_long[!is.na(data_fc_long$level), ]
   data_fc_long$temporal_block = as.numeric(as.factor(data_fc_long$date))
   
   for (i in 1:length(elements)) {
@@ -328,6 +328,66 @@ plot_irn <- function(data_i,
   
   # 1. Mass balance figures ##########
   
+  ### Intake rate as a function of food availability treatment  ######
+  
+  ir_f_food_availability <- ggplot(data_i, aes(x = as.numeric(as.character(food_provided_fw)), y = ingestion_rate_fw, group = food_provided_fw)) +
+    geom_boxplot(alpha = 0.5) + 
+    geom_jitter(width = 15, height = 0, color = "darkgray") + 
+    
+    # Set x limits starting at 0, and match your exact tick marks
+    scale_x_continuous(limits = c(0, NA), breaks = c(120, 240, 360, 480, 900)) +
+    
+    scale_y_continuous(breaks = c(120, 240, 360, 480, 900)) +
+    labs(
+      x = "Food availability<br> (mg<sub>food(fw)</sub> day<sup>-1</sup>)", 
+      y = "Intake rate <br> (mg<sub>(fw)</sub> day<sup>-1</sup>)"
+    ) +
+    theme(
+      axis.title.x = element_markdown(), 
+      axis.title.y = element_markdown()
+    )
+  
+  
+  
+  ggsave(
+    filename = "ir_f_food_availability.pdf",
+    plot = ir_f_food_availability,
+    device = pdf,
+    path = here::here("4_outputs", "2_figures"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
+  
+  ### Mass-specific intake rate as a function of food availability treatment  ######
+  
+  msir_f_food_availability <- ggplot(data_i, aes(x = as.numeric(as.character(food_provided_fw)), y = mass_specific_ingestion_rate_dw, group = food_provided_fw)) +
+    geom_boxplot(alpha = 0.5) + 
+    geom_jitter(width = 15, height = 0, color = "darkgray") + 
+    
+    # Set x limits starting at 0, and match your exact tick marks
+    scale_x_continuous(limits = c(0, NA), breaks = c(120, 240, 360, 480, 900)) +
+        labs(
+      x = "Food availability <br> (<span style='font-size:8pt;'>g<sub>food</sub>  \u22c5 d<sup>-1</sup></span>)", 
+      y = "Intake rate <br> (<span style='font-size:8pt;'>g<sub>intake</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)"
+    ) +
+    theme(
+      axis.title.x = element_markdown(), 
+      axis.title.y = element_markdown()
+    )
+  
+  
+  ggsave(
+    filename = "msir_f_food_availability.pdf",
+    plot = msir_f_food_availability,
+    device = pdf,
+    path = here::here("4_outputs", "2_figures"),
+    scale = 1,
+    width = 6,
+    height = 4,
+    units = "in"
+  )
   ### Assimilation rate according to intake rate ######
   
   mod <- mgcv::gam(assimilation_rate_dw ~ s(ingestion_rate_dw, bs = "cs", k =
@@ -628,24 +688,13 @@ plot_irn <- function(data_i,
   
   gedw_msgrdw_msir <- ggplot(
     data_i,
-    aes(
-      x = mean_growth_dw,
-      y = growth_efficiency_dw,
-      color = mass_specific_ingestion_rate_dw
-    )
+    aes(x = mean_growth_dw, y = growth_efficiency_dw, color = mass_specific_ingestion_rate_dw)
   ) +
     geom_point() +
     xlim(0, NA) +
     ylim(0, NA) +
-    labs(
-      x = "Growth rate <br> (<span style='font-size:8pt;'>g<sub>growth</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)",
-      y = "Growth efficiency <br> (<span style='font-size:8pt;'>g<sub>growth</sub> \u22c5 g<sub>intake</sub><sup>-1</sup></span>)",
-      color = "MSIR"
-    ) +
-    theme(
-      axis.title.x = element_markdown(),
-      axis.title.y = element_markdown()
-    ) +
+    labs(x = "Growth rate <br> (<span style='font-size:8pt;'>g<sub>growth</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)", y = "Growth efficiency <br> (<span style='font-size:8pt;'>g<sub>growth</sub> \u22c5 g<sub>intake</sub><sup>-1</sup></span>)", color = "MSIR") +
+    theme(axis.title.x = element_markdown(), axis.title.y = element_markdown()) +
     scale_color_viridis_c(option = "plasma")
   
   ggsave(
@@ -857,10 +906,8 @@ plot_irn <- function(data_i,
   
   ### Mass-specific maintenance rate according to mass specific growth rate   ######
   
-  msmrdw_msgrdw <- ggplot2::ggplot(
-    data_i,
-    aes(x = mean_growth_dw, y = mass_specific_respiration_rate_dw)
-  ) +
+  msmrdw_msgrdw <- ggplot2::ggplot(data_i,
+                                   aes(x = mean_growth_dw, y = mass_specific_respiration_rate_dw)) +
     geom_point() +
     xlim(0, NA) +
     ylim(NA,
@@ -1099,7 +1146,7 @@ plot_irn <- function(data_i,
   
   # Mass balance complete plot ######
   
-  complete_plot <- (msgrdw_msirdw | aedw_msirdw) /
+  complete_plot <- (msir_f_food_availability | aedw_msirdw) /
     (gedw_msirdw | gedw_msgrdw) + plot_annotation(tag_levels = "a")
   
   
@@ -1801,15 +1848,23 @@ plot_irn <- function(data_i,
     
     plots[[2]][[i]] <- ggplot2::ggplot(
       data_matrix_element,
-      aes(x = mean_mass_specific_intake_rate_fw , y = growth_efficiency_dw/assimilation_efficiency_dw_ege)
+      aes(
+        x = mean_mass_specific_intake_rate_fw ,
+        y = growth_efficiency_dw / assimilation_efficiency_dw_ege
+      )
     ) +
       geom_point() +
       ylim(0, 1) +
       geom_smooth(formula = y ~ s(x),
                   method = gam,
                   color = colours_elements[i]) +
-      labs(x = paste("Intake rate <br> (mg<sub>food</sub> mg<sub>body</sub><sup>-1</sup> day<sup>-1</sup>)", elements[i]),
-           y = paste("Growth/assimilation ratio of", elements[i])) +
+      labs(
+        x = paste(
+          "Intake rate <br> (mg<sub>food</sub> mg<sub>body</sub><sup>-1</sup> day<sup>-1</sup>)",
+          elements[i]
+        ),
+        y = paste("Growth/assimilation ratio of", elements[i])
+      ) +
       theme(axis.title.x = element_markdown())
     
     
@@ -2241,6 +2296,92 @@ plot_irn <- function(data_i,
     height = 4,
     units = "in"
   )
+  
+  ##  Assimilation efficiencies scaled to their means on a single plot  #####
+  
+  # ── 1. Fit GAM per element and extract predictions ────────────────────────────
+  gam_preds <- data_abs |>
+    group_by(element) |>
+    group_modify( ~ {
+      fit <- gam(
+        elemental_value ~ s(mean_mass_specific_intake_rate_dw),
+        data = .x,
+        method = "REML"
+      )
+      tibble(
+        mean_mass_specific_intake_rate_dw = .x$mean_mass_specific_intake_rate_dw,
+        elemental_value                   = .x$elemental_value,
+        gam_fit                           = predict(fit, newdata = .x)
+      )
+    }) |>
+    ungroup()
+  
+  # ── 2. Scale by the maximum GAM-predicted value per element ───────────────────
+  gam_preds_scaled <- gam_preds |>
+    group_by(element) |>
+    mutate(
+      gam_max             = max(gam_fit, na.rm = TRUE),
+      elemental_value_scaled = elemental_value / gam_max,
+      gam_fit_scaled         = gam_fit         / gam_max
+    ) |>
+    ungroup()
+  
+  # ── 3. Plot ───────────────────────────────────────────────────────────────────
+  ael_dw_msirfw_gam_scaled <- ggplot(
+    gam_preds_scaled,
+    aes(
+      x      = mean_mass_specific_intake_rate_dw,
+      y      = elemental_value_scaled,
+      colour = element,
+      group  = element,
+      fill   = element
+    )
+  ) +
+    geom_point(alpha = 0.5,
+               shape = 16,
+               size = 0.5) +
+    geom_smooth(
+      method      = "gam",
+      formula     = y ~ s(x),
+      se          = FALSE,
+      method.args = list(method = "REML")
+    ) +
+    geom_hline(
+      yintercept = 1,
+      linetype = "dashed",
+      colour = "grey40",
+      linewidth = 0.4
+    ) +
+    scale_color_manual(
+      values     = colours_elements,
+      aesthetics = c("colour", "fill"),
+      labels     = order_elements_legend,
+      limits     = c("K", "Mg", "C", "N", "P", "S", "Ca", "Na")
+    ) +
+    labs(
+      x = "Intake rate <br> (<span style='font-size:8pt;'>g<sub>intake</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)",
+      y = "Relative assimilation efficiency <br> (<span style='font-size:8pt;'>AE \u22c5 max(GAM)<sup>-1</sup></span>)",
+      fill  = "Element",
+      color = "Element"
+    ) +
+    theme(
+      legend.position  = "right",
+      axis.title.x     = element_markdown(),
+      axis.title.y     = element_markdown()
+    )
+  
+  ggsave(
+    filename = "assimilation_efficiencies_layered_gam_max_scaled_dw_&_msirfw.pdf",
+    plot     = ael_dw_msirfw_gam_scaled,
+    device   = pdf,
+    path     = here::here("4_outputs", "2_figures"),
+    scale    = 1,
+    width    = 7,
+    height   = 4,
+    units    = "in"
+  )
+  
+  
   ##  Retention times on a single plot #####
   
   ggplot2::theme_set(
@@ -2367,6 +2508,9 @@ plot_irn <- function(data_i,
   p <- plot(test[, 55:62])
   dev.off()
   
+  # The relationship between body X/Y compared to assimilation efficiency of X / assimilation efficiency of Y
+  
+  str(data_g)
   
   # 3. Isotopy figures ##########
   
