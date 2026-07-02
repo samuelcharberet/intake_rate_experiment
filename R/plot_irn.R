@@ -1367,7 +1367,100 @@ plot_irn <- function(data_i,
     width = 7,
     height = 4,
   )
+  ## Differences in elemental content between the variables: food, larva ######
   
+  plots_matrices <- vector("list", nb_elements)
+  
+  for (i in 1:nb_elements) {
+    data_element <- as.data.frame(subset(data_g, data_g$element == elements[i]))
+    food_col <- which(names(data_element) == paste("food_", elements[i], sep =
+                                                     ""))
+    
+    # Food elemental content
+    average_food <- mean(data_element[, food_col])
+    sd_food <- sd(data_element[, food_col])
+    
+    # Larvae elemental content
+    average_larvae <- mean(data_element[which(data_element$variable == "larvae"), ]$elemental_value, na.rm =
+                             T)
+    sd_larvae <- sd(data_element[which(data_element$variable == "larvae"), ]$elemental_value, na.rm =
+                      T)
+    
+    data <- data.frame(
+      name = c("Food", "Larvae"),
+      value = c(average_food, average_larvae),
+      sd = c(sd_food, sd_larvae)
+    )
+    
+    # Bar plot + error bar
+    p <- ggplot(data) +
+      geom_bar(
+        aes(x = name, y = value),
+        width = 0.5,
+        stat = "identity",
+        fill = "skyblue",
+        alpha = 0.7
+      ) +
+      geom_errorbar(
+        aes(
+          x = name,
+          ymin = value - sd,
+          ymax = value + sd
+        ),
+        width = 0.2,
+        colour = "orange",
+        alpha = 0.9,
+        linewidth = 1
+      ) +
+      labs(x = "",
+           y = paste(elements[i], " (", units_content[i], ")", sep = "")) +
+      scale_x_discrete(limits = c("Food", "Larvae")) +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1))
+    
+    plots_matrices[[i]] <- p
+    
+    # Save each plot
+    ggsave(
+      filename = paste("matrices_", elements[i], ".pdf", sep = ""),
+      plot = p,
+      device = pdf,
+      path = here::here("4_outputs", "2_figures"),
+      scale = 1,
+      width = 3,
+      height = 3,
+      units = "in"
+    )
+  }
+  
+  # Create the complete matrices plots
+  complete_matrices <- ggpubr::ggarrange(
+    plots_matrices[[1]],
+    plots_matrices[[2]],
+    plots_matrices[[3]],
+    plots_matrices[[4]],
+    plots_matrices[[5]],
+    plots_matrices[[6]],
+    plots_matrices[[7]],
+    plots_matrices[[8]],
+    ncol = 4,
+    nrow = 2,
+    labels = c("a.", "b.", "c.", "d.", "e.", "f.", "g.", "h."),
+    label.y = 1,
+    label.x = 0,
+    heights = c(0.5, 0.5),
+    widths = c(1, 1, 1, 1)
+  )
+  
+  # Save the complete plot
+  ggsave(
+    filename = paste("food_larvae_", "all_elements", ".pdf", sep = ""),
+    plot = complete_matrices,
+    device = pdf,
+    path = here::here("4_outputs", "3_figures_paper"),
+    scale = 1,
+    width = 7,
+    height = 4,
+  )
   ## Growth rate hypothesis #####
   # We check whether the growth rate in positively related to P body content
   # according to the growth rate hypothesis of Elser
