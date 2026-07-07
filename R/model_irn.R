@@ -155,8 +155,11 @@ model_irn <- function(data_i, data_g) {
     print(style = "tinytable") |>
     print(output = "dataframe")
   
-  p_vals <- pairs_i_ae$`Pr(>|z|)` == "< 0.001" |
-    as.numeric(pairs_i_ae$`Pr(>|z|)`) < 0.05
+  names(pairs_i_ae) = pairs_i_ae[1, ]
+  pairs_i_ae = pairs_i_ae[-1, ]
+  
+  p_vals <- pairs_i_ae$` Pr(>|z|) ` == " <0.001   " |
+    as.numeric(pairs_i_ae$` Pr(>|z|) `) < 0.05
   
   kbl(
     pairs_i_ae,
@@ -182,8 +185,11 @@ model_irn <- function(data_i, data_g) {
     print(style = "tinytable") |>
     print(output = "dataframe")
   
-  p_vals <- pairs_d_ae$`Pr(>|z|)` == "< 0.001" |
-    as.numeric(pairs_d_ae$`Pr(>|z|)`) < 0.05
+  names(pairs_d_ae) = pairs_d_ae[1, ]
+  pairs_d_ae = pairs_d_ae[-1, ]
+  
+  p_vals <- pairs_d_ae$` Pr(>|z|) ` == " < 0.001  " |
+    as.numeric(pairs_d_ae$` Pr(>|z|) `) < 0.05
   
   kbl(
     pairs_d_ae,
@@ -226,8 +232,11 @@ model_irn <- function(data_i, data_g) {
     print(style = "tinytable") |>
     print(output = "dataframe")
   
-  p_vals <- pairs_i_rt$`Pr(>|z|)` == "<0.001" |
-    as.numeric(pairs_i_rt$`Pr(>|z|)`) < 0.05
+  names(pairs_i_rt) = pairs_i_rt[1, ]
+  pairs_i_rt = pairs_i_rt[-1, ]
+  
+  p_vals <- pairs_i_rt$` Pr(>|z|) ` == " <0.001   " |
+    as.numeric(pairs_i_rt$` Pr(>|z|) `) < 0.05
   
   kbl(
     pairs_i_rt,
@@ -253,8 +262,11 @@ model_irn <- function(data_i, data_g) {
     print(style = "tinytable") |>
     print(output = "dataframe")
   
-  p_vals <- pairs_d_rt$`Pr(>|z|)` == "< 0.001" |
-    as.numeric(pairs_d_rt$`Pr(>|z|)`) < 0.05
+  names(pairs_d_rt) = pairs_d_rt[1, ]
+  pairs_d_rt = pairs_d_rt[-1, ]
+  
+  p_vals <- pairs_d_rt$` Pr(>|z|) ` == " < 0.001  " |
+    as.numeric(pairs_d_rt$` Pr(>|z|) `) < 0.05
   
   kbl(
     pairs_d_rt,

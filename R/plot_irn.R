@@ -330,24 +330,25 @@ plot_irn <- function(data_i,
   
   ### Intake rate as a function of food availability treatment  ######
   
-  ir_f_food_availability <- ggplot(data_i, aes(x = as.numeric(as.character(food_provided_fw)), y = ingestion_rate_fw, group = food_provided_fw)) +
-    geom_boxplot(alpha = 0.5) + 
-    geom_jitter(width = 15, height = 0, color = "darkgray") + 
-    
-    # Set x limits starting at 0, and match your exact tick marks
-    scale_x_continuous(limits = c(0, NA), breaks = c(120, 240, 360, 480, 900)) +
-    
-    scale_y_continuous(breaks = c(120, 240, 360, 480, 900)) +
-    labs(
-      x = "Food availability<br> (mg<sub>food(fw)</sub> day<sup>-1</sup>)", 
-      y = "Intake rate <br> (mg<sub>(fw)</sub> day<sup>-1</sup>)"
+  ir_f_food_availability <- ggplot(data_i,
+                                   aes(
+                                     x = as.numeric(as.character(food_provided_fw)),
+                                     y = ingestion_rate_fw,
+                                     group = food_provided_fw
+                                   )) +
+    geom_jitter(
+      width = 15,
+      height = 0,
+      shape = 16,
+      size = 0.7,
+      alpha = 0.5
     ) +
-    theme(
-      axis.title.x = element_markdown(), 
-      axis.title.y = element_markdown()
-    )
-  
-  
+    geom_boxplot(alpha = 0.5) +
+    scale_x_continuous(limits = c(0, NA),
+                       breaks = c(120, 240, 360, 480, 900)) +
+    scale_y_continuous(breaks = c(120, 240, 360, 480, 900)) +
+    labs(x = "Food availability<br> (mg<sub>food(fw)</sub> day<sup>-1</sup>)", y = "Intake rate <br> (mg<sub>(fw)</sub> day<sup>-1</sup>)") +
+    theme(axis.title.x = element_markdown(), axis.title.y = element_markdown())
   
   ggsave(
     filename = "ir_f_food_availability.pdf",
@@ -362,21 +363,26 @@ plot_irn <- function(data_i,
   
   ### Mass-specific intake rate as a function of food availability treatment  ######
   
-  msir_f_food_availability <- ggplot(data_i, aes(x = as.numeric(as.character(food_provided_fw)), y = mass_specific_ingestion_rate_dw, group = food_provided_fw)) +
-    geom_boxplot(alpha = 0.5) + 
-    geom_jitter(width = 15, height = 0, color = "darkgray") + 
-    
-    # Set x limits starting at 0, and match your exact tick marks
-    scale_x_continuous(limits = c(0, NA), breaks = c(120, 240, 360, 480, 900)) +
-        labs(
-      x = "Food availability <br> (<span style='font-size:8pt;'>g<sub>food</sub>  \u22c5 d<sup>-1</sup></span>)", 
-      y = "Intake rate <br> (<span style='font-size:8pt;'>g<sub>intake</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)"
-    ) +
-    theme(
-      axis.title.x = element_markdown(), 
-      axis.title.y = element_markdown()
+  msir_f_food_availability <- ggplot(
+    data_i,
+    aes(
+      x = as.numeric(as.character(food_provided_fw)),
+      y = mass_specific_ingestion_rate_dw,
+      group = food_provided_fw
     )
-  
+  ) +
+    geom_jitter(
+      width = 15,
+      height = 0,
+      shape = 16,
+      size = 0.7,
+      alpha = 0.5
+    ) +
+    geom_boxplot(alpha = 0.5) +
+    scale_x_continuous(limits = c(0, NA),
+                       breaks = c(120, 240, 360, 480, 900)) +
+    labs(x = "Food availability <br> (<span style='font-size:8pt;'>g<sub>food</sub>  \u22c5 d<sup>-1</sup></span>)", y = "Intake rate <br> (<span style='font-size:8pt;'>g<sub>intake</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)") +
+    theme(axis.title.x = element_markdown(), axis.title.y = element_markdown())
   
   ggsave(
     filename = "msir_f_food_availability.pdf",
