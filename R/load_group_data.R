@@ -48,9 +48,12 @@ load_group_data <- function(path) {
     "d15N_larvae"
   )
   
-  # Only keeping first five blocks
-  first_five_weeks = which(as.numeric(data_irn_groups$group_ID) <= 50)
-  data_irn_groups <- data_irn_groups[first_five_weeks, ]
+  # Only keeping the last five weeks #####
+  # Because of Na issues
+  # During week 6, individuals faced dry conditions in the climate chamber and as a results lose weight
+  # We therefore remove them from the study
+  last_five_weeks = which(as.numeric(data_irn_groups$group_ID) >= 61)
+  data_irn_groups <- data_irn_groups[last_five_weeks, ]
   data_irn_groups <- droplevels(data_irn_groups)
   # We define the type of each column
 

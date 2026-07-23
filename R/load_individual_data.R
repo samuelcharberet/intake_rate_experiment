@@ -75,16 +75,16 @@ load_individual_data <- function(path) {
   # Individual 313 seemed ill
   data_irn_individuals <- data_irn_individuals[-which(data_irn_individuals$individual_ID == "313"), ]
 
+
+  # Only keeping the last five weeks #####
+  # Because of Na issues
   # During week 6, individuals faced dry conditions in the climate chamber and as a results lose weight
   # We therefore remove them from the study
-  week_6 <- which(as.numeric(data_irn_individuals$individual_ID) >= 201 & as.numeric(data_irn_individuals$individual_ID) <= 240)
-  data_irn_individuals <- data_irn_individuals[-week_6, ]
-
-  # Only keeping the first five weeks #####
-  # Because of Na issues
-  first_five_weeks = which(as.numeric(data_irn_individuals$individual_ID) <= 200)
-  data_irn_individuals <- data_irn_individuals[first_five_weeks, ]
+  
+  last_five_weeks = which(as.numeric(data_irn_individuals$individual_ID) >= 241)
+  data_irn_individuals <- data_irn_individuals[last_five_weeks, ]
   data_irn_individuals <- droplevels(data_irn_individuals)
+  
   #  2. Filling the table  ##########
 
   ## Last collection day #####

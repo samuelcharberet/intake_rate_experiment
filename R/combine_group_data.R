@@ -28,6 +28,8 @@ combine_group_data <- function(data_i, data_g, data_fc, data_icc) {
   data_g$groupmass_7th_instar_j3_dw_ege <- NA
   data_g$groupmass_7th_instar_j0_fw_ege <- NA
   data_g$food_consumed_collection_days_dw_ege <- NA
+  data_g$frass_group_mass_dw_ege <- NA # frass group mass for elemental growth efficiency
+  data_g$mean_mass_specific_intake_rate_dw_ege <- NA
   
   ####  Initial chemical composition ####
   

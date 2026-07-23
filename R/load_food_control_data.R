@@ -45,7 +45,7 @@ load_food_control_data <- function(path) {
     data_irn_food_control$food_fw
 
   # Only keeping the five first weeks because of the Na issue ####
-  pattern <- "-w[1-5]-"
+  pattern <- "-w([7-9]|1[01])-"
   data_irn_food_control <- data_irn_food_control[grepl(pattern, data_irn_food_control$tube_food_control_ID), ]
   data_irn_food_control <- droplevels(data_irn_food_control)
   

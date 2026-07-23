@@ -52,9 +52,13 @@ plot_irn <- function(data_i,
   
   long_df <- data_i %>%
     select(food_provided_fw, starts_with("bodymass_7th_instar_j")) %>%
-    gather(key = "time", value = "body_mass", -food_provided_fw) %>%
-    mutate(time = gsub("bodymass_7th_instar_j|_fw", "", time),
-           time = as.numeric(time))
+    pivot_longer(
+      cols = starts_with("bodymass_7th_instar_j"),
+      names_to = "time",
+      names_prefix = "bodymass_7th_instar_j",
+      names_transform = list(time = readr::parse_number),
+      values_to = "body_mass"
+    )
   
   # Filter the data to include only the first three days
   long_df_filtered <- long_df %>%
@@ -63,7 +67,8 @@ plot_irn <- function(data_i,
   # Compute the mean body mass for each treatment and time point
   mean_df <- long_df_filtered %>%
     group_by(food_provided_fw, time) %>%
-    dplyr::summarize(mean_body_mass = mean(body_mass, na.rm = TRUE))
+    dplyr::summarize(mean_body_mass = mean(body_mass, na.rm = TRUE),
+                     .groups = "drop_last")
   
   # Create the plot
   growth_curve <- ggplot(mean_df, aes(
@@ -103,12 +108,12 @@ plot_irn <- function(data_i,
     y = wc * 100,
     group = as.factor(food_provided_fw)
   )) +
-    geom_boxplot(fill = "steelblue3") +
-    geom_jitter() +
+    geom_boxplot(fill = "steelblue3", na.rm = TRUE) +
+    geom_jitter(na.rm = TRUE) +
     ylim(NA, 90) +
     labs(x = "Food distributed (mg)", y = "Larval water content (%)") +
     theme(legend.position = "none") +
-    ggpubr::stat_compare_means(method = "anova")
+    ggpubr::stat_compare_means(method = "anova", na.rm = TRUE)
   
   ggsave(
     filename = "wc_&_treatment.pdf",
@@ -236,12 +241,13 @@ plot_irn <- function(data_i,
   
   p <- ggplot2::ggplot(data_i,
                        aes(x = food_consumed_collection_days_dw, y = bodymass_7th_instar_j3_dw)) +
-    geom_point() +
+    geom_point(na.rm = T) +
     labs(x = "Total amount of food consumed (mg dw)", y = "Bodymass at the end of the 7th instar (mg dw)") +
     geom_smooth(
       color = "steelblue3",
       method = mgcv::gam,
-      formula = y ~ s(x, bs = "cs", k = 3)
+      formula = y ~ s(x, bs = "cs", k = 3),
+      na.rm = T
     )
   
   ggsave(
@@ -259,12 +265,13 @@ plot_irn <- function(data_i,
   
   p <- ggplot2::ggplot(data_i,
                        aes(x = food_consumed_collection_days_dw, y = bodymass_imago_dw)) +
-    geom_point() +
+    geom_point(na.rm = T) +
     labs(x = "Total amount of food consumed (mg dw)", y = "Bodymass of the imago (mg dw)") +
     geom_smooth(
       color = "steelblue3",
       method = mgcv::gam,
-      formula = y ~ s(x, bs = "cs", k = 3)
+      formula = y ~ s(x, bs = "cs", k = 3),
+      na.rm = T
     )
   
   ggsave(
@@ -280,19 +287,16 @@ plot_irn <- function(data_i,
   
   ## Dry weight bodymass at the end of the 7th instar according to MSIR  ######
   
-  p <- ggplot2::ggplot(
-    data_i,
-    aes(
-      x = mass_specific_ingestion_rate_dw,
-      y = bodymass_7th_instar_j3_fw * (1 - wc),
-      colour = interaction(treatment_ID, seventh_instar_date)
-    )
-  ) +
-    geom_point() +
+  p <- ggplot2::ggplot(data_i,
+                       aes(x = mass_specific_ingestion_rate_dw, y = bodymass_7th_instar_j3_fw * (1 - wc3))) +
+    geom_point(na.rm = T) +
     labs(x = "Intake rate <br> (mg<sub>food</sub> mg<sub>body</sub><sup>-1</sup> day<sup>-1</sup>)", y = "Bodymass at the end of the 7th instar (mg dw)") +
-    geom_smooth(color = "steelblue3",
-                method = lm,
-                formula = y ~ x) +
+    geom_smooth(
+      color = "steelblue3",
+      method = lm,
+      formula = y ~ x,
+      na.rm = T
+    ) +
     theme(axis.title.x = element_markdown())
   
   ## Number of days spent in 7th instar according to the treatment ######
@@ -397,7 +401,7 @@ plot_irn <- function(data_i,
   ### Assimilation rate according to intake rate ######
   
   mod <- mgcv::gam(assimilation_rate_dw ~ s(ingestion_rate_dw, bs = "cs", k =
-                                              3),
+                                              -1),
                    data = data_i)
   hlt <- 10 * sum(mgcv::influence.gam(mod) / length(mgcv::influence.gam(mod)))
   data_i_f <- filter(data_i, mgcv::influence.gam(mod) < hlt)
@@ -412,7 +416,7 @@ plot_irn <- function(data_i,
     geom_smooth(
       color = "steelblue3",
       method = mgcv::gam,
-      formula = y ~ s(x, bs = "cs", k = 3)
+      formula = y ~ s(x, bs = "cs", k = -1)
     ) +
     theme(axis.title.x = element_markdown(), axis.title.y = element_markdown()) +
     geom_abline(
@@ -437,7 +441,7 @@ plot_irn <- function(data_i,
   mod <- mgcv::gam(assimilation_rate_dw ~ s(
     mass_specific_ingestion_rate_fw,
     bs = "cs",
-    k = 3
+    k = -1
   ),
   data = data_i)
   hlt <- 10 * sum(mgcv::influence.gam(mod) / length(mgcv::influence.gam(mod)))
@@ -519,9 +523,11 @@ plot_irn <- function(data_i,
       method = gam,
       formula = y ~ s(x, k = 5)
     ) +
-    ggpubr::stat_cor(aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")),
-                     label.x.npc = 0.1,
-                     label.y.npc = 0.85) +
+    ggpubr::stat_cor(aes(label = paste(
+      after_stat(rr.label), after_stat(p.label), sep = "~`,`~"
+    )),
+    label.x.npc = 0.1,
+    label.y.npc = 0.85) +
     theme(axis.title.x = element_markdown(), axis.title.y = element_markdown())
   
   
@@ -794,7 +800,7 @@ plot_irn <- function(data_i,
   
   
   
-  ### Growth investment according to mass specific amount assimilated  ######
+  ### Growth investment according to mass specific assimilation flux ######
   
   
   p <- ggplot2::ggplot(data_i,
@@ -1077,7 +1083,7 @@ plot_irn <- function(data_i,
     growth_efficiency_dw ~ s(
       mass_specific_ingestion_rate_dw,
       bs = "ad",
-      k = 10
+      k = -1
     ),
     data = data_i,
     method = "REML",
@@ -1095,7 +1101,7 @@ plot_irn <- function(data_i,
     geom_smooth(
       color = "steelblue3",
       method = mgcv::gam,
-      formula = y ~ s(x, bs = "ad", k = 10),
+      formula = y ~ s(x, bs = "ad", k = -1),
       method.args = list(family = scat(), method = "REML")
     ) +
     labs(x = "Intake rate <br> (<span style='font-size:8pt;'>g<sub>intake</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)", y = "Growth efficiency <br> (<span style='font-size:8pt;'>g<sub>growth</sub> \u22c5 g<sub>intake</sub><sup>-1</sup></span>)") +
@@ -1114,12 +1120,12 @@ plot_irn <- function(data_i,
   )
   
   ### Growth efficiency in dry weight according to specific growth rate in dry weight ######
-  
-  mod_gedw_msgrdw <- mgcv::gam(
-    growth_efficiency_dw ~ s(mean_growth_dw, bs = "ad", k = 10),
+
+    mod_gedw_msgrdw <- mgcv::gam(
+    growth_efficiency_dw ~ s(mean_growth_dw, bs = "ad", k = -1),
     data = data_i,
     method = "REML",
-    family = scat()
+    family = mgcv::scat(link = "identity")
   )
   
   hlt <- 10 * sum(mgcv::influence.gam(mod_gedw_msgrdw) / length(mgcv::influence.gam(mod_gedw_msgrdw)))
@@ -1132,8 +1138,8 @@ plot_irn <- function(data_i,
     geom_smooth(
       color = "steelblue3",
       method = mgcv::gam,
-      formula = y ~ s(x, bs = "ad", k = 10),
-      method.args = list(family = scat(), method = "REML")
+      formula = y ~ s(x, bs = "cs", k = 3),
+      method.args = list(family = mgcv::scat(link = "identity"), method = "REML")
     ) +
     labs(x = "Growth rate <br> (<span style='font-size:8pt;'>g<sub>growth</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)", y = "Growth efficiency <br> (<span style='font-size:8pt;'>g<sub>growth</sub> \u22c5 g<sub>intake</sub><sup>-1</sup></span>)") +
     theme(axis.title.x = element_markdown(), axis.title.y = element_markdown())
@@ -1484,9 +1490,11 @@ plot_irn <- function(data_i,
     geom_point(alpha = 0.2, shape = 16) +
     labs(x = "", y = "Larvae P (g/kg)") +
     geom_smooth(color = "steelblue3", method = lm) +
-    ggpubr::stat_cor(aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")),
-                     label.x.npc = 0.1,
-                     label.y.npc = 0.85)
+    ggpubr::stat_cor(aes(label = paste(
+      after_stat(rr.label), after_stat(p.label), sep = "~`,`~"
+    )),
+    label.x.npc = 0.1,
+    label.y.npc = 0.85)
   
   ggsave(
     filename = "larvaePdw_&_gr.pdf",
@@ -1507,9 +1515,11 @@ plot_irn <- function(data_i,
     geom_point(alpha = 0.2, shape = 16) +
     labs(x = "", y = "Larvae P/N") +
     geom_smooth(color = "steelblue3", method = lm) +
-    ggpubr::stat_cor(aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")),
-                     label.x.npc = 0.1,
-                     label.y.npc = 0.85)
+    ggpubr::stat_cor(aes(label = paste(
+      after_stat(rr.label), after_stat(p.label), sep = "~`,`~"
+    )),
+    label.x.npc = 0.1,
+    label.y.npc = 0.85)
   
   ggsave(
     filename = "larvaePNdw_&_gr.pdf",
@@ -1530,9 +1540,11 @@ plot_irn <- function(data_i,
     geom_point(alpha = 0.2, shape = 16) +
     labs(x = "", y = "Larvae P/C") +
     geom_smooth(color = "steelblue3", method = lm) +
-    ggpubr::stat_cor(aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")),
-                     label.x.npc = 0.1,
-                     label.y.npc = 0.85)
+    ggpubr::stat_cor(aes(label = paste(
+      after_stat(rr.label), after_stat(p.label), sep = "~`,`~"
+    )),
+    label.x.npc = 0.1,
+    label.y.npc = 0.85)
   
   
   ggsave(
@@ -2679,7 +2691,9 @@ plot_irn <- function(data_i,
     labs(x = expression(paste("Growth rate")), y = expression(paste(Delta, "13C"))) +
     geom_smooth(color = "steelblue3", method = "lm") +
     ggpubr::stat_cor(
-      aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")),
+      aes(label = paste(
+        after_stat(rr.label), after_stat(p.label), sep = "~`,`~"
+      )),
       method = "pearson",
       # cor.coef.name = c("rho"),
       label.x.npc = 0.2,
@@ -2707,7 +2721,9 @@ plot_irn <- function(data_i,
     labs(x = expression(paste("Growth rate")), y = expression(paste(Delta, "15N"))) +
     geom_smooth(color = "steelblue3", method = "lm") +
     ggpubr::stat_cor(
-      aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")),
+      aes(label = paste(
+        after_stat(rr.label), after_stat(p.label), sep = "~`,`~"
+      )),
       method = "pearson",
       # cor.coef.name = c("rho"),
       label.x.npc = 0.2,
@@ -2969,7 +2985,9 @@ plot_irn <- function(data_i,
                 span = 0.75) +
     theme(axis.title.x = element_markdown()) +
     ggpubr::stat_cor(
-      aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")),
+      aes(label = paste(
+        after_stat(rr.label), after_stat(p.label), sep = "~`,`~"
+      )),
       method = "pearson",
       # cor.coef.name = c("rho"),
       label.x.npc = 0.2,
@@ -2999,7 +3017,9 @@ plot_irn <- function(data_i,
     )), y = "N IAER") +
     geom_smooth(color = "steelblue3", method = "lm") +
     ggpubr::stat_cor(
-      aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")),
+      aes(label = paste(
+        after_stat(rr.label), after_stat(p.label), sep = "~`,`~"
+      )),
       method = "pearson",
       # cor.coef.name = c("rho"),
       label.x.npc = 0.2,

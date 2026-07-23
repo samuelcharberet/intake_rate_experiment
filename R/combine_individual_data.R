@@ -163,6 +163,18 @@ combine_individual_data <- function(data_fc, data_ic, data_i) {
     )[number_collection_days + 1]) - log(bodymass_7th_instar_j0_fw * (1 - wc)))/(number_collection_days)) %>%
     ungroup()
   
+  ##### Mean growth rate fw ####
+  
+  data_i <- data_i %>%
+    rowwise() %>%
+    mutate(mean_growth_fw = (log(c(
+      bodymass_7th_instar_j0_fw ,
+      bodymass_7th_instar_j1_fw ,
+      bodymass_7th_instar_j2_fw ,
+      bodymass_7th_instar_j3_fw 
+    )[number_collection_days + 1]) - log(bodymass_7th_instar_j0_fw))/(number_collection_days)) %>%
+    ungroup()
+  
   
   ##### Egested mass complete period in mg dw #####
   
