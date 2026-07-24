@@ -1,13 +1,12 @@
 \begin{table}[H]
 \centering
-\caption{\label{tab:table_gam_tm}Summaries of the four GAMs plotted in fig. \ref{fig_massbalance}. MSIR stand for mass-specific intake rate, GR for growth rate, GE for growth efficiency, and AE for assimilation efficiency, edf for effective degrees of freedom. TP refers to thin-plate splines, and AD to adaptive splines. The parameter $\phi$ for Beta regressions is indicated in parentheses \citep{Wood2016}}
+\caption{\label{tab:table_gam_tm}Summaries of the three GAMs plotted in fig. \ref{fig_massbalance}. MSIR stand for mass-specific intake rate, GR for growth rate, GE for growth efficiency, and AE for assimilation efficiency, edf for effective degrees of freedom. TP refers to thin-plate splines, and AD to adaptive splines. The parameter $\phi$ for Beta regressions is indicated in parentheses \citep{Wood2016}}
 \centering
 \resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
 \begin{tabular}[t]{llrllrllll}
 \toprule
 \textbf{Predictor} & \textbf{Response} & \textbf{n} & \textbf{edf} & \textbf{ref df} & \textbf{n parameters} & \textbf{p} & \textbf{Adjusted R$^2$} & \textbf{Family} & \textbf{Smoother}\\
 \midrule
-MSIR & GR & 198 & 4.54 & 5.59 & 10 & <2e-16 & 0.95 & Scaled t(14.39,0.022) & TP\\
 MSIR & AE & 198 & 4.88 & 6 & 10 & <2e-16 & 0.52 & Scaled t(3.987,0.034) & TP\\
 MSIR & GE & 198 & 3.76 & 4 & 10 & <2e-16 & 0.36 & Scaled t(7.112,0.02) & AD\\
 GR & GE & 199 & 4.31 & 5.05 & 10 & <2e-16 & 0.34 & Scaled t(8.738,0.021) & AD\\

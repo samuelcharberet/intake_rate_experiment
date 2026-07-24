@@ -11,9 +11,9 @@ model_irn <- function(data_i, data_g) {
   # I. Total mass balance GAM models #####
   
   # The predictor variables in the total mass balance study
-  predictors_list_tm <- c("MSIR", "MSIR", "MSIR", "GR")
+  predictors_list_tm <- c("MSIR", "MSIR", "GR")
   # The response variables in the total mass balance study
-  responses_list_tm <- c("GR", "AE", "GE", "GE")
+  responses_list_tm <- c("AE", "GE", "GE")
   
   nb_models_tm <- length(responses_list_tm)
   
@@ -26,7 +26,7 @@ model_irn <- function(data_i, data_g) {
   ref_df <- rep(NA, nb_models_tm)
   p_value <- rep(NA, nb_models_tm)
   family <- rep(NA, nb_models_tm)
-  smoother <- c("TP", "TP", "AD", "AD")
+  smoother <- c("TP", "AD", "AD")
   
   gam_tm <- tibble(
     Predictor = predictors_list_tm,
@@ -44,12 +44,6 @@ model_irn <- function(data_i, data_g) {
   
   ## 1. The models ######
   
-  mod_msgrdw_msirdw <- mgcv::gam(
-    mean_growth_dw ~ s(mass_specific_ingestion_rate_fw),
-    family = scat(),
-    method = "REML",
-    data = data_i
-  )
   mod_aedw_msirdw <- mgcv::gam(
     assimilation_efficiency_dw ~ s(mass_specific_ingestion_rate_dw),
     family = scat(),
@@ -74,10 +68,7 @@ model_irn <- function(data_i, data_g) {
   )
   ##  2. Removing outliers   ######
   
-  models <- list(mod_msgrdw_msirdw,
-                 mod_aedw_msirdw,
-                 mod_gedw_msirdw,
-                 mod_gedw_msgrdw)
+  models <- list(mod_aedw_msirdw, mod_gedw_msirdw, mod_gedw_msgrdw)
   
   for (i in 1:length(models)) {
     hlt <- 10 * sum(mgcv::influence.gam(models[[i]]) / length(mgcv::influence.gam(models[[i]])))
@@ -117,7 +108,7 @@ model_irn <- function(data_i, data_g) {
     booktabs = T,
     escape = F,
     linesep = "",
-    caption = "Summaries of the four GAMs plotted in fig. \\ref{fig_massbalance}. MSIR stand for mass-specific intake rate, GR for growth rate, GE for growth efficiency, and AE for assimilation efficiency, edf for effective degrees of freedom. TP refers to thin-plate splines, and AD to adaptive splines. The parameter $\\phi$ for Beta regressions is indicated in parentheses \\citep{Wood2016}",
+    caption = "Summaries of the three GAMs plotted in fig. \\ref{fig_massbalance}. MSIR stand for mass-specific intake rate, GR for growth rate, GE for growth efficiency, and AE for assimilation efficiency, edf for effective degrees of freedom. TP refers to thin-plate splines, and AD to adaptive splines. The parameter $\\phi$ for Beta regressions is indicated in parentheses \\citep{Wood2016}",
     label = "table_gam_tm"
   ) |>
     row_spec(0, bold = TRUE) |>
@@ -162,14 +153,14 @@ model_irn <- function(data_i, data_g) {
   p_clean <- gsub("[< ]", "", p_text)
   p_vals <- as.numeric(p_clean) < 0.05
   
-  
   kbl(
     pairs_i_ae,
     format = "latex",
-    booktabs = T,
-    escape = T,
+    booktabs = TRUE,
+    escape = TRUE,
     linesep = "",
     align = "lrrrrrrr",
+    row.names = FALSE,
     caption = "Pairwise comparisons of elemental absorption efficiencies predicted by the general GAM model. From left to right: elements being compared, the average difference is their estimate, the standard error associated, the z value for the test followed by the p- and the S- values. Finally, the confidence interval of the difference.",
     label = "table_pairs_i_ae"
   ) |>
@@ -203,6 +194,7 @@ model_irn <- function(data_i, data_g) {
     escape = T,
     linesep = "",
     align = "lrrrrrrr",
+    row.names = FALSE,
     caption = "Pairwise comparisons of the effect of intake rate on elemental absorption efficiencies predicted by the general GAM model. From left to right: elements being compared, the average difference in the slopes (see fig \\ref{fig_deriv_asmeffall}), the standard error associated, the z value for the test followed by the p- and the S- values. Finally, the confidence interval of the difference.",
     label = "table_pairs_d_ae"
   ) |>
@@ -211,8 +203,6 @@ model_irn <- function(data_i, data_g) {
     kable_styling(position = "center",
                   latex_options = c("HOLD_position")) |>
     save_kable(here::here("4_outputs", "1_statistical_results", "pairs_d_ae.tex"))
-  
-  
   
   ### ii. Retention times ####
   
@@ -251,6 +241,7 @@ model_irn <- function(data_i, data_g) {
     escape = T,
     linesep = "",
     align = "lrrrrrrr",
+    row.names = FALSE,
     caption = "Pairwise comparisons of elemental retention times predicted by the general GAM model. From left to right: elements being compared, the average difference is their estimate, the standard error associated, the z value for the test followed by the p- and the S- values. Finally, the confidence interval of the difference.",
     label = "table_pairs_i_rt"
   ) |>
@@ -284,6 +275,7 @@ model_irn <- function(data_i, data_g) {
     escape = T,
     linesep = "",
     align = "lrrrrrrr",
+    row.names = FALSE,
     caption = "Pairwise comparisons of the effect of intake rate on elemental retention times predicted by the general GAM model. From left to right: elements being compared, the average difference in the slopes (see fig \\ref{fig_deriv_rettimesall}), the standard error associated, the z value for the test followed by the p- and the S- values. Finally, the confidence interval of the difference.",
     label = "table_pairs_d_rt"
   ) |>
@@ -508,8 +500,7 @@ model_irn <- function(data_i, data_g) {
           "b"
         )
         gam_isotopes$n[k] <- summary_gam$n
-        gam_isotopes$r_squared[k] <- format(signif(summary_gam$r.sq, digits =
-        ), scientific = F)
+        gam_isotopes$r_squared[k] <- format(signif(summary_gam$r.sq, digits =), scientific = F)
         gam_isotopes$edf[k] <- format(signif(summary_gam$edf, digits = 3), scientific = F)
         if (summary_gam$s.pv == 0) {
           gam_isotopes$p_value[k] <- "<2e-16"
