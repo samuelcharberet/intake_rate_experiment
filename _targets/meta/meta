@@ -20,17 +20,17 @@ data_irn_groups|stem|adc90883ec81919d|db7d696fd9eb27a9|0a83138da2532ea0|-3895024
 data_irn_individuals|stem|eec81f14a69ba52a|acf6c07d4cee9ffe|fd69b703aaa7e93c|-1584960181||t20658.538313365s|s10423b|10423|rds|local|vector|||0.234||
 data_irn_food_controls|stem|fe6f26d6d04d2462|5cea8a86c588d0e5|d8227c8c1a72545d|-193505731||t20658.5383146443s|s1164b|1164|rds|local|vector|||0.078||
 data_irn_indivuals_combined|stem|98af183ca64810b8|49eb6e4f9e4f8bb4|4fca948049e2412a|1049433586||t20658.5383192437s|s53958b|53958|rds|local|vector|||0.359||
-data_irn_groups_combined|stem|e2933dcf68c7c374|2a6e44772d700704|0531295783382ec9|1314723806||t20658.5383251588s|s53168b|53168|rds|local|vector|||0.438||
-plots_irn|stem|f91397b38673296f|2f746841af72da03|327506f97dd92e31|485447517|C:/Users/scharber/Documents/6_projects/4_intake_rate_experiment/4_outputs/2_figures/isotopy_figure.pdf|t20658.5637888693s|s32547b|32547|file|local|vector|||37.391||
+data_irn_groups_combined|stem|b37fc55047bf8151|2a6e44772d700704|f15fd7eb941e53f4|1314723806||t20661.7115859454s|s53266b|53266|rds|local|vector|||0.531||
+models_irn|stem|45fc43adb83ccb48|b46e53a4f3480863|02ab235f9713a02a|1662181074||t20661.711697783s|s44b|44|rds|local|vector|||9.61||
 load_individual_control_d1_data|function|18920aa74280fba6
 load_individual_control_data|function|e37d44a254b1d2c7
 load_group_data|function|ee38bdf0a38b1f9f
 average_value|function|1516ccb9f9018eee
 load_food_control_data|function|184a7ba008f2bf8c
-combine_group_data|function|0dc5e498c71baea3
-plot_irn|function|959f9c7b5168bc97
+combine_group_data|function|dc5e25d0c3ff5030
+plot_irn|function|ee4dc25090d19b29
 as.data.frame.pwpm|function|880953ef14c2c33d
-model_irn|function|eb645bc4ea9d84e6
+model_irn|function|bc4ec7d0ca940a68
 load_individual_data|function|8cfb1047755f0de1
 combine_individual_data|function|4875ad39e89b1368
-models_irn|stem|45fc43adb83ccb48|b46e53a4f3480863|05c7c96e407aae4e|1662181074||t20658.6738297197s|s44b|44|rds|local|vector|||13.047||
+plots_irn|stem|0c426def301a66b8|2f746841af72da03|90cedd7f3406ba0c|485447517|C:/Users/scharber/Documents/6_projects/4_intake_rate_experiment/4_outputs/2_figures/isotopy_figure.pdf|t20661.7233922139s||32545|file|local|vector|||22.859||unused arguments (hjust = -0.7, vjust = 1.7)

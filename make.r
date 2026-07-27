@@ -31,7 +31,11 @@ library(gridtext)
 library(stringr)
 library(ggh4x)
 library(readxl)
-
+library(compositions)
+library(broom)
+library(purrr)
+library(ggpubr)
+library(grid)
 
 lapply(list.files(here::here("R"), recursive = TRUE, full.names = T), source)
 

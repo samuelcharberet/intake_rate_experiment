@@ -108,8 +108,8 @@ model_irn <- function(data_i, data_g) {
     booktabs = T,
     escape = F,
     linesep = "",
-    caption = "Summaries of the three GAMs plotted in fig. \\ref{fig_massbalance}. MSIR stand for mass-specific intake rate, GR for growth rate, GE for growth efficiency, and AE for assimilation efficiency, edf for effective degrees of freedom. TP refers to thin-plate splines, and AD to adaptive splines. The parameter $\\phi$ for Beta regressions is indicated in parentheses \\citep{Wood2016}",
-    label = "table_gam_tm"
+    caption = "\\label{supptable:table_gam_tm} Summaries of the three GAMs plotted in fig. \\ref{fig_massbalance}. MSIR stand for mass-specific intake rate, GR for growth rate, GE for growth efficiency, and AE for assimilation efficiency, edf for effective degrees of freedom. TP refers to thin-plate splines, and AD to adaptive splines. The parameter $\\phi$ for Beta regressions is indicated in parentheses \\citep{Wood2016}",
+    label = NULL
   ) |>
     row_spec(0, bold = TRUE) |>
     kable_styling(position = "center",
@@ -117,12 +117,151 @@ model_irn <- function(data_i, data_g) {
     save_kable(here::here("4_outputs", "1_statistical_results", "gam_tm.tex"))
   
   # II. Chemical mass balance models ######
-  
-  ## 1. General models ####
-  
   # The elements
   elements_list <- c("C", "N", "P", "Na", "Mg", "S", "K", "Ca")
   nb_elements <- length(elements_list)
+  
+  
+  ## 1. Global effect of intake on compositions #####
+  ### Larvae #####
+  
+  data_larvae_wide <- filter(data_g,
+                             variable == "larvae",
+                             element %in% elements_list,
+                             !is.na(elemental_value)) |>
+    select(mean_mass_specific_intake_rate_dw,
+           element,
+           elemental_value) |>
+    pivot_wider(values_from = "elemental_value" , names_from = "element") |>
+    na.omit()
+  
+  # Just putting the elemental values back on the same scale
+  data_larvae_wide[, 4:9] = data_larvae_wide[, 4:9] / 10000
+  
+  data_larvae_wide$row_totals <- rowSums(data_larvae_wide[, 2:9], na.rm = TRUE)
+  # Putting the compositional data on the Aitchison simplex geometry
+  
+  larvae_compo <- acomp(data_larvae_wide[, 2:9])
+  
+  # We apply a isometric log ratio (ilr) transformation to the compositional data before analysis
+  lm_larvae_compo <- lm(ilr(larvae_compo) ~ mean_mass_specific_intake_rate_dw,
+                        data = data_larvae_wide)
+  summary(manova(lm_larvae_compo))
+  
+  
+  ### Frass #####
+  
+  data_frass_wide <- filter(data_g,
+                            variable == "frass",
+                            element %in% elements_list,
+                            !is.na(elemental_value)) |>
+    select(mean_mass_specific_intake_rate_dw,
+           element,
+           elemental_value) |>
+    pivot_wider(values_from = "elemental_value" , names_from = "element") |>
+    na.omit()
+  
+  # Just putting the elemental values back on the same scale
+  data_frass_wide[, 4:9] = data_frass_wide[, 4:9] / 10000
+  
+  data_frass_wide$row_totals <- rowSums(data_frass_wide[, 2:9], na.rm = TRUE)
+  # Putting the compositional data on the Aitchison simplex geometry
+  
+  frass_compo <- acomp(data_frass_wide[, 2:9])
+  
+  # We apply a isometric log ratio (ilr) transformation to the compositional data before analysis
+  lm_frass_compo <- lm(ilr(frass_compo) ~ mean_mass_specific_intake_rate_dw, data = data_larvae_wide)
+  summary(manova(lm_frass_compo))
+  
+  
+  ### Assimilation efficiency #####
+  
+  data_assimeff_wide <- filter(
+    data_g,
+    variable == "assimilation_efficiency_dw",
+    element %in% elements_list,
+    !is.na(elemental_value)
+  ) |>
+    select(mean_mass_specific_intake_rate_dw,
+           element,
+           elemental_value) |>
+    pivot_wider(values_from = "elemental_value" , names_from = "element") |>
+    na.omit()
+  # Putting the compositional data on the Aitchison simplex geometry
+  
+  assimeff_compo <- acomp(data_assimeff_wide[, 2:9])
+  
+  # We apply a isometric log ratio (ilr) transformation to the compositional data before analysis
+  lm_assimeff_compo <- lm(ilr(assimeff_compo) ~ mean_mass_specific_intake_rate_dw, data = data_larvae_wide)
+  summary(manova(lm_assimeff_compo))
+  
+  ### Assimilation flux #####
+  
+  data_assimflux_wide <- filter(
+    data_g,
+    variable == "assimilation_flux_dw",
+    element %in% elements_list,
+    !is.na(elemental_value)
+  ) |>
+    select(mean_mass_specific_intake_rate_dw,
+           element,
+           elemental_value) |>
+    pivot_wider(values_from = "elemental_value" , names_from = "element") |>
+    na.omit()
+  
+  # Putting the compositional data on the Aitchison simplex geometry
+  assimflux_compo <- acomp(data_assimflux_wide[, 2:9])
+  
+  # We apply a isometric log ratio (ilr) transformation to the compositional data before analysis
+  lm_assimflux_compo <- lm(ilr(assimflux_compo) ~ mean_mass_specific_intake_rate_dw, data = data_larvae_wide)
+  summary(manova(lm_assimflux_compo))
+  
+  ### General table #####
+  # 1. Store models in a named list
+  manova_models <- list(
+    "Larvae"       = manova(lm_larvae_compo),
+    "Frass"        = manova(lm_frass_compo),
+    "Assimilation"  = manova(lm_assimeff_compo)
+  )
+  
+  # 2. Extract and combine results
+  manova_results <- map_dfr(manova_models, tidy, .id = "Composition of") %>%
+    # Keep only the predictor term (filtering out Residuals)
+    filter(term == "mean_mass_specific_intake_rate_dw") %>%
+    # Calculate S-value (Shannon information content: -log2(p-value))
+    mutate(
+      s_value = -log2(p.value),
+      # Format p-value cleanly for publication
+      p_formatted = if_else(p.value < 0.001, "< 0.001", sprintf("%.4f", p.value)),
+      # Format degrees of freedom as "num DF, den DF"
+      df_combined = paste0(num.df, ", ", den.df)
+    ) %>%
+    select(
+      `Composition of`,
+      `Approx. F`     = statistic,
+      # <-- 'statistic' is broom's name for approx F
+      `df (num, den)` = df_combined,
+      `p-value`       = p_formatted,
+      `S-value`       = s_value
+    )
+  
+  kbl(
+    manova_results,
+    format = "latex",
+    booktabs = TRUE,
+    digits = 3,
+    align = "lrrrrr",
+    caption = "Multivariate Analysis of Variance (MANOVA) examining the effect of intake rate on compositional profiles across larvae, frass, and assimilation efficiency.",
+    label = "table_manova_summary"
+  ) %>%
+    row_spec(0, bold = TRUE) %>%
+    kable_styling(position = "center",
+                  latex_options = c("HOLD_position", "scale_down")) %>%
+    save_kable(here::here("4_outputs", "1_statistical_results", "manova_summary.tex"))
+  
+  ## 2. General models ####
+  
+  
   
   ### i. Assimilation efficiency ####
   
@@ -161,8 +300,8 @@ model_irn <- function(data_i, data_g) {
     linesep = "",
     align = "lrrrrrrr",
     row.names = FALSE,
-    caption = "Pairwise comparisons of elemental absorption efficiencies predicted by the general GAM model. From left to right: elements being compared, the average difference is their estimate, the standard error associated, the z value for the test followed by the p- and the S- values. Finally, the confidence interval of the difference.",
-    label = "table_pairs_i_ae"
+    caption = "\\label{supptable:table_pairs_i_ae} Pairwise comparisons of elemental absorption efficiencies predicted by the general GAM model. From left to right: elements being compared, the average difference is their estimate, the standard error associated, the z value for the test followed by the p- and the S- values. Finally, the confidence interval of the difference.",
+    label = NULL
   ) |>
     row_spec(0, bold = TRUE) |>
     column_spec(c(1, 5), bold = p_vals) |>
@@ -195,8 +334,8 @@ model_irn <- function(data_i, data_g) {
     linesep = "",
     align = "lrrrrrrr",
     row.names = FALSE,
-    caption = "Pairwise comparisons of the effect of intake rate on elemental absorption efficiencies predicted by the general GAM model. From left to right: elements being compared, the average difference in the slopes (see fig \\ref{fig_deriv_asmeffall}), the standard error associated, the z value for the test followed by the p- and the S- values. Finally, the confidence interval of the difference.",
-    label = "table_pairs_d_ae"
+    caption = "\\label{supptable:table_pairs_d_ae} Pairwise comparisons of the effect of intake rate on elemental absorption efficiencies predicted by the general GAM model. From left to right: elements being compared, the average difference in the slopes (see fig \\ref{fig_deriv_asmeffall}), the standard error associated, the z value for the test followed by the p- and the S- values. Finally, the confidence interval of the difference.",
+    label = NULL
   ) |>
     row_spec(0, bold = TRUE) |>
     column_spec(c(1, 5), bold = p_vals) |>
@@ -242,8 +381,8 @@ model_irn <- function(data_i, data_g) {
     linesep = "",
     align = "lrrrrrrr",
     row.names = FALSE,
-    caption = "Pairwise comparisons of elemental retention times predicted by the general GAM model. From left to right: elements being compared, the average difference is their estimate, the standard error associated, the z value for the test followed by the p- and the S- values. Finally, the confidence interval of the difference.",
-    label = "table_pairs_i_rt"
+    caption = "\\label{supptable:table_pairs_i_rt} Pairwise comparisons of elemental retention times predicted by the general GAM model. From left to right: elements being compared, the average difference is their estimate, the standard error associated, the z value for the test followed by the p- and the S- values. Finally, the confidence interval of the difference.",
+    label = NULL
   ) |>
     row_spec(0, bold = TRUE) |>
     column_spec(c(1, 5), bold = p_vals) |>
@@ -276,8 +415,8 @@ model_irn <- function(data_i, data_g) {
     linesep = "",
     align = "lrrrrrrr",
     row.names = FALSE,
-    caption = "Pairwise comparisons of the effect of intake rate on elemental retention times predicted by the general GAM model. From left to right: elements being compared, the average difference in the slopes (see fig \\ref{fig_deriv_rettimesall}), the standard error associated, the z value for the test followed by the p- and the S- values. Finally, the confidence interval of the difference.",
-    label = "table_pairs_d_rt"
+    caption = "\\label{supptable:table_pairs_d_rt} Pairwise comparisons of the effect of intake rate on elemental retention times predicted by the general GAM model. From left to right: elements being compared, the average difference in the slopes (see fig \\ref{fig_deriv_rettimesall}), the standard error associated, the z value for the test followed by the p- and the S- values. Finally, the confidence interval of the difference.",
+    label = NULL
   ) |>
     row_spec(0, bold = TRUE) |>
     column_spec(c(1, 5), bold = p_vals) |>
@@ -391,8 +530,8 @@ model_irn <- function(data_i, data_g) {
     booktabs = T,
     escape = F,
     linesep = "",
-    caption = "Summaries of element-wise GAM models used to produce the plots in figs. \\ref{fig_eff_times}, \\ref{fig_asmeffall}, \\ref{fig_rettimesall}, \\ref{fig_larvaecontentall} and \\ref{fig_frasscontentall}. AE stands for assimilation efficiency, and RT for retention time, edf for effective degrees of freedom. All models were fitted using thin-plate splines and with 10 parameters. The parameter $\\phi$ for Beta regressions is indicated in parentheses \\citep{Wood2016}",
-    label = "table_gam_ch"
+    caption = "\\label{supptable:table_gam_ch} Summaries of element-wise GAM models used to produce the plots in figs. \\ref{fig_eff_times}, \\ref{fig_asmeffall}, \\ref{fig_rettimesall}, \\ref{fig_larvaecontentall} and \\ref{fig_frasscontentall}. AE stands for assimilation efficiency, and RT for retention time, edf for effective degrees of freedom. All models were fitted using thin-plate splines and with 10 parameters. The parameter $\\phi$ for Beta regressions is indicated in parentheses \\citep{Wood2016}",
+    label = NULL
   ) |>
     row_spec(0, bold = TRUE) |>
     kable_styling(position = "center",
@@ -500,7 +639,8 @@ model_irn <- function(data_i, data_g) {
           "b"
         )
         gam_isotopes$n[k] <- summary_gam$n
-        gam_isotopes$r_squared[k] <- format(signif(summary_gam$r.sq, digits =), scientific = F)
+        gam_isotopes$r_squared[k] <- format(signif(summary_gam$r.sq, digits =
+        ), scientific = F)
         gam_isotopes$edf[k] <- format(signif(summary_gam$edf, digits = 3), scientific = F)
         if (summary_gam$s.pv == 0) {
           gam_isotopes$p_value[k] <- "<2e-16"

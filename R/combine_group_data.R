@@ -46,7 +46,8 @@ combine_group_data <- function(data_i, data_g, data_fc, data_icc) {
   ####  Compute group-level measures based on the sum of the individual data ####
   
   # Subset of the data for elemental growth efficiency calculations
-  data_ege = data_i[which(data_i$body_analysis == 1 & data_i$bca_3 == 1),]
+  data_ege = data_i[which(data_i$body_analysis == 1 &
+                            data_i$bca_3 == 1), ]
   
   
   for (i in 1:length(group_IDs)) {
@@ -55,7 +56,7 @@ combine_group_data <- function(data_i, data_g, data_fc, data_icc) {
     
     data_g$bca_3[group_row] <- mean(data_i$bca_3[individual_group_rows])
     data_g$frass_group_mass_dw[group_row] <- sum(data_i$frass_mass_dw[individual_group_rows])
-    data_g$food_consumed_collection_days_dw[group_row] <- sum(data_i$food_consumed_collection_days_dw[individual_group_rows])
+    data_g$food_consumed_collection_days_dw[group_row] <- sum(data_i$food_consumed_collection_days_dw[individual_group_rows]) #  in mg
     data_g$food_consumed_collection_days_fw[group_row] <- sum(data_i$food_consumed_collection_days_fw[individual_group_rows])
     data_g$groupmass_7th_instar_j0_fw[group_row] <- sum(data_i$bodymass_7th_instar_j0_fw[individual_group_rows])
     data_g$groupmass_7th_instar_j3_fw[group_row] <- sum(data_i$bodymass_7th_instar_j3_fw[individual_group_rows])
@@ -81,17 +82,17 @@ combine_group_data <- function(data_i, data_g, data_fc, data_icc) {
     
     
     individual_group_rows_ege <- which(data_ege$group_ID == group_IDs[i])
-    if (length(individual_group_rows_ege == 2)){
-    data_g$groupmass_7th_instar_j3_dw_ege[group_row] <- sum(data_ege$bodymass_7th_instar_j3_dw[individual_group_rows_ege], na.rm =
-                                                              T)
-    if (data_g$groupmass_7th_instar_j3_dw_ege[group_row] == 0) {
-      data_g$groupmass_7th_instar_j3_dw_ege[group_row] <- NA
-    }
-    data_g$frass_group_mass_dw_ege[group_row] <- sum(data_ege$frass_mass_dw[individual_group_rows_ege])
-    data_g$groupmass_7th_instar_j0_fw_ege[group_row] <- sum(data_ege$bodymass_7th_instar_j0_fw[individual_group_rows_ege])
-    data_g$food_consumed_collection_days_dw_ege[group_row] <- sum(data_ege$food_consumed_collection_days_dw[individual_group_rows_ege])
-    data_g$mean_mass_specific_intake_rate_dw_ege[group_row] <- mean(data_ege$mass_specific_ingestion_rate_dw[individual_group_rows_ege])
-    
+    if (length(individual_group_rows_ege == 2)) {
+      data_g$groupmass_7th_instar_j3_dw_ege[group_row] <- sum(data_ege$bodymass_7th_instar_j3_dw[individual_group_rows_ege], na.rm =
+                                                                T)
+      if (data_g$groupmass_7th_instar_j3_dw_ege[group_row] == 0) {
+        data_g$groupmass_7th_instar_j3_dw_ege[group_row] <- NA
+      }
+      data_g$frass_group_mass_dw_ege[group_row] <- sum(data_ege$frass_mass_dw[individual_group_rows_ege])
+      data_g$groupmass_7th_instar_j0_fw_ege[group_row] <- sum(data_ege$bodymass_7th_instar_j0_fw[individual_group_rows_ege])
+      data_g$food_consumed_collection_days_dw_ege[group_row] <- sum(data_ege$food_consumed_collection_days_dw[individual_group_rows_ege])
+      data_g$mean_mass_specific_intake_rate_dw_ege[group_row] <- mean(data_ege$mass_specific_ingestion_rate_dw[individual_group_rows_ege])
+      
     }
   }
   
@@ -125,7 +126,7 @@ combine_group_data <- function(data_i, data_g, data_fc, data_icc) {
     #  search for these dates in the food control dataset
     week_indexes <- which(data_fc$date == week_dates)
     
-    #  report the elemental content of food
+    #  report the elemental content of food, C and N are in % and the rest in ppm
     data_g$food_C[i] <- data_fc$food_C[week_indexes[1]]
     data_g$food_N[i] <- data_fc$food_N[week_indexes[1]]
     data_g$food_P[i] <- data_fc$food_P[week_indexes[1]]
@@ -187,18 +188,38 @@ combine_group_data <- function(data_i, data_g, data_fc, data_icc) {
   
   #### Computes the element assimilation fluxes ####
   
-  data_g$C_assimilation_flux_dw <- (data_g$food_C * data_g$food_consumed_collection_days_dw) - (data_g$C_frass * data_g$frass_group_mass_dw)
-  data_g$N_assimilation_flux_dw <- (data_g$food_N * data_g$food_consumed_collection_days_dw) - (data_g$N_frass * data_g$frass_group_mass_dw)
-  data_g$P_assimilation_flux_dw <- (data_g$food_P * data_g$food_consumed_collection_days_dw) - (data_g$P_frass * data_g$frass_group_mass_dw)
-  data_g$S_assimilation_flux_dw <- (data_g$food_S * data_g$food_consumed_collection_days_dw) - (data_g$S_frass * data_g$frass_group_mass_dw)
-  data_g$Na_assimilation_flux_dw <- (data_g$food_Na * data_g$food_consumed_collection_days_dw) - (data_g$Na_frass * data_g$frass_group_mass_dw)
-  data_g$Mg_assimilation_flux_dw <- (data_g$food_Mg * data_g$food_consumed_collection_days_dw) - (data_g$Mg_frass * data_g$frass_group_mass_dw)
-  data_g$K_assimilation_flux_dw <- (data_g$food_K * data_g$food_consumed_collection_days_dw) - (data_g$K_frass * data_g$frass_group_mass_dw)
-  data_g$Ca_assimilation_flux_dw <- (data_g$food_Ca * data_g$food_consumed_collection_days_dw) - (data_g$Ca_frass * data_g$frass_group_mass_dw)
-  data_g$`12C_assimilation_flux_dw` <- (data_g$`12C_food` * data_g$food_consumed_collection_days_dw) - (data_g$`12C_frass` * data_g$frass_group_mass_dw)
-  data_g$`13C_assimilation_flux_dw` <- (data_g$`13C_food` * data_g$food_consumed_collection_days_dw) - (data_g$`13C_frass` * data_g$frass_group_mass_dw)
-  data_g$`14N_assimilation_flux_dw` <- (data_g$`14N_food` * data_g$food_consumed_collection_days_dw) - (data_g$`14N_frass` * data_g$frass_group_mass_dw)
-  data_g$`15N_assimilation_flux_dw` <- (data_g$`15N_food` * data_g$food_consumed_collection_days_dw) - (data_g$`15N_frass` * data_g$frass_group_mass_dw)
+  data_g$C_assimilation_flux_dw <- 10^(-2) * ((data_g$food_C * data_g$food_consumed_collection_days_dw) - (data_g$C_frass * data_g$frass_group_mass_dw)
+  ) / data_g$number_collection_days # in mg / day
+  data_g$N_assimilation_flux_dw <- 10^(-2) * ((data_g$food_N * data_g$food_consumed_collection_days_dw) - (data_g$N_frass * data_g$frass_group_mass_dw)
+  ) / data_g$number_collection_days# in mg / day
+  data_g$P_assimilation_flux_dw <- 10^(-6) * ((data_g$food_P *  data_g$food_consumed_collection_days_dw) - (data_g$P_frass * data_g$frass_group_mass_dw)
+  ) / data_g$number_collection_days # in mg / day
+  data_g$S_assimilation_flux_dw <- 10^(-6) * ((data_g$food_S *  data_g$food_consumed_collection_days_dw) - (data_g$S_frass * data_g$frass_group_mass_dw)
+  ) / data_g$number_collection_days # in mg / day
+  data_g$Na_assimilation_flux_dw <- 10^(-6) * ((data_g$food_Na *  data_g$food_consumed_collection_days_dw) - (data_g$Na_frass * data_g$frass_group_mass_dw)
+  ) / data_g$number_collection_days # in mg / day
+  data_g$Mg_assimilation_flux_dw <- 10^(-6) * ((data_g$food_Mg *  data_g$food_consumed_collection_days_dw) - (data_g$Mg_frass * data_g$frass_group_mass_dw)
+  ) / data_g$number_collection_days # in mg / day
+  data_g$K_assimilation_flux_dw <- 10^(-6) * ((data_g$food_K *  data_g$food_consumed_collection_days_dw) - (data_g$K_frass * data_g$frass_group_mass_dw)
+  ) / data_g$number_collection_days # in mg / day
+  data_g$Ca_assimilation_flux_dw <- 10^(-6) * ((data_g$food_Ca *  data_g$food_consumed_collection_days_dw) - (data_g$Ca_frass * data_g$frass_group_mass_dw)
+  ) / data_g$number_collection_days
+  data_g$`12C_assimilation_flux_dw` <- ((
+    data_g$`12C_food` * data_g$food_consumed_collection_days_dw
+  ) - (data_g$`12C_frass` * data_g$frass_group_mass_dw)
+  ) / data_g$number_collection_days
+  data_g$`13C_assimilation_flux_dw` <- ((
+    data_g$`13C_food` * data_g$food_consumed_collection_days_dw
+  ) - (data_g$`13C_frass` * data_g$frass_group_mass_dw)
+  ) / data_g$number_collection_days
+  data_g$`14N_assimilation_flux_dw` <- ((
+    data_g$`14N_food` * data_g$food_consumed_collection_days_dw
+  ) - (data_g$`14N_frass` * data_g$frass_group_mass_dw)
+  ) / data_g$number_collection_days
+  data_g$`15N_assimilation_flux_dw` <- ((
+    data_g$`15N_food` * data_g$food_consumed_collection_days_dw
+  ) - (data_g$`15N_frass` * data_g$frass_group_mass_dw)
+  ) / data_g$number_collection_days
   
   #### Computes the element assimilation efficiency ####
   
@@ -250,97 +271,121 @@ combine_group_data <- function(data_i, data_g, data_fc, data_icc) {
   #### Computes the element assimilation efficiency for EGE plots ####
   
   data_g$C_assimilation_efficiency_dw_ege <- (1 - ((data_g$C_frass * data_g$frass_group_mass_dw_ege) /
-                                                 (data_g$food_C * data_g$food_consumed_collection_days_dw_ege)
+                                                     (
+                                                       data_g$food_C * data_g$food_consumed_collection_days_dw_ege
+                                                     )
   ))
   data_g$N_assimilation_efficiency_dw_ege <- (1 - ((data_g$N_frass * data_g$frass_group_mass_dw_ege) /
-                                                 (data_g$food_N * data_g$food_consumed_collection_days_dw_ege)
+                                                     (
+                                                       data_g$food_N * data_g$food_consumed_collection_days_dw_ege
+                                                     )
   ))
   data_g$P_assimilation_efficiency_dw_ege <- (1 - ((data_g$P_frass * data_g$frass_group_mass_dw_ege) /
-                                                 (data_g$food_P * data_g$food_consumed_collection_days_dw_ege)
+                                                     (
+                                                       data_g$food_P * data_g$food_consumed_collection_days_dw_ege
+                                                     )
   ))
   data_g$S_assimilation_efficiency_dw_ege <- (1 - ((data_g$S_frass * data_g$frass_group_mass_dw_ege) /
-                                                 (data_g$food_S * data_g$food_consumed_collection_days_dw_ege)
+                                                     (
+                                                       data_g$food_S * data_g$food_consumed_collection_days_dw_ege
+                                                     )
   ))
   data_g$Na_assimilation_efficiency_dw_ege <- (1 - ((data_g$Na_frass * data_g$frass_group_mass_dw_ege) /
-                                                  (data_g$food_Na * data_g$food_consumed_collection_days_dw_ege)
+                                                      (
+                                                        data_g$food_Na * data_g$food_consumed_collection_days_dw_ege
+                                                      )
   ))
   data_g$Mg_assimilation_efficiency_dw_ege <- (1 - ((data_g$Mg_frass * data_g$frass_group_mass_dw_ege) /
-                                                  (data_g$food_Mg * data_g$food_consumed_collection_days_dw_ege)
+                                                      (
+                                                        data_g$food_Mg * data_g$food_consumed_collection_days_dw_ege
+                                                      )
   ))
   data_g$K_assimilation_efficiency_dw_ege <- (1 - ((data_g$K_frass * data_g$frass_group_mass_dw_ege) /
-                                                 (data_g$food_K * data_g$food_consumed_collection_days_dw_ege)
+                                                     (
+                                                       data_g$food_K * data_g$food_consumed_collection_days_dw_ege
+                                                     )
   ))
   data_g$Ca_assimilation_efficiency_dw_ege <- (1 - ((data_g$Ca_frass * data_g$frass_group_mass_dw_ege) /
-                                                  (data_g$food_Ca * data_g$food_consumed_collection_days_dw_ege)
+                                                      (
+                                                        data_g$food_Ca * data_g$food_consumed_collection_days_dw_ege
+                                                      )
   ))
-
+  
   
   
   #### Computes the element growth efficiency ####
   # We only take larvae that were used for chemical analysis and that were fed for three days
   wc1 = 0.8524
   
-  data_g$C_growth_efficiency_dw <- ifelse(data_g$bca_3 == 0, NA, 1)* (
-    data_g$groupmass_7th_instar_j3_dw_ege  *0.01 * data_g$C_larvae - data_g$groupmass_7th_instar_j0_fw_ege *
-      (1-wc1) * 0.01 * init_C
+  data_g$C_growth_efficiency_dw <- ifelse(data_g$bca_3 == 0, NA, 1) * (
+    data_g$groupmass_7th_instar_j3_dw_ege  * 0.01 * data_g$C_larvae - data_g$groupmass_7th_instar_j0_fw_ege *
+      (1 - wc1) * 0.01 * init_C
   ) / (data_g$food_consumed_collection_days_dw_ege * 0.01 * data_g$food_C)
   
-  data_g$N_growth_efficiency_dw <- ifelse(data_g$bca_3 == 0, NA, 1)* (
-    data_g$groupmass_7th_instar_j3_dw_ege  *0.01 * data_g$N_larvae - data_g$groupmass_7th_instar_j0_fw_ege *
-      (1-wc1) * 0.01 * init_N
+  data_g$N_growth_efficiency_dw <- ifelse(data_g$bca_3 == 0, NA, 1) * (
+    data_g$groupmass_7th_instar_j3_dw_ege  * 0.01 * data_g$N_larvae - data_g$groupmass_7th_instar_j0_fw_ege *
+      (1 - wc1) * 0.01 * init_N
   ) / (data_g$food_consumed_collection_days_dw_ege * 0.01 * data_g$food_N)
-
-  data_g$P_growth_efficiency_dw <- ifelse(data_g$bca_3 == 0, NA, 1)* (
-    data_g$groupmass_7th_instar_j3_dw_ege  *0.01 * data_g$P_larvae - data_g$groupmass_7th_instar_j0_fw_ege *
-      (1-wc1) * 0.01 * init_P
+  
+  data_g$P_growth_efficiency_dw <- ifelse(data_g$bca_3 == 0, NA, 1) * (
+    data_g$groupmass_7th_instar_j3_dw_ege  * 0.01 * data_g$P_larvae - data_g$groupmass_7th_instar_j0_fw_ege *
+      (1 - wc1) * 0.01 * init_P
   ) / (data_g$food_consumed_collection_days_dw_ege * 0.01 * data_g$food_P)
   
-  data_g$K_growth_efficiency_dw <- ifelse(data_g$bca_3 == 0, NA, 1)* (
-    data_g$groupmass_7th_instar_j3_dw_ege  *0.01 * data_g$K_larvae - data_g$groupmass_7th_instar_j0_fw_ege *
-      (1-wc1) * 0.01 * init_K
+  data_g$K_growth_efficiency_dw <- ifelse(data_g$bca_3 == 0, NA, 1) * (
+    data_g$groupmass_7th_instar_j3_dw_ege  * 0.01 * data_g$K_larvae - data_g$groupmass_7th_instar_j0_fw_ege *
+      (1 - wc1) * 0.01 * init_K
   ) / (data_g$food_consumed_collection_days_dw_ege * 0.01 * data_g$food_K)
   
-  data_g$Mg_growth_efficiency_dw <- ifelse(data_g$bca_3 == 0, NA, 1)* (
-    data_g$groupmass_7th_instar_j3_dw_ege  *0.01 * data_g$Mg_larvae - data_g$groupmass_7th_instar_j0_fw_ege *
-      (1-wc1) * 0.01 * init_Mg
+  data_g$Mg_growth_efficiency_dw <- ifelse(data_g$bca_3 == 0, NA, 1) * (
+    data_g$groupmass_7th_instar_j3_dw_ege  * 0.01 * data_g$Mg_larvae - data_g$groupmass_7th_instar_j0_fw_ege *
+      (1 - wc1) * 0.01 * init_Mg
   ) / (data_g$food_consumed_collection_days_dw_ege * 0.01 * data_g$food_Mg)
   
-  data_g$Na_growth_efficiency_dw <- ifelse(data_g$bca_3 == 0, NA, 1)* (
-    data_g$groupmass_7th_instar_j3_dw_ege  *0.01 * data_g$Na_larvae - data_g$groupmass_7th_instar_j0_fw_ege *
-      (1-wc1) * 0.01 * init_Na
+  data_g$Na_growth_efficiency_dw <- ifelse(data_g$bca_3 == 0, NA, 1) * (
+    data_g$groupmass_7th_instar_j3_dw_ege  * 0.01 * data_g$Na_larvae - data_g$groupmass_7th_instar_j0_fw_ege *
+      (1 - wc1) * 0.01 * init_Na
   ) / (data_g$food_consumed_collection_days_dw_ege * 0.01 * data_g$food_Na)
   
-  data_g$Ca_growth_efficiency_dw <- ifelse(data_g$bca_3 == 0, NA, 1)* (
-    data_g$groupmass_7th_instar_j3_dw_ege  *0.01 * data_g$Ca_larvae - data_g$groupmass_7th_instar_j0_fw_ege *
-      (1-wc1) * 0.01 * init_Ca
+  data_g$Ca_growth_efficiency_dw <- ifelse(data_g$bca_3 == 0, NA, 1) * (
+    data_g$groupmass_7th_instar_j3_dw_ege  * 0.01 * data_g$Ca_larvae - data_g$groupmass_7th_instar_j0_fw_ege *
+      (1 - wc1) * 0.01 * init_Ca
   ) / (data_g$food_consumed_collection_days_dw_ege * 0.01 * data_g$food_Ca)
   
-  data_g$S_growth_efficiency_dw <- ifelse(data_g$bca_3 == 0, NA, 1)* (
-    data_g$groupmass_7th_instar_j3_dw_ege  *0.01 * data_g$S_larvae - data_g$groupmass_7th_instar_j0_fw_ege *
-      (1-wc1) * 0.01 * init_S
+  data_g$S_growth_efficiency_dw <- ifelse(data_g$bca_3 == 0, NA, 1) * (
+    data_g$groupmass_7th_instar_j3_dw_ege  * 0.01 * data_g$S_larvae - data_g$groupmass_7th_instar_j0_fw_ege *
+      (1 - wc1) * 0.01 * init_S
   ) / (data_g$food_consumed_collection_days_dw_ege * 0.01 * data_g$food_S)
   
   #### Computes the element growth/assimilation ratio ####
-
-  data_g$C_growth_assimilation_ratio <- data_g$C_assimilation_efficiency_dw_ege/data_g$C_growth_efficiency_dw
-  data_g$N_growth_assimilation_ratio <- data_g$N_assimilation_efficiency_dw_ege/data_g$N_growth_efficiency_dw
-  data_g$P_growth_assimilation_ratio <- data_g$P_assimilation_efficiency_dw_ege/data_g$P_growth_efficiency_dw
-  data_g$S_growth_assimilation_ratio <- data_g$S_assimilation_efficiency_dw_ege/data_g$S_growth_efficiency_dw
-  data_g$K_growth_assimilation_ratio <- data_g$K_assimilation_efficiency_dw_ege/data_g$K_growth_efficiency_dw
-  data_g$Mg_growth_assimilation_ratio <- data_g$Mg_assimilation_efficiency_dw_ege/data_g$Mg_growth_efficiency_dw
-  data_g$Na_growth_assimilation_ratio <- data_g$Na_assimilation_efficiency_dw_ege/data_g$Na_growth_efficiency_dw
-  data_g$Ca_growth_assimilation_ratio <- data_g$Ca_assimilation_efficiency_dw_ege/data_g$Ca_growth_efficiency_dw
+  
+  data_g$C_growth_assimilation_ratio <- data_g$C_assimilation_efficiency_dw_ege /
+    data_g$C_growth_efficiency_dw
+  data_g$N_growth_assimilation_ratio <- data_g$N_assimilation_efficiency_dw_ege /
+    data_g$N_growth_efficiency_dw
+  data_g$P_growth_assimilation_ratio <- data_g$P_assimilation_efficiency_dw_ege /
+    data_g$P_growth_efficiency_dw
+  data_g$S_growth_assimilation_ratio <- data_g$S_assimilation_efficiency_dw_ege /
+    data_g$S_growth_efficiency_dw
+  data_g$K_growth_assimilation_ratio <- data_g$K_assimilation_efficiency_dw_ege /
+    data_g$K_growth_efficiency_dw
+  data_g$Mg_growth_assimilation_ratio <- data_g$Mg_assimilation_efficiency_dw_ege /
+    data_g$Mg_growth_efficiency_dw
+  data_g$Na_growth_assimilation_ratio <- data_g$Na_assimilation_efficiency_dw_ege /
+    data_g$Na_growth_efficiency_dw
+  data_g$Ca_growth_assimilation_ratio <- data_g$Ca_assimilation_efficiency_dw_ege /
+    data_g$Ca_growth_efficiency_dw
   
   ### Computes the element egestion rate ####
   
-  data_g$C_egestion_rate_dw <- data_g$C_frass * data_g$mean_egestion_rate_dw
-  data_g$N_egestion_rate_dw <- data_g$N_frass * data_g$mean_egestion_rate_dw
-  data_g$P_egestion_rate_dw <- data_g$P_frass * data_g$mean_egestion_rate_dw
-  data_g$S_egestion_rate_dw <- data_g$S_frass * data_g$mean_egestion_rate_dw
-  data_g$Na_egestion_rate_dw <- data_g$Na_frass * data_g$mean_egestion_rate_dw
-  data_g$Mg_egestion_rate_dw <- data_g$Mg_frass * data_g$mean_egestion_rate_dw
-  data_g$K_egestion_rate_dw <- data_g$K_frass * data_g$mean_egestion_rate_dw
-  data_g$Ca_egestion_rate_dw <- data_g$Ca_frass * data_g$mean_egestion_rate_dw
+  data_g$C_egestion_rate_dw <- 10^(-2) * data_g$C_frass * data_g$mean_egestion_rate_dw # in mg / day
+  data_g$N_egestion_rate_dw <- 10^(-2) * data_g$N_frass * data_g$mean_egestion_rate_dw
+  data_g$P_egestion_rate_dw <- 10^(-6) * data_g$P_frass * data_g$mean_egestion_rate_dw
+  data_g$S_egestion_rate_dw <- 10^(-6) * data_g$S_frass * data_g$mean_egestion_rate_dw
+  data_g$Na_egestion_rate_dw <- 10^(-6) * data_g$Na_frass * data_g$mean_egestion_rate_dw
+  data_g$Mg_egestion_rate_dw <- 10^(-6) * data_g$Mg_frass * data_g$mean_egestion_rate_dw
+  data_g$K_egestion_rate_dw <- 10^(-6) * data_g$K_frass * data_g$mean_egestion_rate_dw
+  data_g$Ca_egestion_rate_dw <- 10^(-6) * data_g$Ca_frass * data_g$mean_egestion_rate_dw
   data_g$`12C_egestion_rate_dw` <- data_g$`12C_frass` * data_g$mean_egestion_rate_dw
   data_g$`13C_egestion_rate_dw` <- data_g$`13C_frass` * data_g$mean_egestion_rate_dw
   data_g$`14N_egestion_rate_dw` <- data_g$`14N_frass` * data_g$mean_egestion_rate_dw
@@ -348,21 +393,21 @@ combine_group_data <- function(data_i, data_g, data_fc, data_icc) {
   
   #### Computes the element retention time ####
   
-  data_g$C_retention_time <- data_g$C_larvae * data_g$mean_bodymass_dw /
+  data_g$C_retention_time <- 10^(-2) * data_g$C_larvae * data_g$mean_bodymass_dw /
     data_g$C_egestion_rate_dw
-  data_g$N_retention_time <- data_g$N_larvae * data_g$mean_bodymass_dw /
+  data_g$N_retention_time <- 10^(-2) * data_g$N_larvae * data_g$mean_bodymass_dw /
     data_g$N_egestion_rate_dw
-  data_g$P_retention_time <- data_g$P_larvae * data_g$mean_bodymass_dw /
+  data_g$P_retention_time <- 10^(-6) * data_g$P_larvae * data_g$mean_bodymass_dw /
     data_g$P_egestion_rate_dw
-  data_g$S_retention_time <- data_g$S_larvae * data_g$mean_bodymass_dw /
+  data_g$S_retention_time <- 10^(-6) * data_g$S_larvae * data_g$mean_bodymass_dw /
     data_g$S_egestion_rate_dw
-  data_g$Na_retention_time <- data_g$Na_larvae * data_g$mean_bodymass_dw /
+  data_g$Na_retention_time <- 10^(-6) * data_g$Na_larvae * data_g$mean_bodymass_dw /
     data_g$Na_egestion_rate_dw
-  data_g$Mg_retention_time <- data_g$Mg_larvae * data_g$mean_bodymass_dw /
+  data_g$Mg_retention_time <- 10^(-6) * data_g$Mg_larvae * data_g$mean_bodymass_dw /
     data_g$Mg_egestion_rate_dw
-  data_g$K_retention_time <- data_g$K_larvae * data_g$mean_bodymass_dw /
+  data_g$K_retention_time <- 10^(-6) * data_g$K_larvae * data_g$mean_bodymass_dw /
     data_g$K_egestion_rate_dw
-  data_g$Ca_retention_time <- data_g$Ca_larvae * data_g$mean_bodymass_dw /
+  data_g$Ca_retention_time <- 10^(-6) * data_g$Ca_larvae * data_g$mean_bodymass_dw /
     data_g$Ca_egestion_rate_dw
   data_g$`12C_retention_time` <- data_g$`12C_larvae` * data_g$mean_bodymass_dw /
     data_g$`12C_egestion_rate_dw`
@@ -398,6 +443,8 @@ combine_group_data <- function(data_i, data_g, data_fc, data_icc) {
   data_g$`13C_fldf` <- data_g$`d13C_frass` - data_g$`d13C_larvae`
   data_g$`15N_fldf` <- data_g$`d15N_frass` - data_g$`d15N_larvae`
   
+  
+  # A long format ####
   data_g <- tidyr::pivot_longer(
     data_g,
     cols = c(

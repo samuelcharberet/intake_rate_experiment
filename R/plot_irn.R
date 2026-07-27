@@ -188,24 +188,22 @@ plot_irn <- function(data_i,
       ylim(y_lims) +
       labs(x = "",
            y = paste("Food ", elements[i], " (", units_content[i], ")", sep = "")) +
-      theme(legend.position = "none")
+      theme(
+        legend.position = "none"
+      )
   }
   
-  complete_plot <-
-    (plots[[1]] |
-       plots[[2]] |
-       plots[[3]] |
-       plots[[4]]) /
-    (plots[[5]] |
-       plots[[6]] |
-       plots[[7]] |
-       plots[[8]]) + patchwork::plot_annotation(tag_levels = "a")
+  complete_plot <- ggarrange(
+    plotlist = plots[1:8],
+    ncol = 4,
+    nrow = 2,
+    labels = c("(a)", "(b)", "(c)", "(d)", "(e)", "(f)", "(g)", "(h)"),
+    hjust = -0.7,
+    vjust = 1.7
+  )
   
-  
-  
-  complete_plots <- wrap_elements(panel = complete_plot) +
-    labs(tag = "Temporal block", ) +
-    theme(plot.tag = element_markdown(), plot.tag.position = "bottom")
+  complete_plots <- annotate_figure(complete_plot,
+                                    bottom = text_grob("Temporal block", size = 12, face = "plain"))
   
   ggsave(
     filename = "food_compo_&_week.pdf",
@@ -1043,7 +1041,11 @@ plot_irn <- function(data_i,
   
   ### Assimilation efficiency in dw according to mass specific intake rate in dw ######
   mod_aedw_msirdw <- mgcv::gam(
-    assimilation_efficiency_dw ~ s(mass_specific_ingestion_rate_dw, bs = "ad", k=-1),
+    assimilation_efficiency_dw ~ s(
+      mass_specific_ingestion_rate_dw,
+      bs = "ad",
+      k = -1
+    ),
     family = scat(),
     method = "REML",
     data = data_i
@@ -1060,7 +1062,7 @@ plot_irn <- function(data_i,
     geom_smooth(
       color = "steelblue3",
       method = mgcv::gam,
-      formula = y ~ s(x, bs = "ad", k=-1),
+      formula = y ~ s(x, bs = "ad", k = -1),
       method.args = list(family = scat(), method = "REML")
     ) +
     labs(x = "Intake rate <br> (<span style='font-size:8pt;'>g<sub>intake</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)", y = "Assimilation efficiency <br> (<span style='font-size:8pt;'>g<sub>assim</sub> \u22c5 g<sub>intake</sub><sup>-1</sup> </span>)") +
@@ -1162,9 +1164,15 @@ plot_irn <- function(data_i,
   
   # Mass balance complete plot ######
   
-  complete_plot <- (msir_f_food_availability | aedw_msirdw) /
-    (gedw_msirdw | gedw_msgrdw) + plot_annotation(tag_levels = "a")
-  
+  complete_plot <- ggarrange(
+    msir_f_food_availability,
+    aedw_msirdw,
+    gedw_msirdw,
+    gedw_msgrdw,
+    ncol = 2,
+    nrow = 2,
+    labels = c("(a)", "(b)", "(c)", "(d)")
+  )
   
   ggsave(
     filename = paste("total_mass_balance.pdf", sep = ""),
@@ -1257,10 +1265,15 @@ plot_irn <- function(data_i,
     theme(axis.title.x = element_markdown(), axis.title.y = element_text()) +
     ggtitle("")
   
-  derivative_complete_plot <- (deriv_msgrdw_msirdw[[1]] |
-                                 deriv_aedw_msirdw[[1]]) /
-    (deriv_gedw_msirdw[[1]] | deriv_gedw_msgrdw[[1]]) +
-    plot_annotation(tag_levels = "a")
+  derivative_complete_plot <- ggarrange(
+    deriv_msgrdw_msirdw[[1]],
+    deriv_aedw_msirdw[[1]],
+    deriv_gedw_msirdw[[1]],
+    deriv_gedw_msgrdw[[1]],
+    ncol = 2,
+    nrow = 2,
+    labels = paste0("(", letters[1:4], ")")
+  )
   
   
   ggsave(
@@ -1366,7 +1379,7 @@ plot_irn <- function(data_i,
     plots_matrices[[8]],
     ncol = 4,
     nrow = 2,
-    labels = c("a.", "b.", "c.", "d.", "e.", "f.", "g.", "h."),
+    labels = c("(a)", "(b)", "(c)", "(d)", "(e)", "(f)", "(g)", "(h)"),
     label.y = 1,
     label.x = 0,
     heights = c(0.5, 0.5),
@@ -1431,21 +1444,11 @@ plot_irn <- function(data_i,
       labs(x = "",
            y = paste(elements[i], " (", units_content[i], ")", sep = "")) +
       scale_x_discrete(limits = c("Food", "Larvae")) +
-      theme(axis.text.x = element_text(angle = 45, hjust = 1))
+      theme(
+        axis.text.x = element_text(angle = 45, hjust = 1)
+      )
     
     plots_matrices[[i]] <- p
-    
-    # Save each plot
-    ggsave(
-      filename = paste("matrices_", elements[i], ".pdf", sep = ""),
-      plot = p,
-      device = pdf,
-      path = here::here("4_outputs", "2_figures"),
-      scale = 1,
-      width = 3,
-      height = 3,
-      units = "in"
-    )
   }
   
   # Create the complete matrices plots
@@ -1460,16 +1463,16 @@ plot_irn <- function(data_i,
     plots_matrices[[8]],
     ncol = 4,
     nrow = 2,
-    labels = c("a.", "b.", "c.", "d.", "e.", "f.", "g.", "h."),
-    label.y = 1,
-    label.x = 0,
+    labels = c("(a)", "(b)", "(c)", "(d)", "(e)", "(f)", "(g)", "(h)"),
     heights = c(0.5, 0.5),
-    widths = c(1, 1, 1, 1)
+    widths = c(1, 1, 1, 1),
+    hjust = -0.7,
+    vjust = 1.7
   )
   
   # Save the complete plot
   ggsave(
-    filename = paste("food_larvae_", "all_elements", ".pdf", sep = ""),
+    filename = "food_larvae_all_elements.pdf",
     plot = complete_matrices,
     device = pdf,
     path = here::here("4_outputs", "3_figures_paper"),
@@ -1586,16 +1589,23 @@ plot_irn <- function(data_i,
   # GRH complete plot
   
   
-  grh_complete_plot <-
-    (larvaePdw_gr |
-       larvaePCdw_gr |
-       larvaePNdw_gr) + patchwork::plot_annotation(tag_levels = "a")
+  grh_complete_plot <- ggarrange(
+    larvaePdw_gr,
+    larvaePCdw_gr,
+    larvaePNdw_gr,
+    ncol = 3,
+    nrow = 1,
+    labels = paste0("(", letters[1:3], ")"),
+    hjust = -0.7,
+    vjust = 1.7
+  )
   
   
   
-  grh_complete_plot <- wrap_elements(panel = grh_complete_plot) +
-    labs(tag = "Growth rate <br> (<span style='font-size:8pt;'>g<sub>growth</sub> · g<sub>body</sub><sup>-1</sup> · d<sup>-1</sup></span>)", ) +
-    theme(plot.tag = element_markdown(), plot.tag.position = "bottom")
+  grh_complete_plot <- annotate_figure(
+    grh_complete_plot,
+    bottom = richtext_grob(text = "Growth rate <br> (<span style='font-size:8pt;'>g<sub>growth</sub> · g<sub>body</sub><sup>-1</sup> · d<sup>-1</sup></span>)", gp = gpar(fontsize = 10))
+  )
   
   # Saving the the complete plots
   
@@ -1799,7 +1809,9 @@ plot_irn <- function(data_i,
           j != 3, paste("(", units_loop[i, j], ")", sep =
                           ""), ""
         ))) +
-        theme(axis.title.x = element_markdown())
+        theme(
+          axis.title.x = element_markdown()
+        )
       
       
       if (j == 4) {
@@ -1821,7 +1833,9 @@ plot_irn <- function(data_i,
         scale = 1,
         width = 7,
         height = 4,
-        units = "in"
+        units = "in",
+        hjust = -0.7,
+        vjust = 1.7
       )
       
       # Derivatives
@@ -1888,22 +1902,19 @@ plot_irn <- function(data_i,
       plots[[i]][[j]] <- plots[[i]][[j]] + ggpubr::rremove("xlab")
     }
   }
+  
   for (i in 1:(nb_variables + 2)) {
-    complete_plot <-
-      (plots[[i]][[1]] |
-         plots[[i]][[2]] |
-         plots[[i]][[3]] |
-         plots[[i]][[4]]) /
-      (plots[[i]][[5]] |
-         plots[[i]][[6]] |
-         plots[[i]][[7]] |
-         plots[[i]][[8]]) + patchwork::plot_annotation(tag_levels = "a")
+    complete_plot <- ggarrange(
+      plotlist = plots[[i]][1:8],
+      ncol = 4,
+      nrow = 2,
+      labels = paste0("(", letters[1:8], ")")
+    )
     
-    
-    
-    complete_plots[[i]] <- wrap_elements(panel = complete_plot) +
-      labs(tag = "Intake rate <br> (<span style='font-size:8pt;'>g<sub>intake</sub> · g<sub>body</sub><sup>-1</sup> · d<sup>-1</sup></span>)", ) +
-      theme(plot.tag = element_markdown(), plot.tag.position = "bottom")
+    complete_plots[[i]] <- annotate_figure(
+      complete_plot,
+      bottom = richtext_grob(text = "Intake rate <br> (<span style='font-size:8pt;'>g<sub>intake</sub> · g<sub>body</sub><sup>-1</sup> · d<sup>-1</sup></span>)", gp = gpar(fontsize = 10))
+    )
     
     # Saving the the complete plots
     
@@ -1918,6 +1929,8 @@ plot_irn <- function(data_i,
       units = "in"
     )
   }
+  
+  
   
   ## Elemental growth efficiencies and growth/assimilation ratios ######
   
@@ -1963,12 +1976,16 @@ plot_irn <- function(data_i,
     ) +
       geom_point(na.rm = T) +
       ylim(0, 1) +
-      geom_smooth(formula = y ~ s(x),
-                  method = gam,
-                  color = colours_elements[i],
-                  na.rm = T) +
+      geom_smooth(
+        formula = y ~ s(x),
+        method = gam,
+        color = colours_elements[i],
+        na.rm = T
+      ) +
       labs(x = "Intake rate <br> (mg<sub>food</sub> mg<sub>body</sub><sup>-1</sup> day<sup>-1</sup>)", y = paste("GE of", elements[i])) +
-      theme(axis.title.x = element_markdown())
+      theme(
+        axis.title.x = element_markdown()
+      )
     
     
     # Save each plot
@@ -1994,10 +2011,12 @@ plot_irn <- function(data_i,
     ) +
       geom_point(na.rm = T) +
       ylim(0, 1) +
-      geom_smooth(formula = y ~ s(x),
-                  method = gam,
-                  color = colours_elements[i],
-                  na.rm = T) +
+      geom_smooth(
+        formula = y ~ s(x),
+        method = gam,
+        color = colours_elements[i],
+        na.rm = T
+      ) +
       labs(
         x = paste(
           "Intake rate <br> (mg<sub>food</sub> mg<sub>body</sub><sup>-1</sup> day<sup>-1</sup>)",
@@ -2005,7 +2024,9 @@ plot_irn <- function(data_i,
         ),
         y = paste("Growth/assimilation ratio of", elements[i])
       ) +
-      theme(axis.title.x = element_markdown())
+      theme(
+        axis.title.x = element_markdown()
+      )
     
     
     # Save each plot
@@ -2034,21 +2055,19 @@ plot_irn <- function(data_i,
     plots[[1]][[j]] <- plots[[1]][[j]] + ggpubr::rremove("xlab")
   }
   
-  complete_plot <-
-    (plots[[1]][[1]] |
-       plots[[1]][[2]] |
-       plots[[1]][[3]] |
-       plots[[1]][[4]]) /
-    (plots[[1]][[5]] |
-       plots[[1]][[6]] |
-       plots[[1]][[7]] |
-       plots[[1]][[8]]) + patchwork::plot_annotation(tag_levels = "a")
+  complete_plot <- ggarrange(
+    plotlist = plots[[1]][1:8],
+    ncol = 4,
+    nrow = 2,
+    labels = paste0("(", letters[1:8], ")"),
+    hjust = -0.7,
+    vjust = 1.7
+  )
   
-  
-  
-  complete_plots[[1]] <- wrap_elements(panel = complete_plot) +
-    labs(tag = "Intake rate <br> (<span style='font-size:8pt;'>g<sub>intake</sub> · g<sub>body</sub><sup>-1</sup> · d<sup>-1</sup></span>)") +
-    theme(plot.tag = element_markdown(), plot.tag.position = "bottom")
+  complete_plots[[1]] <- annotate_figure(
+    complete_plot,
+    bottom = text_grob(label = "Intake rate <br> (<span style='font-size:8pt;'>g<sub>intake</sub> · g<sub>body</sub><sup>-1</sup> · d<sup>-1</sup></span>)", )
+  )
   
   # Saving the the complete plots
   
@@ -2065,20 +2084,16 @@ plot_irn <- function(data_i,
   
   # Growth assimilation ratio plot
   
-  complete_plot <-
-    (plots[[2]][[1]] |
-       plots[[2]][[2]] |
-       plots[[2]][[3]] |
-       plots[[2]][[4]]) /
-    (plots[[2]][[5]] |
-       plots[[2]][[6]] |
-       plots[[2]][[7]] |
-       plots[[2]][[8]]) + patchwork::plot_annotation(tag_levels = "a")
+  complete_plot <- ggarrange(
+    plotlist = plots[[2]][1:8],
+    ncol = 4,
+    nrow = 2,
+    labels = paste0("(", letters[1:8], ")"),
+    hjust = -0.7,
+    vjust = 1.7
+  )
   
-  
-  
-  complete_plots[[2]] <- wrap_elements(panel = complete_plot) +
-    theme(plot.tag = element_markdown(), plot.tag.position = "bottom")
+  complete_plots[[2]] <- complete_plot
   
   # Saving the the complete plots
   
@@ -2130,7 +2145,9 @@ plot_irn <- function(data_i,
         -1
       }, ")",
     )), y = "Larvae C/N") +
-    geom_smooth(color = "#6D6DA5", method = lm,na.rm = T) +
+    geom_smooth(color = "#6D6DA5",
+                method = lm,
+                na.rm = T) +
     ggpubr::stat_cor(
       method = "pearson",
       cor.coef.name = c("rho"),
@@ -2162,7 +2179,9 @@ plot_irn <- function(data_i,
         -1
       }, ")",
     )), y = "Larvae N/P") +
-    geom_smooth(color = "#A37665", method = lm, na.rm = T) +
+    geom_smooth(color = "#A37665",
+                method = lm,
+                na.rm = T) +
     scale_y_continuous(limits = c(NA, max(data_larvae$N_P, na.rm = T) + 0.1 * (
       max(data_larvae$N_P, na.rm = T) - min(data_larvae$N_P, na.rm = T)
     ))) +
@@ -2198,7 +2217,9 @@ plot_irn <- function(data_i,
         -1
       }, ")",
     )), y = "Larvae C/P") +
-    geom_smooth(color = "#B68940", method = lm,na.rm = T) +
+    geom_smooth(color = "#B68940",
+                method = lm,
+                na.rm = T) +
     scale_y_continuous(limits = c(NA, max(data_larvae$C_P, na.rm = T) + 0.1 * (
       max(data_larvae$C_P, na.rm = T) - min(data_larvae$C_P, na.rm = T)
     ))) +
@@ -2343,7 +2364,7 @@ plot_irn <- function(data_i,
     np_frass,
     ncol = 3,
     nrow = 2,
-    labels = c("a.", "b.", "c.", "d.", "e.", "f."),
+    labels = c("(a)", "(b)", "(c)", "(d)", "(e)", "(f)"),
     label.y = 1,
     label.x = 0,
     heights = c(1, 1, 1),
@@ -2511,7 +2532,7 @@ plot_irn <- function(data_i,
     rtl_dw_msirfw + ggpubr::rremove("xlab"),
     ncol = 2,
     nrow = 1,
-    labels = c("a.", "b."),
+    labels = c("(a)", "(b)"),
     label.y = 1.1,
     label.x = 0,
     heights = c(1),
@@ -2548,6 +2569,274 @@ plot_irn <- function(data_i,
     height = 3,
     units = "in"
   )
+  
+  
+  ## Centered log ratio versions ########
+  
+  ### Assimilation fluxes #####
+  
+  data_assimflux_wide <- filter(
+    data_g,
+    variable == "assimilation_flux_dw",
+    element %in% elements,
+    !is.na(elemental_value)
+  ) |>
+    select(mean_mass_specific_intake_rate_dw,
+           element,
+           elemental_value) |>
+    pivot_wider(values_from = "elemental_value" , names_from = "element") |>
+    na.omit()
+  
+  data_absflux_long <- data_assimflux_wide %>%
+    mutate(log(pick(all_of(elements))) - rowMeans(log(pick(all_of(
+      elements
+    ))))) %>%
+    pivot_longer(cols = all_of(elements),
+                 names_to = "element",
+                 values_to = "elemental_value")
+  
+  clr_assimflux_dw_msirfw = ggplot2::ggplot(
+    data_absflux_long,
+    aes(
+      x = mean_mass_specific_intake_rate_dw,
+      y = elemental_value,
+      colour = element,
+      group = element,
+      fill = element
+    )
+  ) +
+    geom_point(
+      alpha = 0.5,
+      shape = 16,
+      size = 0.5,
+      na.rm = TRUE
+    ) +
+    geom_smooth(
+      method = "gam",
+      formula = y ~ s(x),
+      se = FALSE,
+      method.args = list(method = "REML"),
+      # Default Gaussian family for real-valued CLR
+      na.rm = TRUE
+    ) +
+    scale_color_manual(
+      values = colours_elements,
+      aesthetics = c("colour", "fill"),
+      labels = order_elements_legend,
+      limits = c("K", "Mg", "C", "N", "P", "S", "Ca", "Na")
+    ) +
+    labs(
+      x = "Intake rate <br> (<span style='font-size:8pt;'>g<sub>intake</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)",
+      y = "Centered log-ratio (CLR) of assimilation fluxes",
+      fill = "Element",
+      color = "Element"
+    ) +
+    theme(
+      legend.position = "right",
+      axis.title.x = element_markdown(),
+      axis.title.y = element_markdown()
+    )
+  
+  
+  ### Assimilation efficiency #####
+  
+  data_assimeff_wide <- filter(
+    data_g,
+    variable == "assimilation_efficiency_dw",
+    element %in% elements,
+    !is.na(elemental_value)
+  ) |>
+    select(mean_mass_specific_intake_rate_dw,
+           element,
+           elemental_value) |>
+    pivot_wider(values_from = "elemental_value" , names_from = "element") |>
+    na.omit()
+  
+  data_abseff_long <- data_assimeff_wide %>%
+    mutate(log(pick(all_of(elements))) - rowMeans(log(pick(all_of(
+      elements
+    ))))) %>%
+    pivot_longer(cols = all_of(elements),
+                 names_to = "element",
+                 values_to = "elemental_value")
+  
+  clr_assimeff_dw_msirfw = ggplot2::ggplot(
+    data_abseff_long,
+    aes(
+      x = mean_mass_specific_intake_rate_dw,
+      y = elemental_value,
+      colour = element,
+      group = element,
+      fill = element
+    )
+  ) +
+    geom_point(
+      alpha = 0.5,
+      shape = 16,
+      size = 0.5,
+      na.rm = TRUE
+    ) +
+    geom_smooth(
+      method = "gam",
+      formula = y ~ s(x),
+      se = FALSE,
+      method.args = list(method = "REML"),
+      # Default Gaussian family for real-valued CLR
+      na.rm = TRUE
+    ) +
+    scale_color_manual(
+      values = colours_elements,
+      aesthetics = c("colour", "fill"),
+      labels = order_elements_legend,
+      limits = c("K", "Mg", "C", "N", "P", "S", "Ca", "Na")
+    ) +
+    labs(
+      x = "Intake rate <br> (<span style='font-size:8pt;'>g<sub>intake</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)",
+      y = "Centered log-ratio (CLR) of assimilation efficiencies",
+      fill = "Element",
+      color = "Element"
+    ) +
+    theme(
+      legend.position = "right",
+      axis.title.x = element_markdown(),
+      axis.title.y = element_markdown()
+    )
+  
+  
+  ### Larval composition #####
+  
+  data_larvae_wide <- filter(data_g,
+                             variable == "larvae",
+                             element %in% elements,
+                             !is.na(elemental_value)) |>
+    select(mean_mass_specific_intake_rate_dw,
+           element,
+           elemental_value) |>
+    pivot_wider(values_from = "elemental_value" , names_from = "element") |>
+    na.omit()
+  
+  data_larvae_long <- data_larvae_wide %>%
+    # Scale C and N by 10^-2, and all other elements by 10^-6
+    mutate(across(all_of(c("C", "N")), ~ .x * 1e-2), across(all_of(setdiff(
+      elements, c("C", "N")
+    )), ~ .x * 1e-6)) %>%
+    # Centered Log-Ratio: log(x) - mean(log(x)) across all 8 elements per row
+    mutate(log(pick(all_of(elements))) - rowMeans(log(pick(all_of(
+      elements
+    ))))) %>%
+    pivot_longer(cols = all_of(elements),
+                 names_to = "element",
+                 values_to = "elemental_value")
+  
+  clr_larvae_dw_msirfw = ggplot2::ggplot(
+    data_larvae_long,
+    aes(
+      x = mean_mass_specific_intake_rate_dw,
+      y = elemental_value,
+      colour = element,
+      group = element,
+      fill = element
+    )
+  ) +
+    geom_point(
+      alpha = 0.5,
+      shape = 16,
+      size = 0.5,
+      na.rm = TRUE
+    ) +
+    geom_smooth(
+      method = "gam",
+      formula = y ~ s(x),
+      se = FALSE,
+      method.args = list(method = "REML"),
+      # Default Gaussian family for real-valued CLR
+      na.rm = TRUE
+    ) +
+    scale_color_manual(
+      values = colours_elements,
+      aesthetics = c("colour", "fill"),
+      labels = order_elements_legend,
+      limits = c("K", "Mg", "C", "N", "P", "S", "Ca", "Na")
+    ) +
+    labs(
+      x = "Intake rate <br> (<span style='font-size:8pt;'>g<sub>intake</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)",
+      y = "Centered log-ratio (CLR) of larvae composition",
+      fill = "Element",
+      color = "Element"
+    ) +
+    theme(
+      legend.position = "right",
+      axis.title.x = element_markdown(),
+      axis.title.y = element_markdown()
+    )
+  
+  
+  ### Frass composition #####
+  
+  data_frass_wide <- filter(data_g,
+                            variable == "frass",
+                            element %in% elements,
+                            !is.na(elemental_value)) |>
+    select(mean_mass_specific_intake_rate_dw,
+           element,
+           elemental_value) |>
+    pivot_wider(values_from = "elemental_value" , names_from = "element") |>
+    na.omit()
+  
+  data_frass_long <- data_frass_wide %>%
+    # Scale C and N by 10^-2, and all other elements by 10^-6
+    mutate(across(all_of(c("C", "N")), ~ .x * 1e-2), across(all_of(setdiff(
+      elements, c("C", "N")
+    )), ~ .x * 1e-6)) %>%
+    # Centered Log-Ratio: log(x) - mean(log(x)) across all 8 elements per row
+    mutate(log(pick(all_of(elements))) - rowMeans(log(pick(all_of(
+      elements
+    ))))) %>%
+    pivot_longer(cols = all_of(elements),
+                 names_to = "element",
+                 values_to = "elemental_value")
+  
+  clr_frass_dw_msirfw = ggplot2::ggplot(
+    data_frass_long,
+    aes(
+      x = mean_mass_specific_intake_rate_dw,
+      y = elemental_value,
+      colour = element,
+      group = element,
+      fill = element
+    )
+  ) +
+    geom_point(
+      alpha = 0.5,
+      shape = 16,
+      size = 0.5,
+      na.rm = TRUE
+    ) +
+    geom_smooth(
+      method = "gam",
+      formula = y ~ s(x),
+      se = FALSE,
+      method.args = list(method = "REML"),
+      # Default Gaussian family for real-valued CLR
+      na.rm = TRUE
+    ) +
+    scale_color_manual(
+      values = colours_elements,
+      aesthetics = c("colour", "fill"),
+      labels = order_elements_legend,
+      limits = c("K", "Mg", "C", "N", "P", "S", "Ca", "Na")
+    ) +
+    labs(
+      x = "Intake rate <br> (<span style='font-size:8pt;'>g<sub>intake</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)",
+      y = "Centered log-ratio (CLR) of frass composition",
+      fill = "Element",
+      color = "Element"
+    ) +
+    theme(
+      legend.position = "right",
+      axis.title.x = element_markdown(),
+      axis.title.y = element_markdown()
+    )
   
   # 3. Isotopy figures ##########
   
@@ -2597,7 +2886,9 @@ plot_irn <- function(data_i,
         -1
       }, ")",
     )), y = expression(paste(Delta, "15N"))) +
-    geom_smooth(color = "steelblue3", method = "lm", na.rm = T)
+    geom_smooth(color = "steelblue3",
+                method = "lm",
+                na.rm = T)
   
   ggsave(
     filename = "15ntf_&_msir.pdf",
@@ -2617,7 +2908,9 @@ plot_irn <- function(data_i,
     geom_point(size = 1.5, na.rm = T) +
     xlim(0, NA) +
     labs(x = expression(paste("Growth rate")), y = expression(paste(Delta, "13C"))) +
-    geom_smooth(color = "steelblue3", method = "lm", na.rm = T) +
+    geom_smooth(color = "steelblue3",
+                method = "lm",
+                na.rm = T) +
     ggpubr::stat_cor(
       aes(label = paste(
         after_stat(rr.label), after_stat(p.label), sep = "~`,`~"
@@ -2625,7 +2918,8 @@ plot_irn <- function(data_i,
       method = "pearson",
       # cor.coef.name = c("rho"),
       label.x.npc = 0.2,
-      label.y.npc = 1, na.rm = T
+      label.y.npc = 1,
+      na.rm = T
     ) +
     ylim(NA, max(data_tf$`13C`, na.rm = T) + 0.2 * (abs(
       max(data_tf$`13C`, na.rm = T) - min(data_tf$`13C`, na.rm = T)
@@ -2647,7 +2941,9 @@ plot_irn <- function(data_i,
     geom_point(size = 1.5, na.rm = T) +
     xlim(0, NA) +
     labs(x = expression(paste("Growth rate")), y = expression(paste(Delta, "15N"))) +
-    geom_smooth(color = "steelblue3", method = "lm", na.rm = T) +
+    geom_smooth(color = "steelblue3",
+                method = "lm",
+                na.rm = T) +
     ggpubr::stat_cor(
       aes(label = paste(
         after_stat(rr.label), after_stat(p.label), sep = "~`,`~"
@@ -2655,7 +2951,8 @@ plot_irn <- function(data_i,
       method = "pearson",
       # cor.coef.name = c("rho"),
       label.x.npc = 0.2,
-      label.y.npc = 1, na.rm = T
+      label.y.npc = 1,
+      na.rm = T
     ) +
     ylim(NA, max(data_tf$`15N`, na.rm = T) + 0.2 * (abs(
       max(data_tf$`15N`, na.rm = T) - min(data_tf$`15N`, na.rm = T)
@@ -2678,7 +2975,9 @@ plot_irn <- function(data_i,
   p <- ggplot2::ggplot(data_tf, aes(x = mean_growth_dw, y = `13C`)) +
     geom_point(size = 1.5, na.rm = T) +
     labs(x = "Mass-specific growth rate (mg fw/ day)", y = expression(paste(Delta, "13C"))) +
-    geom_smooth(color = "steelblue3", method = "lm", na.rm = T)
+    geom_smooth(color = "steelblue3",
+                method = "lm",
+                na.rm = T)
   
   ggsave(
     filename = "13ctf_&_msgr.pdf",
@@ -2694,7 +2993,9 @@ plot_irn <- function(data_i,
   p <- ggplot2::ggplot(data_tf, aes(x = mean_growth_dw, y = `15N`)) +
     geom_point(size = 1.5, na.rm = T) +
     labs(x = "Mass-specific growth rate (mg fw/ day)", y = expression(paste(Delta, "15N"))) +
-    geom_smooth(color = "steelblue3", method = "lm", na.rm = T)
+    geom_smooth(color = "steelblue3",
+                method = "lm",
+                na.rm = T)
   
   ggsave(
     filename = "15ntf_&_msgr.pdf",
@@ -2713,7 +3014,9 @@ plot_irn <- function(data_i,
   p <- ggplot2::ggplot(data_tf, aes(x = growth_efficiency_fw, y = `13C`)) +
     geom_point(size = 1.5, na.rm = T) +
     labs(x = "Growth efficiency", y = expression(paste(Delta, "13C"))) +
-    geom_smooth(color = "steelblue3", method = "lm", na.rm = T)
+    geom_smooth(color = "steelblue3",
+                method = "lm",
+                na.rm = T)
   
   ggsave(
     filename = "13ctf_&_gefw.pdf",
@@ -2729,7 +3032,9 @@ plot_irn <- function(data_i,
   p <- ggplot2::ggplot(data_tf, aes(x = growth_efficiency_fw, y = `15N`)) +
     geom_point(size = 1.5, na.rm = T) +
     labs(x = "Growth efficiency", y = expression(paste(Delta, "15N"))) +
-    geom_smooth(color = "steelblue3", method = "lm", na.rm = T)
+    geom_smooth(color = "steelblue3",
+                method = "lm",
+                na.rm = T)
   
   ggsave(
     filename = "15ntf_&_gefw.pdf",
@@ -2761,7 +3066,9 @@ plot_irn <- function(data_i,
       )),
       y = latex2exp::TeX(r'($\delta 13C_{frass}-\delta 13C_{food}$)')
     ) +
-    geom_smooth(color = "steelblue3", method = "lm", na.rm = T)
+    geom_smooth(color = "steelblue3",
+                method = "lm",
+                na.rm = T)
   
   ggsave(
     filename = "13cffdf_&_msir.pdf",
@@ -2787,7 +3094,9 @@ plot_irn <- function(data_i,
       )),
       y = latex2exp::TeX(r'($\delta 15N_{frass}-\delta 15N_{food}$)')
     ) +
-    geom_smooth(color = "steelblue3", method = "lm", na.rm = T)
+    geom_smooth(color = "steelblue3",
+                method = "lm",
+                na.rm = T)
   
   ggsave(
     filename = "15nffdf_&_msir.pdf",
@@ -2810,7 +3119,9 @@ plot_irn <- function(data_i,
     geom_point(size = 1.5, na.rm = T) +
     labs(x = "Assimilation efficiency (%)",
          y = latex2exp::TeX(r'($\delta 13C_{frass}-\delta 13C_{food}$)')) +
-    geom_smooth(color = "steelblue3", method = "lm", na.rm = T)
+    geom_smooth(color = "steelblue3",
+                method = "lm",
+                na.rm = T)
   
   ggsave(
     filename = "13cffdf_&_aedw.pdf",
@@ -2827,7 +3138,9 @@ plot_irn <- function(data_i,
     geom_point(size = 1.5, na.rm = T) +
     labs(x = "Assimilation efficiency (%)",
          y = latex2exp::TeX(r'($\delta 15N_{frass}-\delta 15N_{food}$)')) +
-    geom_smooth(color = "steelblue3", method = "lm", na.rm = T)
+    geom_smooth(color = "steelblue3",
+                method = "lm",
+                na.rm = T)
   
   ggsave(
     filename = "15nffdf_&_aedw.pdf",
@@ -2859,7 +3172,9 @@ plot_irn <- function(data_i,
       )),
       y = latex2exp::TeX(r'($\delta 13C_{frass}-\delta 13C_{larvae}$)')
     ) +
-    geom_smooth(color = "steelblue3", method = "lm", na.rm = T)
+    geom_smooth(color = "steelblue3",
+                method = "lm",
+                na.rm = T)
   
   ggsave(
     filename = "13cfldf_&_msir.pdf",
@@ -2885,7 +3200,9 @@ plot_irn <- function(data_i,
       )),
       y = latex2exp::TeX(r'($\delta 15N_{frass}-\delta 15N_{larvae}$)')
     ) +
-    geom_smooth(color = "steelblue3", method = "lm", na.rm = T)
+    geom_smooth(color = "steelblue3",
+                method = "lm",
+                na.rm = T)
   
   ggsave(
     filename = "15nfldf_&_msir.pdf",
@@ -2908,9 +3225,12 @@ plot_irn <- function(data_i,
     geom_point(size = 1.5, na.rm = T) +
     xlim(0, NA) +
     labs(x = "Intake rate <br> (mg<sub>food(fw)</sub> mg<sub>body(fw)</sub><sup>-1</sup> day<sup>-1</sup>)", y = "C IAER") +
-    geom_smooth(color = "steelblue3",
-                method = "lm",
-                span = 0.75, na.rm = T) +
+    geom_smooth(
+      color = "steelblue3",
+      method = "lm",
+      span = 0.75,
+      na.rm = T
+    ) +
     theme(axis.title.x = element_markdown()) +
     ggpubr::stat_cor(
       aes(label = paste(
@@ -2919,7 +3239,8 @@ plot_irn <- function(data_i,
       method = "pearson",
       # cor.coef.name = c("rho"),
       label.x.npc = 0.2,
-      label.y.npc = 1, na.rm = T
+      label.y.npc = 1,
+      na.rm = T
     ) +
     ylim(NA, max(data_aer$`C`, na.rm = T) + 0.2 * abs(max(data_aer$`C`, na.rm = T) - min(data_aer$`C`, na.rm = T)))
   
@@ -2943,7 +3264,9 @@ plot_irn <- function(data_i,
         -1
       }, ")",
     )), y = "N IAER") +
-    geom_smooth(color = "steelblue3", method = "lm", na.rm = T) +
+    geom_smooth(color = "steelblue3",
+                method = "lm",
+                na.rm = T) +
     ggpubr::stat_cor(
       aes(label = paste(
         after_stat(rr.label), after_stat(p.label), sep = "~`,`~"
@@ -2951,7 +3274,8 @@ plot_irn <- function(data_i,
       method = "pearson",
       # cor.coef.name = c("rho"),
       label.x.npc = 0.2,
-      label.y.npc = 1, na.rm = T
+      label.y.npc = 1,
+      na.rm = T
     ) +
     ylim(NA, max(data_aer$`N`, na.rm = T) + 0.2 * abs(max(data_aer$`N`, na.rm = T) - min(data_aer$`N`, na.rm = T)))
   
@@ -2974,7 +3298,9 @@ plot_irn <- function(data_i,
   p <- ggplot2::ggplot(data_aer, aes(x = assimilation_efficiency_dw, y = `C`)) +
     geom_point(size = 1.5, na.rm = T) +
     labs(x = "Assimilation efficiency (%)", y = "C IAER") +
-    geom_smooth(color = "steelblue3", method = "lm", na.rm = T)
+    geom_smooth(color = "steelblue3",
+                method = "lm",
+                na.rm = T)
   
   ggsave(
     filename = "ciaer_&_ae.pdf",
@@ -2990,7 +3316,9 @@ plot_irn <- function(data_i,
   p <- ggplot2::ggplot(data_aer, aes(x = assimilation_efficiency_dw, y = `N`)) +
     geom_point(size = 1.5, na.rm = T) +
     labs(x = "Assimilation efficiency (%)", y = "N IAER") +
-    geom_smooth(color = "steelblue3", method = "lm", na.rm = T)
+    geom_smooth(color = "steelblue3",
+                method = "lm",
+                na.rm = T)
   
   ggsave(
     filename = "niaer_&_ae.pdf",
@@ -3021,7 +3349,7 @@ plot_irn <- function(data_i,
       plots[[2]],
       ncol = 2,
       nrow = 1,
-      labels = c("a.", "b."),
+      labels = c("(a)", "(b)"),
       label.y = 1.1,
       label.x = 0,
       heights = 1,
@@ -3045,7 +3373,7 @@ plot_irn <- function(data_i,
       plots[[4]],
       ncol = 2,
       nrow = 1,
-      labels = c("c.", "d."),
+      labels = c("(c)", "(d)"),
       label.y = 1.1,
       label.x = 0,
       heights = 1,
@@ -3075,4 +3403,3 @@ plot_irn <- function(data_i,
   )
   
 }
-
