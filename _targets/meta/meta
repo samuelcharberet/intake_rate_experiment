@@ -28,9 +28,9 @@ load_group_data|function|ee38bdf0a38b1f9f
 average_value|function|1516ccb9f9018eee
 load_food_control_data|function|184a7ba008f2bf8c
 combine_group_data|function|dc5e25d0c3ff5030
-plot_irn|function|ee4dc25090d19b29
+plot_irn|function|d5b9256448372fe9
 as.data.frame.pwpm|function|880953ef14c2c33d
 model_irn|function|bc4ec7d0ca940a68
 load_individual_data|function|8cfb1047755f0de1
 combine_individual_data|function|4875ad39e89b1368
-plots_irn|stem|0c426def301a66b8|2f746841af72da03|90cedd7f3406ba0c|485447517|C:/Users/scharber/Documents/6_projects/4_intake_rate_experiment/4_outputs/2_figures/isotopy_figure.pdf|t20661.7233922139s||32545|file|local|vector|||22.859||unused arguments (hjust = -0.7, vjust = 1.7)
+plots_irn|stem|5c4f2a73ebf3fd5c|2f746841af72da03|f49808ae80404df9|485447517|C:/Users/scharber/Documents/6_projects/4_intake_rate_experiment/4_outputs/2_figures/isotopy_figure.pdf|t20662.3762320792s|s32535b|32535|file|local|vector|||37.078||

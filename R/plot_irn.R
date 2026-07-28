@@ -188,9 +188,7 @@ plot_irn <- function(data_i,
       ylim(y_lims) +
       labs(x = "",
            y = paste("Food ", elements[i], " (", units_content[i], ")", sep = "")) +
-      theme(
-        legend.position = "none"
-      )
+      theme(legend.position = "none")
   }
   
   complete_plot <- ggarrange(
@@ -198,12 +196,15 @@ plot_irn <- function(data_i,
     ncol = 4,
     nrow = 2,
     labels = c("(a)", "(b)", "(c)", "(d)", "(e)", "(f)", "(g)", "(h)"),
-    hjust = -0.7,
-    vjust = 1.7
+    hjust = 0,
+    vjust = 0
   )
   
-  complete_plots <- annotate_figure(complete_plot,
-                                    bottom = text_grob("Temporal block", size = 12, face = "plain"))
+  complete_plots <- annotate_figure(
+    complete_plot,
+    bottom = text_grob("Temporal block", size = 12, face = "plain"),
+    top = ""
+  )
   
   ggsave(
     filename = "food_compo_&_week.pdf",
@@ -1171,8 +1172,12 @@ plot_irn <- function(data_i,
     gedw_msgrdw,
     ncol = 2,
     nrow = 2,
-    labels = c("(a)", "(b)", "(c)", "(d)")
+    labels = c("(a)", "(b)", "(c)", "(d)"),
+    hjust = 0,
+    vjust = 0
   )
+  
+  complete_plot = ggpubr::annotate_figure(complete_plot, top = "")
   
   ggsave(
     filename = paste("total_mass_balance.pdf", sep = ""),
@@ -1246,7 +1251,6 @@ plot_irn <- function(data_i,
     ggtitle("")
   
   # Derivative of growth efficiency dw according to mass specific growth rate dw
-  broom::tidy(mod_gedw_msgrdw)
   
   deriv <- gratia::derivatives(mod_gedw_msgrdw, interval = "confidence")
   deriv_gedw_msgrdw <- draw(
@@ -1272,8 +1276,12 @@ plot_irn <- function(data_i,
     deriv_gedw_msgrdw[[1]],
     ncol = 2,
     nrow = 2,
-    labels = paste0("(", letters[1:4], ")")
+    labels = paste0("(", letters[1:4], ")"),
+    hjust = 0,
+    vjust = 0
   )
+  
+  derivative_complete_plot = ggpubr::annotate_figure(derivative_complete_plot, top = "")
   
   
   ggsave(
@@ -1380,11 +1388,13 @@ plot_irn <- function(data_i,
     ncol = 4,
     nrow = 2,
     labels = c("(a)", "(b)", "(c)", "(d)", "(e)", "(f)", "(g)", "(h)"),
-    label.y = 1,
-    label.x = 0,
+    hjust = 0,
+    vjust = 0,
     heights = c(0.5, 0.5),
     widths = c(1, 1, 1, 1)
   )
+  
+  complete_matrices = ggpubr::annotate_figure(complete_matrices, top = "")
   
   # Save the complete plot
   ggsave(
@@ -1444,9 +1454,7 @@ plot_irn <- function(data_i,
       labs(x = "",
            y = paste(elements[i], " (", units_content[i], ")", sep = "")) +
       scale_x_discrete(limits = c("Food", "Larvae")) +
-      theme(
-        axis.text.x = element_text(angle = 45, hjust = 1)
-      )
+      theme(axis.text.x = element_text(angle = 45, hjust = 1))
     
     plots_matrices[[i]] <- p
   }
@@ -1466,9 +1474,11 @@ plot_irn <- function(data_i,
     labels = c("(a)", "(b)", "(c)", "(d)", "(e)", "(f)", "(g)", "(h)"),
     heights = c(0.5, 0.5),
     widths = c(1, 1, 1, 1),
-    hjust = -0.7,
-    vjust = 1.7
+    hjust = 0,
+    vjust = 0
   )
+  
+  complete_matrices = ggpubr::annotate_figure(complete_matrices, top = "")
   
   # Save the complete plot
   ggsave(
@@ -1604,7 +1614,8 @@ plot_irn <- function(data_i,
   
   grh_complete_plot <- annotate_figure(
     grh_complete_plot,
-    bottom = richtext_grob(text = "Growth rate <br> (<span style='font-size:8pt;'>g<sub>growth</sub> · g<sub>body</sub><sup>-1</sup> · d<sup>-1</sup></span>)", gp = gpar(fontsize = 10))
+    bottom = richtext_grob(text = "Growth rate <br> (<span style='font-size:8pt;'>g<sub>growth</sub> · g<sub>body</sub><sup>-1</sup> · d<sup>-1</sup></span>)"),
+    top = ""
   )
   
   # Saving the the complete plots
@@ -1809,9 +1820,7 @@ plot_irn <- function(data_i,
           j != 3, paste("(", units_loop[i, j], ")", sep =
                           ""), ""
         ))) +
-        theme(
-          axis.title.x = element_markdown()
-        )
+        theme(axis.title.x = element_markdown())
       
       
       if (j == 4) {
@@ -1833,9 +1842,7 @@ plot_irn <- function(data_i,
         scale = 1,
         width = 7,
         height = 4,
-        units = "in",
-        hjust = -0.7,
-        vjust = 1.7
+        units = "in"
       )
       
       # Derivatives
@@ -1861,11 +1868,8 @@ plot_irn <- function(data_i,
               elements[i]
             )
           ) +
-          theme(
-            axis.title.x = element_markdown(),
-            axis.title.y = element_markdown(),
-            plot.margin = margin(0, 0, 0, 0)
-          ) +
+          theme(axis.title.x = element_markdown(),
+                axis.title.y = element_markdown()) +
           ggtitle("")
         
         
@@ -1908,12 +1912,15 @@ plot_irn <- function(data_i,
       plotlist = plots[[i]][1:8],
       ncol = 4,
       nrow = 2,
-      labels = paste0("(", letters[1:8], ")")
+      labels = paste0("(", letters[1:8], ")"),
+      hjust = 0,
+      vjust = 0
     )
     
     complete_plots[[i]] <- annotate_figure(
       complete_plot,
-      bottom = richtext_grob(text = "Intake rate <br> (<span style='font-size:8pt;'>g<sub>intake</sub> · g<sub>body</sub><sup>-1</sup> · d<sup>-1</sup></span>)", gp = gpar(fontsize = 10))
+      bottom = richtext_grob(text = "Intake rate <br> (<span style='font-size:8pt;'>g<sub>intake</sub> · g<sub>body</sub><sup>-1</sup> · d<sup>-1</sup></span>)"),
+      top = ""
     )
     
     # Saving the the complete plots
@@ -1983,9 +1990,7 @@ plot_irn <- function(data_i,
         na.rm = T
       ) +
       labs(x = "Intake rate <br> (mg<sub>food</sub> mg<sub>body</sub><sup>-1</sup> day<sup>-1</sup>)", y = paste("GE of", elements[i])) +
-      theme(
-        axis.title.x = element_markdown()
-      )
+      theme(axis.title.x = element_markdown())
     
     
     # Save each plot
@@ -2000,7 +2005,7 @@ plot_irn <- function(data_i,
       units = "in"
     )
     
-    # Elemental growth efficiency
+    # Elemental growth investment
     
     plots[[2]][[i]] <- ggplot2::ggplot(
       data_matrix_element,
@@ -2022,11 +2027,9 @@ plot_irn <- function(data_i,
           "Intake rate <br> (mg<sub>food</sub> mg<sub>body</sub><sup>-1</sup> day<sup>-1</sup>)",
           elements[i]
         ),
-        y = paste("Growth/assimilation ratio of", elements[i])
+        y = paste("GI of", elements[i])
       ) +
-      theme(
-        axis.title.x = element_markdown()
-      )
+      theme(axis.title.x = element_markdown())
     
     
     # Save each plot
@@ -2050,9 +2053,11 @@ plot_irn <- function(data_i,
   complete_plots_widths <- c(7, 7)
   complete_plots_heights <- c(4, 4)
   
-  # Removing the x axis title in the GE IR plot
-  for (j in 1:nb_elements) {
-    plots[[1]][[j]] <- plots[[1]][[j]] + ggpubr::rremove("xlab")
+  # Removing the x axis title in the plots
+  for (i in 1:2) {
+    for (j in 1:nb_elements) {
+      plots[[i]][[j]] <- plots[[i]][[j]] + ggpubr::rremove("xlab")
+    }
   }
   
   complete_plot <- ggarrange(
@@ -2060,13 +2065,14 @@ plot_irn <- function(data_i,
     ncol = 4,
     nrow = 2,
     labels = paste0("(", letters[1:8], ")"),
-    hjust = -0.7,
-    vjust = 1.7
+    hjust = 0,
+    vjust = 0
   )
   
   complete_plots[[1]] <- annotate_figure(
     complete_plot,
-    bottom = text_grob(label = "Intake rate <br> (<span style='font-size:8pt;'>g<sub>intake</sub> · g<sub>body</sub><sup>-1</sup> · d<sup>-1</sup></span>)", )
+    bottom = richtext_grob(text = "Intake rate <br> (<span style='font-size:8pt;'>g<sub>intake</sub> · g<sub>body</sub><sup>-1</sup> · d<sup>-1</sup></span>)"),
+    top = ""
   )
   
   # Saving the the complete plots
@@ -2089,12 +2095,15 @@ plot_irn <- function(data_i,
     ncol = 4,
     nrow = 2,
     labels = paste0("(", letters[1:8], ")"),
-    hjust = -0.7,
-    vjust = 1.7
+    hjust = 0,
+    vjust = 0
   )
   
-  complete_plots[[2]] <- complete_plot
-  
+  complete_plots[[2]] <- annotate_figure(
+    complete_plot,
+    bottom = richtext_grob(text = "Intake rate <br> (<span style='font-size:8pt;'>g<sub>intake</sub> · g<sub>body</sub><sup>-1</sup> · d<sup>-1</sup></span>)"),
+    top = ""
+  )
   # Saving the the complete plots
   
   ggsave(
@@ -2365,11 +2374,13 @@ plot_irn <- function(data_i,
     ncol = 3,
     nrow = 2,
     labels = c("(a)", "(b)", "(c)", "(d)", "(e)", "(f)"),
-    label.y = 1,
-    label.x = 0,
+    vjust = 1,
+    hjust = 0,
     heights = c(1, 1, 1),
     widths = c(1, 1)
   )
+  
+  complete_stoichiometry = ggpubr::annotate_figure(complete_stoichiometry, top = "")
   
   complete_stoichiometry <- ggpubr::annotate_figure(
     complete_stoichiometry,
@@ -2533,8 +2544,8 @@ plot_irn <- function(data_i,
     ncol = 2,
     nrow = 1,
     labels = c("(a)", "(b)"),
-    label.y = 1.1,
-    label.x = 0,
+    hjust = 0,
+    vjust = 0,
     heights = c(1),
     widths = c(1, 1),
     common.legend = T,
@@ -2546,21 +2557,14 @@ plot_irn <- function(data_i,
     bottom = gridtext::richtext_grob(
       "Intake rate <br> (<span style='font-size:8pt;'>g<sub>intake</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)",
       hjust = 0.5,
-      # Center alignment
-      gp = grid::gpar(col = "black")  # Text color
+      gp = grid::gpar(col = "black")
     ),
-    top = ""  # Set to an empty string if you don't want a top title
+    top = ""
   )
   
   # Save the plot
   ggsave(
-    filename = paste(
-      "retention_times",
-      "efficiencies",
-      "layered",
-      "dw_&_msirfw.pdf",
-      sep = ""
-    ),
+    filename = "retention_times_efficiencies_layered_dw_&_msirfw.pdf",
     plot = complete_plot,
     device = pdf,
     path = here::here("4_outputs", "3_figures_paper"),
@@ -3350,8 +3354,8 @@ plot_irn <- function(data_i,
       ncol = 2,
       nrow = 1,
       labels = c("(a)", "(b)"),
-      label.y = 1.1,
-      label.x = 0,
+      hjust = 0,
+      vjust = 0,
       heights = 1,
       widths = c(1, 1)
     ),
@@ -3374,8 +3378,8 @@ plot_irn <- function(data_i,
       ncol = 2,
       nrow = 1,
       labels = c("(c)", "(d)"),
-      label.y = 1.1,
-      label.x = 0,
+      hjust = 0,
+      vjust = 0,
       heights = 1,
       widths = c(1, 1)
     ),
