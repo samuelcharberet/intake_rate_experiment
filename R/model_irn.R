@@ -5,6 +5,12 @@
 #'
 #' @examples
 model_irn <- function(data_i, data_g) {
+  
+  # First delete the model folders to recreate them
+  models_path = here::here("4_outputs", "1_statistical_results")
+  dir_delete(models_path)
+  dir_create(models_path)
+  
   # We have two datasets, one at the level of individuals for total mass balance
   # and another at the level of the group, for chemical data only (elements and isotopes)
   

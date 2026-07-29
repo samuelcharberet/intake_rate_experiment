@@ -9,6 +9,15 @@ plot_irn <- function(data_i,
                      data_model,
                      data_fc,
                      data_ic) {
+  # First delete the figures folders to recreate them
+  figures_path = here::here("4_outputs", "2_figures")
+  figures_paper_path = here::here("4_outputs", "3_figures_paper")
+  
+  dir_delete(figures_path)
+  dir_create(figures_path)
+  dir_delete(figures_paper_path)
+  dir_create(figures_paper_path)
+  
   # Set global options and variables for the plots ####
   
   ggplot2::theme_set(
@@ -1296,8 +1305,7 @@ plot_irn <- function(data_i,
   
   # 2. Chemical balance figures ##########
   
-  
-  # Options for the plots
+  # Options for the plots #####
   
   variables <- c("larvae",
                  "frass",
@@ -1305,96 +1313,203 @@ plot_irn <- function(data_i,
                  "retention_time")
   nb_variables <- length(variables)
   
+  ## Comparisons of larvae and food composition on the simplex ########
+  
+  # 1. Initialize an empty data frame
+  larva_food_assim_data <- data.frame(
+    element = character(),
+    average_food_level = numeric(),
+    average_larvae_level = numeric(),
+    average_larvae_assimilation = numeric(),
+    stringsAsFactors = FALSE
+  )
+  
+  # 2. Append directly inside the loop
+  for (i in 1:nb_elements) {
+    el <- elements[i]
+    data_element <- subset(data_g, element == el)
+    
+    food_col_name <- paste0("food_", el)
+    
+    # Calculate averages
+    avg_food <- mean(data_element[[food_col_name]], na.rm = TRUE)
+    avg_larvae <- mean(data_element$elemental_value[data_element$variable == "larvae"], na.rm = TRUE)
+    avg_assimilation <- mean(data_element$elemental_value[data_element$variable == "assimilation_efficiency_dw"], na.rm = TRUE)
+    
+    # Append the new row using rbind()
+    larva_food_assim_data <- rbind(
+      larva_food_assim_data,
+      data.frame(
+        element = el,
+        average_food_level = avg_food,
+        average_larvae_level = avg_larvae,
+        average_larvae_assimilation = avg_assimilation,
+        stringsAsFactors = FALSE
+      )
+    )
+  }
+  
+  
+  larva_food_assim_data$food_ppm <- ifelse(
+    larva_food_assim_data$element %in% c("C", "N"),
+    larva_food_assim_data$average_food_level * 10000,
+    larva_food_assim_data$average_food_level
+  )
+  
+  larva_food_assim_data$larvae_ppm <- ifelse(
+    larva_food_assim_data$element %in% c("C", "N"),
+    larva_food_assim_data$average_larvae_level * 10000,
+    larva_food_assim_data$average_larvae_level
+  )
+  
+  # CLR transform
+
+  clr = function(x) {
+    log(x/exp(mean(log(x))))
+  }
+  
+  
+  # Compute CLR coordinates
+  larva_food_assim_data$clr_food <- clr(larva_food_assim_data$food_ppm)
+  larva_food_assim_data$clr_larvae <- clr(larva_food_assim_data$larvae_ppm)
+  
+  # Plot
+  element_clr_f_matrix = ggplot(larva_food_assim_data) +
+    geom_segment(
+      aes(
+        x = "Food",
+        xend = "Larvae",
+        y = clr_food,
+        yend = clr_larvae,
+        color = element
+      ),
+      linetype = "solid"
+    ) +
+    geom_point(aes(x = "Food", y = clr_food, color = element)) +
+    geom_point(aes(x = "Larvae", y = clr_larvae, color = element)) +
+    geom_text(
+      aes(
+        x = "Larvae",
+        y = clr_larvae,
+        label = element,
+        color = element
+      ),
+      hjust = -0.4,
+      fontface = "bold"
+    ) +
+    scale_color_manual(values = colours_elements_isotopes) +
+    theme_minimal() +
+    theme(legend.position = "none") +
+    labs(x = "", y = "Centered log-ratio composition", ) +
+    scale_x_discrete(labels = c("Food", "Larvae\n(average)"))
+  
+  ggsave(
+    filename = "element_clr_f_matrix.pdf",
+    plot = element_clr_f_matrix,
+    device = pdf,
+    path = here::here("4_outputs", "3_figures_paper"),
+    scale = 1,
+    width = 3,
+    height = 3,
+    units = "in"
+  )
+  
   ## Differences in elemental content between the variables: food, larva, frass ######
+  data_flf <- data.frame(
+    element = character(),
+    average_food = numeric(),
+    average_larvae = numeric(),
+    average_frass = numeric(),
+    sd_food = numeric(),
+    sd_larvae = numeric(),
+    sd_frass = numeric(),
+    stringsAsFactors = FALSE
+  )
   
   plots_matrices <- vector("list", nb_elements)
   
   for (i in 1:nb_elements) {
-    data_element <- as.data.frame(subset(data_g, data_g$element == elements[i]))
-    food_col <- which(names(data_element) == paste("food_", elements[i], sep =
-                                                     ""))
+    el <- elements[i]
+    data_element <- subset(data_g, element == el)
+    
+    food_col_name <- paste0("food_", el)
     
     # Food elemental content
-    average_food <- mean(data_element[, food_col])
-    sd_food <- sd(data_element[, food_col])
+    avg_food <- mean(data_element[[food_col_name]], na.rm = TRUE)
+    sd_food <- sd(data_element[[food_col_name]])
     
     # Larvae elemental content
-    average_larvae <- mean(data_element[which(data_element$variable == "larvae"), ]$elemental_value, na.rm =
-                             T)
+    avg_larvae <- mean(data_element$elemental_value[data_element$variable == "larvae"], na.rm = TRUE)
+    
     sd_larvae <- sd(data_element[which(data_element$variable == "larvae"), ]$elemental_value, na.rm =
                       T)
     
     # Frass elemental content
-    average_frass <- mean(data_element[which(data_element$variable == "frass"), ]$elemental_value, na.rm =
-                            T)
+    avg_frass <- mean(data_element$elemental_value[data_element$variable == "frass"], na.rm = TRUE)
+    
     sd_frass <- sd(data_element[which(data_element$variable == "frass"), ]$elemental_value, na.rm =
                      T)
-    data <- data.frame(
-      name = c("Food", "Larvae", "Frass"),
-      value = c(average_food, average_larvae, average_frass),
-      sd = c(sd_food, sd_larvae, sd_frass)
-    )
-    
-    # Bar plot + error bar
-    p <- ggplot(data) +
-      geom_bar(
-        aes(x = name, y = value),
-        width = 0.5,
-        stat = "identity",
-        fill = "skyblue",
-        alpha = 0.7
-      ) +
-      geom_errorbar(
-        aes(
-          x = name,
-          ymin = value - sd,
-          ymax = value + sd
-        ),
-        width = 0.2,
-        colour = "orange",
-        alpha = 0.9,
-        linewidth = 1
-      ) +
-      labs(x = "",
-           y = paste(elements[i], " (", units_content[i], ")", sep = "")) +
-      scale_x_discrete(limits = c("Food", "Larvae", "Frass")) +
-      theme(axis.text.x = element_text(angle = 45, hjust = 1))
-    
-    plots_matrices[[i]] <- p
-    
-    # Save each plot
-    ggsave(
-      filename = paste("matrices_", elements[i], ".pdf", sep = ""),
-      plot = p,
-      device = pdf,
-      path = here::here("4_outputs", "2_figures"),
-      scale = 1,
-      width = 3,
-      height = 3,
-      units = "in"
+    # Append the new row using rbind()
+    data_flf <- rbind(
+      data_flf,
+      data.frame(
+        element = el,
+        average_food = avg_food,
+        average_larvae = avg_larvae,
+        average_frass = avg_frass,
+        sd_food = sd_food,
+        sd_larvae = sd_larvae,
+        sd_frass = sd_frass,
+        stringsAsFactors = FALSE
+      )
     )
   }
   
-  # Create the complete matrices plots
-  complete_matrices <- ggpubr::ggarrange(
-    plots_matrices[[1]],
-    plots_matrices[[2]],
-    plots_matrices[[3]],
-    plots_matrices[[4]],
-    plots_matrices[[5]],
-    plots_matrices[[6]],
-    plots_matrices[[7]],
-    plots_matrices[[8]],
-    ncol = 4,
-    nrow = 2,
-    labels = c("(a)", "(b)", "(c)", "(d)", "(e)", "(f)", "(g)", "(h)"),
-    hjust = 0,
-    vjust = 0,
-    heights = c(0.5, 0.5),
-    widths = c(1, 1, 1, 1)
-  )
+  # Updating the K unit so that it is now in percent on this graph only
+  k_rows <- data_flf$element == "K"
+  data_flf[k_rows, -1] <- data_flf[k_rows, -1] / 10000
   
-  complete_matrices = ggpubr::annotate_figure(complete_matrices, top = "")
+  units_content_flf <- c("%", "%", "ppm", "ppm", "ppm", "ppm", "%", "ppm")
+  unit_lookup <- setNames(units_content_flf, elements)
+  
+  # Display order
+  custom_order <- c("C", "N", "P", "K", "S", "Mg", "Ca", "Na")
+  custom_labels <- paste0(custom_order, " (", unit_lookup[custom_order], ")")
+  
+  data_long <- data_flf %>%
+    pivot_longer(
+      cols = -element,
+      names_to = c(".value", "name"),
+      names_sep = "_"
+    ) %>%
+    mutate(
+      name = str_to_title(name),
+      name = factor(name, levels = c("Food", "Larvae", "Frass")),
+      element_label = paste0(element, " (", unit_lookup[element], ")"),
+      element_label = factor(element_label, levels = custom_labels)
+    )
+  
+  complete_matrices = ggplot(data_long, aes(x = name, y = average)) +
+    geom_bar(
+      width = 0.5,
+      stat = "identity",
+      fill = "skyblue",
+      alpha = 0.7
+    ) +
+    geom_errorbar(
+      aes(ymin = average - sd, ymax = average + sd),
+      width = 0.2,
+      colour = "orange",
+      alpha = 0.9,
+      linewidth = 1
+    ) +
+    facet_wrap(~ element_label, nrow = 2, ncol = 4, scales = "free_y") +
+    labs(x = NULL, y = "Content") +
+    theme_minimal() +
+    theme(
+      axis.text.x = element_text(angle = 45, hjust = 1),
+      strip.text = element_text(face = "bold", size = 10)
+    )
   
   # Save the complete plot
   ggsave(
@@ -1406,90 +1521,72 @@ plot_irn <- function(data_i,
     width = 7,
     height = 4,
   )
+  
   ## Differences in elemental content between the variables: food, larva ######
   
-  plots_matrices <- vector("list", nb_elements)
+  data_long = data_long|>
+    filter(name %in% c("Food", "Larvae"))
   
-  for (i in 1:nb_elements) {
-    data_element <- as.data.frame(subset(data_g, data_g$element == elements[i]))
-    food_col <- which(names(data_element) == paste("food_", elements[i], sep =
-                                                     ""))
-    
-    # Food elemental content
-    average_food <- mean(data_element[, food_col])
-    sd_food <- sd(data_element[, food_col])
-    
-    # Larvae elemental content
-    average_larvae <- mean(data_element[which(data_element$variable == "larvae"), ]$elemental_value, na.rm =
-                             T)
-    sd_larvae <- sd(data_element[which(data_element$variable == "larvae"), ]$elemental_value, na.rm =
-                      T)
-    
-    data <- data.frame(
-      name = c("Food", "Larvae"),
-      value = c(average_food, average_larvae),
-      sd = c(sd_food, sd_larvae)
+  food_larvae_all_elements = ggplot(data_long, aes(x = name, y = average)) +
+    geom_bar(
+      width = 0.5,
+      stat = "identity",
+      fill = "skyblue",
+      alpha = 0.7
+    ) +
+    geom_errorbar(
+      aes(ymin = average - sd, ymax = average + sd),
+      width = 0.2,
+      colour = "orange",
+      alpha = 0.9,
+      linewidth = 1
+    ) +
+    facet_wrap(~ element_label, nrow = 2, ncol = 4, scales = "free_y") +
+    labs(x = NULL, y = NULL) +
+    theme_minimal() +
+    theme(
+      axis.text.x = element_text(angle = 45, hjust = 1),
+      strip.text = element_text(face = "bold", size = 10)
     )
-    
-    # Bar plot + error bar
-    p <- ggplot(data) +
-      geom_bar(
-        aes(x = name, y = value),
-        width = 0.5,
-        stat = "identity",
-        fill = "skyblue",
-        alpha = 0.7
-      ) +
-      geom_errorbar(
-        aes(
-          x = name,
-          ymin = value - sd,
-          ymax = value + sd
-        ),
-        width = 0.2,
-        colour = "orange",
-        alpha = 0.9,
-        linewidth = 1
-      ) +
-      labs(x = "",
-           y = paste(elements[i], " (", units_content[i], ")", sep = "")) +
-      scale_x_discrete(limits = c("Food", "Larvae")) +
-      theme(axis.text.x = element_text(angle = 45, hjust = 1))
-    
-    plots_matrices[[i]] <- p
-  }
-  
-  # Create the complete matrices plots
-  complete_matrices <- ggpubr::ggarrange(
-    plots_matrices[[1]],
-    plots_matrices[[2]],
-    plots_matrices[[3]],
-    plots_matrices[[4]],
-    plots_matrices[[5]],
-    plots_matrices[[6]],
-    plots_matrices[[7]],
-    plots_matrices[[8]],
-    ncol = 4,
-    nrow = 2,
-    labels = c("(a)", "(b)", "(c)", "(d)", "(e)", "(f)", "(g)", "(h)"),
-    heights = c(0.5, 0.5),
-    widths = c(1, 1, 1, 1),
-    hjust = 0,
-    vjust = 0
-  )
-  
-  complete_matrices = ggpubr::annotate_figure(complete_matrices, top = "")
   
   # Save the complete plot
   ggsave(
     filename = "food_larvae_all_elements.pdf",
-    plot = complete_matrices,
+    plot = food_larvae_all_elements,
     device = pdf,
     path = here::here("4_outputs", "3_figures_paper"),
     scale = 1,
     width = 7,
     height = 4,
   )
+  
+  ## Both the absolute and relative of the same graph ########
+  
+  food_larvae_abs_rel_all_elements <- ggpubr::ggarrange(
+  food_larvae_all_elements,
+    element_clr_f_matrix,
+    ncol = 2,
+    nrow = 1,
+    labels = c("(a)", "(b)"),
+    widths = c(1.8, 1),
+    hjust = 0,
+    vjust = 0
+  )
+  
+  
+  food_larvae_abs_rel_all_elements = ggpubr::annotate_figure(food_larvae_abs_rel_all_elements, top = "")
+  
+  # Save the complete plot
+  ggsave(
+    filename = "food_larvae_abs_rel_all_elements.pdf",
+    plot = food_larvae_abs_rel_all_elements,
+    device = pdf,
+    path = here::here("4_outputs", "3_figures_paper"),
+    scale = 1,
+    width = 7,
+    height = 3,
+  )
+  
   ## Growth rate hypothesis #####
   # We check whether the growth rate in positively related to P body content
   # according to the growth rate hypothesis of Elser
@@ -2641,6 +2738,70 @@ plot_irn <- function(data_i,
       axis.title.y = element_markdown()
     )
   
+  ### Egestion fluxes #####
+  
+  data_egestflux_wide <- filter(
+    data_g,
+    variable == "egestion_flux_dw",
+    element %in% elements,
+    !is.na(elemental_value)
+  ) |>
+    select(mean_mass_specific_intake_rate_dw,
+           element,
+           elemental_value) |>
+    pivot_wider(values_from = "elemental_value" , names_from = "element") |>
+    na.omit()
+  
+  data_egestflux_long <- data_egestflux_wide %>%
+    mutate(log(pick(all_of(elements))) - rowMeans(log(pick(all_of(
+      elements
+    ))))) %>%
+    pivot_longer(cols = all_of(elements),
+                 names_to = "element",
+                 values_to = "elemental_value")
+  
+  clr_egestflux_dw_msirfw = ggplot2::ggplot(
+    data_egestflux_long,
+    aes(
+      x = mean_mass_specific_intake_rate_dw,
+      y = elemental_value,
+      colour = element,
+      group = element,
+      fill = element
+    )
+  ) +
+    geom_point(
+      alpha = 0.5,
+      shape = 16,
+      size = 0.5,
+      na.rm = TRUE
+    ) +
+    geom_smooth(
+      method = "gam",
+      formula = y ~ s(x),
+      se = FALSE,
+      method.args = list(method = "REML"),
+      # Default Gaussian family for real-valued CLR
+      na.rm = TRUE
+    ) +
+    scale_color_manual(
+      values = colours_elements,
+      aesthetics = c("colour", "fill"),
+      labels = c("C", "N", "P", "K", "S", "Ca", "Mg", "Na"),
+      limits = c("C", "N", "P", "K", "S", "Ca", "Mg", "Na")
+    ) +
+    labs(
+      x = "Intake rate <br> (<span style='font-size:8pt;'>g<sub>intake</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)",
+      y = "Centered log-ratio (CLR) of egestion fluxes",
+      fill = "Element",
+      color = "Element"
+    ) +
+    theme(
+      legend.position = "right",
+      axis.title.x = element_markdown(),
+      axis.title.y = element_markdown()
+    )
+  
   
   ### Assimilation efficiency #####
   
@@ -2842,6 +3003,33 @@ plot_irn <- function(data_i,
       axis.title.y = element_markdown()
     )
   
+  
+  ## Difference between larvae and food and assimilation efficiency ########
+  
+  
+  larva_food_assim_data$ratio = larva_food_assim_data$average_food_level /
+    larva_food_assim_data$average_larvae_level
+  
+  larva_food_ratio_assim = ggplot(
+    larva_food_assim_data,
+    aes(x = ratio, y = average_larvae_assimilation, label = element)
+  ) +
+    geom_text(fontface = "bold", color = "darkblue") +
+    theme_minimal() +
+    labs(x = "Food % / Larva %", y = "Assimilation efficiency", )
+  
+  ggsave(
+    filename = "larva_food_ratio_assim.pdf",
+    plot = larva_food_ratio_assim,
+    device = pdf,
+    path = here::here("4_outputs", "3_figures_paper"),
+    scale = 1,
+    width = 4,
+    height = 3,
+    units = "in"
+  )
+  
+  
   # 3. Isotopy figures ##########
   
   ##  Isotopic fractionation between the larvae and food (trophic fractionation) as a function of MSIR ######
@@ -2904,6 +3092,8 @@ plot_irn <- function(data_i,
     height = 2,
     units = "in"
   )
+  
+  
   
   ##  Isotopic fractionation between the larvae and food (trophic fractionation) as a function of growth rate ######
   

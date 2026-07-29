@@ -42,7 +42,8 @@ tar_option_set(
     "utils",
     "compositions",
     "broom",
-    "purrr"
+    "purrr",
+    "fs"
   )
 )
 
@@ -144,8 +145,7 @@ list(
       data_model = models_irn,
       data_ic = data_irn_individuals_controls,
       data_fc = data_irn_food_controls
-    ),
-    format = "file"
+    )
   )
   # Generate report Rmd
   # archetypes::tar_render(rmd_report, "3_manuscript/irn.rmd")
