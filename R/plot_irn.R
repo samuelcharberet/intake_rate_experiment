@@ -1363,9 +1363,9 @@ plot_irn <- function(data_i,
   )
   
   # CLR transform
-
+  
   clr = function(x) {
-    log(x/exp(mean(log(x))))
+    log(x / exp(mean(log(x))))
   }
   
   
@@ -1503,7 +1503,10 @@ plot_irn <- function(data_i,
       alpha = 0.9,
       linewidth = 1
     ) +
-    facet_wrap(~ element_label, nrow = 2, ncol = 4, scales = "free_y") +
+    facet_wrap( ~ element_label,
+                nrow = 2,
+                ncol = 4,
+                scales = "free_y") +
     labs(x = NULL, y = "Content") +
     theme_minimal() +
     theme(
@@ -1524,7 +1527,7 @@ plot_irn <- function(data_i,
   
   ## Differences in elemental content between the variables: food, larva ######
   
-  data_long = data_long|>
+  data_long = data_long |>
     filter(name %in% c("Food", "Larvae"))
   
   food_larvae_all_elements = ggplot(data_long, aes(x = name, y = average)) +
@@ -1541,7 +1544,10 @@ plot_irn <- function(data_i,
       alpha = 0.9,
       linewidth = 1
     ) +
-    facet_wrap(~ element_label, nrow = 2, ncol = 4, scales = "free_y") +
+    facet_wrap( ~ element_label,
+                nrow = 2,
+                ncol = 4,
+                scales = "free_y") +
     labs(x = NULL, y = NULL) +
     theme_minimal() +
     theme(
@@ -1563,7 +1569,7 @@ plot_irn <- function(data_i,
   ## Both the absolute and relative of the same graph ########
   
   food_larvae_abs_rel_all_elements <- ggpubr::ggarrange(
-  food_larvae_all_elements,
+    food_larvae_all_elements,
     element_clr_f_matrix,
     ncol = 2,
     nrow = 1,
@@ -2738,71 +2744,6 @@ plot_irn <- function(data_i,
       axis.title.y = element_markdown()
     )
   
-  ### Egestion fluxes #####
-  
-  data_egestflux_wide <- filter(
-    data_g,
-    variable == "egestion_flux_dw",
-    element %in% elements,
-    !is.na(elemental_value)
-  ) |>
-    select(mean_mass_specific_intake_rate_dw,
-           element,
-           elemental_value) |>
-    pivot_wider(values_from = "elemental_value" , names_from = "element") |>
-    na.omit()
-  
-  data_egestflux_long <- data_egestflux_wide %>%
-    mutate(log(pick(all_of(elements))) - rowMeans(log(pick(all_of(
-      elements
-    ))))) %>%
-    pivot_longer(cols = all_of(elements),
-                 names_to = "element",
-                 values_to = "elemental_value")
-  
-  clr_egestflux_dw_msirfw = ggplot2::ggplot(
-    data_egestflux_long,
-    aes(
-      x = mean_mass_specific_intake_rate_dw,
-      y = elemental_value,
-      colour = element,
-      group = element,
-      fill = element
-    )
-  ) +
-    geom_point(
-      alpha = 0.5,
-      shape = 16,
-      size = 0.5,
-      na.rm = TRUE
-    ) +
-    geom_smooth(
-      method = "gam",
-      formula = y ~ s(x),
-      se = FALSE,
-      method.args = list(method = "REML"),
-      # Default Gaussian family for real-valued CLR
-      na.rm = TRUE
-    ) +
-    scale_color_manual(
-      values = colours_elements,
-      aesthetics = c("colour", "fill"),
-      labels = c("C", "N", "P", "K", "S", "Ca", "Mg", "Na"),
-      limits = c("C", "N", "P", "K", "S", "Ca", "Mg", "Na")
-    ) +
-    labs(
-      x = "Intake rate <br> (<span style='font-size:8pt;'>g<sub>intake</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)",
-      y = "Centered log-ratio (CLR) of egestion fluxes",
-      fill = "Element",
-      color = "Element"
-    ) +
-    theme(
-      legend.position = "right",
-      axis.title.x = element_markdown(),
-      axis.title.y = element_markdown()
-    )
-  
-  
   ### Assimilation efficiency #####
   
   data_assimeff_wide <- filter(
@@ -2920,12 +2861,12 @@ plot_irn <- function(data_i,
     scale_color_manual(
       values = colours_elements,
       aesthetics = c("colour", "fill"),
-      labels = order_elements_legend,
-      limits = c("K", "Mg", "C", "N", "P", "S", "Ca", "Na")
+      labels = c("C", "N", "P", "K", "S", "Mg", "Ca", "Na"),
+      limits = c("C", "N", "P", "K", "S", "Mg", "Ca", "Na")
     ) +
     labs(
       x = "Intake rate <br> (<span style='font-size:8pt;'>g<sub>intake</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)",
-      y = "Centered log-ratio (CLR) of larvae composition",
+      y = "CLR of larvae composition",
       fill = "Element",
       color = "Element"
     ) +
@@ -2988,12 +2929,12 @@ plot_irn <- function(data_i,
     scale_color_manual(
       values = colours_elements,
       aesthetics = c("colour", "fill"),
-      labels = order_elements_legend,
-      limits = c("K", "Mg", "C", "N", "P", "S", "Ca", "Na")
+      labels = c("C", "N", "P", "K", "S", "Mg", "Ca", "Na"),
+      limits = c("C", "N", "P", "K", "S", "Mg", "Ca", "Na")
     ) +
     labs(
       x = "Intake rate <br> (<span style='font-size:8pt;'>g<sub>intake</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)",
-      y = "Centered log-ratio (CLR) of frass composition",
+      y = "CLR of frass composition",
       fill = "Element",
       color = "Element"
     ) +
@@ -3003,6 +2944,36 @@ plot_irn <- function(data_i,
       axis.title.y = element_markdown()
     )
   
+  ### Two panels figure with larval composition, frass composition #####
+  
+  clr_larvae_dw_msirfw = clr_larvae_dw_msirfw + ggpubr::rremove("xlab")
+  clr_frass_dw_msirfw = clr_frass_dw_msirfw + ggpubr::rremove("xlab")
+  
+  combined_plot <- ggarrange(
+    clr_larvae_dw_msirfw,
+    clr_frass_dw_msirfw,
+    labels = paste0("(", letters[1:2], ")"),
+    ncol = 2,
+    nrow = 1,
+    common.legend = T,
+    legend = "right",
+    hjust = 0,
+    vjust = 0
+  )
+  combined_plot = ggpubr::annotate_figure(combined_plot, top = "",
+                                          bottom = richtext_grob(text = "Intake rate <br> (<span style='font-size:8pt;'>g<sub>intake</sub> · g<sub>body</sub><sup>-1</sup> · d<sup>-1</sup></span>)"),)
+  
+  
+  ggsave(
+    filename = "larva_frass_compo_f_intake_rate.pdf",
+    plot = combined_plot,
+    device = pdf,
+    path = here::here("4_outputs", "3_figures_paper"),
+    scale = 1,
+    width = 4,
+    height = 3,
+    units = "in"
+  )
   
   ## Difference between larvae and food and assimilation efficiency ########
   
@@ -3597,3 +3568,4 @@ plot_irn <- function(data_i,
   )
   
 }
+
