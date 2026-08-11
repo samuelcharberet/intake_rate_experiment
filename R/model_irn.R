@@ -226,8 +226,7 @@ model_irn <- function(data_i, data_g) {
   # 1. Store models in a named list
   manova_models <- list(
     "Larvae"       = manova(lm_larvae_compo),
-    "Frass"        = manova(lm_frass_compo),
-    "Assimilation"  = manova(lm_assimeff_compo)
+    "Frass"        = manova(lm_frass_compo)
   )
   
   # 2. Extract and combine results

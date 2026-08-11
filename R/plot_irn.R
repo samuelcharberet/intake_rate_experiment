@@ -137,13 +137,22 @@ plot_irn <- function(data_i,
   
   ## Effect of week on bodymass at the start ######
   
-  p <- ggplot2::ggplot(
-    data_i,
-    aes(x = seventh_instar_date, y = bodymass_7th_instar_j0_fw, group = seventh_instar_date)
-  ) +
+  p <- ggplot2::ggplot(data_i,
+                       aes(
+                         x = as.factor(seventh_instar_date),
+                         y = bodymass_7th_instar_j0_fw,
+                         group = as.factor(seventh_instar_date)
+                       )) +
     geom_boxplot(fill = "steelblue3") +
+    geom_jitter(na.rm = TRUE) +
     labs(x = "Date of the experiment", y = "Bodymass at the start of 7th instar (mg fw)") +
-    theme(legend.position = "none")
+    theme(legend.position = "none",
+          axis.text.x = element_text(
+            angle = 45,
+            vjust = 1,
+            hjust = 1
+          )) +
+    ggpubr::stat_compare_means(method = "anova", na.rm = T)
   
   ggsave(
     filename = "bm_j0_fw_&_week.pdf",
@@ -155,6 +164,28 @@ plot_irn <- function(data_i,
     height = 4,
     units = "in"
   )
+  
+  ## Effect of treatment on bodymass at the start ######
+  
+  p <- ggplot2::ggplot(data_i,
+                       aes(x = food_provided_fw, y = bodymass_7th_instar_j0_fw)) +
+    geom_boxplot(fill = "steelblue3") +
+    geom_jitter(na.rm = TRUE) +
+    labs(x = "Treatment (mg daily food)", y = "Bodymass at the start of 7th instar (mg fw)") +
+    theme(legend.position = "none") +
+    ggpubr::stat_compare_means(method = "anova", na.rm = TRUE)
+  
+  ggsave(
+    filename = "bm_j0_fw_&_treatment.pdf",
+    plot = p,
+    device = pdf,
+    path = here::here("4_outputs", "3_figures_paper"),
+    scale = 1,
+    width = 7,
+    height = 4,
+    units = "in"
+  )
+  
   
   ## Effect of week on food chemical composition ######
   data_fc_long = pivot_longer(
@@ -226,24 +257,6 @@ plot_irn <- function(data_i,
     units = "in"
   )
   
-  ## Effect of treatment on bodymass at the start ######
-  
-  p <- ggplot2::ggplot(data_i,
-                       aes(x = food_provided_fw, y = bodymass_7th_instar_j0_fw)) +
-    geom_boxplot(fill = "steelblue3") +
-    labs(x = "Treatment (mg daily food)", y = "Bodymass at the start of 7th instar (mg fw)") +
-    theme(legend.position = "none")
-  
-  ggsave(
-    filename = "bm_j0_fw_&_treatment.pdf",
-    plot = p,
-    device = pdf,
-    path = here::here("4_outputs", "3_figures_paper"),
-    scale = 1,
-    width = 7,
-    height = 4,
-    units = "in"
-  )
   
   ## Dry weight bodymass at the end of the 7th instar according to food consumed  ######
   
@@ -374,15 +387,17 @@ plot_irn <- function(data_i,
   )
   
   ### Mass-specific intake rate as a function of food availability treatment  ######
-  
+  visible_greens <- RColorBrewer::brewer.pal(n = 9, name = "Greens")[5:9]
   msir_f_food_availability <- ggplot(
     data_i,
     aes(
       x = as.numeric(as.character(food_provided_fw)),
       y = mass_specific_ingestion_rate_dw,
-      group = food_provided_fw
+      group = food_provided_fw,
+      color = food_provided_fw
     )
   ) +
+    scale_color_manual(values = visible_greens) +
     geom_jitter(
       width = 15,
       height = 0,
@@ -394,7 +409,11 @@ plot_irn <- function(data_i,
     scale_x_continuous(limits = c(0, NA),
                        breaks = c(120, 240, 360, 480, 900)) +
     labs(x = "Food availability <br> (<span style='font-size:8pt;'>g<sub>food</sub>  \u22c5 d<sup>-1</sup></span>)", y = "Intake rate <br> (<span style='font-size:8pt;'>g<sub>intake</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)") +
-    theme(axis.title.x = element_markdown(), axis.title.y = element_markdown())
+    theme(
+      axis.title.x = element_markdown(),
+      axis.title.y = element_markdown(),
+      legend.position = "none"
+    )
   
   ggsave(
     filename = "msir_f_food_availability.pdf",
@@ -551,9 +570,12 @@ plot_irn <- function(data_i,
   hlt <- 10 * sum(mgcv::influence.gam(mod) / length(mgcv::influence.gam(mod)))
   data_i_f <- filter(data_i, mgcv::influence.gam(mod) < hlt)
   
-  aedw_msirfw <- ggplot2::ggplot(data_i_f,
-                                 aes(x = mass_specific_ingestion_rate_fw, y = assimilation_efficiency_dw)) +
-    geom_point() +
+  aedw_msirfw <- ggplot2::ggplot(
+    data_i_f,
+    aes(x = mass_specific_ingestion_rate_fw, y = assimilation_efficiency_dw, color = food_provided_fw)
+  ) +
+    scale_color_manual(values = visible_greens) +
+    geom_point(alpha = .7) +
     xlim(0, NA) +
     ylim(NA,
          max(data_i$assimilation_efficiency_dw) + 0.1 * (
@@ -587,14 +609,17 @@ plot_irn <- function(data_i,
   mod <- mgcv::gam(growth_efficiency_fw ~ s(
     mass_specific_ingestion_rate_fw,
     bs = "cs",
-    k = 3
+    k = 4
   ),
   data = data_i)
   hlt <- 10 * sum(mgcv::influence.gam(mod) / length(mgcv::influence.gam(mod)))
   data_i_f <- filter(data_i, mgcv::influence.gam(mod) < hlt)
   
-  gefw_msirfw <- ggplot2::ggplot(data_i,
-                                 aes(x = mass_specific_ingestion_rate_fw, y = growth_efficiency_fw)) +
+  gefw_msirfw <- ggplot2::ggplot(
+    data_i,
+    aes(x = mass_specific_ingestion_rate_fw, y = growth_efficiency_fw, color = food_provided_fw)
+  ) +
+    scale_color_manual(values = visible_greens) +
     xlim(0, NA) +
     ylim(NA, max(data_i$growth_efficiency_fw) + 0.1 * (
       max(data_i$growth_efficiency_fw) - min(data_i$growth_efficiency_fw)
@@ -1063,8 +1088,11 @@ plot_irn <- function(data_i,
   hlt <- 10 * sum(mgcv::influence.gam(mod_aedw_msirdw) / length(mgcv::influence.gam(mod_aedw_msirdw)))
   data_i_f <- filter(data_i, mgcv::influence.gam(mod_aedw_msirdw) < hlt)
   
-  aedw_msirdw <- ggplot2::ggplot(data_i_f,
-                                 aes(x = mass_specific_ingestion_rate_dw, y = assimilation_efficiency_dw)) +
+  aedw_msirdw <- ggplot2::ggplot(
+    data_i_f,
+    aes(x = mass_specific_ingestion_rate_dw, y = assimilation_efficiency_dw, color = food_provided_fw)
+  ) +
+    scale_color_manual(values = visible_greens) +
     geom_point(shape = 16,
                size = 0.7,
                alpha = 0.5) +
@@ -1076,7 +1104,11 @@ plot_irn <- function(data_i,
       method.args = list(family = scat(), method = "REML")
     ) +
     labs(x = "Intake rate <br> (<span style='font-size:8pt;'>g<sub>intake</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)", y = "Assimilation efficiency <br> (<span style='font-size:8pt;'>g<sub>assim</sub> \u22c5 g<sub>intake</sub><sup>-1</sup> </span>)") +
-    theme(axis.title.x = element_markdown(), axis.title.y = element_markdown())
+    theme(
+      axis.title.x = element_markdown(),
+      axis.title.y = element_markdown(),
+      legend.position = "none"
+    )
   
   
   ggsave(
@@ -1105,8 +1137,11 @@ plot_irn <- function(data_i,
   hlt <- 10 * sum(mgcv::influence.gam(mod_gedw_msirdw) / length(mgcv::influence.gam(mod_gedw_msirdw)))
   data_i_f <- filter(data_i, mgcv::influence.gam(mod_gedw_msirdw) < hlt)
   
-  gedw_msirdw <- ggplot2::ggplot(data_i_f,
-                                 aes(x = mass_specific_ingestion_rate_dw, y = growth_efficiency_dw)) +
+  gedw_msirdw <- ggplot2::ggplot(
+    data_i_f,
+    aes(x = mass_specific_ingestion_rate_dw, y = growth_efficiency_dw, color = food_provided_fw)
+  ) +
+    scale_color_manual(values = visible_greens) +
     xlim(0, NA) +
     geom_point(shape = 16,
                size = 0.7,
@@ -1118,7 +1153,11 @@ plot_irn <- function(data_i,
       method.args = list(family = scat(link = "identity"), method = "REML")
     ) +
     labs(x = "Intake rate <br> (<span style='font-size:8pt;'>g<sub>intake</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)", y = "Growth efficiency <br> (<span style='font-size:8pt;'>g<sub>growth</sub> \u22c5 g<sub>intake</sub><sup>-1</sup></span>)") +
-    theme(axis.title.x = element_markdown(), axis.title.y = element_markdown())
+    theme(
+      axis.title.x = element_markdown(),
+      axis.title.y = element_markdown(),
+      legend.position = "none"
+    )
   
   
   ggsave(
@@ -1143,7 +1182,9 @@ plot_irn <- function(data_i,
   
   hlt <- 10 * sum(mgcv::influence.gam(mod_gedw_msgrdw) / length(mgcv::influence.gam(mod_gedw_msgrdw)))
   data_i_f <- filter(data_i, mgcv::influence.gam(mod_gedw_msgrdw) < hlt)
-  gedw_msgrdw <- ggplot2::ggplot(data_i_f, aes(x = mean_growth_dw, y = growth_efficiency_dw)) +
+  gedw_msgrdw <- ggplot2::ggplot(data_i_f,
+                                 aes(x = mean_growth_dw, y = growth_efficiency_dw, color = food_provided_fw)) +
+    scale_color_manual(values = visible_greens) +
     geom_point(shape = 16,
                alpha = .5,
                size = .7) +
@@ -1158,7 +1199,11 @@ plot_irn <- function(data_i,
       )
     ) +
     labs(x = "Growth rate <br> (<span style='font-size:8pt;'>g<sub>growth</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)", y = "Growth efficiency <br> (<span style='font-size:8pt;'>g<sub>growth</sub> \u22c5 g<sub>intake</sub><sup>-1</sup></span>)") +
-    theme(axis.title.x = element_markdown(), axis.title.y = element_markdown())
+    theme(
+      axis.title.x = element_markdown(),
+      axis.title.y = element_markdown(),
+      legend.position = "none"
+    )
   
   ggsave(
     filename = "gedw_&_msgrdw.pdf",
@@ -1503,10 +1548,10 @@ plot_irn <- function(data_i,
       alpha = 0.9,
       linewidth = 1
     ) +
-    facet_wrap( ~ element_label,
-                nrow = 2,
-                ncol = 4,
-                scales = "free_y") +
+    facet_wrap(~ element_label,
+               nrow = 2,
+               ncol = 4,
+               scales = "free_y") +
     labs(x = NULL, y = "Content") +
     theme_minimal() +
     theme(
@@ -1544,10 +1589,10 @@ plot_irn <- function(data_i,
       alpha = 0.9,
       linewidth = 1
     ) +
-    facet_wrap( ~ element_label,
-                nrow = 2,
-                ncol = 4,
-                scales = "free_y") +
+    facet_wrap(~ element_label,
+               nrow = 2,
+               ncol = 4,
+               scales = "free_y") +
     labs(x = NULL, y = NULL) +
     theme_minimal() +
     theme(
@@ -2960,8 +3005,11 @@ plot_irn <- function(data_i,
     hjust = 0,
     vjust = 0
   )
-  combined_plot = ggpubr::annotate_figure(combined_plot, top = "",
-                                          bottom = richtext_grob(text = "Intake rate <br> (<span style='font-size:8pt;'>g<sub>intake</sub> · g<sub>body</sub><sup>-1</sup> · d<sup>-1</sup></span>)"),)
+  combined_plot = ggpubr::annotate_figure(
+    combined_plot,
+    top = "",
+    bottom = richtext_grob(text = "Intake rate <br> (<span style='font-size:8pt;'>g<sub>intake</sub> · g<sub>body</sub><sup>-1</sup> · d<sup>-1</sup></span>)"),
+  )
   
   
   ggsave(
@@ -3568,4 +3616,3 @@ plot_irn <- function(data_i,
   )
   
 }
-
