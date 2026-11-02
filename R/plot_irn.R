@@ -1575,7 +1575,70 @@ plot_irn <- function(data_i,
   data_long = data_long |>
     filter(name %in% c("Food", "Larvae"))
   
-  food_larvae_all_elements = ggplot(data_long, aes(x = name, y = average)) +
+  # 1. Compute ratio rows from summary table
+  ratios_df <- data_long %>%
+    filter(element %in% c("C", "N", "P")) %>%
+    # Convert P from ppm to % so units align with C and N (%)
+    mutate(
+      average = ifelse(element == "P", average / 10000, average),
+      sd      = ifelse(element == "P", sd / 10000, sd)
+    ) %>%
+    pivot_wider(
+      id_cols = name, 
+      names_from = element, 
+      values_from = c(average, sd)
+    ) %>%
+    rowwise() %>%
+    reframe(
+      name = name,
+      # C/N
+      `C/N_avg` = average_C / average_N,
+      `C/N_sd`  = `C/N_avg` * sqrt((sd_C / average_C)^2 + (sd_N / average_N)^2),
+      # C/P
+      `C/P_avg` = average_C / average_P,
+      `C/P_sd`  = `C/P_avg` * sqrt((sd_C / average_C)^2 + (sd_P / average_P)^2),
+      # N/P
+      `N/P_avg` = average_N / average_P,
+      `N/P_sd`  = `N/P_avg` * sqrt((sd_N / average_N)^2 + (sd_P / average_P)^2)
+    ) %>%
+    pivot_longer(
+      cols = -name,
+      names_to = c("element", ".value"),
+      names_pattern = "(.*)_(avg|sd)"
+    ) %>%
+    rename(average = avg) %>%
+    mutate(element_label = factor(element))
+  
+
+  
+  
+  ## Updated Label Ordering
+  # Define exact desired facet sequence
+  custom_order <- c("C", "N", "P", "C/N", "C/P", "N/P", "K", "S", "Mg", "Ca", "Na")
+  
+  # Map units to elemental names
+  units_content_flf <- c("%", "%", "ppm", "ppm", "ppm", "ppm", "%", "ppm")
+  unit_lookup <- setNames(units_content_flf, elements)
+  
+  # Build custom display labels (Elements get units, ratios stay as-is)
+  custom_labels <- sapply(custom_order, function(x) {
+    if (x %in% names(unit_lookup)) {
+      paste0(x, " (", unit_lookup[x], ")")
+    } else {
+      x
+    }
+  })
+  
+  ## 3. Combine Elements & Ratios Dataframes
+  data_long_combined <- bind_rows(data_long, ratios_df) %>%
+    mutate(
+      name = str_to_title(name),
+      name = factor(name, levels = c("Food", "Larvae")),
+      # Apply custom factor levels to force ggplot facet order
+      element_label = factor(element_label, levels = unname(custom_labels))
+    )
+  
+  food_larvae_all_elements = ggplot(data_long_combined, aes(x = name, y = average)) +
     geom_bar(
       width = 0.5,
       stat = "identity",
@@ -1591,9 +1654,9 @@ plot_irn <- function(data_i,
     ) +
     facet_wrap(~ element_label,
                nrow = 2,
-               ncol = 4,
+               ncol = 6,
                scales = "free_y") +
-    labs(x = NULL, y = NULL) +
+    labs(x = NULL, y = "Content (dry weight) or ratio") +
     theme_minimal() +
     theme(
       axis.text.x = element_text(angle = 45, hjust = 1),

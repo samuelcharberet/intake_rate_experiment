@@ -416,7 +416,7 @@ combine_group_data <- function(data_i, data_g, data_fc, data_icc) {
     data_g$`14N_egestion_rate_dw`
   data_g$`15N_retention_time` <- data_g$`15N_larvae` * data_g$mean_bodymass_dw /
     data_g$`15N_egestion_rate_dw`
-  
+
   #### Isotopic assimilation efficiency ratios ####
   
   
