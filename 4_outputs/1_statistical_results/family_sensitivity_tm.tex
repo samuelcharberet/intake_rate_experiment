@@ -1,0 +1,35 @@
+\begin{table}[H]
+\centering
+\caption{\label{supptable:table_family_sensitivity_tm} Bulk (total) mass models of fig. \ref{fig_massbalance} and growth rate model of fig. \ref{derivatives}a fitted with alternative distribution families and link functions (see fig. \ref{fig_family_sensitivity_tm}). The family selected by AIC (table \ref{supptable:table_family_selection}) and used in the main analyses is in bold. For each model, all fits used all observations and the same smoother, so that only the family differs. Shape: pattern of the first derivative of the fitted smooth (pointwise 95\% confidence interval); decreasing (increasing) when the derivative is significantly negative (positive) over part of the range and never significantly positive (negative); humped when a significantly positive portion precedes a significantly negative one, the predictor value at the fitted maximum being given in parentheses. Holds: the smooth term is significant ($p<0.05$) and its shape matches the conclusion stated in the main text. $\Delta$AIC is the difference in AIC with the best family for the same model. MSIR stands for mass-specific intake rate, GR for growth rate, AE for assimilation efficiency and GE for growth efficiency.}
+\centering
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
+\begin{tabular}[t]{llrrllll}
+\toprule
+\textbf{Model} & \textbf{Family} & \textbf{n} & \textbf{edf} & \textbf{p} & \textbf{Shape} & \textbf{Holds} & \textbf{$\Delta$AIC}\\
+\midrule
+ & \textbf{Scaled t (identity)} & 199 & 3.64 & <2e-16 & decreasing & Yes & 0.0\\
+\cmidrule{2-8}
+ & Gaussian (identity) & 199 & 3.57 & <2e-16 & decreasing & Yes & 13.0\\
+\cmidrule{2-8}
+\multirow{-3}{*}{\raggedright\arraybackslash AE $\sim$ MSIR} & Beta (logit) & 199 & 3.56 & <2e-16 & decreasing & Yes & 14.3\\
+\cmidrule{1-8}
+ & \textbf{Scaled t (identity)} & 199 & 3.80 & <2e-16 & humped (0.828) & Yes & 0.0\\
+\cmidrule{2-8}
+ & Gaussian (identity) & 199 & 3.76 & <2e-16 & humped (0.828) & Yes & 3.4\\
+\cmidrule{2-8}
+\multirow{-3}{*}{\raggedright\arraybackslash GE $\sim$ MSIR} & Beta (logit) & 199 & 3.77 & <2e-16 & humped (0.831) & Yes & 6.0\\
+\cmidrule{1-8}
+ & \textbf{Scaled t (identity)} & 199 & 3.74 & <2e-16 & humped (0.266) & Yes & 0.0\\
+\cmidrule{2-8}
+ & Gaussian (identity) & 199 & 3.68 & <2e-16 & humped (0.267) & Yes & 3.9\\
+\cmidrule{2-8}
+\multirow{-3}{*}{\raggedright\arraybackslash GE $\sim$ GR} & Beta (logit) & 199 & 3.68 & <2e-16 & humped (0.267) & Yes & 5.8\\
+\cmidrule{1-8}
+ & \textbf{Gaussian (identity)} & 199 & 3.36 & <2e-16 & increasing & Yes & 0.0\\
+\cmidrule{2-8}
+ & Scaled t (identity) & 199 & 3.37 & <2e-16 & increasing & Yes & 1.1\\
+\cmidrule{2-8}
+\multirow{-3}{*}{\raggedright\arraybackslash GR $\sim$ MSIR} & Gamma (log) & 199 & 3.91 & <2e-16 & increasing & Yes & 5.4\\
+\bottomrule
+\end{tabular}}
+\end{table}

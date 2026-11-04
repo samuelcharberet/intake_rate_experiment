@@ -1,0 +1,57 @@
+\begin{table}[H]
+\centering
+\caption{\label{supptable:table_family_selection} Selection of the distribution family and link function of each response variable. Each model was fitted to all observations with every family compatible with the support of the data, with the same smoother. $\Delta$AIC (total): difference with the lowest AIC summed over the models of the same response variable (one model for bulk AE and GR, two for bulk GE, one per element otherwise). The selected family, used in the main analyses, is in bold: the lowest total AIC among the families that model the mean of the response on its original scale. The log-normal model (Gaussian model of log-transformed retention times, AIC corrected by the Jacobian of the transformation) models the median retention time and was only used as a sensitivity check; it was within 2 AIC units of the gamma family. Conclusions supported: number of models for which the conclusion stated in the main text holds (see table \ref{supptable:table_family_sensitivity_tm}). AE stands for assimilation efficiency, GE for growth efficiency, GR for growth rate and RT for retention time.}
+\centering
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
+\begin{tabular}[t]{llrrr}
+\toprule
+\textbf{Response} & \textbf{Family} & \textbf{Models} & \textbf{$\Delta$AIC (total)} & \textbf{Conclusions supported}\\
+\midrule
+ & \textbf{Scaled t (identity)} & 1 & 0.0 & 1/1\\
+\cmidrule{2-5}
+ & Gaussian (identity) & 1 & 13.0 & 1/1\\
+\cmidrule{2-5}
+\multirow{-3}{*}{\raggedright\arraybackslash Bulk AE} & Beta (logit) & 1 & 14.3 & 1/1\\
+\cmidrule{1-5}
+ & \textbf{Scaled t (identity)} & 2 & 0.0 & 2/2\\
+\cmidrule{2-5}
+ & Gaussian (identity) & 2 & 7.3 & 2/2\\
+\cmidrule{2-5}
+\multirow{-3}{*}{\raggedright\arraybackslash Bulk GE} & Beta (logit) & 2 & 11.9 & 2/2\\
+\cmidrule{1-5}
+ & \textbf{Gaussian (identity)} & 1 & 0.0 & 1/1\\
+\cmidrule{2-5}
+ & Scaled t (identity) & 1 & 1.1 & 1/1\\
+\cmidrule{2-5}
+\multirow{-3}{*}{\raggedright\arraybackslash Bulk GR} & Gamma (log) & 1 & 5.4 & 1/1\\
+\cmidrule{1-5}
+ & \textbf{Beta (logit)} & 8 & 0.0 & 8/8\\
+\cmidrule{2-5}
+ & Gaussian (identity) & 8 & 25.9 & 8/8\\
+\cmidrule{2-5}
+\multirow{-3}{*}{\raggedright\arraybackslash Elemental AE} & Scaled t (identity) & 8 & 35.5 & 8/8\\
+\cmidrule{1-5}
+ & Log-normal & 8 & 0.0 & 8/8\\
+\cmidrule{2-5}
+ & \textbf{Gamma (log)} & 8 & 1.1 & 8/8\\
+\cmidrule{2-5}
+ & Inverse Gaussian (log) & 8 & 62.5 & 8/8\\
+\cmidrule{2-5}
+ & Gaussian (log) & 8 & 449.7 & 8/8\\
+\cmidrule{2-5}
+\multirow{-5}{*}{\raggedright\arraybackslash RT} & Gaussian (identity) & 8 & 463.9 & 8/8\\
+\cmidrule{1-5}
+ & \textbf{Gaussian (identity)} & 8 & 0.0 & 8/8\\
+\cmidrule{2-5}
+ & Scaled t (identity) & 8 & 6.8 & 8/8\\
+\cmidrule{2-5}
+\multirow{-3}{*}{\raggedright\arraybackslash Larvae content} & Gamma (log) & 8 & 9.0 & 8/8\\
+\cmidrule{1-5}
+ & \textbf{Scaled t (identity)} & 8 & 0.0 & 8/8\\
+\cmidrule{2-5}
+ & Gamma (log) & 8 & 41.9 & 6/8\\
+\cmidrule{2-5}
+\multirow{-3}{*}{\raggedright\arraybackslash Frass content} & Gaussian (identity) & 8 & 44.4 & 6/8\\
+\bottomrule
+\end{tabular}}
+\end{table}

@@ -1,6 +1,6 @@
 \begin{table}[H]
 \centering
-\caption{\label{supptable:table_gam_ch} Summaries of element-wise GAM models used to produce the plots in figs. \ref{fig_eff_times}, \ref{fig_asmeffall}, \ref{fig_rettimesall}, \ref{fig_larvaecontentall} and \ref{fig_frasscontentall}. AE stands for assimilation efficiency, and RT for retention time, edf for effective degrees of freedom. All models were fitted using thin-plate splines and with 10 parameters. The parameter $\phi$ for Beta regressions is indicated in parentheses \citep{Wood2016}}
+\caption{\label{supptable:table_gam_ch} Summaries of element-wise GAM models used to produce the plots in figs. \ref{fig_eff_times}, \ref{fig_asmeffall}, \ref{fig_rettimesall}, \ref{fig_larvaecontentall} and \ref{fig_frasscontentall}. AE stands for assimilation efficiency, and RT for retention time, edf for effective degrees of freedom. All models were fitted using thin-plate splines and with 10 parameters. The parameter $\phi$ of the beta distributions, and the degrees of freedom and scale of the scaled t distributions, are indicated in parentheses \citep{Wood2016}}
 \centering
 \resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
 \begin{tabular}[t]{llrllllll}
@@ -21,25 +21,25 @@
 \cmidrule{2-7}
  & K & 50 & 3.64 & 4.5 & 4.6e-02 & 0.18 &  & \\
 \cmidrule{2-7}
-\multirow{-8}{*}{\raggedright\arraybackslash Larvae} & Ca & 50 & 2.74 & 3.38 & <2e-16 & 0.72 &  & \\
-\cmidrule{1-7}
- & C & 50 & 1 & 1 & 9e-02 & 0.039 &  & \\
-\cmidrule{2-7}
- & N & 50 & 2.01 & 2.49 & <2e-16 & 0.57 &  & \\
-\cmidrule{2-7}
- & P & 50 & 3.07 & 3.79 & 3.4e-05 & 0.4 &  & \\
-\cmidrule{2-7}
- & Na & 48 & 1.49 & 1.82 & <2e-16 & 0.61 &  & \\
-\cmidrule{2-7}
- & Mg & 50 & 1.88 & 2.34 & 3.4e-03 & 0.21 &  & \\
-\cmidrule{2-7}
- & S & 50 & 1.61 & 1.99 & 3.7e-06 & 0.4 &  & \\
-\cmidrule{2-7}
- & K & 50 & 2.18 & 2.7 & <2e-16 & 0.56 &  & \\
-\cmidrule{2-7}
-\multirow{-8}{*}{\raggedright\arraybackslash Frass} & Ca & 50 & 2.54 & 3.14 & 8.5e-02 & 0.12 & \multirow{-16}{*}{\raggedright\arraybackslash gaussian} & \multirow{-16}{*}{\raggedright\arraybackslash identity}\\
+\multirow{-8}{*}{\raggedright\arraybackslash Larvae} & Ca & 50 & 2.74 & 3.38 & <2e-16 & 0.72 & \multirow{-8}{*}{\raggedright\arraybackslash gaussian} & \\
+\cmidrule{1-8}
+ & C & 50 & 1 & 1 & 1.9e-02 & 0.031 & Scaled t(3,0.483) & \\
+\cmidrule{2-8}
+ & N & 50 & 2.06 & 2.56 & <2e-16 & 0.57 & Scaled t(5.183,0.191) & \\
+\cmidrule{2-8}
+ & P & 50 & 3.19 & 3.93 & 9.6e-07 & 0.41 & Scaled t(17.991,273.642) & \\
+\cmidrule{2-8}
+ & Na & 48 & 1.49 & 1.82 & <2e-16 & 0.61 & Scaled t(Inf,43.325) & \\
+\cmidrule{2-8}
+ & Mg & 50 & 1.88 & 2.34 & 1.6e-03 & 0.21 & Scaled t(Inf,72.557) & \\
+\cmidrule{2-8}
+ & S & 50 & 1.5 & 1.84 & 8.9e-07 & 0.4 & Scaled t(6.559,77.513) & \\
+\cmidrule{2-8}
+ & K & 50 & 2.7 & 3.33 & <2e-16 & 0.56 & Scaled t(4.608,524.2) & \\
+\cmidrule{2-8}
+\multirow{-8}{*}[3.5\dimexpr\aboverulesep+\belowrulesep+\cmidrulewidth]{\raggedright\arraybackslash Frass} & Ca & 50 & 2.81 & 3.47 & 3.2e-03 & 0.085 & Scaled t(3.582,48.601) & \multirow{-16}{*}{\raggedright\arraybackslash identity}\\
 \cmidrule{1-9}
- & C & 50 & 3.08 & 3.8 & <2e-16 & 0.69 & Beta regression(271.32) & \\
+ & C & 50 & 3.08 & 3.8 & <2e-16 & 0.69 & Beta regression(271.318) & \\
 \cmidrule{2-8}
  & N & 50 & 2.88 & 3.56 & <2e-16 & 0.79 & Beta regression(182.43) & \\
 \cmidrule{2-8}

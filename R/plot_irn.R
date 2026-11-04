@@ -430,8 +430,7 @@ plot_irn <- function(data_i,
   mod <- mgcv::gam(assimilation_rate_dw ~ s(ingestion_rate_dw, bs = "cs", k =
                                               -1),
                    data = data_i)
-  hlt <- 10 * sum(mgcv::influence.gam(mod) / length(mgcv::influence.gam(mod)))
-  data_i_f <- filter(data_i, mgcv::influence.gam(mod) < hlt)
+  data_i_f <- data_i  # all observations (no leverage-based exclusion)
   
   ardw_irfw <- ggplot2::ggplot(data_i_f, aes(x = ingestion_rate_dw, y = assimilation_rate_dw)) +
     geom_point() +
@@ -471,8 +470,7 @@ plot_irn <- function(data_i,
     k = -1
   ),
   data = data_i)
-  hlt <- 10 * sum(mgcv::influence.gam(mod) / length(mgcv::influence.gam(mod)))
-  data_i_f <- filter(data_i, mgcv::influence.gam(mod) < hlt)
+  data_i_f <- data_i  # all observations (no leverage-based exclusion)
   
   ardw_msirfw <- ggplot2::ggplot(data_i_f,
                                  aes(x = mass_specific_ingestion_rate_fw, y = assimilation_rate_dw)) +
@@ -567,8 +565,7 @@ plot_irn <- function(data_i,
     method = "REML",
     data = data_i
   )
-  hlt <- 10 * sum(mgcv::influence.gam(mod) / length(mgcv::influence.gam(mod)))
-  data_i_f <- filter(data_i, mgcv::influence.gam(mod) < hlt)
+  data_i_f <- data_i  # all observations (no leverage-based exclusion)
   
   aedw_msirfw <- ggplot2::ggplot(
     data_i_f,
@@ -612,8 +609,7 @@ plot_irn <- function(data_i,
     k = 4
   ),
   data = data_i)
-  hlt <- 10 * sum(mgcv::influence.gam(mod) / length(mgcv::influence.gam(mod)))
-  data_i_f <- filter(data_i, mgcv::influence.gam(mod) < hlt)
+  data_i_f <- data_i  # all observations (no leverage-based exclusion)
   
   gefw_msirfw <- ggplot2::ggplot(
     data_i,
@@ -656,8 +652,7 @@ plot_irn <- function(data_i,
     growth_efficiency_fw ~ s(geometric_mean_growth_fw, bs = "cs", k = 3) + s(ingestion_rate_fw, bs = "cs", k = 3),
     data = data_i
   )
-  hlt <- 10 * sum(mgcv::influence.gam(mod) / length(mgcv::influence.gam(mod)))
-  data_i_f <- filter(data_i, mgcv::influence.gam(mod) < hlt)
+  data_i_f <- data_i  # all observations (no leverage-based exclusion)
   gefw_msgrfw <- ggplot2::ggplot(data_i_f,
                                  aes(x = geometric_mean_growth_fw, y = growth_efficiency_fw)) +
     geom_point() +
@@ -757,8 +752,7 @@ plot_irn <- function(data_i,
   
   mod <- mgcv::gam(mean_growth_dw ~ s(ingestion_rate_fw, bs = "cs", k =
                                         3), data = data_i)
-  hlt <- 10 * sum(mgcv::influence.gam(mod) / length(mgcv::influence.gam(mod)))
-  data_i_f <- filter(data_i, mgcv::influence.gam(mod) < hlt)
+  data_i_f <- data_i  # all observations (no leverage-based exclusion)
   
   grfw_irfw <- ggplot2::ggplot(data_i_f, aes(x = ingestion_rate_fw, y = mean_growth_dw)) +
     geom_point() +
@@ -799,8 +793,7 @@ plot_irn <- function(data_i,
     ),
     data = data_i
   )
-  hlt <- 10 * sum(mgcv::influence.gam(mod) / length(mgcv::influence.gam(mod)))
-  data_i_f <- filter(data_i, mgcv::influence.gam(mod) < hlt)
+  data_i_f <- data_i  # all observations (no leverage-based exclusion)
   
   msgrfw_msirfw <- ggplot2::ggplot(data_i_f,
                                    aes(x = mass_specific_ingestion_rate_fw, y = geometric_mean_growth_fw)) +
@@ -1039,13 +1032,13 @@ plot_irn <- function(data_i,
   
   ### Mass-specific growth rate in dry weight according to the mass specific intake rate in dry weight  ######
   mod_msgrdw_msirdw <- mgcv::gam(
-    mean_growth_dw ~ s(mass_specific_ingestion_rate_fw),
-    family = scat(),
+    mean_growth_dw ~ s(mass_specific_ingestion_rate_dw, bs = "cr", k = 5),
+    knots = list(mass_specific_ingestion_rate_dw = harrell_knots_irn(data_i$mass_specific_ingestion_rate_dw)),
+    family = gaussian(),
     method = "REML",
     data = data_i
   )
-  hlt <- 10 * sum(mgcv::influence.gam(mod_msgrdw_msirdw) / length(mgcv::influence.gam(mod_msgrdw_msirdw)))
-  data_i_f <- filter(data_i, mgcv::influence.gam(mod_msgrdw_msirdw) < hlt)
+  data_i_f <- data_i  # all observations (no leverage-based exclusion)
   
   msgrdw_msirdw <- ggplot2::ggplot(data_i_f,
                                    aes(x = mass_specific_ingestion_rate_dw, y = mean_growth_dw)) +
@@ -1056,8 +1049,8 @@ plot_irn <- function(data_i,
     geom_smooth(
       color = "steelblue3",
       method = mgcv::gam,
-      formula = y ~ s(x),
-      method.args = list(method = "REML", family = scat())
+      formula = y ~ s(x, bs = "cr", k = 5),
+      method.args = list(method = "REML", family = gaussian(), knots = list(x = harrell_knots_irn(data_i_f$mass_specific_ingestion_rate_dw)))
     ) +
     labs(x = "Intake rate <br> (<span style='font-size:8pt;'>g<sub>intake</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)", y = "Growth rate <br> (<span style='font-size:8pt;'>g<sub>growth</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)") +
     theme(axis.title.x = element_markdown(), axis.title.y = element_markdown())
@@ -1078,15 +1071,15 @@ plot_irn <- function(data_i,
   mod_aedw_msirdw <- mgcv::gam(
     assimilation_efficiency_dw ~ s(
       mass_specific_ingestion_rate_dw,
-      bs = "ad",
-      k = -1
+      bs = "cr",
+      k = 5
     ),
+    knots = list(mass_specific_ingestion_rate_dw = harrell_knots_irn(data_i$mass_specific_ingestion_rate_dw)),
     family = scat(),
     method = "REML",
     data = data_i
   )
-  hlt <- 10 * sum(mgcv::influence.gam(mod_aedw_msirdw) / length(mgcv::influence.gam(mod_aedw_msirdw)))
-  data_i_f <- filter(data_i, mgcv::influence.gam(mod_aedw_msirdw) < hlt)
+  data_i_f <- data_i  # all observations (no leverage-based exclusion)
   
   aedw_msirdw <- ggplot2::ggplot(
     data_i_f,
@@ -1100,8 +1093,8 @@ plot_irn <- function(data_i,
     geom_smooth(
       color = "steelblue3",
       method = mgcv::gam,
-      formula = y ~ s(x, bs = "ad", k = -1),
-      method.args = list(family = scat(), method = "REML")
+      formula = y ~ s(x, bs = "cr", k = 5),
+      method.args = list(family = scat(), method = "REML", knots = list(x = harrell_knots_irn(data_i_f$mass_specific_ingestion_rate_dw)))
     ) +
     labs(x = "Intake rate <br> (<span style='font-size:8pt;'>g<sub>intake</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)", y = "Assimilation efficiency <br> (<span style='font-size:8pt;'>g<sub>assim</sub> \u22c5 g<sub>intake</sub><sup>-1</sup> </span>)") +
     theme(
@@ -1127,15 +1120,15 @@ plot_irn <- function(data_i,
   mod_gedw_msirdw <- mgcv::gam(
     growth_efficiency_dw ~ s(
       mass_specific_ingestion_rate_dw,
-      bs = "ad",
-      k = -1
+      bs = "cr",
+      k = 5
     ),
+    knots = list(mass_specific_ingestion_rate_dw = harrell_knots_irn(data_i$mass_specific_ingestion_rate_dw)),
     data = data_i,
     method = "REML",
     family = scat(link = "identity")
   )
-  hlt <- 10 * sum(mgcv::influence.gam(mod_gedw_msirdw) / length(mgcv::influence.gam(mod_gedw_msirdw)))
-  data_i_f <- filter(data_i, mgcv::influence.gam(mod_gedw_msirdw) < hlt)
+  data_i_f <- data_i  # all observations (no leverage-based exclusion)
   
   gedw_msirdw <- ggplot2::ggplot(
     data_i_f,
@@ -1149,8 +1142,8 @@ plot_irn <- function(data_i,
     geom_smooth(
       color = "steelblue3",
       method = mgcv::gam,
-      formula = y ~ s(x, bs = "ad", k = -1),
-      method.args = list(family = scat(link = "identity"), method = "REML")
+      formula = y ~ s(x, bs = "cr", k = 5),
+      method.args = list(family = scat(link = "identity"), method = "REML", knots = list(x = harrell_knots_irn(data_i_f$mass_specific_ingestion_rate_dw)))
     ) +
     labs(x = "Intake rate <br> (<span style='font-size:8pt;'>g<sub>intake</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)", y = "Growth efficiency <br> (<span style='font-size:8pt;'>g<sub>growth</sub> \u22c5 g<sub>intake</sub><sup>-1</sup></span>)") +
     theme(
@@ -1174,14 +1167,14 @@ plot_irn <- function(data_i,
   ### Growth efficiency in dry weight according to specific growth rate in dry weight ######
   
   mod_gedw_msgrdw <- mgcv::gam(
-    growth_efficiency_dw ~ s(mean_growth_dw, bs = "ad", k = -1),
+    growth_efficiency_dw ~ s(mean_growth_dw, bs = "cr", k = 5),
+    knots = list(mean_growth_dw = harrell_knots_irn(data_i$mean_growth_dw)),
     data = data_i,
     method = "REML",
     family = mgcv::scat(link = "identity")
   )
   
-  hlt <- 10 * sum(mgcv::influence.gam(mod_gedw_msgrdw) / length(mgcv::influence.gam(mod_gedw_msgrdw)))
-  data_i_f <- filter(data_i, mgcv::influence.gam(mod_gedw_msgrdw) < hlt)
+  data_i_f <- data_i  # all observations (no leverage-based exclusion)
   gedw_msgrdw <- ggplot2::ggplot(data_i_f,
                                  aes(x = mean_growth_dw, y = growth_efficiency_dw, color = food_provided_fw)) +
     scale_color_manual(values = visible_greens) +
@@ -1192,10 +1185,11 @@ plot_irn <- function(data_i,
     geom_smooth(
       color = "steelblue3",
       method = mgcv::gam,
-      formula = y ~ s(x, bs = "ad", k = -1),
+      formula = y ~ s(x, bs = "cr", k = 5),
       method.args = list(
         family = mgcv::scat(link = "identity"),
-        method = "REML"
+        method = "REML",
+        knots = list(x = harrell_knots_irn(data_i_f$mean_growth_dw))
       )
     ) +
     labs(x = "Growth rate <br> (<span style='font-size:8pt;'>g<sub>growth</sub> \u22c5 g<sub>body</sub><sup>-1</sup> \u22c5 d<sup>-1</sup></span>)", y = "Growth efficiency <br> (<span style='font-size:8pt;'>g<sub>growth</sub> \u22c5 g<sub>intake</sub><sup>-1</sup></span>)") +
@@ -1922,7 +1916,7 @@ plot_irn <- function(data_i,
   
   models <- list(
     list(family = gaussian(), method = "REML"),
-    list(family = gaussian(), method = "REML"),
+    list(family = scat(), method = "REML"),
     list(family = betar(), method = "REML"),
     list(family = Gamma(link = log), method = "REML")
   )
@@ -1991,21 +1985,13 @@ plot_irn <- function(data_i,
       )
       
       mod <- mgcv::gam(
-        elemental_value ~ s(mean_mass_specific_intake_rate_fw),
+        elemental_value ~ s(mean_mass_specific_intake_rate_dw),
         data = data_matrix_element,
         method = "REML",
         family = models[[j]]$family
       )
       
-      hlt <- 10 * sum(mgcv::influence.gam(mod) / length(mgcv::influence.gam(mod)))
-      data_matrix_element_f <- filter(data_matrix_element, mgcv::influence.gam(mod) < hlt)
-      
-      mod <- mgcv::gam(
-        elemental_value ~ s(mean_mass_specific_intake_rate_fw),
-        data = data_matrix_element_f,
-        method = "REML",
-        family = models[[j]]$family
-      )
+      data_matrix_element_f <- data_matrix_element  # all observations (no leverage-based exclusion)
       
       if (is.na(ylim_maxs[i, j])) {
         ylim_max <- max(data_matrix_element_f$elemental_value, na.rm = T) + 0.2 * (
@@ -2017,7 +2003,7 @@ plot_irn <- function(data_i,
       
       plots[[j]][[i]] <- ggplot2::ggplot(
         data_matrix_element_f,
-        aes(x = mean_mass_specific_intake_rate_fw, y = elemental_value)
+        aes(x = mean_mass_specific_intake_rate_dw, y = elemental_value)
       ) +
         geom_point() +
         ylim(ylim_min, ylim_max) +
@@ -3678,4 +3664,15 @@ plot_irn <- function(data_i,
     units = "in"
   )
   
+  
+  # 3. Family sensitivity figures #####
+  # Figures of the family sensitivity analysis run in model_irn() (see R/sensitivity_irn.R):
+  # family_sensitivity_mass_balance.pdf, family_sensitivity_assimilation_efficiency.pdf
+  # and family_sensitivity_retention_time.pdf
+  
+  if (is.null(data_model$families)) {
+    # models_irn did not return the sensitivity results: refit them here
+    data_model <- run_sensitivity_irn(data_i = data_i, data_g = data_g)
+  }
+  plot_sensitivity_irn(data_model, path = figures_paper_path)
 }

@@ -32,7 +32,7 @@ model_irn <- function(data_i, data_g) {
   ref_df <- rep(NA, nb_models_tm)
   p_value <- rep(NA, nb_models_tm)
   family <- rep(NA, nb_models_tm)
-  smoother <- c("TP", "AD", "AD")
+  smoother <- c("CR", "CR", "CR")
   
   gam_tm <- tibble(
     Predictor = predictors_list_tm,
@@ -51,7 +51,8 @@ model_irn <- function(data_i, data_g) {
   ## 1. The models ######
   
   mod_aedw_msirdw <- mgcv::gam(
-    assimilation_efficiency_dw ~ s(mass_specific_ingestion_rate_dw),
+    assimilation_efficiency_dw ~ s(mass_specific_ingestion_rate_dw, bs = "cr", k = 5),
+    knots = list(mass_specific_ingestion_rate_dw = harrell_knots_irn(data_i$mass_specific_ingestion_rate_dw)),
     family = scat(),
     method = "REML",
     data = data_i
@@ -59,30 +60,24 @@ model_irn <- function(data_i, data_g) {
   mod_gedw_msirdw <- mgcv::gam(
     growth_efficiency_dw ~ s(
       mass_specific_ingestion_rate_dw,
-      bs = "ad",
-      k = 10
+      bs = "cr",
+      k = 5
     ),
+    knots = list(mass_specific_ingestion_rate_dw = harrell_knots_irn(data_i$mass_specific_ingestion_rate_dw)),
     data = data_i,
     method = "REML",
     family = scat()
   )
   mod_gedw_msgrdw <- mgcv::gam(
-    growth_efficiency_dw ~ s(mean_growth_dw, bs = "ad", k = 10),
+    growth_efficiency_dw ~ s(mean_growth_dw, bs = "cr", k = 5),
+    knots = list(mean_growth_dw = harrell_knots_irn(data_i$mean_growth_dw)),
     data = data_i,
     method = "REML",
     family = scat()
   )
-  ##  2. Removing outliers   ######
+  ##  2. All observations are used (no leverage-based exclusion)   ######
   
   models <- list(mod_aedw_msirdw, mod_gedw_msirdw, mod_gedw_msgrdw)
-  
-  for (i in 1:length(models)) {
-    hlt <- 10 * sum(mgcv::influence.gam(models[[i]]) / length(mgcv::influence.gam(models[[i]])))
-    data_i_f <- filter(data_i, mgcv::influence.gam(models[[i]]) < hlt)
-    call <- models[[i]]$call
-    call$data <- quote(data_i_f)
-    models[[i]] <- eval(call)
-  }
   
   ##  3. Constructing a table  ######
   
@@ -114,7 +109,7 @@ model_irn <- function(data_i, data_g) {
     booktabs = T,
     escape = F,
     linesep = "",
-    caption = "\\label{supptable:table_gam_tm} Summaries of the three GAMs plotted in fig. \\ref{fig_massbalance}. MSIR stand for mass-specific intake rate, GR for growth rate, GE for growth efficiency, and AE for assimilation efficiency, edf for effective degrees of freedom. TP refers to thin-plate splines, and AD to adaptive splines. The parameter $\\phi$ for Beta regressions is indicated in parentheses \\citep{Wood2016}",
+    caption = "\\label{supptable:table_gam_tm} Summaries of the three GAMs plotted in fig. \\ref{fig_massbalance}. MSIR stand for mass-specific intake rate, GR for growth rate, GE for growth efficiency, and AE for assimilation efficiency, edf for effective degrees of freedom. CR refers to penalised cubic regression splines with five knots at the 5th, 27.5th, 50th, 72.5th and 95th percentiles of the predictor, linear beyond the outer knots \\citep{Harrell2015}. The degrees of freedom and scale of the scaled t distributions are indicated in parentheses \\citep{Wood2016}",
     label = NULL
   ) |>
     row_spec(0, bold = TRUE) |>
@@ -475,7 +470,7 @@ model_irn <- function(data_i, data_g) {
   gam_ch_list <- vector(mode = "list", length = nb_models_ch)
   models_methods <- c(
     replicate(nb_elements, list(family = gaussian()), simplify = FALSE),
-    replicate(nb_elements, list(family = gaussian()), simplify = FALSE),
+    replicate(nb_elements, list(family = scat()), simplify = FALSE),
     replicate(nb_elements, list(family = betar()), simplify = FALSE),
     replicate(nb_elements, list(family = Gamma(link = log)), simplify = FALSE)
   )
@@ -491,16 +486,6 @@ model_irn <- function(data_i, data_g) {
       family = models_methods[[i]]$family,
       method = "REML",
       data = data
-    )
-    
-    hlt <- 10 * sum(mgcv::influence.gam(gam_ch_list[[i]]) / length(mgcv::influence.gam(gam_ch_list[[i]])))
-    data_f <- filter(data, mgcv::influence.gam(gam_ch_list[[i]]) < hlt)
-    
-    gam_ch_list[[i]] <- mgcv::gam(
-      elemental_value ~ s(mean_mass_specific_intake_rate_dw),
-      family = models_methods[[i]]$family,
-      method = "REML",
-      data = data_f
     )
     
     
@@ -535,7 +520,7 @@ model_irn <- function(data_i, data_g) {
     booktabs = T,
     escape = F,
     linesep = "",
-    caption = "\\label{supptable:table_gam_ch} Summaries of element-wise GAM models used to produce the plots in figs. \\ref{fig_eff_times}, \\ref{fig_asmeffall}, \\ref{fig_rettimesall}, \\ref{fig_larvaecontentall} and \\ref{fig_frasscontentall}. AE stands for assimilation efficiency, and RT for retention time, edf for effective degrees of freedom. All models were fitted using thin-plate splines and with 10 parameters. The parameter $\\phi$ for Beta regressions is indicated in parentheses \\citep{Wood2016}",
+    caption = "\\label{supptable:table_gam_ch} Summaries of element-wise GAM models used to produce the plots in figs. \\ref{fig_eff_times}, \\ref{fig_asmeffall}, \\ref{fig_rettimesall}, \\ref{fig_larvaecontentall} and \\ref{fig_frasscontentall}. AE stands for assimilation efficiency, and RT for retention time, edf for effective degrees of freedom. All models were fitted using thin-plate splines and with 10 parameters. The parameter $\\phi$ of the beta distributions, and the degrees of freedom and scale of the scaled t distributions, are indicated in parentheses \\citep{Wood2016}",
     label = NULL
   ) |>
     row_spec(0, bold = TRUE) |>
@@ -695,4 +680,19 @@ model_irn <- function(data_i, data_g) {
     gam_isotopes,
     file = here::here("4_outputs", "1_statistical_results", "gam_isotopes.csv")
   )
+  
+  # IV. Choice of the distribution family (second revision at Oikos) #####
+  # Every model refitted with each family / link function compatible with the
+  # data; the family with the lowest total AIC per response variable is the one
+  # used above (checked by select_families_irn()). Helper functions are in
+  # R/sensitivity_irn.R; the model specifications are those used above.
+  
+  sensitivity_irn <- run_sensitivity_irn(data_i = data_i, data_g = data_g)
+  
+  # Writes family_selection.tex, family_sensitivity_tm.tex, family_sensitivity_ch.tex
+  # and knots_sensitivity.tex
+  save_sensitivity_tables_irn(sensitivity_irn, path = models_path)
+  
+  # Returned so that plot_irn() can draw the sensitivity figures without refitting
+  return(sensitivity_irn)
 }

@@ -1,0 +1,16 @@
+\begin{table}[H]
+\centering
+\caption{\label{supptable:table_knots_sensitivity} Sensitivity of the individual-level models (fig. \ref{fig_massbalance} and fig. \ref{derivatives}a) to the number of knots of their cubic regression splines (5 knots in the main analyses). Each cell indicates whether the conclusion stated in the main text holds (see table \ref{supptable:table_family_sensitivity_tm}) and, in parentheses, the difference in AIC with the best number of knots for the same model. Knots were placed at the quantiles recommended by \citet{Harrell2015} for 4 to 7 knots and evenly between the 5th and 95th percentiles for 8 to 10 knots; the splines are linear beyond the outer knots. MSIR stands for mass-specific intake rate, GR for growth rate, AE for assimilation efficiency and GE for growth efficiency.}
+\centering
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
+\begin{tabular}[t]{lccccccc}
+\toprule
+\textbf{Model} & \textbf{4 knots} & \textbf{5 knots} & \textbf{6 knots} & \textbf{7 knots} & \textbf{8 knots} & \textbf{9 knots} & \textbf{10 knots}\\
+\midrule
+AE $\sim$ MSIR & No (0.0) & Yes (2.4) & Yes (2.7) & Yes (3.2) & Yes (3.1) & Yes (3.4) & Yes (3.5)\\
+GE $\sim$ MSIR & Yes (4.6) & Yes (3.5) & Yes (4.1) & Yes (3.1) & Yes (1.1) & Yes (0.3) & Yes (0.0)\\
+GE $\sim$ GR & Yes (0.0) & Yes (0.9) & Yes (1.3) & Yes (2.1) & Yes (2.0) & Yes (2.4) & Yes (2.6)\\
+GR $\sim$ MSIR & Yes (2.7) & Yes (3.4) & Yes (2.9) & Yes (1.1) & Yes (0.2) & Yes (0.0) & Yes (0.1)\\
+\bottomrule
+\end{tabular}}
+\end{table}
